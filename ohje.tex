@@ -1,0 +1,302 @@
+\documentclass[12pt,a4paper]{scrartcl}
+\usepackage[finnish]{babel}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage{zref-lastpage,zref-user}
+\usepackage{fancyhdr}
+\frenchspacing
+\lhead{Sukijan asennus- ja käyttöohje (Copyright © 2011--2013 Hannu Väisänen)}
+\rhead{\thepage(\zpageref{LastPage})}
+\cfoot{}
+\begin{document}
+\pagestyle{fancy}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{1ex plus 0.5ex minus 0.2ex}
+\section*{Sukijan asennus- ja käyttöohje}
+
+Sukija on Javalla kirjoitettu ohjelma suomenkielisten tekstien
+indeksointiin.
+
+Sukija analysoi sanat morfologisesti, muuttaa sanat perusmuotoon (joka
+on sanakirjoissa) ja indeksoi perusmuodot, jotta sanan kaikki
+taivutusmuodot löytyvät vain perusmuotoa etsimällä.
+
+Sukija tallentaa perusmuodot Solr:n tietokantaan, josta niitä voi
+etsiä Solr:n käyttöliittymän kautta.
+
+Sukija osaa indeksoida kaikkia niitä tiedostomuotoja, joita Apache
+Tika \\(http://tika.apache.org/) osaa lukea.
+
+\subsection*{Mitä tarvitaan ja mistä ne saa?}
+
+\begin{itemize}
+
+\item Sukija \\
+      http://sourceforge.net/projects/sukija/ \\
+      Koska luet tätä tekstiä, olet jo imuroinut tämän. (-:
+
+\item Suomi-Malaga \\
+      Se on corevoikossa (https://github.com/voikko/corevoikko)
+      hakemistossa \\
+      suomimalaga.
+
+\item Apache Solr 3.6.1 \\
+      http://lucene.apache.org/solr/
+
+\item Ubuntun paketit libmalaga7 ja maven.
+\end{itemize}
+
+Lisäksi Sukija tarvitsee erinäisiä jar-tiedostoja, mutta Maven imuroi
+ne verkosta automaagisesti.
+
+Sukijaa voi käyttää myös Voikon Java-version kanssa. Tällöin tarvitaan
+myös Ubuntun paketti libvoikko1.
+
+Tämä asennusohje olettaaa, että corevoikko ja apache-solr ovat hakemistoissa \\
+\verb=$HOME/Lataukset/corevoikko/= ja \\
+\verb=$HOME/Lataukset/apache-solr-3.6.1=
+
+\newpage
+\subsection*{Ohjelman rakenne}
+
+Sukijassa on neljä osaa:
+
+\begin{itemize}
+\item sukija-core     Java-luokkia, joita muut ohjelman osat tarvitsevat.
+\item sukija-indexer  Ohjelma, joka lukee sanoja tiedostoista ja lähettää
+                      ne Solr:iin indeksoitavaksi.
+\item sukija-malaga   Solr:n liitännäinen, joka käyttää Suomi-Malagan
+                      Sukija-versiota \\muuttamaan sanat perusmuotoon.
+\item sukija-voikko   Solr:n liitännäinen, joka käyttää Voikkoa
+                      muuttamaan sanat perusmuotoon.
+\end{itemize}
+
+
+\subsection*{Suomi-Malagan asentaminen}
+
+Suomi-Malagasta on kaksi versiota, Voikko-versio on tarkoitettu
+oikolukuun ja Sukija tiedostojen indeksointiin. Sukija-versio
+käännetään komennolla
+
+\begin{verbatim}
+cd $HOME/Lataukset/corevoikko/suomimalaga
+make sukija
+\end{verbatim}
+
+Tee alihakemisto \verb=$HOME/.sukija= ja kopioi sinne tiedostot \\
+\verb=suomimalaga/sukija/{suomi.*_l,suomi.pro}=
+
+Myös Voikko-versiota voi käyttää indeksointiin, kun sen kääntää ja
+asentaa komennoilla
+
+\begin{verbatim}
+cd $HOME/Lataukset/corevoikko/suomimalaga
+make voikko-sukija
+make voikko-install DESTDIR=~/.voikko
+\end{verbatim}
+
+\verb|DESTDIR| voi olla myös joitan muuta kuin \verb|~/.voikko|.
+
+
+\subsection*{Sukijan kääntäminen ja asentaminen, Solr:n konfigurointi}
+
+Ensin käännetään sukija komennolla
+
+\verb=mvn package=
+
+Komento imuroi netistä tarvitsemansa Javan jar-paketit eli ensimmäinen
+kääntäminen saattaa kestää kauan. Erityisen kauan se kestää, jos et
+ole aiemmin käyttänyt mavenia.
+
+\bigskip Toisessa vaiheessa asetetaan Solr:n konfigurointitiedostoon
+\verb=schema.xml= saneistajaluokka (ulkomaankielellä tokenizer), joka
+lukee sanat tiedostoista, ja morfologialuokka, joka muuttaa sanat
+perusmuotoon. Komennolla \verb|make ____-schema| on viisi eri
+vaihtoehtoa:
+
+\begin{tabular}{@{}ll}
+Komento                              & Morfologialuokka \\
+\verb=make malaga-schema=            & MalagaMorphologyFilterFactory \\
+\verb=make malaga-suggestion-schema= & MalagaMorphologySuggestionFilterFactory \\
+\verb=make voikko-schema=            & VoikkoMorphologyFilterFactory \\
+\verb=make voikko-suggestion-schema= & VoikkoMorphologySuggestionFilterFactory \\
+\verb=make debug-schema=             &
+\end{tabular}
+
+Komentoa \verb=make debug-schema= käytetään vain Sukijan
+kehittämiseen.
+
+Saneistajan oletusarvo on FinnishTokenizerFactory, joka tulee Sukijan
+mukana, mutta sen voi vaihtaa muuttujalla TOKENIZER\_FACTORY
+esimerkiksi näin:
+
+\verb|make voikko-schema TOKENIZER_FACTORY=solr.StandardTokenizerFactory|
+
+\verb=____FilterFactory= ja \verb=____SuggestionFilterFactory= eroavat
+toisistaan siten, että jos morfologialuokka ei tunnista sanaa,
+\verb=Suggestion="-luokissa sanaan tehdään muutoksia (esimerkiksi
+muutetaan w v:ksi) ja tunnistusta yritetään uudestaan. Tämä ei ole
+sama asia kuin Voikon oikeinkirjoituksen korjausehdotukset!
+
+\verb=Suggestion="-luokat konfiguroidaan tiedostossa
+\verb|suggestion.txt|. Katso sivu \zpageref{suggestionConfiguration}.
+
+
+
+\bigskip
+Kolmas ja viimeinen komento on \verb=make install=, joka kopioi
+hakemistossa \verb=conf= olevat Solr:n ja Sukijan tarvitsemat
+tiedostot oikeisiin paikkoihin.
+
+Tiedostot
+\verb=logging.properties=,
+\verb=suggestion.txt= ja
+\verb=synonyms.txt=
+kopioidaan hakemistoon \verb=$HOME/.sukija=
+ja tiedostot
+\verb=schema.xml=,
+\verb=solrconfig.xml=,
+\verb=sukija-context.xml= ja
+\verb=sukija.xsl=
+niihin hakemistoihin, joista Solr lukee ne.
+
+
+
+\subsection*{Sukijan konfigurointi}
+
+Sukija konfiguroidaan kahden Javan ympäristömuuttujan avulla. Esimerkiksi
+
+\begin{verbatim}
+sukija.ignore.files = (?u)(?i).*[.](jpg|jpeg)$
+sukija.solr.url = http://localhost:8983/solr
+\end{verbatim}
+
+\verb=sukija.ignore.files= on säännöllinen lauseke, joka kuvaa ne
+tiedostot, joita ei indeksoida. Yllä olevassa esimerkissä ei
+indeksoida JPG"-tiedostoja. Säännöllisen lausekkeen alku
+\verb=(?u)(?i)= kertoo, että tiedostojen nimissä voi olla
+Unicode-merkkejä ja että kirjaimen koolla (isot tai pienet) ei ole
+väliä.
+
+\verb=sukija.solr.url= on Solr:n verkko-osoite.
+
+Näiden muuttujien oletusarvot ovat tiedostossa
+\verb|Indexer.properties|, ja niitä voidaan muuttaa Javan argumentilla
+\verb|-D|.
+
+Varsinainen indeksointi konfiguroidaan sitten Solr:n kautta.
+Valitettavasti Solr:n konfigurointi on oma taiteenlajinsa :-).
+
+
+\subsection*{Sukijan käyttö}
+
+Ensin pitää käynnistää Solr:
+
+\begin{verbatim}
+cd $HOME/Lataukset/apache-solr-3.6.1/example
+java -jar example.jar
+\end{verbatim}
+
+Jos Solr valittaa jna:sta, käynnistyskomento on
+
+\verb|java -Djna.nosys=true -jar example.jar|
+
+Solr:n lokia voi konfiguroida lisäämällä Solr:n käynnistykseen:
+
+\verb|-Djava.util.logging.config.file=~/.sukija/logging.properties|
+
+
+Myös Javan lokin (java.util.logging) konfigurointi on oma
+taiteenlajinsa, ja jotta asia ei olisi liian yksinkertainen, Solr ja
+niin ollen myös Sukijan Solr-liitännäiset käytävät SLF4J:tä
+(www.slf4j.org), joka puolestaan käyttää Javan lokisysteemiä.
+
+\bigskip
+Kun Solr on saatu käyntiin, voidaan ruveta indeksoimaan! Sitä varten
+Sukijassa on bash-ohjelma, joka käynnistetään näin:
+
+\verb|./sukija.sh tiedosto ...|
+
+Ohjelma asettaa Javan classpath-muuttujan ja rupeaa sitten
+indeksoimaan. Jos tiedosto onkin hakemisto, indeksoidaan kaikki
+hakemiston ja sen alihakemistojen tiedostot.
+
+Jos classpath on asetettu jollain muulla tavalla, indeksoinnin voi
+käynnistää näin:
+
+\verb|java peltomaa.sukija.indexer.Indexer tiedosto ...|
+
+Jos muuttujien \verb|sukija.ignore.files| ja \verb|sukija.solr.url|
+oletusarvot eivät kelpaa, ne voidaan asettaa näin:
+
+\verb|java -Dsukija.ignore.files=... peltomaa.sukija.indexer.Indexer|
+
+
+\subsection*{Tiedoston suggestion.txt konfigurointi}
+\zlabel{suggestionConfiguration}
+
+Tiedosto \verb|suggestion.txt| pitää konfiguroida erikseen Sukijalle
+ja Voikolle. Nykyinen konfiguraatio on tehty Sukijalle.
+
+Konfiguraatiossa on neljä komentoa.
+
+\bigskip
+\verb|Apostrophe| Poistaa sanasta heittomerkin ja yrittää tunnistaa
+sanan sen jälkeen. Jos tunnistaminen ei onnistu, poistaa sanasta
+heittomerkin ja kaikki sen jälkeiset merkit ja palauttaa jäljelle
+jääneet merkit sanan perusmuotona. Esimerkiksi \verb|Bordeaux'iin|
+yritetään tunnistaa muodossa \verb|Bordeauxiin|. Jos sitä ei
+tunnisteta, palauttaa merkkijonon \verb|Bordeaux|.
+
+\bigskip
+\verb|Char| Muuttaa sanassa olevan yhden merkin toiseksi. Esimerkiksi
+
+\verb|Char "w" "v"|
+
+muuttaa w:n v:ksi (''wanha'' => ''vanha'').
+
+\bigskip
+\verb|CharCombination| Muuttaa yhden tai usemman merkin kaikki
+kombinaatiot. Esimerkiksi
+
+\verb|CharCombination "pt" "bd"|
+
+(1) muuttaa p:t b:iksi, jättää t:t ennalleen,
+(2) muuttaa t:t d:iksi, jättää p:t ennalleen, sekä
+(3) muuttaa p:t b:iksi ja d:t t:iksi.
+
+
+\bigskip
+\verb|Length3| poistaa kolmesta peräkkäisestä samasta kirjaimesta
+yhden. Esimerkiksi ''kauttta'' => ''kautta''.
+
+
+\bigskip
+\verb|Regex| muuttaa säännöllisen lausekkeen. Esimerkiksi
+
+\verb|Regex "ai(j)[eou]" ""|
+
+poistaa j"-kirjaimen muun muassa sanoista ''aijemmin'', ''aijomme'' ja
+''kaijutin''.
+
+
+Säännöllisessä lausekkeessa voi käyttää kirjainta \verb|C|
+tarkoittamaan konsonantteja ja kirjainta \verb|V| tarkoittamaan
+vokaaleja. Esimerkiksi
+
+\verb|Regex  "C[ae](hi)C"  "i"|
+
+poistaa h"-kirjaimet muun muassa sanoista ''ainahinen'' ja
+''etehinen''.
+
+\bigskip
+Näitä komentoja voi antaa mielivaltaisen paljon missä tahansa
+järjestyksessä, ja \\ \verb|____SuggestionFilterFactory| palauttaa
+perusmuotona ensimmäisen tunnistamansa muodon. Jos mitään ehdotusta ei
+tunnisteta, \verb|____SuggestionFilterFactory| palauttaa alkuperäisen
+merkkijonon.
+
+Tiedostossa \verb|suggestion.txt| voi olla tyhjiä rivejä. Kommentti
+alkaa merkillä \verb|#| ja jatkuu rivin loppuun.
+
+\end{document}

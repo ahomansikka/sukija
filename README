@@ -1,0 +1,19 @@
+Sukija is a program for indexing documents written in Finnish.
+
+
+Sukija analyses words morphologically, converts them to a base form
+(that you find in dictionaries) and indexes the base forms, so that
+you find all inflections of a word by just searching for the base
+form.
+
+To use an English example, if you search for the word "give" you find
+all documents that have "give", "gives", "gave", "given", or "giving".
+
+This is very important in Finnish since Finnish words have literally
+tens of thousands of inflected forms.
+
+
+Sukija is free software: you can redistribute it and/or modify it
+under the terms of the GNU General Public License as published by the
+Free Software Foundation, either version 3 of the License, or (at your
+option) any later version.

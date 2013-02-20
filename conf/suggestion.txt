@@ -1,0 +1,50 @@
+Char             "w" "v"               # Esim. wanha => vanha.
+CharCombination  "bdgkptwšž"      "ptkgbdvsz"
+Length3                                # Esim. kauttta => kautta.
+Regex            "^([0-9]+)"    ""     # Poista numerot sanan alusta.
+Regex            "(\"-|''-|--)" "-"    # Esim. linja"-auto => linja-auto.
+Apostrophe                             # Esim. Bordeaux'iin => Bordeauxiin Bordeaux.
+
+Regex "V(h)V"   "hd"   # Puhistus => puhdistus.
+Regex "VV(v)V"  "d"    # Pöyvän => pöydän, uuven => uuden.
+
+Regex "r(t)elle"        "r"
+Regex "h(t)elle"        "d"
+Regex "V(t)elle"        "d"
+
+Regex "(n)pi(?:A|in)?$"  "m"    # Pienenpi, pienenpiä, pienenpiin.
+
+Regex  "(illi)(?:nen|s)" "i"    # Traagillinen => traaginen.
+Regex  "C[ae](hi)C"      "i"    # Aina(h)inen, ete(h)inen.
+Regex  "(?:uu|yy)(e)"    "de"   # Uuen => uuden.
+Regex  "ai(j)[eou]"      ""     # Ai(j)emmin, ai(j)omme, kai(j)utin.
+
+Regex  "V(mm)Ai[ns]"     "m"    # Alammainen => alamainen.
+Regex  "V(m)Ai[ns]"      "mm"   # Lähimäinen => lähimmäinen.
+
+
+#  private static final String[] end = {
+#    "ki", "n",  // Puuki => puukin. Ei ole sijapääte.
+#    "ks", "i",  // Puuks(i); myös yks(i), kaks(i).
+#    "ll", "a",  // Puull(a).
+#    "ll", "e",  // Puull(e)
+#    "ll", "ä",  // Pääll(ä).
+#    "ss", "a",  // Puuss(a).
+#    "ss", "ä",  // Pääss(ä).
+#    "st", "a",  // Puust(a).
+#    "st", "ä",  // Pääst(ä).
+#    "tt", "a",  // Puutt(a).
+#    "tt", "ä",  // Päätt(ä).
+
+# Vartia => vartija.
+#
+Regex  "..C(ia)(?=ni|si|nsa|mme|tte|n$|a|ta|na|ks[ie]|ssa|sta|h?an|lla|lta|lle|tta|t$|in)" "ija"
+Regex  "..C(ioi)(?=den|tten|na|ks[ie]|ssa|sta|hin|lla|lta|lle|tta|ine)"                    "ijoi"
+Regex  "..C(iä)(?=ni|si|nsä|mme|tte|n$|ä|tä|nä|ks[ie]|ssä|stä|h?än|llä|ltä|lle|ttä|t$|in)" "ijä"
+Regex  "..C(iöi)(?=den|tten|nä|ks[ie]|ssä|stä|hin|llä|ltä|lle|ttä|ine)"                    "ijöi"
+
+
+Regex      "..C[aouyäö](i)(?=nen|se|st[aeä]|sn[aä]|si)" ""  # Hevoinen => hevonen.
+
+Regex  "..C[aouyäö](n)(?=en)"            "in"   # Punanen => punainen.
+Regex  "..C[aouyäö](s)(?=e|t[aeä]|nA|i)" "is"
