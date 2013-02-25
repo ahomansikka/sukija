@@ -59,12 +59,10 @@ Tämä asennusohje olettaaa, että corevoikko ja apache-solr ovat hakemistoissa 
 \newpage
 \subsection*{Ohjelman rakenne}
 
-Sukijassa on neljä osaa:
+Sukijassa on kolme osaa:
 
 \begin{itemize}
 \item sukija-core     Java-luokkia, joita muut ohjelman osat tarvitsevat.
-\item sukija-indexer  Ohjelma, joka lukee sanoja tiedostoista ja lähettää
-                      ne Solr:iin indeksoitavaksi.
 \item sukija-malaga   Solr:n liitännäinen, joka käyttää Suomi-Malagan
                       Sukija-versiota \\muuttamaan sanat perusmuotoon.
 \item sukija-voikko   Solr:n liitännäinen, joka käyttää Voikkoa
@@ -97,10 +95,13 @@ make voikko-install DESTDIR=~/.voikko
 
 \verb|DESTDIR| voi olla myös joitan muuta kuin \verb|~/.voikko|.
 
+Versioiden erot ovat siinä, että Sukija"-versio tunnistaa myös vanhoja
+taivutusmuotoja ja sanoja sekä yleisiä kirjoitusvirheitä.
+
 
 \subsection*{Sukijan kääntäminen ja asentaminen, Solr:n konfigurointi}
 
-Ensin käännetään sukija komennolla
+Ensin käännetään Sukija komennolla
 
 \verb=mvn package=
 
@@ -141,95 +142,98 @@ sama asia kuin Voikon oikeinkirjoituksen korjausehdotukset!
 \verb=Suggestion="-luokat konfiguroidaan tiedostossa
 \verb|suggestion.txt|. Katso sivu \zpageref{suggestionConfiguration}.
 
-
-
 \bigskip
-Kolmas ja viimeinen komento on \verb=make install=, joka kopioi
-hakemistossa \verb=conf= olevat Solr:n ja Sukijan tarvitsemat
-tiedostot oikeisiin paikkoihin.
+Indeksoitavat tiedostot asetetaan tiedostossa \verb|data-config.xml|.
+
+Katso \\
+\verb|http://wiki.apache.org/solr/DataImportHandler#FileListEntityProcessor| \\
+ja \\
+\verb|http://wiki.apache.org/solr/TikaEntityProcessor|).
+
+Tärkeimmät konfiguroitavat parametrit ovat:
+
+\begin{itemize}
+\item baseDir
+Hakemisto, jossa ja jonka alihakemistoissa tiedostot ovat.
+
+\item fileName
+Säännöllinen lauseke, joka valitsee indeksoitavat tiedostot.
+
+\item excludes
+Säännöllinen lauseke, joka valitsee tiedostot, joita ei indeksoida.
+\end{itemize}
+
+Komento \verb|make install| asettaa näiden oletusarvoiksi
+
+baseDir \verb|$HOME/Asiakirjat|
+
+fileName \verb|.*| eli kaikki tiedostot indeksoidaan.
+
+excludes \\
+{\footnotesize \verb+(?u)(?i).*[.](au|bmp|bz2|class|gif|gpg|gz|jar|jpg|jpeg|m|o|png|tif|tiff|wav|zip)$+}
+
+
+Näitä voidaan muuttaa parametreilla \verb|BASE_DIR|,
+\verb|FILE_NAME| ja
+\verb|EXCLUDES|. Esimerkiksi
+
+\verb|make install BASE_DIR=/usr/local/data|
+
+Indeksoitavien tiedostojen asettamisen lisäksi komento
+\verb=make install= kopioi hakemistossa \verb=conf= olevat Solr:n ja
+Sukijan tarvitsemat tiedostot oikeisiin paikkoihin.
 
 Tiedostot
+\verb=data-config.xml=,
 \verb=logging.properties=,
 \verb=suggestion.txt= ja
 \verb=synonyms.txt=
 kopioidaan hakemistoon \verb=$HOME/.sukija=
 ja tiedostot
 \verb=schema.xml=,
-\verb=solrconfig.xml=,
+\verb=solrconfig.xml=, \\
 \verb=sukija-context.xml= ja
 \verb=sukija.xsl=
-niihin hakemistoihin, joista Solr lukee ne.
+niihin hakemistoihin, joista Solr löytää ne.
 
 
-
-\subsection*{Sukijan konfigurointi}
-
-Sukija konfiguroidaan kahden Javan ympäristömuuttujan avulla. Esimerkiksi
-
-\begin{verbatim}
-sukija.ignore.files = (?u)(?i).*[.](jpg|jpeg)$
-sukija.solr.url = http://localhost:8983/solr
-\end{verbatim}
-
-\verb=sukija.ignore.files= on säännöllinen lauseke, joka kuvaa ne
-tiedostot, joita ei indeksoida. Yllä olevassa esimerkissä ei
-indeksoida JPG"-tiedostoja. Säännöllisen lausekkeen alku
-\verb=(?u)(?i)= kertoo, että tiedostojen nimissä voi olla
-Unicode-merkkejä ja että kirjaimen koolla (isot tai pienet) ei ole
-väliä.
-
-\verb=sukija.solr.url= on Solr:n verkko-osoite.
-
-Näiden muuttujien oletusarvot ovat tiedostossa
-\verb|Indexer.properties|, ja niitä voidaan muuttaa Javan argumentilla
-\verb|-D|.
-
-Varsinainen indeksointi konfiguroidaan sitten Solr:n kautta.
-Valitettavasti Solr:n konfigurointi on oma taiteenlajinsa :-).
-
-
-\subsection*{Sukijan käyttö}
-
-Ensin pitää käynnistää Solr:
+\subsection*{Solr:n käynnistäminen}
 
 \begin{verbatim}
 cd $HOME/Lataukset/apache-solr-3.6.1/example
-java -jar example.jar
+java -jar start.jar
 \end{verbatim}
 
 Jos Solr valittaa jna:sta, käynnistyskomento on
 
-\verb|java -Djna.nosys=true -jar example.jar|
+\verb|java -Djna.nosys=true -jar start.jar|
 
 Solr:n lokia voi konfiguroida lisäämällä Solr:n käynnistykseen:
 
 \verb|-Djava.util.logging.config.file=~/.sukija/logging.properties|
 
 
-Myös Javan lokin (java.util.logging) konfigurointi on oma
-taiteenlajinsa, ja jotta asia ei olisi liian yksinkertainen, Solr ja
-niin ollen myös Sukijan Solr-liitännäiset käytävät SLF4J:tä
-(www.slf4j.org), joka puolestaan käyttää Javan lokisysteemiä.
+Javan lokin (java.util.logging) konfigurointi on oma taiteenlajinsa,
+ja jotta asia ei olisi liian yksinkertainen, Solr ja niin ollen myös
+Sukijan Solr-liitännäiset käytävät SLF4J:tä (www.slf4j.org), joka
+puolestaan käyttää Javan lokisysteemiä.
 
-\bigskip
-Kun Solr on saatu käyntiin, voidaan ruveta indeksoimaan! Sitä varten
-Sukijassa on bash-ohjelma, joka käynnistetään näin:
+Solr:n käynnistymisen voi varmistaa selaimessa menemällä verkko-osoitteeseen
 
-\verb|./sukija.sh tiedosto ...|
+\verb|http://localhost:8983/solr/admin/|
 
-Ohjelma asettaa Javan classpath-muuttujan ja rupeaa sitten
-indeksoimaan. Jos tiedosto onkin hakemisto, indeksoidaan kaikki
-hakemiston ja sen alihakemistojen tiedostot.
 
-Jos classpath on asetettu jollain muulla tavalla, indeksoinnin voi
-käynnistää näin:
+\subsection*{Indeksointi}
 
-\verb|java peltomaa.sukija.indexer.Indexer tiedosto ...|
+Tiedostot indeksoidaan menemällä osoitteeseen
 
-Jos muuttujien \verb|sukija.ignore.files| ja \verb|sukija.solr.url|
-oletusarvot eivät kelpaa, ne voidaan asettaa näin:
+\verb|http://localhost:8983/solr/dataimport?command=full-import|
 
-\verb|java -Dsukija.ignore.files=... peltomaa.sukija.indexer.Indexer|
+Enemmän tai vähemmän pitkän ajan kuluttua indeksoinnin lopputuloksen
+voi katsoa osoitteesta
+
+\verb|http://localhost:8983/solr/dataimport|
+
 
 
 \subsection*{Tiedoston suggestion.txt konfigurointi}
@@ -259,11 +263,14 @@ muuttaa w:n v:ksi (''wanha'' => ''vanha'').
 \verb|CharCombination| Muuttaa yhden tai usemman merkin kaikki
 kombinaatiot. Esimerkiksi
 
-\verb|CharCombination "pt" "bd"|
+\verb|CharCombination "pk" "bg"|
 
-(1) muuttaa p:t b:iksi, jättää t:t ennalleen,
-(2) muuttaa t:t d:iksi, jättää p:t ennalleen, sekä
-(3) muuttaa p:t b:iksi ja d:t t:iksi.
+(1) muuttaa p:t b:iksi, jättää k:t ennalleen,
+(2) muuttaa k:t g:iksi, jättää p:t ennalleen, sekä
+(3) muuttaa p:t b:iksi ja k:t g:iksi.
+
+Siis jos tiedostosta luettu sana on ''piolokia'', komento muuttaa sen
+sanoiksi ''biolokia'', ''piologia'' ja ''biologia''.
 
 
 \bigskip
@@ -300,3 +307,18 @@ Tiedostossa \verb|suggestion.txt| voi olla tyhjiä rivejä. Kommentti
 alkaa merkillä \verb|#| ja jatkuu rivin loppuun.
 
 \end{document}
+
+http://localhost:8983/solr/dataimport?command=full-import
+
+Tämän XML-dokumentin mukana ei näytä olevan mitään tyyli- tai
+muotoilutietoa. Dokumentin hierarkia-puu on alla.
+
+
+This response format is experimental.  It is likely to change in the future.
+
+http://localhost:8983/solr/admin/
+
+/dataimport – in order to obtain the current status
+/dataimport?command=reload-config – in order to re-read the configuration
+/dataimport?command=full-import – in order to start a full indexing
+/dataimport?command=delta-import – in order to start an incremental indexing

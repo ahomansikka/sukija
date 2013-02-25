@@ -52,8 +52,11 @@ SUKIJA_HOME=${HOME}/.sukija
 CORE_JAR=sukija-core/target/*jar
 MALAGA_JAR=sukija-malaga/target/*jar
 VOIKKO_JAR=sukija-voikko/target/*jar
-INDEXER_JAR=sukija-indexer/target/*jar
 
+
+BASE_DIR=$(HOME)/Asiakirjat
+FILE_NAME=.*
+EXCLUDES=(?u)(?i).*[.](au|bmp|bz2|class|gif|gpg|gz|jar|jpg|jpeg|m|o|png|tif|tiff|wav|zip)$$
 
 install:
 	if [ ! -e ${SOLR_HOME}/conf/schema.xml.orig ]; then \
@@ -66,7 +69,7 @@ install:
 	  mkdir ${JETTY_CONTEXTS_DIR}; \
 	fi
 	cp ${CONFIG_DIR}/sukija-context.xml ${JETTY_CONTEXTS_DIR}
-	cp ${CORE_JAR} ${MALAGA_JAR} ${VOIKKO_JAR} ${INDEXER_JAR} ${SOLR_HOME}/lib
+	cp ${CORE_JAR} ${MALAGA_JAR} ${VOIKKO_JAR} ${SOLR_HOME}/lib
 	cp ${JNA} ${LIBVOIKKO} ${SOLR_HOME}/lib
 	cp ${CONFIG_DIR}/solrconfig.xml ${SCHEMA_XML} ${SOLR_HOME}/conf
 	cp ${CONFIG_DIR}/sukija.xsl ${SOLR_HOME}/conf/xslt
@@ -74,6 +77,15 @@ install:
 	  mkdir ${SUKIJA_HOME}; \
 	fi
 	cp ${CONFIG_DIR}/suggestion.txt ${CONFIG_DIR}/synonyms.txt ${CONFIG_DIR}/logging.properties ${SUKIJA_HOME}
+	sed -e 's,BASE_DIR,$(BASE_DIR),' \
+	    -e 's,FILE_NAME,$(FILE_NAME),' \
+	    -e 's,EXCLUDES,$(EXCLUDES),' < $(CONFIG_DIR)/data-config.xml.in > $(CONFIG_DIR)/data-config.xml
+	cp ${CONFIG_DIR}/data-config.xml ${SUKIJA_HOME}
+
+
+clean:
+	mvn clean
+	rm -f ${CONFIG_DIR}/data-config.xml $(SCHEMA_XML)
 
 
 SUKIJA=sukija

@@ -40,7 +40,6 @@
 
   <modules>
     <module>sukija-core</module>
-    <module>sukija-indexer</module>
     <module>sukija-malaga</module>
     <module>sukija-voikko</module>
   </modules>
