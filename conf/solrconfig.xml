@@ -83,6 +83,7 @@
   <lib dir="../../contrib/clustering/lib/" regex=".*\.jar" />
 
   <lib dir="../../dist/" regex="apache-solr-dataimporthandler-\d.*\.jar" />
+  <lib dir="../../dist/" regex="apache-solr-dataimporthandler-extras-\d.*\.jar" />
   <lib dir="../../contrib/dataimporthandler/lib/" regex=".*\.jar" />
   
   <lib dir="../../dist/" regex="apache-solr-langid-\d.*\.jar" />
@@ -1611,5 +1612,11 @@
        <healthcheck type="file">server-enabled</healthcheck>
       -->
   </admin>
+
+  <requestHandler name="/dataimport" class="org.apache.solr.handler.dataimport.DataImportHandler">
+    <lst name="defaults">
+      <str name="config">${user.home}/.sukija/data-config.xml</str>
+    </lst>
+  </requestHandler>
 
 </config>
