@@ -1,0 +1,22 @@
+<dataConfig>
+  <dataSource name="bin" type="BinFileDataSource"/>
+  <document>
+    <entity name = "f"
+            dataSource = "null"
+            rootEntity = "false"
+            processor = "solr.handler.dataimport.FileListEntityProcessor"
+            baseDir = "BASE_DIR"
+            fileName = "FILE_NAME"
+            excludes = "EXCLUDES"
+            recursive = "true">
+      <field column = "fileAbsolutePath" meta = "true" name = "id"/>
+      <entity name = "tika"
+              dataSource = "bin"
+              processor = "solr.handler.dataimport.TikaEntityProcessor"
+              url = "${f.fileAbsolutePath}"
+              format = "text"
+              onError = "skip">
+      </entity>
+    </entity>
+  </document>
+</dataConfig>
