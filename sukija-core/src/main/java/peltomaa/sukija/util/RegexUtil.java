@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2009-2012 Hannu Väisänen
+Copyright (©) 2009-2013 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -73,7 +73,7 @@ different letters in Finnish but only two forms of the same letter. :-).
           sb.append ("[aeiouyäö]");
           break;
         default:
-          if (CharInfo.isUpper (s.charAt(i))) {
+          if (Character.isUpperCase (s.charAt(i))) {
             throw new IllegalArgumentException
               ("Argument s contains other characters than lowercase " +
                "letters or A, C, O, U, or V.");
