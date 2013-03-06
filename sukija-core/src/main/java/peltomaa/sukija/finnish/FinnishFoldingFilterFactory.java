@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2012 Hannu Väisänen
+Copyright (©) 2012-2013 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -18,8 +18,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package peltomaa.sukija.finnish;
 
 import java.util.Map;
-import org.apache.solr.analysis.BaseTokenFilterFactory;
+import org.apache.lucene.analysis.TokenFilter;
 import org.apache.lucene.analysis.TokenStream;
+import org.apache.lucene.analysis.util.TokenFilterFactory;
 
 /**
  * Factory for {@link FinnishFoldingFilter}. 
@@ -30,7 +31,7 @@ import org.apache.lucene.analysis.TokenStream;
  *   &lt;/analyzer&gt;
  * &lt;/fieldType&gt;</pre> 
  */
-public class FinnishFoldingFilterFactory extends BaseTokenFilterFactory {
+public class FinnishFoldingFilterFactory extends TokenFilterFactory {
   @Override
   public void init (Map<String,String> args)
   {
@@ -38,7 +39,7 @@ public class FinnishFoldingFilterFactory extends BaseTokenFilterFactory {
   }
 
   @Override
-  public FinnishFoldingFilter create (TokenStream input)
+  public TokenFilter create (TokenStream input)
   {
     return new FinnishFoldingFilter (input);
   }

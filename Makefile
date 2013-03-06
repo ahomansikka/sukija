@@ -44,15 +44,13 @@ debug-schema:
 	    -e 's%MORPHOLOGY_FILTER_FACTORY%$(MALAGA_MORPHOLOGY_SUGGESTION_FILTER_FACTORY)%g' $(SCHEMA_XML_IN) >$(SCHEMA_XML)
 
 
-JNA=${HOME}/.m2/repository/net/java/dev/jna/jna/3.4.0/jna-3.4.0.jar
-LIBVOIKKO=${HOME}/.m2/repository/org/puimula/libvoikko/3.2/libvoikko-3.2.jar
-SOLR_HOME=${HOME}/Lataukset/apache-solr-3.6.1/example/solr
-JETTY_CONTEXTS_DIR=${HOME}/Lataukset/apache-solr-3.6.1/example/contexts
 SUKIJA_HOME=${HOME}/.sukija
 CORE_JAR=sukija-core/target/*jar
 MALAGA_JAR=sukija-malaga/target/*jar
 VOIKKO_JAR=sukija-voikko/target/*jar
 
+SOLR_HOME=${HOME}/Lataukset/solr-4.1.0/example/solr/collection1
+JETTY_CONTEXTS_DIR=${HOME}/Lataukset/solr-4.1.0/example/contexts
 
 BASE_DIR=$(HOME)/Asiakirjat
 FILE_NAME=.*
@@ -69,17 +67,18 @@ install:
 	  mkdir ${JETTY_CONTEXTS_DIR}; \
 	fi
 	cp ${CONFIG_DIR}/sukija-context.xml ${JETTY_CONTEXTS_DIR}
-	cp ${CORE_JAR} ${MALAGA_JAR} ${VOIKKO_JAR} ${SOLR_HOME}/lib
-	cp ${JNA} ${LIBVOIKKO} ${SOLR_HOME}/lib
-	cp ${CONFIG_DIR}/solrconfig.xml ${SCHEMA_XML} ${SOLR_HOME}/conf
+	cp ${CONFIG_DIR}/solrconfig.xml ${SOLR_HOME}/conf
+	cp ${CONFIG_DIR}/schema.xml ${SOLR_HOME}/conf
 	cp ${CONFIG_DIR}/sukija.xsl ${SOLR_HOME}/conf/xslt
 	if [ ! -e ${SUKIJA_HOME} ]; then \
 	  mkdir ${SUKIJA_HOME}; \
 	fi
+	cp ${CORE_JAR} ${MALAGA_JAR} ${VOIKKO_JAR} ${SUKIJA_HOME}
 	cp ${CONFIG_DIR}/suggestion.txt ${CONFIG_DIR}/synonyms.txt ${CONFIG_DIR}/logging.properties ${SUKIJA_HOME}
 	sed -e 's,BASE_DIR,$(BASE_DIR),' \
 	    -e 's,FILE_NAME,$(FILE_NAME),' \
-	    -e 's,EXCLUDES,$(EXCLUDES),' < $(CONFIG_DIR)/data-config.xml.in > $(CONFIG_DIR)/data-config.xml
+	    -e 's,EXCLUDES,$(EXCLUDES),' \
+            < $(CONFIG_DIR)/data-config.xml.in > $(CONFIG_DIR)/data-config.xml
 	cp ${CONFIG_DIR}/data-config.xml ${SUKIJA_HOME}
 
 

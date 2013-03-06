@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2009-2012 Hannu Väisänen
+Copyright (©) 2009-2013 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -44,7 +44,7 @@ public class HVTokenizer extends Tokenizer {
    */
   public HVTokenizer (Reader input)
   {
-    this.input = input;
+    super (input);
     this.scanner = new HVTokenizerImpl (input);
     termAtt = addAttribute(CharTermAttribute.class);
     offsetAtt = addAttribute(OffsetAttribute.class);
@@ -101,14 +101,6 @@ public class HVTokenizer extends Tokenizer {
   {
     super.reset();
     scanner.yyreset (input);
-  }
-
-
-  @Override
-  public void reset (Reader reader) throws IOException
-  {
-    super.reset (reader);
-    scanner.yyreset (reader);
   }
 
   private static final Logger LOG = LoggerFactory.getLogger (HVTokenizer.class);

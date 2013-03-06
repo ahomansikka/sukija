@@ -40,7 +40,7 @@ Tika \\(http://tika.apache.org/) osaa lukea.
       hakemistossa \\
       suomimalaga.
 
-\item Apache Solr 3.6.1 \\
+\item Apache Solr 4.1.0 \\
       http://lucene.apache.org/solr/
 
 \item Ubuntun paketit libmalaga7 ja maven.
@@ -54,7 +54,7 @@ myös Ubuntun paketti libvoikko1.
 
 Tämä asennusohje olettaaa, että corevoikko ja apache-solr ovat hakemistoissa \\
 \verb=$HOME/Lataukset/corevoikko/= ja \\
-\verb=$HOME/Lataukset/apache-solr-3.6.1=
+\verb=$HOME/Lataukset/solr-4.1.0=
 
 \newpage
 \subsection*{Ohjelman rakenne}
@@ -200,7 +200,7 @@ niihin hakemistoihin, joista Solr löytää ne.
 \subsection*{Solr:n käynnistäminen}
 
 \begin{verbatim}
-cd $HOME/Lataukset/apache-solr-3.6.1/example
+cd $HOME/Lataukset/solr-4.1.0/example
 java -jar start.jar
 \end{verbatim}
 
@@ -307,18 +307,3 @@ Tiedostossa \verb|suggestion.txt| voi olla tyhjiä rivejä. Kommentti
 alkaa merkillä \verb|#| ja jatkuu rivin loppuun.
 
 \end{document}
-
-http://localhost:8983/solr/dataimport?command=full-import
-
-Tämän XML-dokumentin mukana ei näytä olevan mitään tyyli- tai
-muotoilutietoa. Dokumentin hierarkia-puu on alla.
-
-
-This response format is experimental.  It is likely to change in the future.
-
-http://localhost:8983/solr/admin/
-
-/dataimport – in order to obtain the current status
-/dataimport?command=reload-config – in order to re-read the configuration
-/dataimport?command=full-import – in order to start a full indexing
-/dataimport?command=delta-import – in order to start an incremental indexing

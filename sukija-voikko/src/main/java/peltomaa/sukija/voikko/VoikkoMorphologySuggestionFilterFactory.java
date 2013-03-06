@@ -19,9 +19,8 @@ package peltomaa.sukija.voikko;
 
 import java.util.Map;
 import org.apache.lucene.analysis.TokenFilter;
-import org.apache.lucene.analysis.Tokenizer;
 import org.apache.lucene.analysis.TokenStream;;
-import org.apache.solr.analysis.BaseTokenFilterFactory;
+import org.apache.lucene.analysis.util.TokenFilterFactory;
 import peltomaa.sukija.morphology.MorphologyFilter;
 import peltomaa.sukija.util.PropertiesUtil;
 import peltomaa.sukija.suggestion.SuggestionFilter;
@@ -38,7 +37,7 @@ import peltomaa.sukija.suggestion.SuggestionFilter;
  *   &lt;/analyzer&gt;
  * &lt;/fieldType&gt;</pre> 
  */
-public class VoikkoMorphologySuggestionFilterFactory extends BaseTokenFilterFactory {
+public class VoikkoMorphologySuggestionFilterFactory extends TokenFilterFactory {
   @Override
   public void init (Map<String,String> args)
   {
@@ -49,7 +48,7 @@ public class VoikkoMorphologySuggestionFilterFactory extends BaseTokenFilterFact
 
 
   @Override
-  public SuggestionFilter create (TokenStream input)
+  public TokenFilter create (TokenStream input)
   {
     return new SuggestionFilter (input, VoikkoMorphology.getInstance (dictionary), suggestionFile);
   }

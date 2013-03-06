@@ -28,13 +28,15 @@
     <dependency>
       <groupId>org.apache.solr</groupId>
       <artifactId>solr-core</artifactId>
-      <version>3.6.1</version>
+<!--      <version>3.6.1</version> -->
+      <version>4.1.0</version>
     </dependency>
 
    <dependency>
       <groupId>org.apache.solr</groupId>
       <artifactId>solr-solrj</artifactId>
-      <version>3.6.1</version>
+<!--      <version>3.6.1</version> -->
+      <version>4.1.0</version>
     </dependency>
   </dependencies>
 

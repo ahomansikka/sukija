@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2009-2012 Hannu Väisänen
+Copyright (©) 2009-2013 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -41,7 +41,7 @@ public class FinnishTokenizer extends Tokenizer {
    */
   public FinnishTokenizer (Reader input)
   {
-    this.input = input;
+    super (input);
     this.scanner = new FinnishTokenizerImpl (input);
     termAtt = addAttribute(CharTermAttribute.class);
     offsetAtt = addAttribute(OffsetAttribute.class);
@@ -95,11 +95,5 @@ public class FinnishTokenizer extends Tokenizer {
   {
     super.reset();
     scanner.yyreset (input);
-  }
-
-  public void reset (Reader reader) throws IOException
-  {
-    input = reader;
-    reset();
   }
 }

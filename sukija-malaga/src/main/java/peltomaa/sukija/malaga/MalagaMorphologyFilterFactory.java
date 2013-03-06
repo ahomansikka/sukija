@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2012 Hannu Väisänen
+Copyright (©) 2012-2013 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -19,9 +19,8 @@ package peltomaa.sukija.malaga;
 
 import java.util.Map;
 import org.apache.lucene.analysis.TokenFilter;
-import org.apache.lucene.analysis.Tokenizer;
 import org.apache.lucene.analysis.TokenStream;;
-import org.apache.solr.analysis.BaseTokenFilterFactory;
+import org.apache.lucene.analysis.util.TokenFilterFactory;
 import peltomaa.sukija.morphology.MorphologyFilter;
 import peltomaa.sukija.util.PropertiesUtil;
 
@@ -35,7 +34,7 @@ import peltomaa.sukija.util.PropertiesUtil;
  *   &lt;/analyzer&gt;
  * &lt;/fieldType&gt;</pre> 
  */
-public class MalagaMorphologyFilterFactory extends BaseTokenFilterFactory {
+public class MalagaMorphologyFilterFactory extends TokenFilterFactory {
   @Override
   public void init (Map<String,String> args)
   {
@@ -46,7 +45,7 @@ public class MalagaMorphologyFilterFactory extends BaseTokenFilterFactory {
 
 
   @Override
-  public MorphologyFilter create (TokenStream input)
+  public TokenFilter create (TokenStream input)
   {
 //System.out.println ("mal2 " + malagaProjectFile);
     return new MorphologyFilter (input, MalagaMorphology.getInstance (malagaProjectFile));
