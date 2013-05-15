@@ -147,8 +147,8 @@ Indeksoitavat tiedostot asetetaan tiedostossa \verb|data-config.xml|.
 
 Katso \\
 \verb|http://wiki.apache.org/solr/DataImportHandler#FileListEntityProcessor| \\
-ja \\
-\verb|http://wiki.apache.org/solr/TikaEntityProcessor|).
+ja
+\verb|http://wiki.apache.org/solr/TikaEntityProcessor|.
 
 Tärkeimmät konfiguroitavat parametrit ovat:
 
@@ -179,6 +179,9 @@ Näitä voidaan muuttaa parametreilla \verb|BASE_DIR|,
 
 \verb|make install BASE_DIR=/usr/local/data|
 
+Säännöllisten lausekkeiden syntaksi on sama kuin Javan luokassa \\
+\verb=java.util.regex.Pattern=.
+
 Indeksoitavien tiedostojen asettamisen lisäksi komento
 \verb=make install= kopioi hakemistossa \verb=conf= olevat Solr:n ja
 Sukijan tarvitsemat tiedostot oikeisiin paikkoihin.
@@ -192,8 +195,9 @@ kopioidaan hakemistoon \verb=$HOME/.sukija=
 ja tiedostot
 \verb=schema.xml=,
 \verb=solrconfig.xml=, \\
-\verb=sukija-context.xml= ja
-\verb=sukija.xsl=
+\verb=sukija-context.xml=,
+\verb=sukija.xsl= ja
+alihakemisto \verb=velocity=
 niihin hakemistoihin, joista Solr löytää ne.
 
 
@@ -235,6 +239,23 @@ voi katsoa osoitteesta
 \verb|http://localhost:8983/solr/dataimport|
 
 
+\subsection*{Tietojen etsiminen}
+
+Sanoja etsitään menemällä osoitteeseen
+\verb=http://localhost:8983/solr/browse=
+
+Etsittävien sanojen tulee olla perusmuodossa. Etsittäessä sanoja ei
+muuteta perusmuotoon siksi, että yhden sanan perusmuoto voi olla
+toisen sanan taivutusmuoto. Paras esimerkki tästä on ''alusta'', joka
+on sanojen ''alusta'', ''alustaa'', ''alku'', ''alunen'' ja ''alus''
+taivutusmuoto. Tällöin herää kysymys, mitä sanaa pitää etsiä, vai
+etsitäänkö kaikkia?
+
+
+%Esimerkiksi sanaa ''huuhaa'' etsitään menemällä verkko-osoitteeseen
+%{\footnotesize
+%\verb|http://localhost:8983/solr/collection1/select?q=huuhaa&df=text&wt=xslt&tr=sukija.xsl|}
+
 
 \subsection*{Tiedoston suggestion.txt konfigurointi}
 \zlabel{suggestionConfiguration}
@@ -242,22 +263,26 @@ voi katsoa osoitteesta
 Tiedosto \verb|suggestion.txt| pitää konfiguroida erikseen Sukijalle
 ja Voikolle. Nykyinen konfiguraatio on tehty Sukijalle.
 
+Tässä vaiheessa kaikki indeksoitavista tiedostoista luetut sanat on
+muutettu pieniksi kirjaimiksi eli tiedostossa \verb|suggestion.txt|
+olevat erisnimet pitää kirjoittaa pienellä alkukirjaimella.
+
 Konfiguraatiossa on neljä komentoa.
 
 \bigskip
 \verb|Apostrophe| Poistaa sanasta heittomerkin ja yrittää tunnistaa
 sanan sen jälkeen. Jos tunnistaminen ei onnistu, poistaa sanasta
 heittomerkin ja kaikki sen jälkeiset merkit ja palauttaa jäljelle
-jääneet merkit sanan perusmuotona. Esimerkiksi \verb|Bordeaux'iin|
-yritetään tunnistaa muodossa \verb|Bordeauxiin|. Jos sitä ei
-tunnisteta, palauttaa merkkijonon \verb|Bordeaux|.
+jääneet merkit sanan perusmuotona. Esimerkiksi yrittää tunnistaa
+merkkijonon \verb|centime'in| muodossa \verb|centimein|. Jos
+tunnistaminen ei onnistu, palauttaa merkkijonon \verb|centime|.
 
 \bigskip
 \verb|Char| Muuttaa sanassa olevan yhden merkin toiseksi. Esimerkiksi
 
 \verb|Char "w" "v"|
 
-muuttaa w:n v:ksi (''wanha'' => ''vanha'').
+muuttaa w:t v:iksi (''wanha'' => ''vanha'').
 
 \bigskip
 \verb|CharCombination| Muuttaa yhden tai usemman merkin kaikki
@@ -275,7 +300,7 @@ sanoiksi ''biolokia'', ''piologia'' ja ''biologia''.
 
 \bigskip
 \verb|Length3| poistaa kolmesta peräkkäisestä samasta kirjaimesta
-yhden. Esimerkiksi ''kauttta'' => ''kautta''.
+yhden. \\ Esimerkiksi ''kauttta'' => ''kautta''.
 
 
 \bigskip
@@ -295,6 +320,10 @@ vokaaleja. Esimerkiksi
 
 poistaa h"-kirjaimet muun muassa sanoista ''ainahinen'' ja
 ''etehinen''.
+
+Kirjaimia \verb|C| ja \verb|V| lukuun ottamatta säännöllisten
+lausekkeiden syntaksi on sama kuin Javan luokassa
+\verb=java.util.regex.Pattern=.
 
 \bigskip
 Näitä komentoja voi antaa mielivaltaisen paljon missä tahansa

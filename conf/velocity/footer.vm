@@ -1,0 +1,10 @@
+<hr/>
+<div>
+  <span>Asetukset:</span>
+  #if($request.params.get('debugQuery'))
+  <a href="#url_for_home?#q#if($list.size($request.params.getParams('fq')) > 0)&#fqs($request.params.getParams('fq'))#end">disable debug</a>
+  #else
+  <a href="#url_for_lens&debugQuery=true&fl=*,score">enable debug</a>
+  #end
+  <a #annTitle("Click to switch to an XML response: &wt=xml") href="#url_for_lens&wt=xml#if($request.params.get('debugQuery'))&debugQuery=true#end">XML</a>
+  <a #annTitle("Click to switch to an XSLT response: &df=text&wt=xslt&tr=sukija.xsl") href="#url_for_lens&df=text&wt=xslt&tr=sukija.xsl#if($request.params.get('debugQuery'))&debugQuery=true#end">XSLT</a></div>
