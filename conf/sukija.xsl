@@ -49,13 +49,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     }
   </style>
 
-<!--
+<!-- -->
   pageNumber=  <xsl:value-of select="$pageNumber"/>
   numberOfRecord= <xsl:value-of select="$numberOfRecords"/>
   recordsPerPage= <xsl:value-of select="$recordsPerPage"/>
   endPage= <xsl:value-of select="$endPage"/>
   queryWord= <xsl:value-of select="$queryWord"/>
--->
+<!-- -->
 
 
   <table id="seekResult"><xsl:text>&#xa;</xsl:text>
