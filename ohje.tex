@@ -40,7 +40,7 @@ Tika \\(http://tika.apache.org/) osaa lukea.
       hakemistossa \\
       suomimalaga.
 
-\item Apache Solr 4.1.0 \\
+\item Apache Solr 4.3.1 \\
       http://lucene.apache.org/solr/
 
 \item Ubuntun paketit libmalaga7 ja maven.
@@ -54,7 +54,7 @@ myös Ubuntun paketti libvoikko1.
 
 Tämä asennusohje olettaaa, että corevoikko ja apache-solr ovat hakemistoissa \\
 \verb=$HOME/Lataukset/corevoikko/= ja \\
-\verb=$HOME/Lataukset/solr-4.1.0=
+\verb=$HOME/Lataukset/solr-4.3.1=
 
 \newpage
 \subsection*{Ohjelman rakenne}
@@ -267,7 +267,10 @@ Tässä vaiheessa kaikki indeksoitavista tiedostoista luetut sanat on
 muutettu pieniksi kirjaimiksi eli tiedostossa \verb|suggestion.txt|
 olevat erisnimet pitää kirjoittaa pienellä alkukirjaimella.
 
-Konfiguraatiossa on neljä komentoa.
+Konfiguraatiossa on neljä komentoa. Komentojen nimet tulevat siitä,
+että ne on toteutettu samannimisinä Java-luokkina tai ainakin melkein:
+\verb|Apostrophe| on toteutettu luokassa \verb|ApostropheSuggestion|
+ja niin edelleen.
 
 \bigskip
 \verb|Apostrophe| Poistaa sanasta heittomerkin ja yrittää tunnistaa
@@ -294,8 +297,8 @@ kombinaatiot. Esimerkiksi
 (2) muuttaa k:t g:iksi, jättää p:t ennalleen, sekä
 (3) muuttaa p:t b:iksi ja k:t g:iksi.
 
-Siis jos tiedostosta luettu sana on ''piolokia'', komento muuttaa sen
-sanoiksi ''biolokia'', ''piologia'' ja ''biologia''.
+Siis jos tiedostosta luettu sana on ''piolokia'', komento yrittää
+ tunnistaa sanat ''biolokia'', ''piologia'' ja ''biologia''.
 
 
 \bigskip

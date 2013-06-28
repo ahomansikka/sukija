@@ -28,7 +28,8 @@ import org.apache.lucene.analysis.Tokenizer;
 import org.apache.lucene.analysis.tokenattributes.OffsetAttribute;
 import org.apache.lucene.analysis.tokenattributes.PositionIncrementAttribute;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
-//import org.apache.lucene.analysis.tokenattributes.TypeAttribute;
+import org.apache.lucene.analysis.tokenattributes.TypeAttribute;
+import org.apache.lucene.util.AttributeSource.AttributeFactory;
 
 /**
  * A class that uses HVTokenizerImpl.
@@ -36,21 +37,33 @@ import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 public class HVTokenizer extends Tokenizer {
 
   /** A private instance of the JFlex-constructed scanner */
-  private final HVTokenizerImpl scanner;
+  private HVTokenizerImpl scanner;
 
   /**
-   * Creates a new instance of the {@link HVTokenizer}. Attaches the
-   * <code>input</code> to a newly created JFlex scanner.
+   * Creates a new HVTokenizer.
    */
   public HVTokenizer (Reader input)
   {
     super (input);
-    this.scanner = new HVTokenizerImpl (input);
-    termAtt = addAttribute(CharTermAttribute.class);
-    offsetAtt = addAttribute(OffsetAttribute.class);
-    posIncrAtt = addAttribute(PositionIncrementAttribute.class);
-//    typeAtt = addAttribute(TypeAttribute.class);
+    init();
   }
+
+
+  /** Creates a new HVTokenizer with a given
+      {@link org.apache.lucene.util.AttributeSource.AttributeFactory}.
+   */
+  public HVTokenizer (AttributeFactory factory, Reader input)
+  {
+    super (factory, input);
+    init();
+  }
+
+
+  private void init()
+  {
+    this.scanner = new HVTokenizerImpl (input);
+  }
+
 
   /*
    * (non-Javadoc)
@@ -78,10 +91,11 @@ public class HVTokenizer extends Tokenizer {
   // This tokenizer generates three attributes:
   // offset, positionIncrement and type.
   //
-  private CharTermAttribute termAtt;
-  private OffsetAttribute offsetAtt;
-  private PositionIncrementAttribute posIncrAtt;
-//  private TypeAttribute typeAtt;
+  private final CharTermAttribute termAtt = addAttribute (CharTermAttribute.class);
+  private final OffsetAttribute offsetAtt = addAttribute (OffsetAttribute.class);
+  private final PositionIncrementAttribute posIncrAtt = addAttribute (PositionIncrementAttribute.class);
+//  private final TypeAttribute typeAtt = addAttribute (TypeAttribute.class);
+
 
   @Override
   public final void end()

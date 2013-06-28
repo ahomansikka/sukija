@@ -38,10 +38,11 @@ import peltomaa.sukija.suggestion.SuggestionFilter;
  * &lt;/fieldType&gt;</pre> 
  */
 public class VoikkoMorphologySuggestionFilterFactory extends TokenFilterFactory {
-  @Override
-  public void init (Map<String,String> args)
+  /** Create a new VoikkoMorphologySuggestionFilterFactory.
+   */
+  public VoikkoMorphologySuggestionFilterFactory (Map<String,String> args)
   {
-    super.init (args);
+    super (args);
     dictionary = PropertiesUtil.replacePropertyNameWithValue (args.get ("dictionary"));
     suggestionFile = PropertiesUtil.replacePropertyNameWithValue (args.get ("suggestionFile"));
   }

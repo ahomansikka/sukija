@@ -36,10 +36,11 @@ import peltomaa.sukija.util.PropertiesUtil;
  * &lt;/fieldType&gt;</pre> 
  */
 public class VoikkoMorphologyFilterFactory extends TokenFilterFactory {
-  @Override
-  public void init (Map<String,String> args)
+  /** Create a new VoikkoMorphologyFilterFactory.
+   */
+  public VoikkoMorphologyFilterFactory (Map<String,String> args)
   {
-    super.init (args);
+    super (args);
     dictionary = PropertiesUtil.replacePropertyNameWithValue (args.get ("dictionary"));
   }
 

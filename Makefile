@@ -49,8 +49,8 @@ CORE_JAR=sukija-core/target/*jar
 MALAGA_JAR=sukija-malaga/target/*jar
 VOIKKO_JAR=sukija-voikko/target/*jar
 
-SOLR_HOME=${HOME}/Lataukset/solr-4.1.0/example/solr/collection1
-JETTY_CONTEXTS_DIR=${HOME}/Lataukset/solr-4.1.0/example/contexts
+SOLR_HOME=${HOME}/Lataukset/solr-4.3.1/example/solr/collection1
+JETTY_CONTEXTS_DIR=${HOME}/Lataukset/solr-4.3.1/example/contexts
 
 BASE_DIR=$(HOME)/Asiakirjat
 FILE_NAME=.*

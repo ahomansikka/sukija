@@ -20,7 +20,7 @@ package peltomaa.sukija.finnish;
 import java.io.Reader;
 import java.util.Map;
 import org.apache.lucene.analysis.util.TokenizerFactory;
-
+import org.apache.lucene.util.AttributeSource.AttributeFactory;
 
 /**
  * Factory for {@link HVTokenizer}. 
@@ -32,14 +32,15 @@ import org.apache.lucene.analysis.util.TokenizerFactory;
  * &lt;/fieldType&gt;</pre> 
  */
 public class HVTokenizerFactory extends TokenizerFactory {
-  @Override
-  public void init (Map<String,String> args)
+  /** Create new HVTokenizerFactory.
+   */
+  public HVTokenizerFactory (Map<String,String> args)
   {
-    super.init (args);
+    super (args);
   }
 
-  public HVTokenizer create (Reader reader)
+  public HVTokenizer create (AttributeFactory factory, Reader reader)
   {
-    return new HVTokenizer (reader);
+    return new HVTokenizer (factory, reader);
   }
 }

@@ -22,6 +22,7 @@ import org.apache.lucene.analysis.TokenFilter;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.util.TokenFilterFactory;
 
+
 /**
  * Factory for {@link FinnishFoldingFilter}. 
  * <pre class="prettyprint" >
@@ -32,10 +33,11 @@ import org.apache.lucene.analysis.util.TokenFilterFactory;
  * &lt;/fieldType&gt;</pre> 
  */
 public class FinnishFoldingFilterFactory extends TokenFilterFactory {
-  @Override
-  public void init (Map<String,String> args)
+  /** Create a new FinnishFoldingFilterFactory.
+   */
+  public FinnishFoldingFilterFactory (Map<String,String> args)
   {
-    super.init (args);
+    super (args);
   }
 
   @Override

@@ -27,10 +27,11 @@ import peltomaa.sukija.suggestion.SuggestionFilter;
 
 
 public class MalagaMorphologySuggestionFilterFactory extends TokenFilterFactory {
-  @Override
-  public void init (Map<String,String> args)
+  /** Create a new MalagaMorphologySuggestionFilterFactory.
+   */
+  public MalagaMorphologySuggestionFilterFactory (Map<String,String> args)
   {
-    super.init (args);
+    super (args);
     malagaProjectFile = PropertiesUtil.replacePropertyNameWithValue (args.get ("malagaProjectFile"));
     suggestionFile = PropertiesUtil.replacePropertyNameWithValue (args.get ("suggestionFile"));
   }

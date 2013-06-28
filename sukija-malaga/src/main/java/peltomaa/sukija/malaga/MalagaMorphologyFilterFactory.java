@@ -35,10 +35,11 @@ import peltomaa.sukija.util.PropertiesUtil;
  * &lt;/fieldType&gt;</pre> 
  */
 public class MalagaMorphologyFilterFactory extends TokenFilterFactory {
-  @Override
-  public void init (Map<String,String> args)
+  /** Create a new MalagaMorphologyFilterFactory.
+   */
+  public MalagaMorphologyFilterFactory (Map<String,String> args)
   {
-    super.init (args);
+    super (args);
     malagaProjectFile = PropertiesUtil.replacePropertyNameWithValue (args.get ("malagaProjectFile"));
 //System.out.println ("mal1 " + malagaProjectFile);
   }
