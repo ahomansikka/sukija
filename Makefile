@@ -1,3 +1,8 @@
+# Muuta nämä kaksi muuttujaa, jos Solr on jossain muualla.
+SOLR_HOME=${HOME}/Lataukset/solr/solr-4.5.1/example/solr/collection1
+JETTY_CONTEXTS_DIR=${HOME}/Lataukset/solr/solr-4.5.1/example/contexts
+
+
 CONFIG_DIR=conf
 SCHEMA_XML=$(CONFIG_DIR)/schema.xml
 SCHEMA_XML_IN=$(CONFIG_DIR)/schema.xml.in
@@ -49,8 +54,6 @@ CORE_JAR=sukija-core/target/*jar
 MALAGA_JAR=sukija-malaga/target/*jar
 VOIKKO_JAR=sukija-voikko/target/*jar
 
-SOLR_HOME=${HOME}/Lataukset/solr-4.3.1/example/solr/collection1
-JETTY_CONTEXTS_DIR=${HOME}/Lataukset/solr-4.3.1/example/contexts
 
 BASE_DIR=$(HOME)/Asiakirjat
 FILE_NAME=.*
@@ -79,7 +82,7 @@ install:
 	  mkdir ${SUKIJA_HOME}; \
 	fi
 	cp ${CORE_JAR} ${MALAGA_JAR} ${VOIKKO_JAR} ${SUKIJA_HOME}
-	cp ${CONFIG_DIR}/suggestion.txt ${CONFIG_DIR}/synonyms.txt ${CONFIG_DIR}/logging.properties ${SUKIJA_HOME}
+	cp ${CONFIG_DIR}/suggestion.txt ${CONFIG_DIR}/synonyms.txt ${SUKIJA_HOME}
 	sed -e 's,BASE_DIR,$(BASE_DIR),' \
 	    -e 's,FILE_NAME,$(FILE_NAME),' \
 	    -e 's,EXCLUDES,$(EXCLUDES),' \

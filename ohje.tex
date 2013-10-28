@@ -31,30 +31,33 @@ Tika \\(http://tika.apache.org/) osaa lukea.
 
 \begin{itemize}
 
-\item Sukija \\
-      https://github.com/ahomansikka/sukija \\
+\item Sukija:
+      \verb=https://github.com/ahomansikka/sukija= \\
       Koska luet tätä tekstiä, olet jo imuroinut tämän. (-:
 
-\item Suomi-Malaga \\
-      Se on corevoikossa (https://github.com/voikko/corevoikko)
-      hakemistossa \\
-      suomimalaga.
+\item Suomi-Malaga Se on corevoikossa
+      (\verb=https://github.com/voikko/corevoikko=) \\
+      hakemistossa suomimalaga.
 
-\item Apache Solr 4.3.1 \\
-      http://lucene.apache.org/solr/
+\item Apache Solr 4.5.1:
+      \verb=http://lucene.apache.org/solr/=
 
-\item Ubuntun paketit libmalaga7 ja maven.
+\item Ubuntun paketit \verb=libmalaga7= ja \verb=maven=.
 \end{itemize}
 
 Lisäksi Sukija tarvitsee erinäisiä jar-tiedostoja, mutta Maven imuroi
 ne verkosta automaagisesti.
 
 Sukijaa voi käyttää myös Voikon Java-version kanssa. Tällöin tarvitaan
-myös Ubuntun paketti libvoikko1.
+Ubuntun paketti  \verb=libvoikko1=.
 
 Tämä asennusohje olettaaa, että corevoikko ja apache-solr ovat hakemistoissa \\
-\verb=$HOME/Lataukset/corevoikko/= ja \\
-\verb=$HOME/Lataukset/solr-4.3.1=
+\verb=$HOME/Lataukset/corevoikko/= ja
+\verb=$HOME/Lataukset/solr/solr-4.5.1=
+
+Jos ne ovat jossain muualla, tiedoston \verb=Makefile= alussa olevia
+muuttujia \verb=SOLR_HOME= ja \verb=JETTY_CONTEXTS_DIR= pitää muuttaa
+vastaavasti.
 
 \newpage
 \subsection*{Ohjelman rakenne}
@@ -188,7 +191,6 @@ Sukijan tarvitsemat tiedostot oikeisiin paikkoihin.
 
 Tiedostot
 \verb=data-config.xml=,
-\verb=logging.properties=,
 \verb=suggestion.txt= ja
 \verb=synonyms.txt=
 kopioidaan hakemistoon \verb=$HOME/.sukija=
@@ -204,27 +206,42 @@ niihin hakemistoihin, joista Solr löytää ne.
 \subsection*{Solr:n käynnistäminen}
 
 \begin{verbatim}
-cd $HOME/Lataukset/solr-4.1.0/example
+cd $HOME/Lataukset/solr/solr-4.5.1/example
 java -jar start.jar
 \end{verbatim}
 
 Jos Solr valittaa jna:sta, käynnistyskomento on
 
-\verb|java -Djna.nosys=true -jar start.jar|
-
-Solr:n lokia voi konfiguroida lisäämällä Solr:n käynnistykseen:
-
-\verb|-Djava.util.logging.config.file=$HOME/.sukija/logging.properties|
-
-
-Javan lokin (java.util.logging) konfigurointi on oma taiteenlajinsa,
-ja jotta asia ei olisi liian yksinkertainen, Solr ja niin ollen myös
-Sukijan Solr-liitännäiset käytävät SLF4J:tä (www.slf4j.org), joka
-puolestaan käyttää Javan lokisysteemiä.
+\begin{verbatim}
+java -Djna.nosys=true -jar start.jar
+\end{verbatim}
 
 Solr:n käynnistymisen voi varmistaa selaimessa menemällä verkko-osoitteeseen
 
 \verb|http://localhost:8983/solr/admin/|
+
+
+\subsection*{Solr:n loki}
+
+Solr:n lokitulostus (\verb=http://wiki.apache.org/solr/SolrLogging=)
+konfiguroidaan tiedostossa
+\verb=solr-4.5.1/example/resources/log4j.properties=
+Mahdollisimman suuren lokitulostuksen saa lisäämällä tämän tiedoston
+loppuun rivit
+
+\begin{verbatim}
+log4j.logger.peltomaa.sukija.finnish.HVTokenizer = ALL
+log4j.logger.peltomaa.sukija.morphology.MorphologyFilter = ALL
+log4j.logger.peltomaa.sukija.suggestion.Suggestion = ALL
+log4j.logger.peltomaa.sukija.suggestion.SuggestionFilter = ALL
+log4j.logger.peltomaa.sukija.malaga.MalagaMorphology = ALL
+log4j.logger.peltomaa.sukija.voikko.VoikkoMorphology = ALL
+\end{verbatim}
+
+Tällöin tulostus on paljon suurempi kuin indeksoitavat tiedostot (-:,
+mutta kaikkia ei tietenkään tarvitse lisätä.
+
+Lokitulostus menee tiedostoon \verb=solr-4.5.1/example/logs/solr.log=
 
 
 \subsection*{Indeksointi}
@@ -326,7 +343,10 @@ poistaa h"-kirjaimet muun muassa sanoista ''ainahinen'' ja
 
 Kirjaimia \verb|C| ja \verb|V| lukuun ottamatta säännöllisten
 lausekkeiden syntaksi on sama kuin Javan luokassa
-\verb=java.util.regex.Pattern=.
+\verb=java.util.regex.Pattern=. Muita isoja kirjaimia ei tule
+käyttää säännöllisissä lausekkeissa, koska tässä vaiheessa kaikki
+tiedostoista luetut sanat on muutettu pieniksi kirjaimiksi, siis myös
+isokirjaimiset lyhenteet ja erisnimien alkukirjaimet.
 
 \bigskip
 Näitä komentoja voi antaa mielivaltaisen paljon missä tahansa

@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <!DOCTYPE Configure PUBLIC "-//Mort Bay Consulting//DTD Configure//EN" "http://jetty.mortbay.org/configure.dtd">
 
-<!-- Tee hakemisto apache-solr-4.1.0/example/contexts
-     ja laita tämä tiedosto siihen.
+<!-- Tämä tiedosto tulee hakemistoon ${JETTY_CONTEXTS_DIR}.
+     Katso Makefile.
 -->
 
 <Configure class="org.eclipse.jetty.webapp.WebAppContext">
