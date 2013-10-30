@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2009-2011, 2013 Hannu Väisänen
+Copyright (©) 2013 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -17,37 +17,40 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 package peltomaa.sukija.suggestion;
 
-import java.util.Vector;
 import peltomaa.sukija.morphology.Morphology;
-import peltomaa.sukija.util.Pair;
+import java.util.Set;
+import java.util.TreeSet;
 
-
-public class EndSuggestion extends Suggestion {
-  public EndSuggestion (Morphology morphology, Vector<Pair<String,String>> data)
+/**
+ * Try to recognise a word without a prefix. If succesful, return
+ * prefix + recognised word.
+ *
+ * For example, if prefix is "aasian" and word is "aasianleijonaa",
+ * try to recognise "leijonaa". If succesful, return "aasianleijona".
+ */
+public class PrefixSuggestion extends Suggestion {
+  public PrefixSuggestion (Morphology morphology, String prefix)
   {
     super (morphology);
-    v = data;
+    this.prefix = prefix;
   }
-
-
-  public EndSuggestion (Morphology morphology, String[] array)
-  {
-    this (morphology, Pair.makePair (array));
-  }
-
 
   public boolean suggest (String word)
   {
-    for (int i = 0; i < v.size(); i++) {
-      if (word.endsWith (v.get(i).first)) {
-        reset();
-        sb.append(word).append(v.get(i).second);
-        if (analyse()) return true;
+    reset();
+
+    if (word.startsWith (prefix)) {
+      Set<String> set = new TreeSet<String>();
+      if (analyse (word.substring (prefix.length()), set)) {
+        result.clear();
+        for (String s: set) {
+          result.add (prefix + s);
+        }
+        return true;
       }
     }
     return false;
   }
 
-
-  private Vector<Pair<String,String>> v;
+  private String prefix;
 }

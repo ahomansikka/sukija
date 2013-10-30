@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2009-2012 Hannu Väisänen
+Copyright (©) 2009-2013 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -46,7 +46,7 @@ public class CompoundWordSuggestion extends Suggestion {
   }
 
 
-  public boolean suggest (CharSequence word)
+  public boolean suggest (String word)
   {
     reset();
     result.clear();

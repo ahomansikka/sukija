@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2009-2011 Hannu Väisänen
+Copyright (©) 2009-2011, 2013 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -39,7 +39,7 @@ public class RegexCombinationSuggestion extends Suggestion {
   }
 
 
-  public boolean suggest (CharSequence word)
+  public boolean suggest (String word)
   {
 // System.out.println ("Regex " + word);
     Set<String> set = rc.makeCombination (word);

@@ -16,7 +16,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 
-package peltomaa.sukija.malaga;
+package peltomaa.sukija.voikko;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
@@ -62,12 +62,26 @@ public class SuggestionTest extends TestCase {
 
   public void testSuggestion()
   {
-
     try {
-      morphology = MalagaMorphology.getInstance (getMalagaProjectFile());
+      morphology = VoikkoMorphology.getInstance ("fi");
 
-      assertTrue (test (morphology, "wanhoille",   "vanha",    new CharSuggestion (morphology, "w", "v")));
-      assertTrue (test (morphology, "kuuusikolle", "kuusikko", new Length3Suggestion (morphology)));
+      Suggestion prefixSuggestion1 = new PrefixSuggestion (morphology, "aamu");
+      Suggestion prefixSuggestion2 = new PrefixSuggestion (morphology, "aasian");
+      Suggestion prefixSuggestion3 = new PrefixSuggestion (morphology, "aito");
+      Suggestion prefixSuggestion4 = new PrefixSuggestion (morphology, "amerikan");
+
+      assertTrue (test (morphology, "aamuäreälle",         "aamuäreä",        prefixSuggestion1));
+      assertTrue (test (morphology, "aasianleijonille",    "aasianleijona",   prefixSuggestion2));
+      assertTrue (test (morphology, "aitomajavat",         "aitomajava",      prefixSuggestion3));
+      assertTrue (test (morphology, "amerikanbiisoneille", "amerikanbiisoni", prefixSuggestion4));
+
+      Suggestion compoundSuggestion = new CompoundWordRegexSuggestion (morphology, "l[aä]i(s[eit]|nen)");
+
+      assertTrue (test (morphology, "aatelilaiset",     "aatelilainen",    compoundSuggestion));
+      assertTrue (test (morphology, "vuonolaisien",     "vuonolainen",     compoundSuggestion));
+      assertTrue (test (morphology, "faniklubilaisten", "faniklubilainen", compoundSuggestion));
+      assertTrue (test (morphology, "vuonolainenkin",   "vuonolainen",     compoundSuggestion));
+//      assertTrue (test (morphology, "ikäväläinen",      "ikäväläinen",     compoundSuggestion));
     }
     catch (IOException t)
     {
@@ -104,7 +118,7 @@ public class SuggestionTest extends TestCase {
         }
         else if (suggestion.suggest (w)) {
           Set<String> result = suggestion.getResult();
-          print ("s", result);
+//          print ("s", result);
           if (result.size() == 1) {
             return result.iterator().next();
           }

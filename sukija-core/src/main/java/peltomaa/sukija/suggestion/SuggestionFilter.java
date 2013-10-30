@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2012 Hannu Väisänen
+Copyright (©) 2012-2013 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -112,7 +112,7 @@ public class SuggestionFilter extends TokenFilter {
   }
 
 
-  private Set<String> getSuggestions (CharSequence word)
+  private Set<String> getSuggestions (String word)
   {
     for (int i = 0; i < suggestion.size(); i++) {
       if (suggestion.get(i).suggest (word)) {

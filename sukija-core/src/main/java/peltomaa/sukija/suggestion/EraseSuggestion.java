@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2009-2011 Hannu Väisänen
+Copyright (©) 2009-2011, 2013 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -39,7 +39,7 @@ public class EraseSuggestion extends Suggestion {
   }
 
 
-  public boolean suggest (CharSequence word)
+  public boolean suggest (String word)
   {
     if ((StringUtil.indexOf (word, from) == -1) &&
         (StringUtil.indexOf (word, to)   == -1)) {

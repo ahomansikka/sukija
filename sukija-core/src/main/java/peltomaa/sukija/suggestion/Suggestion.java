@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2009-2012 Hannu Väisänen
+Copyright (©) 2009-2013 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -54,7 +54,7 @@ public abstract class Suggestion {
    *
    * @param word  A word whose spelling is to be corrected.
    */
-  public abstract boolean suggest (CharSequence word);
+  public abstract boolean suggest (String word);
 
 
   /** An instance of Morphology.
@@ -149,6 +149,22 @@ public abstract class Suggestion {
     }
     return false;
   }
+
+
+  protected boolean analyse (String word, Set<String> result)
+  {
+    try {
+      if (morphology.analyzeLowerCase (word, result)) {
+        return true;
+      }
+    }
+    catch (MorphologyException e)
+    {
+      LOG.error (e.getMessage());
+    }
+    return false;
+  }
+
 
   protected static final Logger LOG = LoggerFactory.getLogger (Suggestion.class);
 }
