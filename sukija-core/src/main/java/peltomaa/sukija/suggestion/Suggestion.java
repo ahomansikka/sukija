@@ -119,6 +119,12 @@ public abstract class Suggestion {
     {
       LOG.error (e.getMessage());
     }
+    catch (NullPointerException e)
+    {
+      if (morphology == null)
+        LOG.error ("morphology == null");
+      throw e;
+    }
     return false;
   }
 

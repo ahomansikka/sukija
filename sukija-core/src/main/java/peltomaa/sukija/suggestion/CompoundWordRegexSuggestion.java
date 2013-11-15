@@ -28,12 +28,11 @@ import peltomaa.sukija.morphology.MorphologyException;
 
 
 /**
- * Split a word and try to recognise each part.<p>
+ * Split a word on regular expression and try to recognise it.<p>
  *
- * For example, {@code vanhaanmalliin} is split as {@code vanhaan},
- * {@code malliin} and base forms are {@code vanha} and {@code malli}.
- * This class splits word only in two parts, otherwise we would get
- * too many incorrect words.
+ * For example, if regex is {@code "l[aä]i(s[eit]|nen)"} and word is
+ * {@code aatelilaiset} splits word to {@code aateli} and {@code laiset}
+ * and returns {@code aatelilainen} as a base form.
  */
 public class CompoundWordRegexSuggestion extends Suggestion {
   /**

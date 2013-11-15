@@ -19,10 +19,12 @@ package peltomaa.sukija.suggestion;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.FileReader;
 import java.io.Reader;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 import java.util.regex.MatchResult;
+import java.util.Scanner;
 import java.util.Vector;
 import peltomaa.sukija.morphology.Morphology;
 import peltomaa.sukija.util.RegexUtil;
@@ -34,51 +36,61 @@ public class SuggestionParser {
     BufferedReader file = new BufferedReader (reader);
     String line;
     while ((line = file.readLine()) != null) {
-      if (!comment_or_whitespace.matcher(line).matches()) {
-        parse (line, morphology);
+      if (!COMMENT_OR_WHITESPACE.matcher(line).matches()) {
+        parseLine (line, morphology);
       }
     }
   }
 
-  Vector<Suggestion> getSuggestions() {return v;}
+
+  public Vector<Suggestion> getSuggestions() {return v;}
 
 
-  private void parse (String line, Morphology morphology)
+  private void parseLine (String line, Morphology morphology)
   {
-    Matcher m = command.matcher (line);
-    if (m.matches()) {
-      parse (m.group(1), argument(m.group(2)), argument(m.group(3)), morphology);
-    }
-    else if (length3.matcher(line).matches()) {
-//      System.out.println ("Length3");
-      v.add (new Length3Suggestion (morphology));
-    }
-    else if (apostrophe.matcher(line).matches()) {
- //     System.out.println ("Apostrophe");
-      v.add (new ApostropheSuggestion (morphology));
-    }
-    else {
-      throw new RuntimeException ("SuggestionParser: Incorrect line: " + line);
+    Scanner scanner = new Scanner (line);
+
+    if (scanner.hasNext (KEYWORD)) {
+      parseCommand (scanner, morphology);
     }
   }
 
 
-  private final void parse (String name, String argument1, String argument2, Morphology morphology)
+  private void parseCommand (Scanner scanner, Morphology morphology)
   {
-//System.out.println (name + " " + argument1 + " " + argument2);
+    String command = scanner.next();
 
-    if (name.compareTo ("Char") == 0) {
-      v.add (new CharSuggestion (morphology, argument1, argument2));
+    switch (command) {
+      case "Apostrophe":
+        v.add (new ApostropheSuggestion (morphology));
+//        System.out.println (command);
+        break;
+      case "Char":
+        v.add (new CharSuggestion (morphology, argument(scanner.next()), argument(scanner.next())));
+//        System.out.println (command + " " + scanner.next() + " " + scanner.next());
+        break;
+      case "CharCombination":
+        v.add (new CharCombinationSuggestion (morphology, argument(scanner.next()), argument(scanner.next())));
+//        System.out.println (command + " " + scanner.next() + " " + scanner.next());
+        break;
+      case "Length3":
+        v.add (new Length3Suggestion (morphology));
+//        System.out.println (command);
+        break;
+      case "Prefix":
+        v.add (new PrefixSuggestion (morphology, argument(scanner.next())));
+//        System.out.println (command + " " + scanner.next());
+        break;
+      case "Regex":
+        v.add (new RegexSuggestion (morphology, argument(scanner.next()), argument(scanner.next())));
+//        System.out.println (command + " " + scanner.next() + " " + scanner.next());
+        break;
+      case "RegexCombination":
+//        v.add (new RegexCombinationSuggestion (morphology, argument(scanner.next()), argument(scanner.next())));
+//        System.out.println (command + " " + scanner.next() + " " + scanner.next());
+        break;
     }
-    else if (name.compareTo ("CharCombination") == 0) {
-      v.add (new CharCombinationSuggestion (morphology, argument1, argument2));
-    }
-    else if (name.compareTo ("Regex") == 0) {
-      v.add (new RegexSuggestion (morphology, argument1, argument2));
-    }
-    else if (name.compareTo ("RegexCombination") == 0) {
-//      v.add (new RegexCombinationSuggestion (morphology, argument1, argument2));
-    }
+    scanner.skip (COMMENT_OR_WHITESPACE);
   }
 
 
@@ -90,13 +102,9 @@ public class SuggestionParser {
   }
 
 
-  private static final String KEYWORD = "(Char|CharCombination|Regex|RegexCombination)";
   private static final String IGNORE = "\\s*(#.*$)*";
-
-  private static final Pattern comment_or_whitespace = Pattern.compile (IGNORE);
-  private static final Pattern command = Pattern.compile ("\\s*" + KEYWORD + "\\s+(\\S+)\\s+(\\S+)" + IGNORE);
-  private static final Pattern length3 = Pattern.compile ("\\s*Length3" + IGNORE);
-  private static final Pattern apostrophe = Pattern.compile ("\\s*Apostrophe" + IGNORE);
+  private static final Pattern COMMENT_OR_WHITESPACE = Pattern.compile (IGNORE);
+  private static final Pattern KEYWORD = Pattern.compile ("Apostrophe|Char|CharCombination|Length3|Prefix|Regex|RegexCombination");
 
   private Vector<Suggestion> v = new Vector<Suggestion>();
 }

@@ -18,23 +18,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 package peltomaa.sukija.voikko;
 
+import java.io.IOException;
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
-
-import java.io.IOException;
-import java.io.Reader;
-import java.io.StringReader;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.Set;
-import java.util.TreeSet;
-
-import org.apache.lucene.analysis.Tokenizer;
-import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
-import peltomaa.sukija.finnish.HVTokenizer;
 import peltomaa.sukija.morphology.Morphology;
 import peltomaa.sukija.suggestion.*;
+
 
 /**
  * Unit test for spelling suggestions.
@@ -63,25 +53,30 @@ public class SuggestionTest extends TestCase {
   public void testSuggestion()
   {
     try {
-      morphology = VoikkoMorphology.getInstance ("fi");
+      Morphology morphology = VoikkoMorphology.getInstance ("fi");
+      SuggestionTester tester = new SuggestionTester (morphology);
+
+      for (int i = 0; i < SuggestionTester.data.size(); i++) {
+        assertTrue (tester.test (SuggestionTester.data.get(i)));
+      }
 
       Suggestion prefixSuggestion1 = new PrefixSuggestion (morphology, "aamu");
       Suggestion prefixSuggestion2 = new PrefixSuggestion (morphology, "aasian");
       Suggestion prefixSuggestion3 = new PrefixSuggestion (morphology, "aito");
       Suggestion prefixSuggestion4 = new PrefixSuggestion (morphology, "amerikan");
 
-      assertTrue (test (morphology, "aamuäreälle",         "aamuäreä",        prefixSuggestion1));
-      assertTrue (test (morphology, "aasianleijonille",    "aasianleijona",   prefixSuggestion2));
-      assertTrue (test (morphology, "aitomajavat",         "aitomajava",      prefixSuggestion3));
-      assertTrue (test (morphology, "amerikanbiisoneille", "amerikanbiisoni", prefixSuggestion4));
+      assertTrue (tester.test ("aamuäreälle",         "aamuäreä",        prefixSuggestion1));
+      assertTrue (tester.test ("aasianleijonille",    "aasianleijona",   prefixSuggestion2));
+      assertTrue (tester.test ("aitomajavat",         "aitomajava",      prefixSuggestion3));
+      assertTrue (tester.test ("amerikanbiisoneille", "amerikanbiisoni", prefixSuggestion4));
 
       Suggestion compoundSuggestion = new CompoundWordRegexSuggestion (morphology, "l[aä]i(s[eit]|nen)");
 
-      assertTrue (test (morphology, "aatelilaiset",     "aatelilainen",    compoundSuggestion));
-      assertTrue (test (morphology, "vuonolaisien",     "vuonolainen",     compoundSuggestion));
-      assertTrue (test (morphology, "faniklubilaisten", "faniklubilainen", compoundSuggestion));
-      assertTrue (test (morphology, "vuonolainenkin",   "vuonolainen",     compoundSuggestion));
-//      assertTrue (test (morphology, "ikäväläinen",      "ikäväläinen",     compoundSuggestion));
+      assertTrue (tester.test ("aatelilaiset",     "aatelilainen",    compoundSuggestion));
+      assertTrue (tester.test ("vuonolaisien",     "vuonolainen",     compoundSuggestion));
+      assertTrue (tester.test ("faniklubilaisten", "faniklubilainen", compoundSuggestion));
+      assertTrue (tester.test ("vuononlainenkin",   "vuononlainen",     compoundSuggestion));
+//      assertTrue (tester.test ("ikäväläinen",      "ikäväläinen",     compoundSuggestion));
     }
     catch (IOException t)
     {
@@ -89,67 +84,4 @@ public class SuggestionTest extends TestCase {
 //      t.printStackTrace (System.out);
     }
   }
-
-
-  boolean test (Morphology morphology, String input, String expectedOutput, Suggestion suggestion) throws IOException
-  {
-    final String result = analyze (morphology, input, suggestion);
-    System.out.println ("input " + input + " result " + result + " " + expectedOutput);
-    return (result.equals (expectedOutput));
-  }
-
-
-  private String analyze (Morphology morphology, String input, Suggestion suggestion) throws IOException
-  {
-    Set<String> set = new TreeSet<String>();
-
-    Reader r = new StringReader (input);
-    Tokenizer t = new HVTokenizer (r);
-    CharTermAttribute word = t.addAttribute (CharTermAttribute.class);
-
-    try {
-      t.reset();
-      while (t.incrementToken()) {
-        final String w = word.toString();
-        System.out.println ("Sana: " + w);
-        set.clear();
-        if (morphology.analyzeLowerCase (w, set)) {
-          print ("m", set);
-        }
-        else if (suggestion.suggest (w)) {
-          Set<String> result = suggestion.getResult();
-//          print ("s", result);
-          if (result.size() == 1) {
-            return result.iterator().next();
-          }
-        }
-        else {
-          return null;
-        }
-      }
-      t.end();
-    }
-    finally {
-      t.close();
-    }
-
-    return null;
-  }
-
-
-  private void print (String prefix, Collection<String> c)
-  {
-    Iterator i = c.iterator();
-    while (i.hasNext()) {
-      System.out.println ("   " + prefix + " " + i.next());
-    }
-  }
-
-
-  private String getMalagaProjectFile()
-  {
-    return String.format ("%s/.sukija/suomi.pro", System.getProperty ("user.home"));
-  }
-
-  private Morphology morphology;
 }

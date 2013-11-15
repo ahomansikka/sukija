@@ -18,24 +18,27 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 package peltomaa.sukija.malaga;
 
-import java.io.IOException;
+
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.FileReader;
+import java.io.Reader;
+import java.util.Vector;
 import peltomaa.sukija.morphology.Morphology;
 import peltomaa.sukija.suggestion.*;
 
 
-/**
- * Unit test for spelling suggestions.
- */
-public class SuggestionTest extends TestCase {
+public class SuggestionParserTest extends TestCase {
   /**
    * Create the test case.
    *
    * @param testName name of the test case
    */
-  public SuggestionTest (String testName)
+  public SuggestionParserTest (String testName)
   {
     super (testName);
   }
@@ -46,21 +49,22 @@ public class SuggestionTest extends TestCase {
    */
   public static Test suite()
   {
-    return new TestSuite (SuggestionTest.class);
+    return new TestSuite (SuggestionParserTest.class);
   }
 
 
-  public void testSuggestion()
+  public void testSuggestionParser()
   {
-
     try {
       Morphology morphology = MalagaMorphology.getInstance (getMalagaProjectFile());
-      SuggestionTester tester = new SuggestionTester (morphology);
 
-      for (int i = 0; i < SuggestionTester.data.size(); i++) {
-        assertTrue (tester.test (SuggestionTester.data.get(i)));
+      BufferedReader reader = new BufferedReader (new FileReader (System.getProperty("user.home") + "/.sukija/suggestion.txt"));
+      SuggestionParser sp = new SuggestionParser (morphology, reader);
+      Vector<Suggestion> v = sp.getSuggestions();
+
+      for (Suggestion s: v) {
+        assertTrue (s.suggest ("qwertyuiop") == false);
       }
-      tester.test ("raa'emmaksi", "raaka", new ApostropheSuggestion (morphology));
     }
     catch (IOException t)
     {
@@ -68,7 +72,6 @@ public class SuggestionTest extends TestCase {
 //      t.printStackTrace (System.out);
     }
   }
-
 
   private String getMalagaProjectFile()
   {

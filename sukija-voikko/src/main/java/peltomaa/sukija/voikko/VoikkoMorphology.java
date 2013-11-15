@@ -38,6 +38,12 @@ public class VoikkoMorphology implements Morphology {
   }
 
 
+  private VoikkoMorphology (String dictionary, String path)
+  {
+    voikko = new Voikko (dictionary, path);
+  }
+
+
   /**
    * Get an instance of this class.
    *
@@ -53,6 +59,24 @@ public class VoikkoMorphology implements Morphology {
     }
     return voikkoMorphology;
   }
+
+
+  /**
+   * Get an instance of this class.
+   *
+   * @param dictionary Dictionary to use.
+   *
+   * @throws MorphologyException if initialization fails
+   */
+  public static synchronized VoikkoMorphology getInstance (String dictionary, String path) throws MorphologyException
+  {
+    if (voikkoMorphology == null) {
+      voikkoMorphology = new VoikkoMorphology (dictionary, path);
+      LOG.info (MessageFormat.format (r.getString ("init-voikko-morphology"), null));
+    }
+    return voikkoMorphology;
+  }
+
 
 
   public synchronized boolean analyze (String word, Collection<String> c) throws MorphologyException
