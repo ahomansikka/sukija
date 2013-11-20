@@ -20,6 +20,8 @@ package peltomaa.sukija.suggestion;
 import peltomaa.sukija.morphology.Morphology;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.Vector;
+
 
 /**
  * Try to recognise a word without a prefix. If succesful, return
@@ -32,25 +34,38 @@ public class PrefixSuggestion extends Suggestion {
   public PrefixSuggestion (Morphology morphology, String prefix)
   {
     super (morphology);
-    this.prefix = prefix;
+    this.prefix = new Vector<String>();
+    this.prefix.add (prefix);
   }
+
+
+  public PrefixSuggestion (Morphology morphology, Vector<String> prefix)
+  {
+    super (morphology);
+    this.prefix = prefix;
+// for (String p : this.prefix) System.out.println ("Huu " + p + ".");
+  }
+
 
   public boolean suggest (String word)
   {
     reset();
 
-    if (word.startsWith (prefix)) {
-      Set<String> set = new TreeSet<String>();
-      if (analyse (word.substring (prefix.length()), set)) {
-        result.clear();
-        for (String s: set) {
-          result.add (prefix + s);
+    for (String p : prefix) {
+      if (word.startsWith (p)) {
+        set.clear();
+        if (analyse (word.substring (p.length()), set)) {
+          result.clear();
+          for (String s: set) {
+            result.add (p + s);
+          }
+          return true;
         }
-        return true;
       }
     }
     return false;
   }
 
-  private String prefix;
+  private Vector<String> prefix;
+  private Set<String> set = new TreeSet<String>();
 }

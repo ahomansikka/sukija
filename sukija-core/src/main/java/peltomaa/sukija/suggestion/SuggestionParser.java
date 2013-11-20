@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2012 Hannu Väisänen
+Copyright (©) 2012-2013 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -63,34 +63,41 @@ public class SuggestionParser {
     switch (command) {
       case "Apostrophe":
         v.add (new ApostropheSuggestion (morphology));
-//        System.out.println (command);
         break;
       case "Char":
         v.add (new CharSuggestion (morphology, argument(scanner.next()), argument(scanner.next())));
-//        System.out.println (command + " " + scanner.next() + " " + scanner.next());
         break;
       case "CharCombination":
         v.add (new CharCombinationSuggestion (morphology, argument(scanner.next()), argument(scanner.next())));
-//        System.out.println (command + " " + scanner.next() + " " + scanner.next());
         break;
       case "Length3":
         v.add (new Length3Suggestion (morphology));
-//        System.out.println (command);
         break;
       case "Prefix":
-        v.add (new PrefixSuggestion (morphology, argument(scanner.next())));
-//        System.out.println (command + " " + scanner.next());
+        v.add (new PrefixSuggestion (morphology, parseList (scanner)));
         break;
       case "Regex":
         v.add (new RegexSuggestion (morphology, argument(scanner.next()), argument(scanner.next())));
-//        System.out.println (command + " " + scanner.next() + " " + scanner.next());
         break;
       case "RegexCombination":
 //        v.add (new RegexCombinationSuggestion (morphology, argument(scanner.next()), argument(scanner.next())));
-//        System.out.println (command + " " + scanner.next() + " " + scanner.next());
         break;
     }
     scanner.skip (COMMENT_OR_WHITESPACE);
+  }
+
+
+  private Vector<String> parseList (Scanner scanner)
+  {
+    Vector<String> argument = new Vector<String>();
+    while (scanner.hasNext()) {
+      final String s = scanner.next();
+      if (s.startsWith ("#")) {
+        break;
+      }
+      argument.add (s);
+    }
+    return argument;
   }
 
 
