@@ -902,18 +902,10 @@
 
        <!-- Highlighting defaults. -->
        <str name="hl">on</str>
-       <str name="hl.fl">content features title name</str>
+       <str name="hl.fl">text</str>
        <str name="hl.encoder">html</str>
        <str name="hl.simple.pre">&lt;b&gt;</str>
        <str name="hl.simple.post">&lt;/b&gt;</str>
-       <str name="f.title.hl.fragsize">0</str>
-       <str name="f.title.hl.alternateField">title</str>
-       <str name="f.name.hl.fragsize">0</str>
-       <str name="f.name.hl.alternateField">name</str>
-       <str name="f.content.hl.snippets">3</str>
-       <str name="f.content.hl.fragsize">200</str>
-       <str name="f.content.hl.alternateField">content</str>
-       <str name="f.content.hl.maxAlternateFieldLength">750</str>
 
        <!-- No spell checking. -->
        <str name="spellcheck">off</str>

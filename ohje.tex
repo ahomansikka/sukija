@@ -238,8 +238,23 @@ log4j.logger.peltomaa.sukija.malaga.MalagaMorphology = ALL
 log4j.logger.peltomaa.sukija.voikko.VoikkoMorphology = ALL
 \end{verbatim}
 
+Tuossa ovat kaikki Sukijan luokat, joissa on lokitulostus.
+
 Tällöin tulostus on paljon suurempi kuin indeksoitavat tiedostot (-:,
-mutta kaikkia ei tietenkään tarvitse lisätä.
+mutta kaikkia ei tietenkään tarvitse lisätä, riittää kun laittaa
+luokat \verb=MorphologyFilter= ja \\
+\verb=SuggestionFilter=.
+
+Luokkaa \verb=HVTokenizer= ei tarvitse laittaa, jos ei käytä tätä
+saneistajaa, ja luokkia \\
+\verb=MalagaMorphology= ja \verb=VoikkoMorphology= Sukija ei käytä
+yhtaikaa. \verb=SuggestionFilter= tuottaa lokitulostuksen kaikista
+yrityksistä muuttaa sana perusmuotoon, \verb=Suggestion= kertoo
+erikseen, mikä muunnos sai aikaan sanan tunnistamisen (katso sivu
+\zpageref{suggestionConfiguration}).
+
+Lokitulostuksen eri tasot (\verb=ALL=, jne) voi katsua luokan
+\verb=org.apache.log4j.Level= dokumentoinnista.
 
 Lokitulostus menee tiedostoon \verb=solr-4.5.1/example/logs/solr.log=
 
@@ -269,9 +284,15 @@ taivutusmuoto. Tällöin herää kysymys, mitä sanaa pitää etsiä, vai
 etsitäänkö kaikkia?
 
 
-%Esimerkiksi sanaa ''huuhaa'' etsitään menemällä verkko-osoitteeseen
-%{\footnotesize
-%\verb|http://localhost:8983/solr/collection1/select?q=huuhaa&df=text&wt=xslt&tr=sukija.xsl|}
+Eri tavalla muotoillun tulostuksen saa osoitteesta \\
+\verb=http://localhost:8983/solr/select=
+
+Esimerkiksi sanaa \verb=sana= etsitään näin:
+
+\verb|http://localhost:8983/solr/select?q=sana|
+
+Tämän tulostuksen ulkonäköä voi muuttaa muuttamalla Sukijan mukana
+tulevaa tiedostoa \verb=conf/sukija.xsl=.
 
 
 \subsection*{Tiedoston suggestion.txt konfigurointi}
