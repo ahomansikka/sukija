@@ -15,14 +15,16 @@ MALAGA_MORPHOLOGY_FILTER_FACTORY=filter class="peltomaa.sukija.malaga.MalagaMorp
 
 MALAGA_MORPHOLOGY_SUGGESTION_FILTER_FACTORY=filter class="peltomaa.sukija.malaga.MalagaMorphologySuggestionFilterFactory"\
                                  malagaProjectFile="$${user.home}/.sukija/suomi.pro"\
-                                 suggestionFile="$${user.home}/.sukija/suggestion.txt"
+                                 suggestionFile="$${user.home}/.sukija/suggestion.txt"\
+                                 success="true"
 
 VOIKKO_MORPHOLOGY_FILTER_FACTORY=filter class="peltomaa.sukija.voikko.VoikkoMorphologyFilterFactory\
                                  dictionary="fi"
 
 VOIKKO_MORPHOLOGY_SUGGESTION_FILTER_FACTORY=filter class="peltomaa.sukija.voikko.VoikkoMorphologyFilterFactory\
                                             dictionary="fi"\
-                                            suggestionFile="$${user.home}/.sukija/suggestion.txt"
+                                            suggestionFile="$${user.home}/.sukija/suggestion.txt"\
+                                            success="true"
 
 
 TOKENIZER_FACTORY=$(FINNISH_TOKENIZER_FACTORY)

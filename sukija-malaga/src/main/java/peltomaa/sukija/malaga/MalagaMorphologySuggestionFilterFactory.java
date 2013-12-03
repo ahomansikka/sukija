@@ -23,9 +23,23 @@ import org.apache.lucene.analysis.TokenStream;;
 import org.apache.lucene.analysis.util.TokenFilterFactory;
 import peltomaa.sukija.morphology.MorphologyFilter;
 import peltomaa.sukija.util.PropertiesUtil;
+import peltomaa.sukija.suggestion.SuccessFilter;
 import peltomaa.sukija.suggestion.SuggestionFilter;
 
 
+/**
+ * Factory for {@link SuggestionFilter} or {@link SuccesfulFilter}. 
+ * <pre class="prettyprint" >
+ * &lt;fieldType name="text" class="solr.TextField"
+ *   &lt;analyzer&gt;
+ *     &lt;filter class="peltomaa.sukija.malagaMalagaMorphologySuggestionFilterFactory"
+              dictionary="fi"
+              suggestionFile="suggestion.txt"
+              success="true"/&gt;
+ *   &lt;/analyzer&gt;
+ * &lt;/fieldType&gt;</pre> 
+ * <p>If success is true {@link SuccessFilter}, otherwise {@link SuggestionFilter} is used.
+ */
 public class MalagaMorphologySuggestionFilterFactory extends TokenFilterFactory {
   /** Create a new MalagaMorphologySuggestionFilterFactory.
    */
@@ -34,16 +48,23 @@ public class MalagaMorphologySuggestionFilterFactory extends TokenFilterFactory 
     super (args);
     malagaProjectFile = PropertiesUtil.replacePropertyNameWithValue (args.get ("malagaProjectFile"));
     suggestionFile = PropertiesUtil.replacePropertyNameWithValue (args.get ("suggestionFile"));
+    success = Boolean.valueOf (PropertiesUtil.replacePropertyNameWithValue (args.get ("success")));
   }
 
 
   @Override
   public TokenFilter create (TokenStream input)
   {
-    return new SuggestionFilter (input, MalagaMorphology.getInstance (malagaProjectFile), suggestionFile);
+    if (success) {
+      return new SuccessFilter (input, MalagaMorphology.getInstance (malagaProjectFile), suggestionFile);
+    }
+    else {
+      return new SuggestionFilter (input, MalagaMorphology.getInstance (malagaProjectFile), suggestionFile);
+    }
   }
 
 
   private String malagaProjectFile;
   private String suggestionFile;
+  private boolean success;
 }

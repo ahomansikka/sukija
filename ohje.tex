@@ -112,6 +112,12 @@ Komento imuroi netistä tarvitsemansa Javan jar-paketit eli ensimmäinen
 kääntäminen saattaa kestää kauan. Erityisen kauan se kestää, jos et
 ole aiemmin käyttänyt mavenia.
 
+Testien aikana tulee virheilmoitus
+
+SLF4J: Class path contains multiple SLF4J bindings.
+
+Siitä ei tarvitse välittää.
+
 \bigskip Toisessa vaiheessa asetetaan Solr:n konfigurointitiedostoon
 \verb=schema.xml= saneistajaluokka (ulkomaankielellä tokenizer), joka
 lukee sanat tiedostoista, ja morfologialuokka, joka muuttaa sanat
@@ -233,6 +239,7 @@ loppuun rivit
 log4j.logger.peltomaa.sukija.finnish.HVTokenizer = ALL
 log4j.logger.peltomaa.sukija.morphology.MorphologyFilter = ALL
 log4j.logger.peltomaa.sukija.suggestion.Suggestion = ALL
+log4j.logger.peltomaa.sukija.suggestion.SuccessFilter = ALL
 log4j.logger.peltomaa.sukija.suggestion.SuggestionFilter = ALL
 log4j.logger.peltomaa.sukija.malaga.MalagaMorphology = ALL
 log4j.logger.peltomaa.sukija.voikko.VoikkoMorphology = ALL
@@ -242,8 +249,11 @@ Tuossa ovat kaikki Sukijan luokat, joissa on lokitulostus.
 
 Tällöin tulostus on paljon suurempi kuin indeksoitavat tiedostot (-:,
 mutta kaikkia ei tietenkään tarvitse lisätä, riittää kun laittaa
-luokat \verb=MorphologyFilter= ja \\
-\verb=SuggestionFilter=.
+luokat \verb=MorphologyFilter= sekä \\
+\verb=SuggestionFilter= tai \verb=SuccessFilter=.
+
+Luokkia \verb=SuggestionFilter= ja \verb=SuccessFilter= ei pidä
+käyttää yhtaikaa.
 
 Luokkaa \verb=HVTokenizer= ei tarvitse laittaa, jos ei käytä tätä
 saneistajaa, ja luokkia \\
