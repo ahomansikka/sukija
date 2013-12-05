@@ -23,7 +23,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     <field name="_version_" type="long" indexed="true" stored="true" multiValued="false"/>
 
     <field name="id" type="string" indexed="true" stored="true" required="true" multiValued="false"/>
+    <field name="text" type="text" indexed="true" stored="false" multiValued="true"/>
+<!--
     <field name="text" type="text" indexed="true" stored="true" multiValued="true"/>
+-->
 
     <!-- Default handler for ExtractingRequestHandler defined in the
          solrconfig.xml puts all the Tika's not identified extracted fields
