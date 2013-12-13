@@ -97,7 +97,7 @@ public class SuggestionTester {
   }
 
 
-  public static void analyze (Reader reader, Morphology morphology, Vector<Suggestion> suggestion) throws IOException
+  public static void analyze (Reader reader, Morphology morphology, Vector<Suggestion> suggestion, boolean stopOnSuccess) throws IOException
   {
     Set<String> set = new TreeSet<String>();
     Tokenizer t = new HVTokenizer (reader);
@@ -117,6 +117,9 @@ public class SuggestionTester {
           for (Suggestion s : suggestion) {
             if (s.suggest(w)) {
               print ("S", s.getResult());
+              if (stopOnSuccess) {
+                break;
+              }
             }
           }
         }
