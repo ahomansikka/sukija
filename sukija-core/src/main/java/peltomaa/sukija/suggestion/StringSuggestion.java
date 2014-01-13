@@ -18,8 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package peltomaa.sukija.suggestion;
 
 import peltomaa.sukija.morphology.Morphology;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.Collection;
 import java.util.Vector;
 
 
@@ -27,18 +26,18 @@ import java.util.Vector;
  * Replace a string and try to recognise a word after that.
  */
 public class StringSuggestion extends Suggestion {
-  public StringSuggestion (Morphology morphology, String string)
+  public StringSuggestion (Morphology morphology, String from, String to)
   {
     super (morphology);
-    this.str = new Vector<String>();
-    this.str.add (string);
+    this.str.add (from);
+    this.str.add (to);
   }
 
 
-  public StringSuggestion (Morphology morphology, Vector<String> str)
+  public StringSuggestion (Morphology morphology, Collection<String> str)
   {
     super (morphology);
-    this.str = str;
+    this.str.addAll (str);
   }
 
 
@@ -58,6 +57,5 @@ public class StringSuggestion extends Suggestion {
     return false;
   }
 
-  private Vector<String> str;
-  private Set<String> set = new TreeSet<String>();
+  private Vector<String> str = new Vector<String>();
 }

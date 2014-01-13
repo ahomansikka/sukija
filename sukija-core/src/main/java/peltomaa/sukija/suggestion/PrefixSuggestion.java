@@ -18,6 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package peltomaa.sukija.suggestion;
 
 import peltomaa.sukija.morphology.Morphology;
+import java.util.Collection;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.Vector;
@@ -34,15 +35,14 @@ public class PrefixSuggestion extends Suggestion {
   public PrefixSuggestion (Morphology morphology, String prefix)
   {
     super (morphology);
-    this.prefix = new Vector<String>();
     this.prefix.add (prefix);
   }
 
 
-  public PrefixSuggestion (Morphology morphology, Vector<String> prefix)
+  public PrefixSuggestion (Morphology morphology, Collection<String> prefix)
   {
     super (morphology);
-    this.prefix = prefix;
+    this.prefix.addAll (prefix);
 // for (String p : this.prefix) System.out.println ("Huu " + p + ".");
   }
 
@@ -66,6 +66,6 @@ public class PrefixSuggestion extends Suggestion {
     return false;
   }
 
-  private Vector<String> prefix;
+  private Vector<String> prefix = new Vector<String>();
   private Set<String> set = new TreeSet<String>();
 }

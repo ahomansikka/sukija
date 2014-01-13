@@ -41,37 +41,41 @@ public class CharCombinationSuggestion extends Suggestion {
   {
     reset();
 
-    Vector<Integer> v = new Vector<Integer>();
+    int size = 0;
 
-    // Put the indices of 'from' characters in 'word' into vector v.
+    // Put the indices of 'from' characters in 'word' into array v.
     //
     for (int i = 0; i < word.length(); i++) {
       if (from.indexOf (word.charAt (i)) >= 0) {
-        v.add (i);
+        v[size] = i;
+        w[size++] = to.charAt (from.indexOf (word.charAt (i)));
+        if (size >= MAX_CHARS) {
+          return false;  // Return silently, if we have too many chars to replace.
+        }
       }
     }
 
-    if ((0 < v.size()) && (v.size() <= MAX_CHARS)) {
-      for (int i = 0; i <= v.size(); i++) {
-        Combination c = new Combination (v.size(), i);
+    if (size > 0) {                      // Do we have something to replace?
+      for (int i = 0; i <= size; i++) {  // If we do, we test all combinations.
+        Combination c = new Combination (size, i);
         do {
           sb.delete (0, sb.length());
           sb.append (word);
 
           for (int k = 0; k < c.getK(); k++) {
-            final int p = v.get (c.get (k));
-            final int u = from.indexOf (sb.charAt (p));
-            sb.replace (p, p+1, to.substring(u,u+1));
+            sb.setCharAt (v[c.get(k)], w[c.get(k)]);
           }
           if (analyse()) return true;
         } while (c.next());
       }
     }
-
     return false;
   }
 
+
   private String from;
   private String to;
-  private static int MAX_CHARS = 10;
+  private static int MAX_CHARS = 11;  // Max number of allowed permutations is 10! or 3628800.
+  private int[] v = new int[MAX_CHARS];
+  private char[] w = new char[MAX_CHARS];
 }
