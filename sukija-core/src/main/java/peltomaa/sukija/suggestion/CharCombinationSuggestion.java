@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2009-2011, 2013 Hannu Väisänen
+Copyright (©) 2009-2011, 2013-2014 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -43,12 +43,14 @@ public class CharCombinationSuggestion extends Suggestion {
 
     int size = 0;
 
-    // Put the indices of 'from' characters in 'word' into array v.
+    // Put the indices of 'from' characters in 'word' into array v
+    // and corresponding 'to' characters into array w.
     //
     for (int i = 0; i < word.length(); i++) {
-      if (from.indexOf (word.charAt (i)) >= 0) {
+      final int n = from.indexOf (word.charAt (i));
+      if (n >= 0) {
         v[size] = i;
-        w[size++] = to.charAt (from.indexOf (word.charAt (i)));
+        w[size++] = to.charAt (n);
         if (size >= MAX_CHARS) {
           return false;  // Return silently, if we have too many chars to replace.
         }
@@ -59,8 +61,7 @@ public class CharCombinationSuggestion extends Suggestion {
       for (int i = 0; i <= size; i++) {  // If we do, we test all combinations.
         Combination c = new Combination (size, i);
         do {
-          sb.delete (0, sb.length());
-          sb.append (word);
+          sb.replace (0, sb.length(), word);
 
           for (int k = 0; k < c.getK(); k++) {
             sb.setCharAt (v[c.get(k)], w[c.get(k)]);
