@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2013 Hannu Väisänen
+Copyright (©) 2013-2014 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -49,7 +49,7 @@ public class SuggestionTester {
   {
     final String result = analyze (input, suggestion);
     System.out.println ("Syöte " + input + ", tulos [" + result + "], odotettu tulos [" + expectedOutput + "].");
-    return (result.equals (expectedOutput));
+    return ((result != null) && result.equals (expectedOutput));
   }
 
 
