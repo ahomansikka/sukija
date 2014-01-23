@@ -41,7 +41,6 @@ public class PrefixSuggestion extends Suggestion {
   public PrefixSuggestion (Morphology morphology, String prefix)
   {
     super (morphology);
-//    pattern1 = Pattern.compile (prefix);
     prefixSet = new HashSet<String>();
     prefixSet.add (prefix);
     minLength = prefix.length();
@@ -52,7 +51,6 @@ public class PrefixSuggestion extends Suggestion {
   public PrefixSuggestion (Morphology morphology, List<String> prefix)
   {
     super (morphology);
-//    makePatterns (prefix);
     prefixSet = new HashSet<String> (prefix);
     minLength = 1000000;
     maxLength = 0;
@@ -67,11 +65,14 @@ public class PrefixSuggestion extends Suggestion {
   {
     reset();
 
+    // Käydään läpi kaikki etuliitteet pisimmästä alkaen ja
+    // lopetetaan, kun löytyy eka tunnistettu sana.
+    //
     for (int i = Math.min (maxLength, word.length()); i >= minLength; i--) {
-      final String p = word.substring (0, i);
-      if (prefixSet.contains (p)) {
+      final String p = word.substring (0, i);    // Sanan alku.
+      if (prefixSet.contains (p)) {              // Onko etuliite?
         set.clear();
-        if (analyse (word.substring(i), set)) {
+        if (analyse (word.substring(i), set)) {  // Tunnistetaanko etuliitteetön sana?
           result.clear();
           for (String s: set) {
             result.add (p + s);
@@ -80,117 +81,11 @@ public class PrefixSuggestion extends Suggestion {
         }
       }
     }
-/*
-    Matcher m = pattern1.matcher (word);
-    if (m.lookingAt()) {
-      if (m.end() == word.length()) return suggest (word, pattern2);
-      set.clear();
-      String p = word.substring (0, m.end());
-//System.out.println (" " + p);
-      if (analyse (word.substring (m.end()), set)) {
-        result.clear();
-        for (String s: set) {
-          result.add (p + s);
-        }
-        return true;
-      }
-    }
-    else if (pattern2 != null) {
-      return suggest (word, pattern2);
-    }
-*/
-/*
-    for (String p : prefix) {
-      if (word.startsWith (p)) {
-        set.clear();
-        if (analyse (word.substring (p.length()), set)) {
-          result.clear();
-          for (String s: set) {
-            result.add (p + s);
-          }
-          return true;
-        }
-      }
-    }
-*/
     return false;
   }
-
-
-  private boolean suggest (String word, Pattern pattern)
-  {
-    Matcher m = pattern.matcher (word);
-    if (m.lookingAt()) {
-      set.clear();
-      String p = word.substring (0, m.end());
-      if (analyse (word.substring (m.end()), set)) {
-        result.clear();
-        for (String s: set) {
-          result.add (p + s);
-        }
-        return true;
-      }
-    }
-    return false;
-  }
-
-
-  private List<String>[] makeListArray (List<String> s)
-  {
-    Collections.sort (s);
-    ArrayList[] u = new ArrayList[2];
-    u[0] = new ArrayList();
-    u[1] = new ArrayList();
-
-    for (int i = 0; i < s.size(); i++) {
-//System.out.println (i + " " + s.get(i));
-      if (i < s.size()-1 && s.get(i+1).startsWith (s.get(i))) {
-        u[0].add (s.get(i+1));
-        u[1].add (s.get(i));
-//System.out.println (i + " " + s.get(i+1) + " " + s.get(i));
-        i++;
-      }
-      else {
-//System.out.println (i + " " + s.get(i) + " xxxx");
-        u[0].add (s.get(i));
-      }
-    }
-    return u;
-  }
-
-
-  private String makePatternString (List<String> s)
-  {
-    StringBuilder sb = new StringBuilder (10*s.size());
-    sb.append ('(');
-    for (int i = 0; i < s.size(); i++) {
-      sb.append (s.get(i));
-      if (i < s.size()-1) {
-        sb.append ('|');
-      }
-    }
-    sb.append (')');
-    return sb.toString();
-  }
-
-
-  private void makePatterns (List<String> v)
-  {
-    List<String>[] list = makeListArray (v);
-
-    pattern1 = Pattern.compile (makePatternString (list[0]));
-
-    if (list[1].size() > 0) {
-      pattern2 = Pattern.compile (makePatternString (list[1]));
-    }
-  }
-
 
   private Set<String> set = new TreeSet<String>();
-  private Pattern pattern1;
-  private Pattern pattern2;
-
-  private Set<String> prefixSet;
-  private int minLength;
-  private int maxLength;
+  private Set<String> prefixSet;  // Etuliitteet.
+  private int minLength;  // Lyhimmän etuliitteen pituus.
+  private int maxLength;  // Pisimmän etuliitteen pituus.
 }
