@@ -62,12 +62,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                 ignoreCase="true"
                 expand="false"/> 
         <!-- Tämä luokka tietää, että å, ä ja ö eivät ole aksentillisia merkkejä. -->
-        <filter class="peltomaa.sukija.finnish.FinnishFoldingFilterFactory"/>
+        <filter class="peltomaa.sukija.finnish.FinnishFoldingLowerCaseFilterFactory"/>
       </analyzer>
       <analyzer type="query">
         <tokenizer class="solr.WhitespaceTokenizerFactory"/>
-        <filter class="solr.LowerCaseFilterFactory"/>
-        <filter class="peltomaa.sukija.finnish.FinnishFoldingFilterFactory"/>
+        <filter class="peltomaa.sukija.finnish.FinnishFoldingLowerCaseFilterFactory"/>
       </analyzer>
     </fieldType>
   </types>
