@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2009-2011, 2013 Hannu Väisänen
+Copyright (©) 2009-2011, 2013-2014 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -17,9 +17,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 package peltomaa.sukija.suggestion;
 
+import java.util.List;
 import java.util.regex.Matcher;
-import java.util.regex.MatchResult;
 import java.util.regex.Pattern;
+import java.util.Set;
+import java.util.TreeSet;
+import java.util.Vector;
 import peltomaa.sukija.morphology.Morphology;
 import peltomaa.sukija.util.RegexUtil;
 
@@ -36,27 +39,59 @@ public class RegexSuggestion extends Suggestion {
   public RegexSuggestion (Morphology morphology, String regex, String replacement)
   {
     super (morphology);
-    pattern = RegexUtil.makePattern (regex);
-    this.replacement = replacement;
+    this.pattern.add (RegexUtil.makePattern (regex));
+    this.replacement.add (replacement);
+  }
+
+
+  public RegexSuggestion (Morphology morphology, List<String> input, boolean tryAll)
+  {
+    super (morphology);
+
+    for (int i = 0; i < input.size(); i += 2) {
+      this.pattern.add (RegexUtil.makePattern (input.get (i)));
+      this.replacement.add (input.get (i+1));
+    }
+    this.tryAll = tryAll;
   }
 
 
   public boolean suggest (String word)
   {
+    boolean success = false;
+    result.clear();
+
+    for (int i = 0; i < pattern.size(); i++) {
+      if (suggest (i, word)) {
+        result.addAll (set);
+        if (tryAll) {
+          success = true;
+        }
+        else {
+          return true;
+        }
+      }
+    }
+    return success;
+  }
+
+
+  private boolean suggest (int i, String word)
+  {
     reset();
-    Matcher m = pattern.matcher (word);
+    set.clear();
+    Matcher m = pattern.get(i).matcher (word);
     int start = 0;
 
     while (m.find()) {
-      MatchResult r = m.toMatchResult();
 /*
 System.out.println (sb.toString()
                     + " " + word.toString()
                     + " " + word.subSequence (start, m.start(1)).toString()
                     + " " + m.group(0)
                     + " " + m.group(1)
-                    + " " + pattern.pattern()
-                    + " [" + replacement
+                    + " " + pattern.get(i).pattern()
+                    + " [" + replacement.get(i)
                     + "] " + start
                     + " " + m.start()
                     + " " + m.end()
@@ -64,18 +99,18 @@ System.out.println (sb.toString()
                     + " " + m.end(1));
 */
       sb.append (word.subSequence (start, m.start(1)));  // Append start of word.
-      sb.append (replacement);                           // Append replacement.
+      sb.append (replacement.get(i));                    // Append replacement.
       start = m.end (1);           // Continue searching after the previous match.
       found = true;
     }
-
     if (!found) return false;
 
     sb.append (word.subSequence (start, word.length())); // Append end of word.
-    return analyse();
+    return analyse (sb.toString(), set);
   }
 
-
-  private Pattern pattern;
-  private String replacement;
+  private Vector<Pattern> pattern = new Vector<Pattern>();
+  private Vector<String> replacement = new Vector<String>();
+  private Set<String> set = new TreeSet<String>();
+  private boolean tryAll;
 }

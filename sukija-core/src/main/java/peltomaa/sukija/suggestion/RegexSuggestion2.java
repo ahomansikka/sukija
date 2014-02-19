@@ -18,7 +18,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package peltomaa.sukija.suggestion;
 
 import java.util.regex.Matcher;
-import java.util.regex.MatchResult;
 import java.util.regex.Pattern;
 import java.util.List;
 import java.util.Set;
@@ -68,10 +67,10 @@ public class RegexSuggestion2 extends Suggestion {
   {
     reset();
     Matcher m = pattern.get(i).matcher (word);
+
     int start = 0;
 
     while (m.find()) {
-      MatchResult r = m.toMatchResult();
       sb.append (word.subSequence (start, m.start(1)));  // Append start of word.
       sb.append (replacement.get(i));                    // Append replacement.
       start = m.end (1);           // Continue searching after the previous match.

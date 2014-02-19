@@ -17,23 +17,20 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 package peltomaa.sukija.suggestion;
 
-import peltomaa.sukija.morphology.Morphology;
 import java.util.Set;
 import java.util.TreeSet;
+import peltomaa.sukija.morphology.Morphology;
 
 
-/**
- * Replace a string and try to recognise a word after that.
- */
-public class StringSuggestion extends Suggestion {
-  public StringSuggestion (Morphology morphology, String[][] input)
+public class EndChangeSuggestion extends Suggestion {
+  public EndChangeSuggestion (Morphology morphology, String[][] input)
   {
     super (morphology);
     this.input = input;
   }
 
 
-  public StringSuggestion (Morphology morphology, String[] input)
+  public EndChangeSuggestion (Morphology morphology, String[] input)
   {
     super (morphology);
     this.input = new String[1][];
@@ -45,33 +42,20 @@ public class StringSuggestion extends Suggestion {
   {
     for (int i = 0; i < input.length; i++) {
       result.clear();
-      if (word.indexOf (input[i][0]) >= 0) {
+      if (word.endsWith (input[i][0])) {
+        final String start = word.substring (0, word.length()-input[i][0].length());
         for (int j = 1; j < input[i].length; j++) {
-          final String s = word.replace (input[i][0], input[i][j]);
           set.clear();
-          if (analyse (s, set)) {
+          if (analyse (start + input[i][j], set)) {
             result.addAll (set);
           }
         }
         return (result.size() > 0);
       }
     }
-
-/*
-    reset();
-
-    for (int i = 0; i < str.size(); i += 2) {
-      if (word.indexOf (str.get(i)) >= 0) {
-        final String s = word.replace (str.get(i), str.get(i+1));
-        result.clear();
-        if (analyse (s, result)) {
-          return true;
-        }
-      }
-    }
-*/
     return false;
   }
+
 
   private String[][] input;
   private Set<String> set = new TreeSet<String>();
