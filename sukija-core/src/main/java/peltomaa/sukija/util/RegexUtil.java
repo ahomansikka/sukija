@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2009-2013 Hannu Väisänen
+Copyright (©) 2009-2014 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -92,7 +92,7 @@ different letters in Finnish but only two forms of the same letter. :-).
   /**
    * Compile character sequece into {@code Pattern}.<p>
    *
-   * This function calls {@link #makePatternString(CharSequence,int)}
+   * This function calls {@link #makePatternString(CharSequence)}
    * and compiles the character string that function returns.
    *
    * @param s    A character sequence.

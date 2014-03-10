@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2009-2013 Hannu Väisänen
+Copyright (©) 2009-2014 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -32,13 +32,13 @@ import peltomaa.sukija.morphology.MorphologyException;
 Suggest a correct spelling for misspelled word.<p>
 
 This is an abstract class and you should extend this class and provide
-an implementation for function {@link #suggest(CharSequence)}.<p>
+an implementation for function {@link #suggest(String)}.<p>
 
-Function {@link #suggest(CharSequence)} should correct the spelling of
+Function {@link #suggest(String)} should correct the spelling of
 the word and then try to convert the corrected word to a base form
 with function {@link #analyse()} or {@link #analyse(Set)}.<p>
 
-If those functions return {@code true} {@link #suggest(CharSequence)}
+If those functions return {@code true} {@link #suggest(String)}
 should return {@code true}, otherwise it should return {@code false}.
 */
 public abstract class Suggestion {
@@ -78,23 +78,23 @@ public abstract class Suggestion {
   protected boolean found = false;
 
 
-  /** If {@link #suggest(CharSequence)} returns {@code true}
+  /** If {@link #suggest(String)} returns {@code true}
    *  this function returns the base form(s) of the {@code word}
-   *  {@link #suggest(CharSequence)} has corrected.
+   *  {@link #suggest(String)} has corrected.
    */
   public Set<String> getResult() {return result;}
 
 
-  /** If {@link #suggest(CharSequence)} returns {@code true}
+  /** If {@link #suggest(String)} returns {@code true}
    *  this function returns an iterator to the base form(s) of the {@code word}
-   *  {@link #suggest(CharSequence)} has corrected. This function is equal
+   *  {@link #suggest(String)} has corrected. This function is equal
    *  to call {@code getResult().iterator()}.
    */
   public Iterator<String> iterator() {return result.iterator();}
 
 
   /** Set internal variables to initial values. You should call this
-   *  function at the beginning of function {@link #suggest(CharSequence)}.
+   *  function at the beginning of function {@link #suggest(String)}.
    */
   protected void reset()
   {
