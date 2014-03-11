@@ -19,9 +19,9 @@
     </dependency>
 
     <dependency>
-      <groupId>org.puimula</groupId>
+      <groupId>org.puimula.voikko</groupId>
       <artifactId>libvoikko</artifactId>
-      <version>3.2</version>
+      <version>3.6.1</version>
     </dependency>
   </dependencies>
 
