@@ -39,7 +39,7 @@ Tika \\(http://tika.apache.org/) osaa lukea.
       (\verb=https://github.com/voikko/corevoikko=) \\
       hakemistossa suomimalaga.
 
-\item Apache Solr 4.6.1:
+\item Apache Solr 4.7.0:
       \verb=http://lucene.apache.org/solr/=
 
 \item Ubuntun paketit \verb=libmalaga7= ja \verb=maven=.
@@ -53,7 +53,7 @@ Ubuntun paketti  \verb=libvoikko1=.
 
 Tämä asennusohje olettaaa, että corevoikko ja apache-solr ovat hakemistoissa \\
 \verb=$HOME/Lataukset/corevoikko/= ja
-\verb=$HOME/Lataukset/solr/solr-4.6.1=
+\verb=$HOME/Lataukset/solr/solr-4.7.0=
 
 Jos ne ovat jossain muualla, tiedoston \verb=Makefile= alussa olevia
 muuttujia \verb=SOLR_HOME= ja \verb=JETTY_CONTEXTS_DIR= pitää muuttaa
@@ -212,7 +212,7 @@ niihin hakemistoihin, joista Solr löytää ne.
 \subsection*{Solr:n käynnistäminen}
 
 \begin{verbatim}
-cd $HOME/Lataukset/solr/solr-4.6.1/example
+cd $HOME/Lataukset/solr/solr-4.7.0/example
 java -jar start.jar
 \end{verbatim}
 
@@ -231,7 +231,7 @@ Solr:n käynnistymisen voi varmistaa selaimessa menemällä verkko-osoitteeseen
 
 Solr:n lokitulostus (\verb=http://wiki.apache.org/solr/SolrLogging=)
 konfiguroidaan tiedostossa
-\verb=solr-4.6.1/example/resources/log4j.properties=
+\verb=solr-4.7.0/example/resources/log4j.properties=
 Mahdollisimman suuren lokitulostuksen saa lisäämällä tämän tiedoston
 loppuun rivit
 
@@ -266,7 +266,7 @@ erikseen, mikä muunnos sai aikaan sanan tunnistamisen (katso sivu
 Lokitulostuksen eri tasot (\verb=ALL=, jne) voi katsua luokan
 \verb=org.apache.log4j.Level= dokumentoinnista.
 
-Lokitulostus menee tiedostoon \verb=solr-4.6.1/example/logs/solr.log=
+Lokitulostus menee tiedostoon \verb=solr-4.7.0/example/logs/solr.log=
 
 
 \subsection*{Indeksointi}
