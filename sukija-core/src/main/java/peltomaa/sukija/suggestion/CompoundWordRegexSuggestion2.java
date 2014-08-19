@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2013-2014 Hannu Väisänen
+Copyright (©) 2014 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -28,18 +28,20 @@ import peltomaa.sukija.util.RegexUtil;
 
 
 /**
- * Split a word on regular expression and try to recognise it.<p>
- *
- * For example, if regex is {@code "l[aä]i(s[eit]|nen)"} and word is
- * {@code aatelilaiset} splits word to {@code aateli} and {@code laiset}
- * and returns {@code aatelilainen} as a base form.
+ * Jos {@code morphology} tunnistaa säännöllisen lausekkeen {@code regex}
+ * jälkeen tulevan sanan osan sanaksi, muutetaan tunnistettu sana
+ * perusmuotoon ja palautetaan sanan alkuosa + tunnistettu perusmuoto.
+ * <p>
+ * Esimerkki: jos {@code regex} on {@code "l[aä]is"} ja sana on
+ * {@code aldabranjättiläiskilpikonnalla} palautetaan
+ * {@code aldabranjättiläiskilpikonna}.
  */
-public class CompoundWordRegexSuggestion extends Suggestion {
+public class CompoundWordRegexSuggestion2 extends Suggestion {
   /**
    * @param morphology  Morphology.
    * @param regex       Regular expression
    */
-  public CompoundWordRegexSuggestion (Morphology morphology, String regex)
+  public CompoundWordRegexSuggestion2 (Morphology morphology, String regex)
   {
     super (morphology);
     pattern = RegexUtil.makePattern (regex);
@@ -52,12 +54,12 @@ public class CompoundWordRegexSuggestion extends Suggestion {
 
     if (matcher.find()) {
       reset();
-      final String end = word.substring (matcher.start());
+      final String end = word.substring (matcher.end());
       Set<String> set = new TreeSet<String>();
 
       if (analyse (end, set)) {
         result.clear();
-        final String start = word.substring (0, matcher.start());
+        final String start = word.substring (0, matcher.end());
         for (String s: set) {
           result.add (start + s);
         }
