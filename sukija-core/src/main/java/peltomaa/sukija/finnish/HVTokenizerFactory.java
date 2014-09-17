@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2009-2013 Hannu Väisänen
+Copyright (©) 2009-2014 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@ package peltomaa.sukija.finnish;
 import java.io.Reader;
 import java.util.Map;
 import org.apache.lucene.analysis.util.TokenizerFactory;
-import org.apache.lucene.util.AttributeSource.AttributeFactory;
+import org.apache.lucene.util.AttributeFactory;
 
 /**
  * Factory for {@link HVTokenizer}. 

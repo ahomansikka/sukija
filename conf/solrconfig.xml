@@ -89,19 +89,7 @@
   <lib dir="../../../contrib/analysis-extras/lucene-libs" regex=".*\.jar" />
 <!-- OMA LISÄYS LOPPUU. -->
 
-  <!-- If a 'dir' option (with or without a regex) is used and nothing
-       is found that matches, it will be ignored
-    -->
-  <lib dir="/total/crap/dir/ignored" /> 
 
-  <!-- An exact 'path' can be used instead of a 'dir' to specify a 
-       specific jar file.  This will cause a serious error to be logged 
-       if it can't be loaded.
-    -->
-  <!--
-     <lib path="../a-jar-that-does-not-exist.jar" /> 
-  -->
-  
   <!-- Data Directory
 
        Used to specify an alternate directory to hold all index data
@@ -786,61 +774,48 @@
        <!-- Highlighting defaults. -->
        <str name="hl">true</str>
        <str name="hl.fl">text</str>
+       <str name="hl.snippets">100</str>
+       <str name="hl.maxAnalyzedChars">100000</str>
 <!-- OMA LISÄYS LOPPUU. -->
      </lst>
-    <!-- In addition to defaults, "appends" params can be specified
-         to identify values which should be appended to the list of
-         multi-val params from the query (or the existing "defaults").
-      -->
-    <!-- In this example, the param "fq=instock:true" would be appended to
-         any query time fq params the user may specify, as a mechanism for
-         partitioning the index, independent of any user selected filtering
-         that may also be desired (perhaps as a result of faceted searching).
-
-         NOTE: there is *absolutely* nothing a client can do to prevent these
-         "appends" values from being used, so don't use this mechanism
-         unless you are sure you always want it.
-      -->
-    <!--
-       <lst name="appends">
-         <str name="fq">inStock:true</str>
-       </lst>
-      -->
-    <!-- "invariants" are a way of letting the Solr maintainer lock down
-         the options available to Solr clients.  Any params values
-         specified here are used regardless of what values may be specified
-         in either the query, the "defaults", or the "appends" params.
-
-         In this example, the facet.field and facet.query params would
-         be fixed, limiting the facets clients can use.  Faceting is
-         not turned on by default - but if the client does specify
-         facet=true in the request, these are the only facets they
-         will be able to see counts for; regardless of what other
-         facet.field or facet.query params they may specify.
-
-         NOTE: there is *absolutely* nothing a client can do to prevent these
-         "invariants" values from being used, so don't use this mechanism
-         unless you are sure you always want it.
-      -->
-    <!--
-       <lst name="invariants">
-         <str name="facet.field">cat</str>
-         <str name="facet.field">manu_exact</str>
-         <str name="facet.query">price:[* TO 500]</str>
-         <str name="facet.query">price:[500 TO *]</str>
-       </lst>
-      -->
-    <!-- If the default list of SearchComponents is not desired, that
-         list can either be overridden completely, or components can be
-         prepended or appended to the default list.  (see below)
-      -->
-    <!--
-       <arr name="components">
-         <str>nameOfCustomComponent1</str>
-         <str>nameOfCustomComponent2</str>
-       </arr>
-      -->
     </requestHandler>
+
+
+  <requestHandler name="/sukija" class="solr.SearchHandler">
+    <!-- Default values for query parameters can be specified, these
+         will be overridden by parameters in the request.
+      -->
+     <lst name="defaults">
+       <str name="echoParams">explicit</str>
+       <int name="rows">10</int>
+       <str name="df">text</str>
+<!-- OMA LISÄYS ALKAA. -->
+       <str name="wt">xslt</str>
+       <str name="tr">sukija.xsl</str>
+       <str name="fl">id</str>
+       <!-- Highlighting defaults. -->
+       <str name="hl">true</str>
+       <str name="hl.fl">text</str>
+       <str name="hl.snippets">100</str>
+       <str name="hl.maxAnalyzedChars">100000</str>
+
+      <bool name="terms">true</bool>
+      <bool name="distrib">false</bool>
+      <str name="terms.fl">text</str>
+      <int name="terms.limit">-1</int>
+<!-- OMA LISÄYS LOPPUU. -->
+     </lst>
+     <arr name="components">
+        <str>query</str>
+        <str>facet</str>
+        <str>mlt</str>
+        <str>highlight</str>
+        <str>stats</str>
+        <str>debug</str>
+        <str>terms</str>
+     </arr>
+    </requestHandler>
+
 
   <!-- A request handler that returns indented JSON by default -->
   <requestHandler name="/query" class="solr.SearchHandler">
@@ -904,14 +879,31 @@
        <int name="mlt.count">3</int>
 
        <!-- Highlighting defaults. -->
+<!--
        <str name="hl">on</str>
        <str name="hl.fl">text</str>
        <str name="hl.encoder">html</str>
        <str name="hl.simple.pre">&lt;b&gt;</str>
        <str name="hl.simple.post">&lt;/b&gt;</str>
-
+-->
        <!-- No spell checking. -->
        <str name="spellcheck">off</str>
+
+<int name="hl.snippets">1</int>
+<str name="hl.tag.pre">&lt;em&gt;</str>
+<str name="hl.tag.post">&lt;/em&gt;</str>
+<str name="hl.tag.ellipsis">... </str>
+<bool name="hl.defaultSummary">true</bool>
+<str name="hl.encoder">simple</str>
+<float name="hl.score.k1">1.2</float>
+<float name="hl.score.b">0.75</float>
+<float name="hl.score.pivot">87</float>
+<str name="hl.bs.language"></str>
+<str name="hl.bs.country"></str>
+<str name="hl.bs.variant"></str>
+<str name="hl.bs.type">SENTENCE</str>
+<int name="hl.maxAnalyzedChars">10000</int>
+
      </lst>
   </requestHandler>
 
@@ -1127,7 +1119,9 @@
      <lst name="defaults">
       <bool name="terms">true</bool>
       <bool name="distrib">false</bool>
-    </lst>     
+      <str name="terms.fl">text</str>
+      <int name="terms.limit">-1</int>
+    </lst>
     <arr name="components">
       <str>terms</str>
     </arr>
@@ -1159,6 +1153,11 @@
     </arr>
   </requestHandler>
 
+<!--
+  <searchComponent class="solr.HighlightComponent" name="highlight">
+    <highlighting class="org.apache.solr.highlight.PostingsSolrHighlighter"/>
+  </searchComponent>
+-->
 
   <!-- Highlighting Component
 

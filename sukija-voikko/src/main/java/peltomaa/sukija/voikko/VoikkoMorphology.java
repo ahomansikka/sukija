@@ -117,7 +117,16 @@ public class VoikkoMorphology implements Morphology {
     }
     else {
       for (Analysis a: list) {
-        c.add (a.get("BASEFORM").toLowerCase());
+        final String s = a.get("BASEFORM");
+        if (s == null) {
+          if (LOG.isDebugEnabled()) {
+            LOG.debug ("analyzeLowerCase [" + word + "]: no base form.");
+          }
+          c.add (word.toLowerCase());
+        }
+        else {
+          c.add (s.toLowerCase());
+        }
       }
       return true;
     }

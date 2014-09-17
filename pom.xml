@@ -36,20 +36,34 @@
     <dependency>
       <groupId>org.apache.solr</groupId>
       <artifactId>solr-core</artifactId>
-      <version>4.7.0</version>
+      <version>4.9.0</version>
     </dependency>
 
    <dependency>
       <groupId>org.apache.solr</groupId>
       <artifactId>solr-solrj</artifactId>
-      <version>4.7.0</version>
+      <version>4.9.0</version>
     </dependency>
+
+   <dependency>
+      <groupId>org.apache.solr</groupId>
+      <artifactId>solr-solrj</artifactId>
+      <version>4.9.0</version>
+    </dependency>
+
+    <dependency>
+      <groupId>commons-logging</groupId>
+      <artifactId>commons-logging</artifactId>
+      <version>1.2</version>
+    </dependency>
+
   </dependencies>
 
   <modules>
     <module>sukija-core</module>
     <module>sukija-malaga</module>
     <module>sukija-voikko</module>
+    <module>sukija-ui</module>
   </modules>
 
 
@@ -62,6 +76,7 @@
         <configuration>
           <source>1.7</source>
           <target>1.7</target>
+<!--          <compilerArgument>-Xlint:deprecation</compilerArgument> -->
         </configuration>
       </plugin>
 
@@ -69,6 +84,18 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
         <version>2.4</version>
+        <configuration>
+          <archive>
+            <manifest>
+              <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+              <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+              <addClasspath>true</addClasspath>
+              <mainClass>peltomaa.sukija.Sukija</mainClass>
+              <classpathLayoutType>repository</classpathLayoutType>
+              <classpathPrefix>${user.home}/.m2/repository</classpathPrefix>
+            </manifest>
+          </archive>
+        </configuration>
       </plugin>
 
      <plugin>
