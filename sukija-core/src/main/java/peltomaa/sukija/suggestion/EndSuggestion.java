@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2009-2011, 2013 Hannu Väisänen
+Copyright (©) 2009-2011, 2013-2014 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -22,14 +22,20 @@ import peltomaa.sukija.morphology.Morphology;
 import peltomaa.sukija.util.Pair;
 
 
+/**
+ * Lisätään sanan loppuun merkkijono ja yritetään tunnistaa sana sen jälkeen.
+ */
 public class EndSuggestion extends Suggestion {
-  public EndSuggestion (Morphology morphology, Vector<Pair<String,String>> data)
+  private EndSuggestion (Morphology morphology, Vector<Pair<String,String>> data)
   {
     super (morphology);
     v = data;
   }
 
 
+  /** Jos <code>array = {"ks", "i"}</code> ja tunnistettava sana on {@code puuks},
+   * yritetään tunnistaa sana {@code puuksi}.
+   */
   public EndSuggestion (Morphology morphology, String[] array)
   {
     this (morphology, Pair.makePair (array));

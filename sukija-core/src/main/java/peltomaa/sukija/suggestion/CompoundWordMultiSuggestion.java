@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2013 Hannu Väisänen
+Copyright (©) 2013-2014 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -30,12 +30,11 @@ import peltomaa.sukija.morphology.MorphologyException;
 
 
 /**
- * Split a word and try to recognise each part.<p>
+ * Katkaistaan sana säännöllisen lausekkeen kohdalta ja yritetään tunnistaa molemmat osat.
  *
- * For example, {@code vanhaanmalliin} is split as {@code vanhaan},
- * {@code malliin} and base forms are {@code vanha} and {@code malli}.
- * This class splits word only in two parts, otherwise we would get
- * too many incorrect words.
+ * Esimerkiksi jos säännöllinen lauseke on {@code "-"} ja sana on {@code kuun-kauden},
+ * yritetään tunnistaa {@code kuun} ja {@code kauden}, jolloin perusmuodot ovat
+ * {@code kuu} ja {@code kausi}
  */
 public class CompoundWordMultiSuggestion extends Suggestion {
   /**
