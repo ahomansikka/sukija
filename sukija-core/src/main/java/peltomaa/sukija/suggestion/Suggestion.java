@@ -132,8 +132,11 @@ public abstract class Suggestion {
   /** Analyse a set of words.
    *
    * @param words  Words to be analysed.
+   * @param addUnrecognizedWordsToResult
+   *        If word is not recoginzed, do we return
+   *        it as a 'base form'?        
    */
-  protected boolean analyse (Set<String> words)
+  protected boolean analyse (Set<String> words, boolean addUnrecognizedWordsToResult)
   {
     try {
       result.clear();
@@ -142,8 +145,12 @@ public abstract class Suggestion {
       Set<String> tmp = new TreeSet<String>();
 
       while (i.hasNext()) {
-        if (morphology.analyzeLowerCase (i.next(), tmp)) {
+        final String s = i.next();
+        if (morphology.analyzeLowerCase (s, tmp)) {
           result.addAll (tmp);
+        }
+        else if (addUnrecognizedWordsToResult) {
+          result.add (s);
         }
         tmp.clear();
       }
@@ -154,6 +161,12 @@ public abstract class Suggestion {
       LOG.error (e.getMessage());
     }
     return false;
+  }
+
+
+  protected boolean analyse (Set<String> words)
+  {
+    return analyse (words, false);
   }
 
 
