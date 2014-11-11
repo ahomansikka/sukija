@@ -18,6 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package peltomaa.sukija.suggestion;
 
 import java.util.Arrays;
+import java.util.regex.Pattern;
 import java.util.TreeSet;
 import peltomaa.sukija.morphology.Morphology;
 
@@ -39,7 +40,7 @@ public class HyphenSuggestion extends Suggestion {
    *
    * @param morphology Morfologialuokka
    * @param addUnrecognizedWordPartsToResult
-   *        Lisätäänkö tunnistamattomat sanan osat tuloksiin.
+   *        Lisätäänkö tunnistamattomat sanan osat tuloksiin?
    */
   public HyphenSuggestion (Morphology morphology, boolean addUnrecognizedWordPartsToResult)
   {
@@ -50,15 +51,15 @@ public class HyphenSuggestion extends Suggestion {
 
   public boolean suggest (String word)
   {
-    if (word.indexOf('-') == -1) return false;
+    String[] s = PATTERN.split (word);
+    if (s.length == 1) return false;
     reset();
-    String[] s = word.split("-");
     sb.append (join(s));
     if (analyse()) {
       return true;
     }
     else {
-      return analyse (new TreeSet (Arrays.asList(s)), addUnrecognizedWordPartsToResult);
+      return analyse (new TreeSet<String> (Arrays.asList(s)), addUnrecognizedWordPartsToResult);
     }
   }
 
@@ -75,4 +76,5 @@ public class HyphenSuggestion extends Suggestion {
 
 
   private boolean addUnrecognizedWordPartsToResult;
+  private static final Pattern PATTERN = Pattern.compile ("-+|[.]-|\"-+");
 }
