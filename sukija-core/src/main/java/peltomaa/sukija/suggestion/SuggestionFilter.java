@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2012-2013 Hannu Väisänen
+Copyright (©) 2012-2014 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -42,18 +42,14 @@ public class SuggestionFilter extends TokenFilter {
   {
     super (in);
     try {
-      parser = new SuggestionParser (morphology, new FileReader (suggestionFile));
+      parser = new SuggestionParser (morphology, suggestionFile);
       suggestion = parser.getSuggestions();
 
       this.morphology = morphology;
 
       if (LOG.isDebugEnabled()) LOG.debug ("SuggestionFilter: creating class " + getClass().getName() + ".");
     }
-    catch (FileNotFoundException e)
-    {
-      LOG.error ("SuggestionFilter: " + e.getMessage());
-    }
-    catch (IOException e)
+    catch (SuggestionParser.SuggestionParserException e)
     {
       LOG.error ("SuggestionFilter: " + e.getMessage());
     }

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+
+<xsd:complexType name = "SuggestionInput">
+  <xsd:sequence>
+    <xsd:element name = "suggestion" minOccurs = "1" maxOccurs = "unbounded">
+       <xsd:complexType>
+         <xsd:sequence>
+            <xsd:element name = "argument" type = "xsd:string" minOccurs = "0" maxOccurs = "unbounded"/>
+         </xsd:sequence>
+         <xsd:attribute name = "name" use = "required" type = "xsd:string"/>
+       </xsd:complexType>
+    </xsd:element>
+  </xsd:sequence>
+</xsd:complexType>
+
+<xsd:element name = "suggestions" type = "SuggestionInput"/>
+
+</xsd:schema>

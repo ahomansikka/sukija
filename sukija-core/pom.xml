@@ -17,4 +17,30 @@
       <version>1.4</version>
     </dependency>
   </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>jaxb2-maven-plugin</artifactId>
+        <version>1.5</version>
+        <executions>
+          <execution>
+            <id>xjc</id>
+            <goals>
+              <goal>xjc</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+        <!-- The name of your generated source package. -->
+        <packageName>peltomaa.sukija.schema</packageName>
+        <!-- The output path to include in your jar/war/etc if
+             you wish to include your schemas in your artifact.
+        -->
+        <includeSchemasOutputPath>peltomaa/sukija/schema</includeSchemasOutputPath>
+      </configuration>
+    </plugin>
+    </plugins>
+  </build>
 </project>

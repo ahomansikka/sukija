@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2012-2013 Hannu Väisänen
+Copyright (©) 2012-2014 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -17,101 +17,180 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 package peltomaa.sukija.suggestion;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.FileReader;
-import java.io.Reader;
+import java.util.Arrays;
+import java.util.List;
+import java.io.OutputStream;
 import java.util.regex.Pattern;
-import java.util.regex.Matcher;
-import java.util.regex.MatchResult;
-import java.util.Scanner;
 import java.util.Vector;
+import javax.xml.bind.JAXBException;
+import org.xml.sax.SAXException;
 import peltomaa.sukija.morphology.Morphology;
-import peltomaa.sukija.util.RegexUtil;
+import peltomaa.sukija.util.JAXBUtil;
+import peltomaa.sukija.schema.*;
 
 
 public class SuggestionParser {
-  public SuggestionParser (Morphology morphology, Reader reader) throws IOException
+  public SuggestionParser (Morphology morphology, String xmlFile) throws SuggestionParserException
   {
-    BufferedReader file = new BufferedReader (reader);
-    String line;
-    while ((line = file.readLine()) != null) {
-      if (!COMMENT_OR_WHITESPACE.matcher(line).matches()) {
-        parseLine (line, morphology);
-      }
+    this (morphology, xmlFile, XSD_FILE);
+  }
+
+
+  public SuggestionParser (Morphology morphology, String xmlFile, String xsdFile) throws SuggestionParserException
+  {
+    try {
+      si = JAXBUtil.unmarshal (xmlFile, xsdFile, CONTEXT_PATH);
+      parseSuggestions (morphology, si.getSuggestion());
     }
+    catch (SuggestionParserException e) {
+      throw e;
+    }
+    catch (Throwable t)
+    {
+      throw new SuggestionParserException (t);
+    }
+  }
+
+
+  public SuggestionParser (Morphology morphology, java.io.Reader reader)
+  {
+  }
+
+
+  /** Tulostetaan asetukset.
+   */
+  public void print (OutputStream out) throws JAXBException
+  {
+    JAXBUtil.marshal ((new ObjectFactory()).createSuggestions(si), CONTEXT_PATH, out);
   }
 
 
   public Vector<Suggestion> getSuggestions() {return v;}
 
 
-  private void parseLine (String line, Morphology morphology)
+  private void parseSuggestions (Morphology morphology, List<SuggestionInput.Suggestion> s) throws SuggestionParserException
   {
-    Scanner scanner = new Scanner (line);
-
-    if (scanner.hasNext (KEYWORD)) {
-      parseCommand (scanner, morphology);
-    }
-  }
-
-
-  private void parseCommand (Scanner scanner, Morphology morphology)
-  {
-    String command = scanner.next();
-
-    switch (command) {
-      case "Apostrophe":
-        v.add (new ApostropheSuggestion (morphology));
-        break;
-      case "Char":
-        v.add (new CharSuggestion (morphology, argument(scanner.next()), argument(scanner.next())));
-        break;
-      case "CharCombination":
-        v.add (new CharCombinationSuggestion (morphology, argument(scanner.next()), argument(scanner.next())));
-        break;
-      case "Length3":
-        v.add (new Length3Suggestion (morphology));
-        break;
-      case "Prefix":
-        v.add (new PrefixSuggestion (morphology, parseList (scanner)));
-        break;
-      case "Regex":
-        v.add (new RegexSuggestion (morphology, argument(scanner.next()), argument(scanner.next())));
-        break;
-      case "RegexCombination":
-//        v.add (new RegexCombinationSuggestion (morphology, argument(scanner.next()), argument(scanner.next())));
-        break;
-    }
-    scanner.skip (COMMENT_OR_WHITESPACE);
-  }
-
-
-  private Vector<String> parseList (Scanner scanner)
-  {
-    Vector<String> argument = new Vector<String>();
-    while (scanner.hasNext()) {
-      final String s = scanner.next();
-      if (s.startsWith ("#")) {
-        break;
+    for (int i = 0; i < s.size(); i++) {
+      final List<String> argument = s.get(i).getArgument();
+      final String name = s.get(i).getName();
+      switch (name) {
+        case "Apostrophe":
+          checkArguments (name, argument.size() == 0);
+          v.add (new ApostropheSuggestion (morphology));
+          break;
+        case "Char":
+          checkArguments (name, argument.size() == 2);
+          v.add (new CharSuggestion (morphology, argument.get(0), argument.get(1)));
+          break;
+        case "CharCombination":
+          checkArguments (name, argument.size() == 2);
+          v.add (new CharCombinationSuggestion (morphology, argument.get(0), argument.get(1)));
+          break;
+        case "Hyphen":
+          checkArguments (name, argument.size() == 1);
+          v.add (new HyphenSuggestion (morphology, toBoolean(argument.get(0))));
+          break;
+        case "Length3":
+          checkArguments (name, argument.size() == 0);
+          v.add (new Length3Suggestion (morphology));
+          break;
+        case "Prefix":
+          checkArguments (name, argument.size() >= 1);
+          v.add (new PrefixSuggestion (morphology, toList(argument)));
+          break;
+        case "Regex":
+          checkArguments (name, argument.size() >= 2);
+          v.add (new RegexSuggestion (morphology, parse1(name,argument), toBoolean(argument.get(argument.size()-1))));
+          break;
+        case "RegexCombination":
+//          v.add (new RegexCombinationSuggestion (morphology, argument(scanner.next()), argument(scanner.next())));
+          break;
+        case "String":
+          checkArguments (name, argument.size() >= 1);
+          v.add (new StringSuggestion (morphology, parse2 (name, argument)));
+          break;
       }
-      argument.add (s);
     }
-    return argument;
   }
 
 
-  private String argument (String s)
+  private void checkArguments (String name, boolean expr) throws SuggestionParserException
   {
-    if (!s.startsWith("\"")) throw new RuntimeException ("String '" + s + "' does not start with '\"'.");
-    if (!s.endsWith("\""))   throw new RuntimeException ("String '" + s + "' does not end with '\"'.");
-    return s.substring (1, s.length()-1);
+    if (!expr) throw new SuggestionParserException (name);
   }
 
 
-  private static final String IGNORE = "\\s*(#.*$)*";
-  private static final Pattern COMMENT_OR_WHITESPACE = Pattern.compile (IGNORE);
-  private static final Pattern KEYWORD = Pattern.compile ("Apostrophe|Char|CharCombination|Length3|Prefix|Regex|RegexCombination");
+  private List<String> toList (List<String> s)
+  {
+    List<String> u = new Vector<String>();
+    for (int i = 0; i < s.size(); i++) {
+      u.addAll (Arrays.asList (WHITESPACE.split(s.get(i))));
+    }
+    return u;
+  }
+
+
+  private List<String> parse1 (String name, List<String> argument) throws SuggestionParserException
+  {
+    List<String> u = new Vector<String>();
+    for (int i = 0; i < argument.size()-1; i++) {
+      String[] p = WHITESPACE.split (argument.get(i));
+      if (p.length == 1) {
+        u.add (p[0]);
+        u.add ("");
+      }
+      else if (p.length == 2) {
+        u.addAll (Arrays.asList (p));
+      }
+      else {
+        throw new SuggestionParserException (name + " " + p.length + ": virheellinen parametrilista: " + argument.toString());
+      }
+    }
+    return u;
+  }
+
+
+  private String[][] parse2 (String name, List<String> argument) throws SuggestionParserException
+  {
+    String[][] s = new String[argument.size()][];
+    for (int i = 0; i < argument.size(); i++) {
+      String[] p = WHITESPACE.split (argument.get(i));
+      if (p.length >= 2) {
+        s[i] = p;
+      }
+      else {
+        throw new SuggestionParserException (name + ": virheellinen parametrilista: " + argument.toString());
+      }
+    }
+    return s;
+  }
+
+
+  private boolean toBoolean (String s)
+  {
+    return Boolean.valueOf (s);
+  }
+
+
+  public class SuggestionParserException extends Exception {
+    private SuggestionParserException (String message)
+    {
+      super (message);
+    }
+    private SuggestionParserException (String message, Throwable cause)
+    {
+      super (message, cause);
+    }
+    private SuggestionParserException (Throwable cause)
+    {
+      super (cause);
+    }
+  }
+
 
   private Vector<Suggestion> v = new Vector<Suggestion>();
+  private static final String CONTEXT_PATH = "peltomaa.sukija.schema";
+  private static final String XSD_FILE = "/peltomaa/sukija/schema/SuggestionInput.xsd";
+  private static final Pattern WHITESPACE = Pattern.compile ("\\s+");
+  private SuggestionInput si;
 }
