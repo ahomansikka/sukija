@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+
+<suggestions>
+
+  <suggestion name = "CompoundWordEnd">
+    <argument>aukio aukio</argument>
+    <argument>hall[ie] halli</argument>
+    <argument>harju harju</argument>
+    <argument>hiek hiekka</argument>
+    <argument>jo(k[ie]|e) joki</argument>
+    <argument>jän[kg] jänkä</argument>
+    <argument>järv[ie] järvi</argument>
+    <argument>kair[ao] kaira</argument>
+    <argument>kallio kallio</argument>
+    <argument>kan(ka[ai]|gas) kangas</argument>
+    <argument>kanjon kanjoni</argument>
+    <argument>kappel kappeli</argument>
+    <argument>kartano kartano</argument>
+    <argument>ka[td]u katu</argument>
+    <argument>kent[itä] kenttä</argument>
+    <argument>kirk[ko] kirkko</argument>
+    <argument>kiv[ie] kivi</argument>
+    <argument>koivik koivikko</argument>
+    <argument>kor(pi|ve) korpi</argument>
+    <argument>kosk[ie] koski</argument>
+    <argument>koulu koulu</argument>
+    <argument>kukkul kukkula</argument>
+    <argument>kulm[ai] kulma</argument>
+    <argument>kum[pm]u kumpu</argument>
+    <argument>kuru kuru</argument>
+    <argument>kuusik[ko] kuusikko</argument>
+    <argument>kyl[äi] kylä</argument>
+    <argument>kön[kg]ä köngäs</argument>
+    <argument>laakso laakso</argument>
+    <argument>lah(ti|de) lahti</argument>
+    <argument>lai(s|nen) lainen</argument>
+    <argument>läi(s|nen) läinen</argument>
+    <argument>lam(pi|me) lampi</argument>
+    <argument>lamm[ie] lammi</argument>
+    <argument>leh[td]o lehto</argument>
+    <argument>let[to] letto</argument>
+    <argument>linn[ao] linna</argument>
+    <argument>luol[ai] luola</argument>
+    <argument>luo[td]o luoto</argument>
+    <argument>läh[dt]e lähde</argument>
+    <argument>metsik[kö] metsikkö</argument>
+    <argument>mets[äi] metsä</argument>
+    <argument>moskeij moskeija</argument>
+    <argument>mutk[ai] mutka</argument>
+    <argument>mä(ki|[ei]) mäki</argument>
+    <argument>nev[ao] neva</argument>
+    <argument>nie(nt(en|ä)|m[ie]) niemi</argument>
+    <argument>niit[tu] niittu</argument>
+    <argument>niit[ty] niitty</argument>
+    <argument>nok[kai] nokka</argument>
+    <argument>notko notko</argument>
+    <argument>numm[ie] nummi</argument>
+    <argument>pel[tl]o pelto</argument>
+    <argument>perä perä</argument>         <!-- Monikossa tulee liikaa vääriä tunnistuksia. -->
+    <argument>pih[ao] piha</argument>
+    <argument>po(ik[ai]|j[ai]) poika</argument>
+    <argument>pol[ku] polku</argument>
+    <argument>puisto puisto</argument>
+    <argument>puro puro</argument>
+    <argument>putou[sk] putous</argument>
+    <argument>ran[tn] ranta</argument>
+    <argument>rim(pi|m[ei]) rimpi</argument>
+    <argument>rin[nt]e rinne</argument>    <!-- Tunnistaa myös perinne-loppuiset sanat. (-: -->
+    <argument>rotko rotko</argument>
+    <argument>räme räme</argument>
+    <argument>saar[iet] saari</argument>
+    <argument>salm[ie] salmi</argument>
+    <argument>salo salo</argument>
+    <argument>sel[kä] selkä</argument>
+    <argument>selän[nt] selänne</argument>
+    <argument>suo suo</argument>
+    <argument>suisto suisto</argument>
+    <argument>suvan[tn] suvanto</argument>
+    <argument>särk[kä] särkkä</argument>
+    <argument>talo talo</argument>
+    <argument>tundr[aio] tundra</argument>
+    <argument>tuntur[ie] tunturi</argument>
+    <argument>tytt?är tytär</argument>
+    <argument>törm[äi] törmä</argument>
+    <argument>vaar[ao] vaara</argument>
+    <argument>vainio vainio</argument>
+    <argument>ve(si|de) vesi</argument>
+    <argument>vir[tr] virta</argument>
+    <argument>vuom[ai] vuoma</argument>
+    <argument>vuono vuono</argument>
+    <argument>vuor[iet] vuori</argument>
+    <argument>vuoristo vuoristo</argument>
+    <argument>väyl[äi] väylä</argument>
+    <argument>ylän[kg]ö ylänkö</argument>
+  </suggestion>
+
+  <suggestion name = "Apostrophe"/>
+
+  <suggestion name = "Char">
+    <argument>w</argument>
+    <argument>v</argument>
+  </suggestion>
+
+  <suggestion name = "Char">
+    <argument>kptgbdwv</argument>
+    <argument>gbdkptvw</argument>
+  </suggestion>
+
+  <suggestion name = "Erase">
+    <argument>[</argument>
+    <argument>]</argument>
+  </suggestion>
+
+  <suggestion name = "Length3"/>
+
+  <suggestion name = "Regex">
+    <argument>V(h)V hd</argument>  <!-- Puhistus => puhdistus. -->
+    <argument>V(h)V</argument>     <!-- Pöyvän => pöydän, uuven => uuden. -->
+    <argument>VV(v)V d</argument>
+    <argument>[^l](li)(:?nen|se|si|st) lli</argument>
+    <argument>Oi(ts[ie])</argument>
+    <argument>U(v)A</argument>         <!-- Lauvantai => lauantai, kauvan => kauvan. -->
+    <argument>r(t)elle r</argument>
+    <argument>h(t)elle d</argument>
+    <argument>V(t)elle d</argument>
+    <argument>(n)pi(?:A|in)?$"m </argument>  <!-- Pienenpi, pienenpiä, pienenpiin. -->
+    <argument>(illi)(?:nen|s) i </argument>  <!-- Traagillinen => traaginen. -->
+    <argument>C[ae](hi)C      i </argument>  <!-- Aina(h)inen, ete(h)inen. -->
+    <argument>(?:uu|yy)(e)    de</argument>  <!-- Uuen => uuden. -->
+    <argument>ai(j)[eou]        </argument>  <!-- Ai(j)emmin, ai(j)omme, kai(j)utin. -->
+    <argument>V(mm)Ai[ns]     m </argument>  <!-- Alammainen => alamainen. -->
+    <argument>V(m)Ai[ns]      mm</argument>  <!-- Lähimäinen => lähimmäinen. -->
+    <argument>^([0-9]+)</argument>           <!-- Poista numerot sanan alusta. -->
+    <argument>true</argument>
+  </suggestion>
+
+  <suggestion name = "String">
+    <argument>tsh ts</argument>
+    <argument>sydämm sydäm</argument>
+  </suggestion>
+</suggestions>

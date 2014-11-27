@@ -34,7 +34,7 @@ VFST_MORPHOLOGY_FILTER_FACTORY=filter class="peltomaa.sukija.voikko.VoikkoMorpho
 
 
 VFST_MORPHOLOGY_SUGGESTION_FILTER_FACTORY=\
-    filter class="peltomaa.sukija.voikko.VoikkoMorphologyFilterFactory"\
+    filter class="peltomaa.sukija.voikko.VoikkoMorphologySuggestionFilterFactory"\
     dictionary="fi"\
     path="$${user.home}/vvfst/voikkodict"\
     libvoikkoPath="$${user.home}/vvfst/lib/libvoikko.so"\

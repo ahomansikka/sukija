@@ -93,10 +93,9 @@ public class VoikkoMorphology implements Morphology {
      String libvoikkoPath,
      String libraryPath) throws MorphologyException
   {
-    System.load (libvoikkoPath);
-    Voikko.addLibraryPath (libraryPath);
-
     if (voikkoMorphology == null) {
+      System.load (libvoikkoPath);
+      Voikko.addLibraryPath (libraryPath);
       voikkoMorphology = new VoikkoMorphology (dictionary, path);
       LOG.info (MessageFormat.format (r.getString ("init-voikko-morphology"), null));
       LOG.info ("Voikko vfst morphology.");

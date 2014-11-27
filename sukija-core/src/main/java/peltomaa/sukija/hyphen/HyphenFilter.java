@@ -49,6 +49,8 @@ public class HyphenFilter extends SukijaFilter {
     v.add (word);
 
     final String[] s = pattern.split (word);
+//    if (LOG.isDebugEnabled()) LOG.debug (word + " " + s.length);
+
     if (s.length > 1) {
       final String w = pattern.matcher(word).replaceAll(replacement);
 //      System.out.println (word + " " + w);
