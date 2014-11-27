@@ -87,7 +87,7 @@ public class RegexSuggestion extends Suggestion {
 /*
 System.out.println (sb.toString()
                     + " " + word.toString()
-                    + " " + word.subSequence (start, m.start(1)).toString()
+                    + " " + word.substring (start, m.start(1)).toString()
                     + " " + m.group(0)
                     + " " + m.group(1)
                     + " " + pattern.get(i).pattern()
@@ -98,14 +98,14 @@ System.out.println (sb.toString()
                     + " " + m.start(1)
                     + " " + m.end(1));
 */
-      sb.append (word.subSequence (start, m.start(1)));  // Append start of word.
-      sb.append (replacement.get(i));                    // Append replacement.
+      sb.append (word.substring (start, m.start(1)));  // Append start of word.
+      sb.append (replacement.get(i));                  // Append replacement.
       start = m.end (1);           // Continue searching after the previous match.
       found = true;
     }
     if (!found) return false;
 
-    sb.append (word.subSequence (start, word.length())); // Append end of word.
+    sb.append (word.substring (start, word.length())); // Append end of word.
     return analyse (sb.toString(), set);
   }
 

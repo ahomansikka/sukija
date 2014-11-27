@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2013 Hannu Väisänen
+Copyright (©) 2013-2014 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -58,15 +58,14 @@ public class SuggestionParserTest extends TestCase {
     try {
       Morphology morphology = MalagaMorphology.getInstance (getMalagaProjectFile());
 
-      BufferedReader reader = new BufferedReader (new FileReader (System.getProperty("user.home") + "/.sukija/suggestion.txt"));
-      SuggestionParser sp = new SuggestionParser (morphology, reader);
+      SuggestionParser sp = new SuggestionParser (morphology, System.getProperty("user.home") + "/.sukija/suggestion.txt");
       Vector<Suggestion> v = sp.getSuggestions();
 
       for (Suggestion s: v) {
         assertTrue (s.suggest ("qwertyuiop") == false);
       }
     }
-    catch (IOException t)
+    catch (SuggestionParser.SuggestionParserException t)
     {
       if (t.getMessage() != null) System.out.println (t.getMessage());
 //      t.printStackTrace (System.out);

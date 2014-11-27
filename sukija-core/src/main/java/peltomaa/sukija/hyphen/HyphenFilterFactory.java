@@ -15,34 +15,35 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-package peltomaa.sukija.morphology;
+package peltomaa.sukija.hyphen;
 
-
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.Map;
+import org.apache.lucene.analysis.TokenFilter;
 import org.apache.lucene.analysis.TokenStream;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import peltomaa.sukija.util.SukijaFilter;
+import org.apache.lucene.analysis.util.TokenFilterFactory;
 
 
-public class MorphologyFilter extends SukijaFilter {
-  public MorphologyFilter (TokenStream in, Morphology morphology)
+/**
+ * Factory for {@link HyphenFilter}. 
+ * <pre class="prettyprint" >
+ * &lt;fieldType name="text" class="solr.TextField"
+ *   &lt;analyzer&gt;
+ *     &lt;filter class="peltomaa.sukija.filter.HyphenFilterFactory"
+ *   &lt;/analyzer&gt;
+ * &lt;/fieldType&gt;</pre> 
+ */
+public class HyphenFilterFactory extends TokenFilterFactory {
+  /**
+   * Create new HyphenFilterFactory.
+   */
+  public HyphenFilterFactory (Map<String,String> args)
   {
-    super (in);
-    this.morphology = morphology;
+    super (args);
   }
 
-
-  protected void filter (String word)
+  @Override
+  public TokenFilter create (TokenStream input)
   {
-    set.clear();
-    morphology.analyzeLowerCase (word, set);
-    iterator = set.iterator();
+    return new HyphenFilter (input);
   }
-
-
-  private static final Logger LOG = LoggerFactory.getLogger (MorphologyFilter.class);
-  private Morphology morphology;
-  private Set<String> set = new TreeSet<String>();
 }

@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2009-2011, 2013 Hannu Väisänen
+Copyright (©) 2009-2011, 2013-2014 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -17,9 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 package peltomaa.sukija.suggestion;
 
-import java.util.Vector;
 import peltomaa.sukija.morphology.Morphology;
-import peltomaa.sukija.util.Pair;
 
 
 public class ApostropheSuggestion extends Suggestion {
@@ -62,29 +60,18 @@ public class ApostropheSuggestion extends Suggestion {
   */
   public boolean suggest (String word)
   {
-    final int n = find (word, ch);
+    final int n = word.indexOf (ch);
     if (n == -1) return false;
 
     reset();
-    sb.append (word.subSequence (0, n)).append (word.subSequence (n+1, word.length()));
+    sb.append (word.substring (0, n)).append (word.substring (n+1, word.length()));
     if (analyse()) return true;
 
     result.clear();
-    result.add (word.subSequence (0, n).toString());
+    result.add (word.substring (0, n));
     return true;
   }
 
 
   private final char ch;
-
-
-  private int find (CharSequence word, char c)
-  {
-    for (int i = 0; i < word.length(); i++) {
-      if (word.charAt(i) == c) {
-        return i;
-      }
-    }
-    return -1;
-  }
 }

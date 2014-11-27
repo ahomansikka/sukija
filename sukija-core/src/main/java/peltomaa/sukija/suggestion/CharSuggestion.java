@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2009-2011, 2013 Hannu Väisänen
+Copyright (©) 2009-2011, 2013-2014 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -17,20 +17,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 package peltomaa.sukija.suggestion;
 
+import java.util.Vector;
 import peltomaa.sukija.morphology.Morphology;
+import peltomaa.sukija.util.Combination;
 
 
 /**
- * Replace characters with other characters.<p>
- *
- * Each from[i] is replaced with to[i] one at a time.<p>
- * For example<p>
- * {@code CharSuggestion (morphology, "w", "v");}<p>
- * replace {@code w} with {@code v}; e.g.
- * replacing {@code wanha} with {@code vanha}.<p>
- *
- * If you are replacing more than one letter use
- * {@link peltomaa.sukija.suggestion.CharCombinationSuggestion} instead.
+ * Replace combinations of characters.
  */
 public class CharSuggestion extends Suggestion {
   public CharSuggestion (Morphology morphology, String from, String to)
@@ -47,24 +40,43 @@ public class CharSuggestion extends Suggestion {
   public boolean suggest (String word)
   {
     reset();
-    sb.append (word);
 
-    for (int i = 0; i < sb.length(); i++) {
-      for (int j = 0; j < from.length(); j++) {
-        if (sb.charAt (i) == from.charAt (j)) {
-          final char ch = sb.charAt (i);
-          sb.setCharAt (i, to.charAt (j));
-          if (analyse()) {
-            return true;
-          }
-          sb.setCharAt (i, ch);
+    int size = 0;
+
+    // Put the indices of 'from' characters in 'word' into array v
+    // and corresponding 'to' characters into array w.
+    //
+    for (int i = 0; i < word.length(); i++) {
+      final int n = from.indexOf (word.charAt (i));
+      if (n >= 0) {
+        v[size] = i;
+        w[size++] = to.charAt (n);
+        if (size >= MAX_CHARS) {
+          return false;  // Return silently, if we have too many chars to replace.
         }
       }
     }
 
-    return found;
+    if (size > 0) {                      // Do we have something to replace?
+      for (int i = 0; i <= size; i++) {  // If we do, we test all combinations.
+        Combination c = new Combination (size, i);
+        do {
+          sb.replace (0, sb.length(), word);
+
+          for (int k = 0; k < c.getK(); k++) {
+            sb.setCharAt (v[c.get(k)], w[c.get(k)]);
+          }
+          if (analyse()) return true;
+        } while (c.next());
+      }
+    }
+    return false;
   }
+
 
   private String from;
   private String to;
+  private static int MAX_CHARS = 11;  // Max number of allowed permutations is 10! or 3628800.
+  private int[] v = new int[MAX_CHARS];
+  private char[] w = new char[MAX_CHARS];
 }

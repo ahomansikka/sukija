@@ -25,28 +25,31 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.Vector;
-
+import org.apache.lucene.analysis.TokenStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import org.apache.lucene.analysis.TokenFilter;
-import org.apache.lucene.analysis.TokenStream;
-import org.apache.lucene.analysis.tokenattributes.PositionIncrementAttribute;
-import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
-
 import peltomaa.sukija.morphology.Morphology;
+import peltomaa.sukija.util.SukijaFilter;
 
 
-public class SuggestionFilter extends TokenFilter {
-  public SuggestionFilter (TokenStream in, Morphology morphology, String suggestionFile)
+
+public class SuggestionFilter extends SukijaFilter {
+  /**
+   * @param in
+   * @param morphology     Käytetty morfologia (Malaga tai Voikko).
+   * @param suggestionFile Tiedosto, josta korjausehdotukset luetaan.
+   * @param successOnly    Jos 'true', suodatin päästää läpi vain ne sanat, jotka tunnistetaan,
+   *                       jos false, myös tunnistamattomat sanat päästetään läpi.
+   */
+  public SuggestionFilter (TokenStream in, Morphology morphology, String suggestionFile, boolean successOnly)
   {
     super (in);
     try {
+      LOG.info ("SuggestionFilter: aloitetaan.");
       parser = new SuggestionParser (morphology, suggestionFile);
       suggestion = parser.getSuggestions();
-
       this.morphology = morphology;
-
+      this.successOnly = successOnly;
       if (LOG.isDebugEnabled()) LOG.debug ("SuggestionFilter: creating class " + getClass().getName() + ".");
     }
     catch (SuggestionParser.SuggestionParserException e)
@@ -56,54 +59,44 @@ public class SuggestionFilter extends TokenFilter {
   }
 
 
-  @Override
-  public final boolean incrementToken() throws IOException
+  /**
+   * Sama kuin {@code SuggestionFilter (in, morphology, suggestionFile, false)}.<p>
+   *
+   * @param in
+   * @param morphology     Käytetty morfologia (Malaga tai Voikko).
+   * @param suggestionFile Tiedosto, josta korjausehdotukset luetaan.
+   */
+  public SuggestionFilter (TokenStream in, Morphology morphology, String suggestionFile)
   {
-     if ((iterator == null) || (!iterator.hasNext())) {
-      if (!input.incrementToken()) {
-         return false;
-      }
-      final String word = termAtt.toString();
-      if (word == null || word.length() == 0) {
-        return false;
-      }
-      set.clear();
-      positionIncrement = 1;
-      if (morphology.analyzeLowerCase (word, set)) {
-        iterator = set.iterator();
-      }
-      else {
-        suggest (word.toLowerCase());
-      }
-      savedState = captureState();
-    }
-
-    if (iterator.hasNext()) {
-      restoreState (savedState);
-      String baseWord = (String)iterator.next();
-      termAtt.setEmpty();
-      termAtt.append (baseWord);
-      posIncrAtt.setPositionIncrement (positionIncrement);
-      positionIncrement = 0;
-      return true;
-    }
-    return false;
+    this (in, morphology, suggestionFile, false);
   }
 
 
-  /* Try suggestions.
-   */
-  private void suggest (String term)
+  protected void filter (String word)
+  {
+    set.clear();
+    if (morphology.analyzeLowerCase (word, set)) {
+      iterator = set.iterator();
+    }
+    else {
+      iterator = suggest (word.toLowerCase());
+    }
+  }
+
+
+  /** Try suggestions.
+    */
+  private Iterator<String> suggest (String term)
   {
     suggestionSet = getSuggestions (term);
 
     if (suggestionSet == null) { /* No suggestions found. */
-      iterator = set.iterator();
-      if (LOG.isDebugEnabled()) LOG.debug ("Suggest " + term);
+      if (LOG.isDebugEnabled()) LOG.debug ("Suggest1 " + term);
+      return (successOnly ? null : set.iterator());
     }
     else {
-      iterator = suggestionSet.iterator();
-      if (LOG.isDebugEnabled()) LOG.debug ("Suggest " + term + " " + Arrays.toString (suggestionSet.toArray (new String[0])));
+      if (LOG.isDebugEnabled()) LOG.debug ("Suggest2 " + term + " " + Arrays.toString (suggestionSet.toArray (new String[0])));
+      return suggestionSet.iterator();
     }
   }
 
@@ -121,16 +114,10 @@ public class SuggestionFilter extends TokenFilter {
 
   private static final Logger LOG = LoggerFactory.getLogger (SuggestionFilter.class);
 
-  private Iterator<String> iterator;
   private Set<String> set = new TreeSet<String>();
   private Set<String> suggestionSet;
-  private int positionIncrement = 1;
-  private State savedState;
-
-  private final CharTermAttribute termAtt = addAttribute (CharTermAttribute.class);
-  private final PositionIncrementAttribute posIncrAtt = addAttribute (PositionIncrementAttribute.class);
-
   private Morphology morphology;
   private SuggestionParser parser;
   private Vector<Suggestion> suggestion;
+  private boolean successOnly;
 }

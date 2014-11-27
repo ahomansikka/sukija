@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2012-2013 Hannu Väisänen
+Copyright (©) 2012-2014 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -18,6 +18,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package peltomaa.sukija.voikko;
 
 import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.apache.lucene.analysis.TokenFilter;
 import org.apache.lucene.analysis.TokenStream;;
 import org.apache.lucene.analysis.util.TokenFilterFactory;
@@ -31,9 +33,14 @@ import peltomaa.sukija.util.PropertiesUtil;
  * &lt;fieldType name="text" class="solr.TextField"
  *   &lt;analyzer&gt;
  *     &lt;filter class="peltomaa.sukija.voikko.VoikkoMorphologyFilterFactory"
-              dictionary="fi"/&gt;
+              dictionary="fi"
+              path="${user.home}/.voikko"
+              libvoikkoPath="/usr/local/lib/libvoikko.so"
+              libraryPath=/usr/local/lib/"/&gt;
  *   &lt;/analyzer&gt;
- * &lt;/fieldType&gt;</pre> 
+ * &lt;/fieldType&gt;</pre>
+ * <p>Arguments path, libvoikkoPath and libraryPath are optional.
+ * If they are not here defaults are used.
  */
 public class VoikkoMorphologyFilterFactory extends TokenFilterFactory {
   /** Create a new VoikkoMorphologyFilterFactory.
@@ -41,16 +48,43 @@ public class VoikkoMorphologyFilterFactory extends TokenFilterFactory {
   public VoikkoMorphologyFilterFactory (Map<String,String> args)
   {
     super (args);
-    dictionary = PropertiesUtil.replacePropertyNameWithValue (args.get ("dictionary"));
+    dictionary    = PropertiesUtil.replacePropertyNameWithValue (args.get ("dictionary"));
+    path          = PropertiesUtil.replacePropertyNameWithValue (args.get ("path"));
+    libvoikkoPath = PropertiesUtil.replacePropertyNameWithValue (args.get ("libvoikkoPath"));
+    libraryPath   = PropertiesUtil.replacePropertyNameWithValue (args.get ("libraryPath"));
   }
 
 
   @Override
   public TokenFilter create (TokenStream input)
   {
-    return new MorphologyFilter (input, VoikkoMorphology.getInstance (dictionary));
+    if (dictionary == null) {
+      LOG.error ("VoikkoMorphologyFilterFactory: dictionary == null.");
+      LOG.info ("VoikkoMorphologyFilterFactory 1.");
+      return null;
+    }
+    else if (path == null) {
+      LOG.info ("VoikkoMorphologyFilterFactory 2.");
+      return new MorphologyFilter (input, VoikkoMorphology.getInstance (dictionary));
+    }
+    else if ((libvoikkoPath == null) && (libraryPath == null)) {
+      LOG.info ("VoikkoMorphologyFilterFactory 3.");
+      return new MorphologyFilter (input, VoikkoMorphology.getInstance (dictionary, path));
+    }
+    else if ((libvoikkoPath != null) && (libraryPath != null)) {
+      LOG.info ("VoikkoMorphologyFilterFactory 4.");
+      return new MorphologyFilter (input, VoikkoMorphology.getInstance (dictionary, path, libvoikkoPath, libraryPath));
+    }
+    else {
+      LOG.error ("VoikkoMorphologyFilterFactory: some parameters are null.");
+      return null;
+    }
   }
 
 
   private String dictionary;
+  private String path;
+  private String libvoikkoPath;
+  private String libraryPath;
+  private static final Logger LOG = LoggerFactory.getLogger (VoikkoMorphologyFilterFactory.class);
 }

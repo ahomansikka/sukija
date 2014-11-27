@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2009-2011, 2013 Hannu Väisänen
+Copyright (©) 2009-2011, 2013-2014 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -47,7 +47,7 @@ public class Length3Suggestion extends Suggestion {
         sb.append (word.charAt(i));
       }
     }
-    sb.append (word.subSequence (i, word.length()));
+    sb.append (word.substring (i, word.length()));
 
     if (!found) return false;
     return analyse();

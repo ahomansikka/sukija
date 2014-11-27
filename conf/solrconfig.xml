@@ -83,7 +83,7 @@
 
 <!-- OMA LISÄYS ALKAA. -->
   <lib path="${user.home}/.m2/repository/net/java/dev/jna/jna/3.4.0/jna-3.4.0.jar"/>
-  <lib path="${user.home}/.m2/repository/org/puimula/libvoikko/3.2/libvoikko-3.2.jar"/>
+  <lib path="${user.home}/.m2/repository/org/puimula/voikko/libvoikko/3.7/libvoikko-3.7.jar"/>
   <lib dir="${user.home}/.sukija" regex=".*\.jar" />
   <lib dir="../../../dist/" regex="solr-dataimporthandler-.*\.jar" />
   <lib dir="../../../contrib/analysis-extras/lucene-libs" regex=".*\.jar" />

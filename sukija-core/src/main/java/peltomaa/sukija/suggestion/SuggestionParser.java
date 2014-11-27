@@ -20,10 +20,12 @@ package peltomaa.sukija.suggestion;
 import java.util.Arrays;
 import java.util.List;
 import java.io.OutputStream;
+import java.io.StringWriter;
+import java.io.Writer;
 import java.util.regex.Pattern;
 import java.util.Vector;
-import javax.xml.bind.JAXBException;
-import org.xml.sax.SAXException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import peltomaa.sukija.morphology.Morphology;
 import peltomaa.sukija.util.JAXBUtil;
 import peltomaa.sukija.schema.*;
@@ -39,29 +41,53 @@ public class SuggestionParser {
   public SuggestionParser (Morphology morphology, String xmlFile, String xsdFile) throws SuggestionParserException
   {
     try {
-      si = JAXBUtil.unmarshal (xmlFile, xsdFile, CONTEXT_PATH);
+      LOG.info ("SuggestionParser: " + xmlFile + " " + xsdFile);
+
+      si = JAXBUtil.unmarshal (xmlFile, xsdFile, CONTEXT_PATH, this.getClass().getClassLoader());
       parseSuggestions (morphology, si.getSuggestion());
+
+//      print (System.out);
     }
     catch (SuggestionParserException e) {
+      LOG.info (e.getMessage());
+      LOG.info (e.getCause().getMessage());
       throw e;
     }
     catch (Throwable t)
     {
+      LOG.info (t.getMessage());
       throw new SuggestionParserException (t);
     }
   }
 
 
-  public SuggestionParser (Morphology morphology, java.io.Reader reader)
+  /** Tulostetaan asetukset.
+   */
+  public void print (OutputStream out) throws SuggestionParserException
   {
+    try {
+      JAXBUtil.marshal ((new ObjectFactory()).createSuggestions(si), CONTEXT_PATH, out, this.getClass().getClassLoader());
+    }
+    catch (Throwable t)
+    {
+      LOG.info (t.getMessage());
+      throw new SuggestionParserException (t);
+    }
   }
 
 
   /** Tulostetaan asetukset.
    */
-  public void print (OutputStream out) throws JAXBException
+  public void print (Writer out) throws SuggestionParserException
   {
-    JAXBUtil.marshal ((new ObjectFactory()).createSuggestions(si), CONTEXT_PATH, out);
+    try {
+      JAXBUtil.marshal ((new ObjectFactory()).createSuggestions(si), CONTEXT_PATH, out, this.getClass().getClassLoader());
+    }
+    catch (Throwable t)
+    {
+      LOG.info (t.getMessage());
+      throw new SuggestionParserException (t);
+    }
   }
 
 
@@ -73,6 +99,7 @@ public class SuggestionParser {
     for (int i = 0; i < s.size(); i++) {
       final List<String> argument = s.get(i).getArgument();
       final String name = s.get(i).getName();
+      LOG.debug (i + " " + name + " " + argument.toString());
       switch (name) {
         case "Apostrophe":
           checkArguments (name, argument.size() == 0);
@@ -82,9 +109,13 @@ public class SuggestionParser {
           checkArguments (name, argument.size() == 2);
           v.add (new CharSuggestion (morphology, argument.get(0), argument.get(1)));
           break;
-        case "CharCombination":
+        case "CompoundWordEnd":
+          checkArguments (name, argument.size() > 0);
+          v.add (new CompoundWordEndSuggestion (morphology, toList(argument)));
+          break;
+        case "Erase":
           checkArguments (name, argument.size() == 2);
-          v.add (new CharCombinationSuggestion (morphology, argument.get(0), argument.get(1)));
+          v.add (new EraseSuggestion (morphology, toChar(argument.get(0)), toChar(argument.get(1))));
           break;
         case "Hyphen":
           checkArguments (name, argument.size() == 1);
@@ -100,14 +131,15 @@ public class SuggestionParser {
           break;
         case "Regex":
           checkArguments (name, argument.size() >= 2);
-          v.add (new RegexSuggestion (morphology, parse1(name,argument), toBoolean(argument.get(argument.size()-1))));
+          v.add (new RegexSuggestion (morphology, parse(name,argument), toBoolean(argument.get(argument.size()-1))));
           break;
         case "RegexCombination":
-//          v.add (new RegexCombinationSuggestion (morphology, argument(scanner.next()), argument(scanner.next())));
+          checkArguments (name, argument.size() >= 1);
+          v.add (new RegexCombinationSuggestion (morphology, toList(argument).toArray(new String[0])));
           break;
         case "String":
           checkArguments (name, argument.size() >= 1);
-          v.add (new StringSuggestion (morphology, parse2 (name, argument)));
+          v.add (new StringSuggestion (morphology, toArray2 (name, argument)));
           break;
       }
     }
@@ -130,7 +162,7 @@ public class SuggestionParser {
   }
 
 
-  private List<String> parse1 (String name, List<String> argument) throws SuggestionParserException
+  private List<String> parse (String name, List<String> argument) throws SuggestionParserException
   {
     List<String> u = new Vector<String>();
     for (int i = 0; i < argument.size()-1; i++) {
@@ -150,7 +182,7 @@ public class SuggestionParser {
   }
 
 
-  private String[][] parse2 (String name, List<String> argument) throws SuggestionParserException
+  private String[][] toArray2 (String name, List<String> argument) throws SuggestionParserException
   {
     String[][] s = new String[argument.size()][];
     for (int i = 0; i < argument.size(); i++) {
@@ -166,9 +198,33 @@ public class SuggestionParser {
   }
 
 
+  private char toChar (String s) throws SuggestionParserException
+  {
+    if (s.length() != 1) throw new SuggestionParserException (s + " ei ole yksi merkki.");
+    return s.charAt (0);
+  }
+
+
   private boolean toBoolean (String s)
   {
     return Boolean.valueOf (s);
+  }
+
+
+  private List<String> toList (String name, List<String> argument, int start, int end, int min, int max)
+    throws SuggestionParserException
+  {
+    List<String> u = new Vector<String>();
+    for (int i = start; i < end; i++) {
+      String[] p = WHITESPACE.split (argument.get(i));
+      if (p.length < min || p.length > max) {
+        u.addAll (Arrays.asList (p));        
+      }
+      else {
+        throw new SuggestionParserException (name + ": virheellinen parametrilista: " + argument.toString());
+      }
+    }
+    return u;    
   }
 
 
@@ -188,6 +244,7 @@ public class SuggestionParser {
   }
 
 
+  private static final Logger LOG = LoggerFactory.getLogger (SuggestionParser.class);
   private Vector<Suggestion> v = new Vector<Suggestion>();
   private static final String CONTEXT_PATH = "peltomaa.sukija.schema";
   private static final String XSD_FILE = "/peltomaa/sukija/schema/SuggestionInput.xsd";

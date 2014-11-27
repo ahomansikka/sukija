@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2009-2012 Hannu Väisänen
+Copyright (©) 2009-2012, 2014 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -30,9 +30,7 @@ public class FinnishSuggestion {
 
   private static final void initialize (Morphology morphology)
   {
-    v.add (new CharSuggestion (morphology, "w", "v"));         // Wanha => vanha.
-    v.add (new EndSuggestion (morphology, end));
-    v.add (new CharCombinationSuggestion (morphology, "bdgkptw", "ptkgbdv"));
+    v.add (new CharSuggestion (morphology, "bdgkptw", "ptkgbdv"));
     v.add (new Length3Suggestion (morphology));
     v.add (new RegexSuggestion (morphology, "^([0-9]+)", ""));
     v.add (new RegexSuggestion (morphology, "(\"-|''-|--)", "-"));
@@ -48,7 +46,6 @@ public class FinnishSuggestion {
     v.add (new RegexCombinationSuggestion (morphology, rx_nen));
     v.add (new RegexSuggestion (morphology, "C(eesti)$", "esti"));
     v.add (new RegexSuggestion (morphology, "^(parai)",  "parhai"));
-    v.add (new SplitSuggestion (morphology, "(\"-|''-|--|-)"));
     v.add (new CompoundWordSuggestion (morphology, 4));
   }
 

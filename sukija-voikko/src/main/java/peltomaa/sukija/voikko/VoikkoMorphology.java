@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2012-2013 Hannu Väisänen
+Copyright (©) 2012-2014 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -27,7 +27,6 @@ import java.text.MessageFormat;
 import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
-import java.util.MissingResourceException;
 import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
 
@@ -78,6 +77,34 @@ public class VoikkoMorphology implements Morphology {
   }
 
 
+  /**
+   * Get an instance of this class.
+   *
+   * @param dictionary    Dictionary to use.
+   * @param path          Path to dictionary files.
+   * @param libvoikkoPath Path to libvoikko.so.
+   * @param libraryPath   Path to libvoikko library
+   *
+   * @throws MorphologyException if initialization fails
+   */
+  public static synchronized VoikkoMorphology getInstance
+    (String dictionary,
+     String path,
+     String libvoikkoPath,
+     String libraryPath) throws MorphologyException
+  {
+    System.load (libvoikkoPath);
+    Voikko.addLibraryPath (libraryPath);
+
+    if (voikkoMorphology == null) {
+      voikkoMorphology = new VoikkoMorphology (dictionary, path);
+      LOG.info (MessageFormat.format (r.getString ("init-voikko-morphology"), null));
+      LOG.info ("Voikko vfst morphology.");
+    }
+    return voikkoMorphology;
+  }
+
+
 
   public synchronized boolean analyze (String word, Collection<String> c) throws MorphologyException
   {
@@ -105,12 +132,11 @@ public class VoikkoMorphology implements Morphology {
   {
     List<Analysis> list = voikko.analyze (word);
 
-/*
     if (LOG.isDebugEnabled()) {
       LOG.debug ("analyzeLowerCase [" + word + "]");
       for (Analysis a: list) LOG.debug ("  " + a.get("BASEFORM").toLowerCase());
     }
-*/
+
     if (list.size() == 0) {
       c.add (word.toLowerCase());
       return false;

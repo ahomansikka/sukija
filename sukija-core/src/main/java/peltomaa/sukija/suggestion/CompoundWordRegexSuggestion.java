@@ -19,6 +19,7 @@ package peltomaa.sukija.suggestion;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -27,45 +28,58 @@ import peltomaa.sukija.morphology.MorphologyException;
 import peltomaa.sukija.util.RegexUtil;
 
 
-/**
- * Split a word on regular expression and try to recognise it.<p>
- *
- * For example, if regex is {@code "l[aä]i(s[eit]|nen)"} and word is
- * {@code aatelilaiset} splits word to {@code aateli} and {@code laiset}
- * and returns {@code aatelilainen} as a base form.
- */
 public class CompoundWordRegexSuggestion extends Suggestion {
-  /**
-   * @param morphology  Morphology.
-   * @param regex       Regular expression
-   */
   public CompoundWordRegexSuggestion (Morphology morphology, String regex)
   {
     super (morphology);
-    pattern = RegexUtil.makePattern (regex);
+    pattern = new Pattern[1];
+    pattern[0] = RegexUtil.makePattern (regex);
+  }
+
+
+  public CompoundWordRegexSuggestion (Morphology morphology, List<String> regex)
+  {
+    super (morphology);
+    pattern = new Pattern[regex.size()];
+    for (int i = 0; i < regex.size(); i++) {
+      pattern[i] = RegexUtil.makePattern (regex.get(i));
+    }
   }
 
 
   public boolean suggest (String word)
   {
-    Matcher matcher = pattern.matcher (word);
+    for (int i = 0; i < pattern.length; i++) {
+      Matcher matcher = pattern[i].matcher (word);
 
-    if (matcher.find()) {
-      reset();
-      final String end = word.substring (matcher.start());
-      Set<String> set = new TreeSet<String>();
-
-      if (analyse (end, set)) {
+      if (matcher.find()) {
         result.clear();
-        final String start = word.substring (0, matcher.start());
-        for (String s: set) {
-          result.add (start + s);
+        if (suggest (word, matcher.start()) || suggest (word, matcher.end())) {
+          return true;
         }
-        return true;
       }
     }
     return false;
   }
 
-  private final Pattern pattern;
+
+  private boolean suggest (String word, int first)
+  {
+    reset();
+    set.clear();
+    final String end = word.substring (first);
+
+    if (analyse (end, set)) {
+      final String start = word.substring (0, first);
+      for (String s: set) {
+        result.add (start + s);
+      }
+      return true;
+    }
+    return false;
+  }
+
+
+  private final Pattern[] pattern;
+  private Set<String> set = new TreeSet<String>();
 }

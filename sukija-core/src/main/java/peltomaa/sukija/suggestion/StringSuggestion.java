@@ -56,20 +56,6 @@ public class StringSuggestion extends Suggestion {
         return (result.size() > 0);
       }
     }
-
-/*
-    reset();
-
-    for (int i = 0; i < str.size(); i += 2) {
-      if (word.indexOf (str.get(i)) >= 0) {
-        final String s = word.replace (str.get(i), str.get(i+1));
-        result.clear();
-        if (analyse (s, result)) {
-          return true;
-        }
-      }
-    }
-*/
     return false;
   }
 

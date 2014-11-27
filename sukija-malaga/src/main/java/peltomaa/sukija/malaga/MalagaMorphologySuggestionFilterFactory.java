@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2012-2013 Hannu Väisänen
+Copyright (©) 2012-2014 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -23,7 +23,6 @@ import org.apache.lucene.analysis.TokenStream;;
 import org.apache.lucene.analysis.util.TokenFilterFactory;
 import peltomaa.sukija.morphology.MorphologyFilter;
 import peltomaa.sukija.util.PropertiesUtil;
-import peltomaa.sukija.suggestion.SuccessFilter;
 import peltomaa.sukija.suggestion.SuggestionFilter;
 
 
@@ -35,10 +34,10 @@ import peltomaa.sukija.suggestion.SuggestionFilter;
  *     &lt;filter class="peltomaa.sukija.malagaMalagaMorphologySuggestionFilterFactory"
               dictionary="fi"
               suggestionFile="suggestion.txt"
-              success="true"/&gt;
+              success="false"/&gt;
  *   &lt;/analyzer&gt;
  * &lt;/fieldType&gt;</pre> 
- * <p>If success is true {@link SuccessFilter}, otherwise {@link SuggestionFilter} is used.
+ * <p>If success is true filter accepts only words that it recognizes.
  */
 public class MalagaMorphologySuggestionFilterFactory extends TokenFilterFactory {
   /** Create a new MalagaMorphologySuggestionFilterFactory.
@@ -55,12 +54,7 @@ public class MalagaMorphologySuggestionFilterFactory extends TokenFilterFactory 
   @Override
   public TokenFilter create (TokenStream input)
   {
-    if (success) {
-      return new SuccessFilter (input, MalagaMorphology.getInstance (malagaProjectFile), suggestionFile);
-    }
-    else {
-      return new SuggestionFilter (input, MalagaMorphology.getInstance (malagaProjectFile), suggestionFile);
-    }
+    return new SuggestionFilter (input, MalagaMorphology.getInstance (malagaProjectFile), suggestionFile, success);
   }
 
 

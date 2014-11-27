@@ -25,37 +25,49 @@ import java.util.TreeSet;
 import java.util.Vector;
 
 import peltomaa.sukija.morphology.Morphology;
+import peltomaa.sukija.morphology.MorphologyException;
 import peltomaa.sukija.util.RegexUtil;
 
 
-public class RegexSuggestion2 extends Suggestion {
-  public RegexSuggestion2 (Morphology morphology, List<String> input, String afterTest)
+public class CompoundWordEndSuggestion extends Suggestion {
+  public CompoundWordEndSuggestion (Morphology morphology, String regex, String last)
   {
     super (morphology);
+    pattern.add (RegexUtil.makePattern (regex));
+    end.add (last);
+  }
 
-    for (int i = 0; i < input.size(); i += 2) {
-      pattern.add (RegexUtil.makePattern (input.get(i)));
-      replacement.add (input.get(i+1));
+
+  public CompoundWordEndSuggestion (Morphology morphology, List<String> s)
+  {
+    super (morphology);
+    for (int i = 0; i < s.size(); i += 2) {
+      pattern.add (RegexUtil.makePattern (s.get(i)));
+      end.add (s.get(i+1));
     }
-
-    this.afterTest = Pattern.compile (afterTest);
   }
 
 
   public boolean suggest (String word)
   {
     for (int i = 0; i < pattern.size(); i++) {
-      if (suggest (i, word)) {
+      Matcher matcher = pattern.get(i).matcher (word);
+
+      if (matcher.find()) {
+        reset();
         set.clear();
-        for (String s: result) {
-          if (afterTest.matcher(s).find()) {
-            set.add (s);
+        result.clear();
+        if (analyse (word.substring(matcher.start()), set)) {
+          final String start = word.substring (0, matcher.start());
+          result.add (end.get(i));
+          for (String s: set) {
+            if (s.endsWith (end.get(i))) {
+//System.out.println ("\n\nHuu [" + word + "] [" + s + "] [" + (start+s) + "] [" + end.get(i));
+              result.add (start + s);
+              found = true;
+            }
           }
-        }
-        if (set.size() > 0) {
-          result.clear();
-          result.addAll (set);
-          return true;
+          return found;
         }
       }
     }
@@ -63,29 +75,7 @@ public class RegexSuggestion2 extends Suggestion {
   }
 
 
-  public boolean suggest (int i, String word)
-  {
-    reset();
-    Matcher m = pattern.get(i).matcher (word);
-
-    int start = 0;
-
-    while (m.find()) {
-      sb.append (word.subSequence (start, m.start(1)));  // Append start of word.
-      sb.append (replacement.get(i));                    // Append replacement.
-      start = m.end (1);           // Continue searching after the previous match.
-      found = true;
-    }
-
-    if (!found) return false;
-
-    sb.append (word.subSequence (start, word.length())); // Append end of word.
-    return analyse();
-  }
-
-
   private Vector<Pattern> pattern = new Vector<Pattern>();
-  private Vector<String> replacement = new Vector<String>();
-  private Pattern afterTest;
+  private Vector<String> end = new Vector<String>();
   private Set<String> set = new TreeSet<String>();
 }

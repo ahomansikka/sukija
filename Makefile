@@ -1,6 +1,6 @@
 # Muuta nämä kaksi muuttujaa, jos Solr on jossain muualla.
-SOLR_HOME=${HOME}/Lataukset/solr/solr-4.9.0/example/solr/collection1
-JETTY_CONTEXTS_DIR=${HOME}/Lataukset/solr/solr-4.9.0/example/contexts
+SOLR_HOME=${HOME}/Lataukset/solr/solr-4.10.2/example/solr/collection1
+JETTY_CONTEXTS_DIR=${HOME}/Lataukset/solr/solr-4.10.2/example/contexts
 
 
 CONFIG_DIR=conf
@@ -15,17 +15,32 @@ MALAGA_MORPHOLOGY_FILTER_FACTORY=filter class="peltomaa.sukija.malaga.MalagaMorp
 
 MALAGA_MORPHOLOGY_SUGGESTION_FILTER_FACTORY=filter class="peltomaa.sukija.malaga.MalagaMorphologySuggestionFilterFactory"\
                                  malagaProjectFile="$${user.home}/.sukija/suomi.pro"\
-                                 suggestionFile="$${user.home}/.sukija/suggestion.txt"\
-                                 success="true"
+                                 suggestionFile="$${user.home}/.sukija/suggestion.xml"\
+                                 success="false"
 
-VOIKKO_MORPHOLOGY_FILTER_FACTORY=filter class="peltomaa.sukija.voikko.VoikkoMorphologyFilterFactory\
+VOIKKO_MORPHOLOGY_FILTER_FACTORY=filter class="peltomaa.sukija.voikko.VoikkoMorphologyFilterFactory"\
                                  dictionary="fi"
 
-VOIKKO_MORPHOLOGY_SUGGESTION_FILTER_FACTORY=filter class="peltomaa.sukija.voikko.VoikkoMorphologyFilterFactory\
+VOIKKO_MORPHOLOGY_SUGGESTION_FILTER_FACTORY=filter class="peltomaa.sukija.voikko.VoikkoMorphologySuggestionFilterFactory"\
                                             dictionary="fi"\
-                                            suggestionFile="$${user.home}/.sukija/suggestion.txt"\
-                                            success="true"
+                                            suggestionFile="$${user.home}/.sukija/suggestion.xml"\
+                                            success="false"
 
+VFST_MORPHOLOGY_FILTER_FACTORY=filter class="peltomaa.sukija.voikko.VoikkoMorphologyFilterFactory"\
+                               dictionary="fi"\
+                               path="$${user.home}/vvfst/voikkodict"\
+                               libvoikkoPath="$${user.home}/vvfst/lib/libvoikko.so"\
+                               libraryPath="$${user.home}/vvfst/lib"
+
+
+VFST_MORPHOLOGY_SUGGESTION_FILTER_FACTORY=\
+    filter class="peltomaa.sukija.voikko.VoikkoMorphologyFilterFactory"\
+    dictionary="fi"\
+    path="$${user.home}/vvfst/voikkodict"\
+    libvoikkoPath="$${user.home}/vvfst/lib/libvoikko.so"\
+    libraryPath="$${user.home}/vvfst/lib"\
+    suggestionFile="$${user.home}/.sukija/suggestion.xml"\
+    success="false"
 
 TOKENIZER_FACTORY=$(FINNISH_TOKENIZER_FACTORY)
 
@@ -40,11 +55,19 @@ malaga-suggestion-schema:
 
 voikko-schema:
 	sed -e 's%TOKENIZER_FACTORY%$(TOKENIZER_FACTORY)%g' \
-	    -e 's%MORPHOLOGY_FILTER_FACTORY%$(VOIKKO_MORPHOLOGY_SUGGESTION_FILTER_FACTORY)%g' $(SCHEMA_XML_IN) >$(SCHEMA_XML)
+	    -e 's%MORPHOLOGY_FILTER_FACTORY%$(VOIKKO_MORPHOLOGY_FILTER_FACTORY)%g' $(SCHEMA_XML_IN) >$(SCHEMA_XML)
 
 voikko-suggestion-schema:
 	sed -e 's%TOKENIZER_FACTORY%$(TOKENIZER_FACTORY)%g' \
-	    -e 's%MORPHOLOGY_FILTER_FACTORY%$(VOIKKO_MORPHOLOGY_FILTER_FACTORY)%g' $(SCHEMA_XML_IN) >$(SCHEMA_XML)
+	    -e 's%MORPHOLOGY_FILTER_FACTORY%$(VOIKKO_MORPHOLOGY_SUGGESTION_FILTER_FACTORY)%g' $(SCHEMA_XML_IN) >$(SCHEMA_XML)
+
+vfst-schema:
+	sed -e 's%TOKENIZER_FACTORY%$(TOKENIZER_FACTORY)%g' \
+	    -e 's%MORPHOLOGY_FILTER_FACTORY%$(VFST_MORPHOLOGY_FILTER_FACTORY)%g' $(SCHEMA_XML_IN) >$(SCHEMA_XML)
+
+vfst-suggestion-schema:
+	sed -e 's%TOKENIZER_FACTORY%$(TOKENIZER_FACTORY)%g' \
+	    -e 's%MORPHOLOGY_FILTER_FACTORY%$(VFST_MORPHOLOGY_SUGGESTION_FILTER_FACTORY)%g' $(SCHEMA_XML_IN) >$(SCHEMA_XML)
 
 debug-schema:
 	sed -e 's%TOKENIZER_FACTORY%$(HV_TOKENIZER_FACTORY)%g' \
