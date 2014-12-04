@@ -84,7 +84,9 @@
 <!-- OMA LISÄYS ALKAA. -->
   <lib path="${user.home}/.m2/repository/net/java/dev/jna/jna/3.4.0/jna-3.4.0.jar"/>
   <lib path="${user.home}/.m2/repository/org/puimula/voikko/libvoikko/3.7/libvoikko-3.7.jar"/>
-  <lib dir="${user.home}/.sukija" regex=".*\.jar" />
+  <lib path="${user.home}/.m2/repository/peltomaa/sukija/sukija-voikko/1.0/sukija-voikko-1.0.jar"/>
+  <lib path="${user.home}/.m2/repository/peltomaa/sukija/sukija-malaga/1.0/sukija-malaga-1.0.jar"/>
+  <lib path="${user.home}/.m2/repository/peltomaa/sukija/sukija-core/1.0/sukija-core-1.0.jar"/>
   <lib dir="../../../dist/" regex="solr-dataimporthandler-.*\.jar" />
   <lib dir="../../../contrib/analysis-extras/lucene-libs" regex=".*\.jar" />
 <!-- OMA LISÄYS LOPPUU. -->
@@ -1310,7 +1312,8 @@
 <!-- OMA LISÄYS ALKAA. -->
   <requestHandler name="/dataimport" class="org.apache.solr.handler.dataimport.DataImportHandler">
     <lst name="defaults">
-      <str name="config">${user.home}/.sukija/data-config.xml</str>
+      <str name="config">data-config.xml</str>
+<!--      <str name="config">${user.home}/.sukija/data-config.xml</str> -->
     </lst>
   </requestHandler>
 <!-- OMA LISÄYS LOPPUU. -->

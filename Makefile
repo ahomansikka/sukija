@@ -15,7 +15,7 @@ MALAGA_MORPHOLOGY_FILTER_FACTORY=filter class="peltomaa.sukija.malaga.MalagaMorp
 
 MALAGA_MORPHOLOGY_SUGGESTION_FILTER_FACTORY=filter class="peltomaa.sukija.malaga.MalagaMorphologySuggestionFilterFactory"\
                                  malagaProjectFile="$${user.home}/.sukija/suomi.pro"\
-                                 suggestionFile="$${user.home}/.sukija/suggestion.xml"\
+                                 suggestionFile="solr/collection1/conf/finnish-suggestion.xml"\
                                  success="false"
 
 VOIKKO_MORPHOLOGY_FILTER_FACTORY=filter class="peltomaa.sukija.voikko.VoikkoMorphologyFilterFactory"\
@@ -23,7 +23,7 @@ VOIKKO_MORPHOLOGY_FILTER_FACTORY=filter class="peltomaa.sukija.voikko.VoikkoMorp
 
 VOIKKO_MORPHOLOGY_SUGGESTION_FILTER_FACTORY=filter class="peltomaa.sukija.voikko.VoikkoMorphologySuggestionFilterFactory"\
                                             dictionary="fi"\
-                                            suggestionFile="$${user.home}/.sukija/suggestion.xml"\
+                                            suggestionFile="solr/collection1/conf/finnish-suggestion.xml"\
                                             success="false"
 
 VFST_MORPHOLOGY_FILTER_FACTORY=filter class="peltomaa.sukija.voikko.VoikkoMorphologyFilterFactory"\
@@ -32,14 +32,13 @@ VFST_MORPHOLOGY_FILTER_FACTORY=filter class="peltomaa.sukija.voikko.VoikkoMorpho
                                libvoikkoPath="$${user.home}/vvfst/lib/libvoikko.so"\
                                libraryPath="$${user.home}/vvfst/lib"
 
-
 VFST_MORPHOLOGY_SUGGESTION_FILTER_FACTORY=\
     filter class="peltomaa.sukija.voikko.VoikkoMorphologySuggestionFilterFactory"\
     dictionary="fi"\
     path="$${user.home}/vvfst/voikkodict"\
     libvoikkoPath="$${user.home}/vvfst/lib/libvoikko.so"\
     libraryPath="$${user.home}/vvfst/lib"\
-    suggestionFile="$${user.home}/.sukija/suggestion.xml"\
+    suggestionFile="solr/collection1/conf/finnish-suggestion.xml"\
     success="false"
 
 TOKENIZER_FACTORY=$(FINNISH_TOKENIZER_FACTORY)
@@ -100,6 +99,9 @@ install:
 	cp ${CONFIG_DIR}/sukija-context.xml ${JETTY_CONTEXTS_DIR}
 	cp ${CONFIG_DIR}/solrconfig.xml ${SOLR_HOME}/conf
 	cp ${CONFIG_DIR}/schema.xml ${SOLR_HOME}/conf
+	cp ${CONFIG_DIR}/data-config.xml ${SOLR_HOME}/conf
+	cp ${CONFIG_DIR}/finnish-synonyms.txt ${SOLR_HOME}/conf
+	cp ${CONFIG_DIR}/finnish-suggestion.xml ${SOLR_HOME}/conf
 	cp ${CONFIG_DIR}/sukija.xsl ${SOLR_HOME}/conf/xslt
 	rm ${SOLR_HOME}/conf/velocity/*
 	cp ${CONFIG_DIR}/velocity/* ${SOLR_HOME}/conf/velocity
@@ -107,12 +109,10 @@ install:
 	  mkdir ${SUKIJA_HOME}; \
 	fi
 	cp ${CORE_JAR} ${MALAGA_JAR} ${VOIKKO_JAR} ${SUKIJA_HOME}
-	cp ${CONFIG_DIR}/suggestion.txt ${CONFIG_DIR}/synonyms.txt ${SUKIJA_HOME}
 	sed -e 's,BASE_DIR,$(BASE_DIR),' \
 	    -e 's,FILE_NAME,$(FILE_NAME),' \
 	    -e 's,EXCLUDES,$(EXCLUDES),' \
             < $(CONFIG_DIR)/data-config.xml.in > $(CONFIG_DIR)/data-config.xml
-	cp ${CONFIG_DIR}/data-config.xml ${SUKIJA_HOME}
 
 
 clean:

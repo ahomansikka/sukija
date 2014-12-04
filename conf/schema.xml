@@ -62,9 +62,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
     <fieldType name="text" class="solr.TextField" positionIncrementGap="1">
       <analyzer type="index">
-        <tokenizer class="TOKENIZER_FACTORY"/>
+        <tokenizer class="peltomaa.sukija.finnish.FinnishTokenizerFactory"/>
         <filter class="peltomaa.sukija.hyphen.HyphenFilterFactory"/>
-        <MORPHOLOGY_FILTER_FACTORY/>
+        <filter class="peltomaa.sukija.voikko.VoikkoMorphologySuggestionFilterFactory" dictionary="fi" path="${user.home}/vvfst/voikkodict" libvoikkoPath="${user.home}/vvfst/lib/libvoikko.so" libraryPath="${user.home}/vvfst/lib" suggestionFile="solr/collection1/conf/finnish-suggestion.xml" success="false"/>
        <filter class="solr.SynonymFilterFactory"
                 synonyms="finnish-synonyms.txt" 
                 ignoreCase="true"

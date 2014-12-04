@@ -25,6 +25,9 @@ import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocumentList;
 import org.apache.solr.common.SolrDocument;
 
+import org.apache.log4j.Logger;
+import org.apache.log4j.BasicConfigurator;
+
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
@@ -52,6 +55,8 @@ public class Sukija extends JFrame {
   public static void main (String[] args)
   {
     try {
+      BasicConfigurator.configure();
+
 //      System.out.println (System.getProperty ("java.class.path") + "\n===\n");
 
       String url = "http://localhost:8983/solr/";
