@@ -21,8 +21,8 @@ import java.util.Map;
 import org.apache.lucene.analysis.TokenFilter;
 import org.apache.lucene.analysis.TokenStream;;
 import org.apache.lucene.analysis.util.TokenFilterFactory;
+import org.apache.solr.util.PropertiesUtil;
 import peltomaa.sukija.morphology.MorphologyFilter;
-import peltomaa.sukija.util.PropertiesUtil;
 import peltomaa.sukija.suggestion.SuggestionFilter;
 
 
@@ -45,9 +45,9 @@ public class MalagaMorphologySuggestionFilterFactory extends TokenFilterFactory 
   public MalagaMorphologySuggestionFilterFactory (Map<String,String> args)
   {
     super (args);
-    malagaProjectFile = PropertiesUtil.replacePropertyNameWithValue (args.get ("malagaProjectFile"));
-    suggestionFile = PropertiesUtil.replacePropertyNameWithValue (args.get ("suggestionFile"));
-    success = Boolean.valueOf (PropertiesUtil.replacePropertyNameWithValue (args.get ("success")));
+    malagaProjectFile = PropertiesUtil.substituteProperty ("malagaProjectFile", null);
+    suggestionFile = PropertiesUtil.substituteProperty ("suggestionFile", null);
+    success = getBoolean (args, "success", false);
   }
 
 
