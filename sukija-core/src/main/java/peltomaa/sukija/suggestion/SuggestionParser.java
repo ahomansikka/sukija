@@ -19,6 +19,7 @@ package peltomaa.sukija.suggestion;
 
 import java.util.Arrays;
 import java.util.List;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.StringWriter;
 import java.io.Writer;
@@ -32,6 +33,28 @@ import peltomaa.sukija.schema.*;
 
 
 public class SuggestionParser {
+  public SuggestionParser (Morphology morphology, InputStream is) throws SuggestionParserException
+  {
+    try {
+      LOG.info ("Aloitetaan.");
+      si = JAXBUtil.unmarshal (is, XSD_FILE, CONTEXT_PATH, this.getClass().getClassLoader());
+      parseSuggestions (morphology, si.getSuggestion());
+
+//      print (System.out);
+    }
+    catch (SuggestionParserException e) {
+      LOG.info (e.getMessage());
+      LOG.info (e.getCause().getMessage());
+      throw e;
+    }
+    catch (Throwable t)
+    {
+      LOG.info (t.getMessage());
+      throw new SuggestionParserException (t);
+    }
+  }
+
+
   public SuggestionParser (Morphology morphology, String xmlFile) throws SuggestionParserException
   {
     this (morphology, xmlFile, XSD_FILE);
@@ -50,7 +73,7 @@ public class SuggestionParser {
     }
     catch (SuggestionParserException e) {
       LOG.info (e.getMessage());
-      LOG.info (e.getCause().getMessage());
+      if (e.getCause() != null) LOG.info (e.getCause().getMessage());
       throw e;
     }
     catch (Throwable t)
@@ -119,7 +142,7 @@ public class SuggestionParser {
           break;
         case "Hyphen":
           checkArguments (name, argument.size() == 1);
-          v.add (new HyphenSuggestion (morphology, toBoolean(argument.get(0))));
+          v.add (new HyphenSuggestion (morphology, Boolean.valueOf(argument.get(0))));
           break;
         case "Length3":
           checkArguments (name, argument.size() == 0);
@@ -131,11 +154,17 @@ public class SuggestionParser {
           break;
         case "Regex":
           checkArguments (name, argument.size() >= 2);
-          v.add (new RegexSuggestion (morphology, parse(name,argument), toBoolean(argument.get(argument.size()-1))));
+          v.add (new RegexSuggestion (morphology, parse(name,argument),
+                                      Boolean.valueOf(argument.get(argument.size()-1))));
           break;
         case "RegexCombination":
           checkArguments (name, argument.size() >= 1);
           v.add (new RegexCombinationSuggestion (morphology, toList(argument).toArray(new String[0])));
+          break;
+        case "Start":
+          checkArguments (name, argument.size() == 3);
+          v.add (new StartSuggestion (morphology, Integer.valueOf(argument.get(0)),
+                                      Integer.valueOf(argument.get(1)), Boolean.valueOf(argument.get(2))));
           break;
         case "String":
           checkArguments (name, argument.size() >= 1);
@@ -202,12 +231,6 @@ public class SuggestionParser {
   {
     if (s.length() != 1) throw new SuggestionParserException (s + " ei ole yksi merkki.");
     return s.charAt (0);
-  }
-
-
-  private boolean toBoolean (String s)
-  {
-    return Boolean.valueOf (s);
   }
 
 

@@ -25,7 +25,6 @@ import java.util.TreeSet;
 import java.util.Vector;
 
 import peltomaa.sukija.morphology.Morphology;
-import peltomaa.sukija.morphology.MorphologyException;
 import peltomaa.sukija.util.RegexUtil;
 
 

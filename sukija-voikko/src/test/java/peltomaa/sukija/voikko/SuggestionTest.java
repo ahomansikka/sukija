@@ -53,22 +53,18 @@ public class SuggestionTest extends TestCase {
   public void testSuggestion()
   {
     try {
-      Morphology morphology = VoikkoMorphology.getInstance ("fi");
+      final String HOME = System.getProperty ("user.home");
+      Morphology morphology = VoikkoMorphology.getInstance ("fi",
+                                                            HOME + "/vvfst/voikkodict",
+                                                            HOME + "/vvfst/lib/libvoikko.so",
+                                                            HOME + "/vvfst/lib");
+      assertTrue (morphology != null);
+
       SuggestionTester tester = new SuggestionTester (morphology);
 
       for (int i = 0; i < SuggestionTester.data.size(); i++) {
         assertTrue (tester.test (SuggestionTester.data.get(i)));
       }
-
-      Suggestion prefixSuggestion1 = new PrefixSuggestion (morphology, "aamu");
-      Suggestion prefixSuggestion2 = new PrefixSuggestion (morphology, "aasian");
-      Suggestion prefixSuggestion3 = new PrefixSuggestion (morphology, "aito");
-      Suggestion prefixSuggestion4 = new PrefixSuggestion (morphology, "amerikan");
-
-      assertTrue (tester.test ("aamuäreälle",         "aamuäreä",        prefixSuggestion1));
-      assertTrue (tester.test ("aasianleijonille",    "aasianleijona",   prefixSuggestion2));
-      assertTrue (tester.test ("aitomajavat",         "aitomajava",      prefixSuggestion3));
-      assertTrue (tester.test ("amerikanbiisoneille", "amerikanbiisoni", prefixSuggestion4));
 
       Suggestion compoundSuggestion = new CompoundWordRegexSuggestion (morphology, "l[aä]i(s[eit]|nen)");
 

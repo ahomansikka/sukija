@@ -19,6 +19,7 @@ package peltomaa.sukija.suggestion;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.InputStream;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -69,6 +70,24 @@ public class SuggestionFilter extends SukijaFilter {
   public SuggestionFilter (TokenStream in, Morphology morphology, String suggestionFile)
   {
     this (in, morphology, suggestionFile, false);
+  }
+
+
+  public SuggestionFilter (TokenStream in, Morphology morphology, InputStream is, boolean successOnly)
+  {
+    super (in);
+    try {
+      LOG.info ("SuggestionFilter: aloitetaan.");
+      parser = new SuggestionParser (morphology, is);
+      suggestion = parser.getSuggestions();
+      this.morphology = morphology;
+      this.successOnly = successOnly;
+      if (LOG.isDebugEnabled()) LOG.debug ("SuggestionFilter: creating class " + getClass().getName() + ".");
+    }
+    catch (SuggestionParser.SuggestionParserException e)
+    {
+      LOG.error ("SuggestionFilter: " + e.getMessage());
+    }
   }
 
 

@@ -23,7 +23,7 @@ VOIKKO_MORPHOLOGY_FILTER_FACTORY=filter class="peltomaa.sukija.voikko.VoikkoMorp
 
 VOIKKO_MORPHOLOGY_SUGGESTION_FILTER_FACTORY=filter class="peltomaa.sukija.voikko.VoikkoMorphologySuggestionFilterFactory"\
                                             dictionary="fi"\
-                                            suggestionFile="solr/collection1/conf/finnish-suggestion.xml"\
+                                            suggestionFile="finnish-suggestion.xml"\
                                             success="false"
 
 VFST_MORPHOLOGY_FILTER_FACTORY=filter class="peltomaa.sukija.voikko.VoikkoMorphologyFilterFactory"\
@@ -38,8 +38,13 @@ VFST_MORPHOLOGY_SUGGESTION_FILTER_FACTORY=\
     path="$${user.home}/vvfst/voikkodict"\
     libvoikkoPath="$${user.home}/vvfst/lib/libvoikko.so"\
     libraryPath="$${user.home}/vvfst/lib"\
-    suggestionFile="solr/collection1/conf/finnish-suggestion.xml"\
+    suggestionFile="finnish-suggestion.xml"\
     success="false"
+
+#    suggestionFile="$${solr.solr.home}/collection1/conf/finnish-suggestion.xml"\
+#
+#    suggestionFile="solr/collection1/conf/finnish-suggestion.xml"\
+#
 
 TOKENIZER_FACTORY=$(FINNISH_TOKENIZER_FACTORY)
 
@@ -72,12 +77,9 @@ debug-schema:
 	sed -e 's%TOKENIZER_FACTORY%$(HV_TOKENIZER_FACTORY)%g' \
 	    -e 's%MORPHOLOGY_FILTER_FACTORY%$(MALAGA_MORPHOLOGY_SUGGESTION_FILTER_FACTORY)%g' $(SCHEMA_XML_IN) >$(SCHEMA_XML)
 
-
-SUKIJA_HOME=${HOME}/.sukija
-CORE_JAR=sukija-core/target/*jar
-MALAGA_JAR=sukija-malaga/target/*jar
-VOIKKO_JAR=sukija-voikko/target/*jar
-
+debug-vfst-schema:
+	sed -e 's%TOKENIZER_FACTORY%$(HV_TOKENIZER_FACTORY)%g' \
+	    -e 's%MORPHOLOGY_FILTER_FACTORY%$(VFST_MORPHOLOGY_SUGGESTION_FILTER_FACTORY)%g' $(SCHEMA_XML_IN) >$(SCHEMA_XML)
 
 BASE_DIR=$(HOME)/Asiakirjat
 FILE_NAME=.*
@@ -96,6 +98,10 @@ install:
 	if [ ! -e ${JETTY_CONTEXTS_DIR} ]; then \
 	  mkdir ${JETTY_CONTEXTS_DIR}; \
 	fi
+	sed -e 's,BASE_DIR,$(BASE_DIR),' \
+	    -e 's,FILE_NAME,$(FILE_NAME),' \
+	    -e 's,EXCLUDES,$(EXCLUDES),' \
+            < $(CONFIG_DIR)/data-config.xml.in > $(CONFIG_DIR)/data-config.xml
 	cp ${CONFIG_DIR}/sukija-context.xml ${JETTY_CONTEXTS_DIR}
 	cp ${CONFIG_DIR}/solrconfig.xml ${SOLR_HOME}/conf
 	cp ${CONFIG_DIR}/schema.xml ${SOLR_HOME}/conf
@@ -105,14 +111,6 @@ install:
 	cp ${CONFIG_DIR}/sukija.xsl ${SOLR_HOME}/conf/xslt
 	rm ${SOLR_HOME}/conf/velocity/*
 	cp ${CONFIG_DIR}/velocity/* ${SOLR_HOME}/conf/velocity
-	if [ ! -e ${SUKIJA_HOME} ]; then \
-	  mkdir ${SUKIJA_HOME}; \
-	fi
-	cp ${CORE_JAR} ${MALAGA_JAR} ${VOIKKO_JAR} ${SUKIJA_HOME}
-	sed -e 's,BASE_DIR,$(BASE_DIR),' \
-	    -e 's,FILE_NAME,$(FILE_NAME),' \
-	    -e 's,EXCLUDES,$(EXCLUDES),' \
-            < $(CONFIG_DIR)/data-config.xml.in > $(CONFIG_DIR)/data-config.xml
 
 
 clean:

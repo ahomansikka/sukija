@@ -19,6 +19,7 @@ package peltomaa.sukija.util;
 
 
 import java.io.File;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Writer;
 import javax.xml.bind.JAXBContext;
@@ -45,14 +46,29 @@ public class JAXBUtil {
     throws JAXBException, SAXException
   {
 //    LOG.debug ("JAXBUtil.unmarshal (1).");
+/*
     SchemaFactory sf = SchemaFactory.newInstance (XMLConstants.W3C_XML_SCHEMA_NS_URI);
     Schema schema = sf.newSchema (JAXBUtil.class.getResource (xsdFile));
     JAXBContext jc = JAXBContext.newInstance (contextPath, classLoader);
     Unmarshaller u = jc.createUnmarshaller();
     u.setSchema (schema);
+*/
+    Unmarshaller u = getUnmarshaller (xsdFile, contextPath, classLoader);
 
     @SuppressWarnings("unchecked")
     JAXBElement<T> v = (JAXBElement<T>)u.unmarshal (new File (xmlFile));
+//    LOG.debug ("JAXBUtil.unmarshal (2).");
+    return v.getValue();
+  }
+
+
+  public static final <T> T unmarshal (InputStream is, String xsdFile, String contextPath, ClassLoader classLoader)
+    throws JAXBException, SAXException
+  {
+    Unmarshaller u = getUnmarshaller (xsdFile, contextPath, classLoader);
+
+    @SuppressWarnings("unchecked")
+    JAXBElement<T> v = (JAXBElement<T>)u.unmarshal (is);
 //    LOG.debug ("JAXBUtil.unmarshal (2).");
     return v.getValue();
   }
@@ -91,4 +107,16 @@ public class JAXBUtil {
   }
 
 //  private static final Logger LOG = LoggerFactory.getLogger (JAXBUtil.class);
+
+
+  private static final Unmarshaller getUnmarshaller (String xsdFile, String contextPath, ClassLoader classLoader)
+    throws JAXBException, SAXException
+  {
+    SchemaFactory sf = SchemaFactory.newInstance (XMLConstants.W3C_XML_SCHEMA_NS_URI);
+    Schema schema = sf.newSchema (JAXBUtil.class.getResource (xsdFile));
+    JAXBContext jc = JAXBContext.newInstance (contextPath, classLoader);
+    Unmarshaller u = jc.createUnmarshaller();
+    u.setSchema (schema);
+    return u;
+  }
 }

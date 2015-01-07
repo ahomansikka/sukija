@@ -1,5 +1,5 @@
 /*
-Copyright (@) 2008-2012 Hannu Väisänen (Firstname.Lastname@uef.fi)
+Copyright (@) 2008-2012, 2015 Hannu Väisänen (Firstname.Lastname@uef.fi)
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -17,6 +17,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 package peltomaa.sukija.finnish;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 %%
 %class HVTokenizerImpl
 %unicode
@@ -27,6 +29,8 @@ package peltomaa.sukija.finnish;
 %final
 
 %{
+private static final Logger LOG = LoggerFactory.getLogger (HVTokenizerImpl.class);
+
 public final int yychar()
 {
   return yychar;
@@ -61,7 +65,7 @@ LPAR = "{"[0-9a-zA-Z]+"}"
 %%
 
 {NUM} {
-//  System.out.println ("Number §" + yytext() + "§.");
+  if (LOG.isDebugEnabled()) LOG.debug ("NUM [" + yytext() + "]");
 } /* Ignore numbers. */
 
 
@@ -69,15 +73,15 @@ LPAR = "{"[0-9a-zA-Z]+"}"
 /* Ignore LaTeX commands. */
 
 "\\"(documentclass|usepackage)("["[0-9a-zA-Z,]+"]")?{LPAR} {
-//  System.out.println ("LaTeX 1 §" + yytext() + "§.");
+  if (LOG.isDebugEnabled()) LOG.debug ("a [" + yytext() + "]");
 }
 
 "\\"(begin|end){LPAR} {
-//  System.out.println ("LaTeX 2 §" + yytext() + "§.");
+  if (LOG.isDebugEnabled()) LOG.debug ("b [" + yytext() + "]");
 }
 
 [\\][a-zA-Z@]+[*]? {
-//  System.out.println ("LaTeX 3 §" + yytext() + "§.");
+  if (LOG.isDebugEnabled()) LOG.debug ("c [" + yytext() + "]");
 }
 
 

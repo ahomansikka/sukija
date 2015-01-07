@@ -65,7 +65,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <tokenizer class="TOKENIZER_FACTORY"/>
         <filter class="peltomaa.sukija.hyphen.HyphenFilterFactory"/>
         <MORPHOLOGY_FILTER_FACTORY/>
-       <filter class="solr.SynonymFilterFactory"
+        <filter class="solr.SynonymFilterFactory"
                 synonyms="finnish-synonyms.txt" 
                 ignoreCase="true"
                 expand="false"/> 
