@@ -112,7 +112,6 @@ install:
 	rm ${SOLR_HOME}/conf/velocity/*
 	cp ${CONFIG_DIR}/velocity/* ${SOLR_HOME}/conf/velocity
 
-
 clean:
 	mvn clean
 	rm -f ${CONFIG_DIR}/data-config.xml $(SCHEMA_XML)
