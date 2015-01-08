@@ -21,9 +21,6 @@ import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServer;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.impl.HttpSolrServer;
-import org.apache.solr.client.solrj.response.QueryResponse;
-import org.apache.solr.common.SolrDocumentList;
-import org.apache.solr.common.SolrDocument;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.BasicConfigurator;
@@ -33,9 +30,6 @@ import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.net.URL;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
 import javax.swing.BoxLayout;
 import javax.swing.AbstractAction;
 import javax.swing.event.HyperlinkListener;
@@ -47,6 +41,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
+
+import java.awt.Font;
+import com.l2fprod.common.swing.JFontChooser;
 
 
 // Katso http://wiki.apache.org/solr/Solrj
@@ -93,69 +90,18 @@ public class Sukija extends JFrame {
     setVisible (true);
 
     server = new HttpSolrServer (url);
+
+    query = new Query (server, messageField, editorPane);
+
+//    JFontChooser chooser = new JFontChooser();
+//    Font selectedFont = JFontChooser.showDialog (null, "Choose Font", null);
   }
 
 
-  public class Query extends AbstractAction {
+  public class QueryX extends AbstractAction {
     public void actionPerformed (ActionEvent e)
     {
-      try {
-        SolrQuery query = new SolrQuery();
-        query.setQuery (queryField.getText());
-        query.setParam ("rows", "1000");
-        query.addTermsField ("text");
-        query.setTerms (true);
-        query.setParam ("hl.useFastVectorHighlighter", "true");
-        query.setParam ("hl.mergeContiguous", "true");
-//        query.setParam ("hl.fragsize", "0");
-        query.setParam ("hl.maxAnalyzedChars", "-1");
-
-        query.set ("qt", "/sukija"); // To choose a different request handler, for example, just set the qt parameter.
-        QueryResponse response = server.query (query);
-
-//        for (String s : query.getTermsFields()) System.out.println ("Field " + s);
-
-//        QueryResponsePrinter.print (System.out, response);
-
-        SolrDocumentList documents = response.getResults();
-
-        if (documents == null) {
-          messageField.setText ("Sukija.java: documents == null: ohjelmassa on virhe.");
-          System.exit (1);
-        }
-
-        setMessage (documents.size());
-
-        if (documents.size() == 0) {
-          editorPane.setText ("");
-        }
-        else {
-          editorPane.setText (getText (response));
-          editorPane.setCaretPosition (0);
-        }
-      }
-      catch (SolrServerException ex)
-      {
-        messageField.setText (ex.getMessage());
-      }
-      catch (Exception ex)
-      {
-        messageField.setText (ex.getMessage());
-      }
-    }
-  }
-
-
-  private void setMessage (int n)
-  {
-    if (n == 0) {
-      messageField.setText ("Ei löytynyt.");
-    }
-    else if (n == 1) {
-      messageField.setText (String.format ("Löytyi %d tiedosto.", n));
-    }
-    else {
-      messageField.setText (String.format ("Löytyi %d tiedostoa.", n));
+      query.query (queryField.getText());
     }
   }
 
@@ -168,28 +114,8 @@ public class Sukija extends JFrame {
     queryField = new JTextField (20);
     panel.add (queryField);
 
-    queryField.addActionListener (new Query());
+    queryField.addActionListener (new QueryX());
     return panel;
-  }
-
-
-  private void writeEntry (StringBuffer s, Map.Entry<String,Map<String,List<String>>> entry)
-  {
-    final String fileName = entry.getKey();
-    final Map<String,List<String>> map = entry.getValue();
-
-    s.append ("<a href=\"file://" + fileName + "\">" + fileName + "</a><p>\n");
-
-    Iterator<Map.Entry<String,List<String>>> i = map.entrySet().iterator();
-
-    while (i.hasNext()) {
-      Map.Entry<String,List<String>> u = i.next();
-      final List<String> list = (List<String>)u.getValue();
-      for (String p : list) {
-        s.append (p + "<p>");
-      }
-    }
-    s.append ("<p>\n");
   }
 
 
@@ -238,26 +164,12 @@ public class Sukija extends JFrame {
   }
 
 
-  private String getText (QueryResponse response)
-  {
-    Map<String,Map<String,List<String>>> hlMap = response.getHighlighting();
-    Iterator<Map.Entry<String,Map<String,List<String>>>> i = hlMap.entrySet().iterator();
-
-    StringBuffer s = new StringBuffer();
-    s.append ("<html><style> body {font-size: 18px;} </style><body>\n");
-    while (i.hasNext()) {
-      writeEntry (s, i.next());
-    }
-    s.append ("</body></html>\n");
-    return s.toString();
-  }
-
-
   private SolrServer server;
   private JTextField queryField;
   private JLabel messageField;
   private FileDisplayer fileDisplayer = new FileDisplayer();
   private JEditorPane editorPane;
+  private Query query;
 }
 
 /*

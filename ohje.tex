@@ -39,8 +39,10 @@ Tika \\(http://tika.apache.org/) osaa lukea.
       (\verb=https://github.com/voikko/corevoikko=) \\
       hakemistossa suomimalaga.
 
-\item Apache Solr 4.9.0:
-      \verb=http://lucene.apache.org/solr/=
+\item Apache Solr 4.10.2:
+      \verb=http://lucene.apache.org/solr/= \\
+      Tässä dokumentissa Solr:sta käytetään nimeä solr-x.y.z,
+      missä x.y.z on version numero, esimerkiksi 4.10.2.
 
 \item Ubuntun paketit \verb=libmalaga7= ja \verb=maven=.
 \end{itemize}
@@ -49,11 +51,11 @@ Lisäksi Sukija tarvitsee erinäisiä jar-tiedostoja, mutta Maven imuroi
 ne verkosta automaagisesti.
 
 Sukijaa voi käyttää myös Voikon Java-version kanssa. Tällöin tarvitaan
-Ubuntun paketti  \verb=libvoikko1=.
+Ubuntun paketti \verb=libvoikko1=.
 
 Tämä asennusohje olettaaa, että corevoikko ja apache-solr ovat hakemistoissa \\
 \verb=$HOME/Lataukset/corevoikko= ja
-\verb=$HOME/Lataukset/solr/solr-4.9.0=
+\verb=$HOME/Lataukset/solr/solr-x.y.z=
 
 Jos ne ovat jossain muualla, tiedoston \verb=Makefile= alussa olevia
 muuttujia \verb=SOLR_HOME= ja \verb=JETTY_CONTEXTS_DIR= pitää muuttaa
@@ -62,14 +64,15 @@ vastaavasti.
 \newpage
 \subsection*{Ohjelman rakenne}
 
-Sukijassa on kolme osaa:
+Sukijassa on neljä osaa:
 
 \begin{itemize}
 \item sukija-core     Java-luokkia, joita muut ohjelman osat tarvitsevat.
 \item sukija-malaga   Solr:n liitännäinen, joka käyttää Suomi-Malagan
                       Sukija-versiota \\muuttamaan sanat perusmuotoon.
 \item sukija-voikko   Solr:n liitännäinen, joka käyttää Voikkoa
-                      muuttamaan sanat perusmuotoon.
+                      (Malaga- tai Vfst"-morfologiaa) muuttamaan sanat perusmuotoon.
+\item sukija-ui       Javalla tehty käyttöliittymä (keskeneräinen).
 \end{itemize}
 
 
@@ -130,8 +133,12 @@ Komento                              & Morfologialuokka \\
 \verb=make malaga-suggestion-schema= & MalagaMorphologySuggestionFilterFactory \\
 \verb=make voikko-schema=            & VoikkoMorphologyFilterFactory \\
 \verb=make voikko-suggestion-schema= & VoikkoMorphologySuggestionFilterFactory \\
+\verb=make vfst-schema=              & VoikkoMorphologyFilterFactory \\
+\verb=make vfst-suggestion-schema=   & VoikkoMorphologySuggestionFilterFactory \\
 \verb=make debug-schema=             &
 \end{tabular}
+
+Vfst on Voikko, joka käyttää uutta vfst-morfologiaa.
 
 Komentoa \verb=make debug-schema= käytetään vain Sukijan
 kehittämiseen.
@@ -149,7 +156,7 @@ muutetaan w v:ksi) ja tunnistusta yritetään uudestaan. Tämä ei ole
 sama asia kuin Voikon oikeinkirjoituksen korjausehdotukset!
 
 \verb=Suggestion="-luokat konfiguroidaan tiedostossa
-\verb|suggestion.txt|. Katso sivu \zpageref{suggestionConfiguration}.
+\verb|finnish-suggestion.xml|. Katso sivu \zpageref{suggestionConfiguration}.
 
 \bigskip
 Indeksoitavat tiedostot asetetaan tiedostossa \verb|data-config.xml|.
@@ -212,7 +219,7 @@ niihin hakemistoihin, joista Solr löytää ne.
 \subsection*{Solr:n käynnistäminen}
 
 \begin{verbatim}
-cd $HOME/Lataukset/solr/solr-4.9.0/example
+cd $HOME/Lataukset/solr/solr-x.y.z/example
 java -jar start.jar
 \end{verbatim}
 
@@ -231,7 +238,7 @@ Solr:n käynnistymisen voi varmistaa selaimessa menemällä verkko-osoitteeseen
 
 Solr:n lokitulostus (\verb=http://wiki.apache.org/solr/SolrLogging=)
 konfiguroidaan tiedostossa
-\verb=solr-4.9.0/example/resources/log4j.properties=
+\verb=solr-x.y.z/example/resources/log4j.properties=
 Mahdollisimman suuren lokitulostuksen saa lisäämällä tämän tiedoston
 loppuun rivit
 
@@ -266,7 +273,7 @@ erikseen, mikä muunnos sai aikaan sanan tunnistamisen (katso sivu
 Lokitulostuksen eri tasot (\verb=ALL=, jne) voi katsua luokan
 \verb=org.apache.log4j.Level= dokumentoinnista.
 
-Lokitulostus menee tiedostoon \verb=solr-4.9.0/example/logs/solr.log=
+Lokitulostus menee tiedostoon \verb=solr-x.y.z/example/logs/solr.log=
 
 
 \subsection*{Indeksointi}
