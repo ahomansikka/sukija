@@ -90,21 +90,6 @@ public class Query {
   }
 
 
-  private String getText (QueryResponse response)
-  {
-    Map<String,Map<String,List<String>>> hlMap = response.getHighlighting();
-    Iterator<Map.Entry<String,Map<String,List<String>>>> i = hlMap.entrySet().iterator();
-
-    StringBuffer s = new StringBuffer();
-    s.append ("<html><style> body {font-size: 18px;} </style><body>\n");
-    while (i.hasNext()) {
-      writeEntry (s, i.next());
-    }
-    s.append ("</body></html>\n");
-    return s.toString();
-  }
-
-
   private void setMessage (int n)
   {
     if (n == 0) {
@@ -119,23 +104,28 @@ public class Query {
   }
 
 
-  private void writeEntry (StringBuffer s, Map.Entry<String,Map<String,List<String>>> entry)
+  private String getText (QueryResponse response)
   {
-    final String fileName = entry.getKey();
-    final Map<String,List<String>> map = entry.getValue();
+    Iterator<SolrDocument> i = response.getResults().iterator();
 
-    s.append ("<a href=\"file://" + fileName + "\">" + fileName + "</a><p>\n");
-
-    Iterator<Map.Entry<String,List<String>>> i = map.entrySet().iterator();
+    StringBuffer s = new StringBuffer();
+    s.append ("<html><style> body {font-size: 18px;} </style><body>\n");
 
     while (i.hasNext()) {
-      Map.Entry<String,List<String>> u = i.next();
-      final List<String> list = (List<String>)u.getValue();
-      for (String p : list) {
-        s.append (p + "<p>");
+      SolrDocument document = i.next();
+      String fileName = (String)document.getFieldValue ("id");
+      if (response.getHighlighting().get(fileName) != null) {
+        List<String> highlightSnippets = response.getHighlighting().get(fileName).get("text");
+        s.append ("<a href=\"file://" + fileName + "\">" + fileName + "</a><p>\n");
+        for (String p : highlightSnippets) {
+          s.append (p + "<p>");
+        }
+        s.append ("<p>\n");
       }
     }
-    s.append ("<p>\n");
+    s.append ("</body></html>\n");
+
+    return s.toString();
   }
 
 
