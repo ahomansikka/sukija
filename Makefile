@@ -1,6 +1,6 @@
 # Muuta nämä kaksi muuttujaa, jos Solr on jossain muualla.
-SOLR_HOME=${HOME}/Lataukset/solr/solr-4.10.2/example/solr/collection1
-JETTY_CONTEXTS_DIR=${HOME}/Lataukset/solr/solr-4.10.2/example/contexts
+SOLR_HOME=${HOME}/Lataukset/solr/solr-4.10.3/example/solr/collection1
+JETTY_CONTEXTS_DIR=${HOME}/Lataukset/solr/solr-4.10.3/example/contexts
 
 
 CONFIG_DIR=conf

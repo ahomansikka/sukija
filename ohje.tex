@@ -5,7 +5,7 @@
 \usepackage{zref-lastpage,zref-user}
 \usepackage{fancyhdr}
 \frenchspacing
-\lhead{Sukijan asennus- ja käyttöohje (Copyright © 2011--2014 Hannu Väisänen)}
+\lhead{Sukijan asennus- ja käyttöohje (Copyright © 2011--2015 Hannu Väisänen)}
 \rhead{\thepage(\zpageref{LastPage})}
 \cfoot{}
 \begin{document}
@@ -39,10 +39,10 @@ Tika \\(http://tika.apache.org/) osaa lukea.
       (\verb=https://github.com/voikko/corevoikko=) \\
       hakemistossa suomimalaga.
 
-\item Apache Solr 4.10.2:
+\item Apache Solr 4.10.3:
       \verb=http://lucene.apache.org/solr/= \\
       Tässä dokumentissa Solr:sta käytetään nimeä solr-x.y.z,
-      missä x.y.z on version numero, esimerkiksi 4.10.2.
+      missä x.y.z on version numero, esimerkiksi 4.10.3.
 
 \item Ubuntun paketit \verb=libmalaga7= ja \verb=maven=.
 \end{itemize}
@@ -250,6 +250,8 @@ log4j.logger.peltomaa.sukija.suggestion.SuccessFilter = ALL
 log4j.logger.peltomaa.sukija.suggestion.SuggestionFilter = ALL
 log4j.logger.peltomaa.sukija.malaga.MalagaMorphology = ALL
 log4j.logger.peltomaa.sukija.voikko.VoikkoMorphology = ALL
+log4j.logger.peltomaa.sukija.voikko.VoikkoMorphologySuggestionFilterFactory = ALL
+log4j.logger.peltomaa.sukija.hyphen.HyphenFilter = ALL
 \end{verbatim}
 
 Tuossa ovat kaikki Sukijan luokat, joissa on lokitulostus.
@@ -312,72 +314,126 @@ Tämän tulostuksen ulkonäköä voi muuttaa muuttamalla Sukijan mukana
 tulevaa tiedostoa \verb=conf/sukija.xsl=.
 
 
-\subsection*{Tiedoston suggestion.txt konfigurointi}
+\subsection*{Tiedoston finnish-suggestion.xml konfigurointi}
 \zlabel{suggestionConfiguration}
 
-Tiedosto \verb|suggestion.txt| pitää konfiguroida erikseen Sukijalle
-ja Voikolle. Nykyinen konfiguraatio on tehty Sukijalle.
+Tiedosto \verb|finnish-suggestion.xml| pitää konfiguroida erikseen
+Sukijalle ja Voikolle. Nykyinen konfiguraatio on tehty Voikolle ja sen
+vfst"-morfologialle.
 
 Tässä vaiheessa kaikki indeksoitavista tiedostoista luetut sanat on
-muutettu pieniksi kirjaimiksi eli tiedostossa \verb|suggestion.txt|
-olevat erisnimet pitää kirjoittaa pienellä alkukirjaimella.
+muutettu pieniksi kirjaimiksi eli tiedostossa
+\verb|finnish-suggestion.xml| olevat erisnimetkin pitää kirjoittaa
+pienellä alkukirjaimella.
 
-Konfiguraatiossa on neljä komentoa. Komentojen nimet tulevat siitä,
+Konfiguroinnissa on komennon nimi, jota voi seurata argumentteja,
+esimerkiksi
+
+\begin{verbatim}
+  <suggestion name = "CompoundWordEnd">
+    <argument>aukio aukio</argument>
+  </suggestion>
+\end{verbatim}
+
+
+Komentojen nimet tulevat siitä,
 että ne on toteutettu samannimisinä Java-luokkina tai ainakin melkein:
 \verb|Apostrophe| on toteutettu luokassa \verb|ApostropheSuggestion|
 ja niin edelleen.
 
-\bigskip
-\verb|Apostrophe| Poistaa sanasta heittomerkin ja yrittää tunnistaa
-sanan sen jälkeen. Jos tunnistaminen ei onnistu, poistaa sanasta
-heittomerkin ja kaikki sen jälkeiset merkit ja palauttaa jäljelle
-jääneet merkit sanan perusmuotona. Esimerkiksi yrittää tunnistaa
-merkkijonon \verb|centime'in| muodossa \verb|centimein|. Jos
-tunnistaminen ei onnistu, palauttaa merkkijonon \verb|centime|.
 
 \bigskip
-\verb|Char| Muuttaa sanassa olevan yhden merkin toiseksi. Esimerkiksi
+\verb|<suggestion name = "Apostrophe"/>|
 
-\verb|Char "w" "v"|
+Poistaa sanasta heittomerkin ja yrittää tunnistaa sanan sen jälkeen.
+Jos tunnistaminen ei onnistu, poistaa sanasta heittomerkin ja kaikki
+sen jälkeiset merkit ja palauttaa jäljelle jääneet merkit sanan
+perusmuotona. Esimerkiksi yrittää tunnistaa merkkijonon
+\verb|centime'in| muodossa \verb|centimein|. Jos tunnistaminen ei
+onnistu, palauttaa merkkijonon \verb|centime|.
 
-muuttaa w:t v:iksi (''wanha'' => ''vanha'').
+
 
 \bigskip
-\verb|CharCombination| Muuttaa yhden tai usemman merkin kaikki
-kombinaatiot. Esimerkiksi
+\verb|Char| Muuttaa sanassa olevat merkit toiseksi. Tämä vastaa Unixin komentoa \verb|tr|.
 
-\verb|CharCombination "pk" "bg"|
+Esimerkiksi
+
+\begin{verbatim}
+  <suggestion name = "Char">
+    <argument>pk</argument>
+    <argument>bg</argument>
+  </suggestion>
+\end{verbatim}
 
 (1) muuttaa p:t b:iksi, jättää k:t ennalleen,
 (2) muuttaa k:t g:iksi, jättää p:t ennalleen, sekä
 (3) muuttaa p:t b:iksi ja k:t g:iksi.
 
 Siis jos tiedostosta luettu sana on ''piolokia'', komento yrittää
- tunnistaa sanat ''biolokia'', ''piologia'' ja ''biologia''.
+tunnistaa sanat ''piolokia'', ''biolokia'', ''piologia'' ja ''biologia''.
 
 
 \bigskip
-\verb|Length3| poistaa kolmesta peräkkäisestä samasta kirjaimesta
+\verb|<suggestion name = "Length3"/>|
+
+poistaa kolmesta peräkkäisestä samasta kirjaimesta
 yhden. \\ Esimerkiksi ''kauttta'' => ''kautta''.
+
+
+\bigskip
+
+\verb|CompoundWordEnd| tunnistaa yhdyssanan, jos se loppuu tiettyyn sanaan. Esimeriksi
+
+\begin{verbatim}
+  <suggestion name = "CompoundWordEnd">
+   <argument>aukio aukio</argument>
+   <argument>jo(k[ie]|e) joki</argument>
+  </suggestion>
+\end{verbatim}
+
+tunnistaa merkkijonot ''arkadianaukion'' ja ''aatsajoelle''. Tällä
+tavalla voidaan tunnistaa paikannimiä, jotka eivät ole sanastossa.
+
+Jokaisessa argumentissa on kaksi osaa. Ensimmäinen on säännöllinen
+lauseke ja toinen jonkin sanan perusmuoto. Tunnistettaessa merkkijono
+katkaistaan siitä kohdasta, josta säännöllinen lauseke alkaa, ja jos
+merkkijonon loppuosan perusmuoto on argumentin toinen osa,
+perusmuotona palauteaan merkkijonon alkuosa + argumentin toinen osa.
+
+Esimeriksi ''aatsajoelle'' jaetaan kahtia osiin ''aatsa'' ja
+''joelle'', ja koska merkkijonon ''joelle'' perusmuoto on ''joki'',
+merkkijonon ''aatsajoelle'' perusmuodoksi tulee ''aatsajoki''.
 
 
 \bigskip
 \verb|Regex| muuttaa säännöllisen lausekkeen. Esimerkiksi
 
-\verb|Regex "ai(j)[eou]" ""|
 
-poistaa j"-kirjaimen muun muassa sanoista ''aijemmin'', ''aijomme'' ja
+\begin{verbatim}
+  <suggestion name = "Regex">
+    <argument>ai(j)[eou]  </argument>
+    <argument>C[ae](hi)C  i</argument> 
+    <argument>true</argument>
+  </suggestion>
+\end{verbatim}
+
+Ensimmäinen argumentti \verb|Regex "ai(j)[eou]" ""| poistaa
+j"-kirjaimen muun muassa sanoista ''aijemmin'', ''aijomme'' ja
 ''kaijutin''.
 
+Toinen argumentti \verb|C[ae](hi)C i|
+poistaa h"-kirjaimet muun muassa sanoista ''ainahinen'' ja
+''etehinen''
+
+Viimeinen argumentti on joko \verb|true|, jolloin kokeillaan kaikkia
+argumentteina olevia säännöllisiä lausekkeita ja palautetaan kaikki
+tunnistetut sanat, tai \verb|false|, jolloin lopetetaan, kun
+ensimmäinen säännöllinen lauseke on tunnistettu.
 
 Säännöllisessä lausekkeessa voi käyttää kirjainta \verb|C|
 tarkoittamaan konsonantteja ja kirjainta \verb|V| tarkoittamaan
-vokaaleja. Esimerkiksi
-
-\verb|Regex  "C[ae](hi)C"  "i"|
-
-poistaa h"-kirjaimet muun muassa sanoista ''ainahinen'' ja
-''etehinen''.
+vokaaleja.
 
 Kirjaimia \verb|C| ja \verb|V| lukuun ottamatta säännöllisten
 lausekkeiden syntaksi on sama kuin Javan luokassa
@@ -386,6 +442,20 @@ käyttää säännöllisissä lausekkeissa, koska tässä vaiheessa kaikki
 tiedostoista luetut sanat on muutettu pieniksi kirjaimiksi, siis myös
 isokirjaimiset lyhenteet ja erisnimien alkukirjaimet.
 
+
+\bigskip
+\verb|String| muuttaa merkkijonon toiseksi. Esimerkiksi
+
+\begin{verbatim}
+  <suggestion name = "String">
+    <argument>tsh ts</argument>
+    <argument>sydämm sydäm</argument>
+  </suggestion>
+\end{verbatim}
+
+muuttaa merkkijonon ''mantshuria'' merkkijonoksi ''mantsuria'' ja
+merkkijonon ''sydämmellisesti'' merkkijonoksi ''sydämellisesti''.
+
 \bigskip
 Näitä komentoja voi antaa mielivaltaisen paljon missä tahansa
 järjestyksessä, ja \\ \verb|____SuggestionFilterFactory| palauttaa
@@ -393,7 +463,11 @@ perusmuotona ensimmäisen tunnistamansa muodon. Jos mitään ehdotusta ei
 tunnisteta, \verb|____SuggestionFilterFactory| palauttaa alkuperäisen
 merkkijonon.
 
-Tiedostossa \verb|suggestion.txt| voi olla tyhjiä rivejä. Kommentti
-alkaa merkillä \verb|#| ja jatkuu rivin loppuun.
+
+\subsection*{Javalla kirjoitettu käyttöliittymä}
+
+Kun tiedostot on indeksoitu, niitä voidaan tutkia myös komennolla
+
+\verb|java -jar sukija-ui/target/sukija-ui-1.0.jar|
 
 \end{document}
