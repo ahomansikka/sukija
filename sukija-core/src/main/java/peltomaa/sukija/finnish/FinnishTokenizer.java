@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2009-2014 Hannu Väisänen
+Copyright (©) 2009-2015 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -20,7 +20,6 @@ package peltomaa.sukija.finnish;
 import java.io.IOException;
 import java.io.Reader;
 
-import org.apache.lucene.analysis.Token;
 import org.apache.lucene.analysis.Tokenizer;
 import org.apache.lucene.analysis.tokenattributes.OffsetAttribute;
 import org.apache.lucene.analysis.tokenattributes.PositionIncrementAttribute;

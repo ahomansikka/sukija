@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2009-2014 Hannu Väisänen
+Copyright (©) 2009-2015 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -28,15 +28,16 @@ public final class RegexUtil {
   /**
    * Convert a character sequence to regular expression string.<p>
    *
-   * Letters {@code A C O U V} in {@code s} are replaced with these regular
+   * Expressions {@code %A %C %O %U %V %%} in {@code s} are replaced with these regular
    * expressions
 
 <pre>
-A [aä]
-C [bcdfghjklmnpqrsštvwxzž]
-O [oö]
-U [uy]
-V [aeiouyäö]
+%A [aä]
+%C [bcdfghjklmnpqrsštvwxzž]
+%O [oö]
+%U [uy]
+%V [aeiouyäö]
+%% %
 </pre>
 
 
@@ -51,41 +52,14 @@ different letters in Finnish but only two forms of the same letter. :-).
 
    * @param s    A character sequence.
    */
-  public static final String makePatternString (CharSequence s)
+  public static final String makePatternString (String s)
   {
-    StringBuffer sb = new StringBuffer();
-
-    for (int i = 0; i < s.length(); i++) {
-      switch (s.charAt(i)) {
-        case 'A':
-          sb.append ("[aä]");
-          break;
-        case 'C':
-          sb.append ("[bcdfghjklmnpqrsštvwxzž]");
-          break;
-        case 'O':
-          sb.append ("[oö]");
-          break;
-        case 'U':
-          sb.append ("[uy]");
-          break;
-        case 'V':
-          sb.append ("[aeiouyäö]");
-          break;
-        default:
-          if (Character.isUpperCase (s.charAt(i))) {
-            throw new IllegalArgumentException
-              ("Argument s contains other characters than lowercase " +
-               "letters or A, C, O, U, or V.");
-          }
-          else {
-            sb.append (s.charAt(i));
-          }
-          break;
-      }
+    String u = s;
+    for (int i = 0; i < pattern.length; i++) {
+      u = u.replace (pattern[i][0], pattern[i][1]);
     }
-//System.out.println (s.toString() + " " + sb.toString());
-    return sb.toString();
+//System.out.println (s + " " + u);
+    return u;
   }
 
 
@@ -97,11 +71,21 @@ different letters in Finnish but only two forms of the same letter. :-).
    *
    * @param s    A character sequence.
    */
-  public static final Pattern makePattern (CharSequence s)
+  public static final Pattern makePattern (String s)
   {
     return Pattern.compile (makePatternString (s));
 
 // Pattern.CANON_EQ does not work. )-:
 //  return Pattern.compile (makePatternString (s, FI), Pattern.CANON_EQ);
   }
+
+
+  private static final String pattern[][] = {
+    {"%A", "[aä]"},
+    {"%C", "[bcdfghjklmnpqrsštvwxzž]"},
+    {"%O", "[oö]"},
+    {"%U", "[uy]"},
+    {"%V", "[aeiouyäö]"},
+    {"%%", "%"}
+  };
 }

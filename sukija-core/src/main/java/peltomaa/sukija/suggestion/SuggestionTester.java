@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2013-2014 Hannu Väisänen
+Copyright (©) 2013-2015 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -27,8 +27,12 @@ import java.util.TreeSet;
 import java.util.Vector;
 
 import org.apache.lucene.analysis.Tokenizer;
+import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
+import org.apache.lucene.analysis.tokenattributes.OffsetAttribute;
+import org.apache.lucene.analysis.tokenattributes.PositionIncrementAttribute;
 import peltomaa.sukija.finnish.HVTokenizer;
+import peltomaa.sukija.hyphen.HyphenFilter;
 import peltomaa.sukija.morphology.Morphology;
 
 
@@ -65,7 +69,7 @@ public class SuggestionTester {
 
     Reader r = new StringReader (input);
     Tokenizer t = new HVTokenizer (r);
-    CharTermAttribute word = t.addAttribute (CharTermAttribute.class);
+    CharTermAttribute word = t.getAttribute (CharTermAttribute.class);
 
     try {
       t.reset();
@@ -101,7 +105,7 @@ public class SuggestionTester {
   {
     Set<String> set = new TreeSet<String>();
     Tokenizer t = new HVTokenizer (reader);
-    CharTermAttribute word = t.addAttribute (CharTermAttribute.class);
+    CharTermAttribute word = t.getAttribute (CharTermAttribute.class);
 
     try {
       t.reset();
@@ -124,6 +128,25 @@ public class SuggestionTester {
           }
         }
         System.out.println ("");
+      }
+      t.end();
+    }
+    finally {
+      t.close();
+    }
+  }
+
+
+  public static void testSuggestionFilter (Reader reader, Morphology morphology, Vector<Suggestion> suggestion, boolean stopOnSuccess) throws IOException
+  {
+    Tokenizer u = new HVTokenizer (reader);
+    TokenStream t = new SuggestionFilter (u, morphology, suggestion, stopOnSuccess);
+    CharTermAttribute word = t.getAttribute (CharTermAttribute.class);
+
+    try {
+      t.reset();
+      while (t.incrementToken()) {
+        System.out.println ("Sana: " + word.toString());
       }
       t.end();
     }

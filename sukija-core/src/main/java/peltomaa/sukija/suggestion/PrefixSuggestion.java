@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2013-2014 Hannu Väisänen
+Copyright (©) 2013-2015 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -35,17 +35,25 @@ import java.util.regex.Pattern;
  * try to recognise "leijonaa". If succesful, return "aasianleijona".
  */
 public class PrefixSuggestion extends Suggestion {
-  public PrefixSuggestion (Morphology morphology, String prefix)
+  public PrefixSuggestion (Morphology morphology, String prefix, boolean savePrefix, boolean saveWord)
   {
     super (morphology);
     prefixSet = new HashSet<String>();
     prefixSet.add (prefix);
     minLength = prefix.length();
     maxLength = minLength;
+    this.savePrefix = savePrefix;
+    this.saveWord = saveWord;
   }
 
 
-  public PrefixSuggestion (Morphology morphology, List<String> prefix)
+  public PrefixSuggestion (Morphology morphology, String prefix)
+  {
+    this (morphology, prefix, true, true);
+  }
+
+
+  public PrefixSuggestion (Morphology morphology, List<String> prefix, boolean savePrefix, boolean saveWord)
   {
     super (morphology);
     prefixSet = new HashSet<String> (prefix);
@@ -55,6 +63,14 @@ public class PrefixSuggestion extends Suggestion {
       if (minLength > s.length()) minLength = s.length();
       if (maxLength < s.length()) maxLength = s.length();
     }
+    this.savePrefix = savePrefix;
+    this.saveWord = saveWord;
+  }
+
+
+  public PrefixSuggestion (Morphology morphology, List<String> prefix)
+  {
+    this (morphology, prefix, true, true);
   }
 
 
@@ -71,8 +87,10 @@ public class PrefixSuggestion extends Suggestion {
         set.clear();
         if (analyse (word.substring(i), set)) {  // Tunnistetaanko etuliitteetön sana?
           result.clear();
+          if (savePrefix) result.add (p);
           for (String s: set) {
             result.add (p + s);
+            if (saveWord) result.add (s);
           }
           return true;
         }
@@ -85,4 +103,6 @@ public class PrefixSuggestion extends Suggestion {
   private Set<String> prefixSet;  // Etuliitteet.
   private int minLength;  // Lyhimmän etuliitteen pituus.
   private int maxLength;  // Pisimmän etuliitteen pituus.
+  private boolean savePrefix;
+  private boolean saveWord;
 }

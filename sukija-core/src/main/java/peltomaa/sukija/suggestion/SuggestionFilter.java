@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2012-2014 Hannu Väisänen
+Copyright (©) 2012-2015 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -22,7 +22,9 @@ import java.io.FileReader;
 import java.io.InputStream;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.regex.Pattern;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.Vector;
@@ -31,7 +33,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import peltomaa.sukija.morphology.Morphology;
 import peltomaa.sukija.util.SukijaFilter;
-
 
 
 public class SuggestionFilter extends SukijaFilter {
@@ -91,6 +92,16 @@ public class SuggestionFilter extends SukijaFilter {
   }
 
 
+  public SuggestionFilter (TokenStream in, Morphology morphology, Vector<Suggestion> suggestion, boolean stopOnSuccess)
+  {
+    super (in);
+    this.morphology = morphology;
+    this.suggestion = suggestion;
+    this.successOnly = successOnly;
+    if (LOG.isDebugEnabled()) LOG.debug ("SuggestionFilter: creating class " + getClass().getName() + ".");
+  }
+
+
   protected void filter (String word)
   {
     set.clear();
@@ -105,16 +116,15 @@ public class SuggestionFilter extends SukijaFilter {
 
   /** Try suggestions.
     */
-  private Iterator<String> suggest (String term)
+  private Iterator<String> suggest (String word)
   {
-    suggestionSet = getSuggestions (term);
-
+    suggestionSet = getSuggestions (word);
     if (suggestionSet == null) { /* No suggestions found. */
-      if (LOG.isDebugEnabled()) LOG.debug ("Suggest1 " + term);
+      if (LOG.isDebugEnabled()) LOG.debug ("Suggest1 " + word);
       return (successOnly ? null : set.iterator());
     }
     else {
-      if (LOG.isDebugEnabled()) LOG.debug ("Suggest2 " + term + " " + Arrays.toString (suggestionSet.toArray (new String[0])));
+      if (LOG.isDebugEnabled()) LOG.debug ("Suggest2 " + word + " " + Arrays.toString (suggestionSet.toArray (new String[0])));
       return suggestionSet.iterator();
     }
   }
@@ -122,12 +132,70 @@ public class SuggestionFilter extends SukijaFilter {
 
   private Set<String> getSuggestions (String word)
   {
+    final Set<String> s = trySuggestions (word);
+    if (s != null) {
+      return s;
+    }
+    else {
+      final String[] array = SPLIT.split (word);
+      if (array.length > 1) {
+        return trySuggestions (array);
+      }
+      return null;
+    }
+  }
+
+
+  private Set<String> trySuggestions (String[] word)
+  {
+    Set<String> set = new HashSet<String>();
+    Set<String> tmp = new HashSet<String>();
+
+    for (int i = 0; i < word.length; i++) {
+      tmp.clear();
+      if (morphology.analyzeLowerCase (word[i], tmp)) {
+        set.addAll (tmp);
+      }
+      else {
+        Set<String> s = trySuggestions (word[i]);
+        System.out.println ("Huuhaa: " + word.length + " " + join(word) + " " + word[i] + " " + ((s==null) ? null : s.toString()));
+        if (s != null) set.addAll (s);
+      }
+    }
+
+    if (set.size() > 0) {
+      System.out.print ("SPLIT " + join (word) + ": ");
+      for (String p : word) System.out.print (p + " ");
+      System.out.println (" : " + set.toString());
+
+      return set;
+    }
+    else {
+      return null;
+    }
+  }
+
+
+  private Set<String> trySuggestions (String word)
+  {
     for (int i = 0; i < suggestion.size(); i++) {
       if (suggestion.get(i).suggest (word)) {
         return suggestion.get(i).getResult();
       }
     }
     return null;
+  }
+
+
+  private String join (String[] s)
+  {
+    StringBuilder sb = new StringBuilder();
+
+    for (int i = 0; i < s.length; i++) {
+      sb.append (s[i]);
+      if (i < s.length-1) sb.append ('-');
+    }
+    return sb.toString();
   }
 
 
@@ -139,4 +207,5 @@ public class SuggestionFilter extends SukijaFilter {
   private SuggestionParser parser;
   private Vector<Suggestion> suggestion;
   private boolean successOnly;
+  private static final Pattern SPLIT = Pattern.compile ("(''|[\"\\'.])?-+");
 }

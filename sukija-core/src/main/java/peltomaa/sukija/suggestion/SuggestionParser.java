@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2012-2014 Hannu Väisänen
+Copyright (©) 2012-2015 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -17,14 +17,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 package peltomaa.sukija.suggestion;
 
-import java.util.Arrays;
-import java.util.List;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.StringWriter;
 import java.io.Writer;
-import java.util.regex.Pattern;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Vector;
+import javax.xml.bind.JAXBElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import peltomaa.sukija.morphology.Morphology;
@@ -41,11 +40,6 @@ public class SuggestionParser {
       parseSuggestions (morphology, si.getSuggestion());
 
 //      print (System.out);
-    }
-    catch (SuggestionParserException e) {
-      LOG.info (e.getMessage());
-      LOG.info (e.getCause().getMessage());
-      throw e;
     }
     catch (Throwable t)
     {
@@ -70,11 +64,6 @@ public class SuggestionParser {
       parseSuggestions (morphology, si.getSuggestion());
 
 //      print (System.out);
-    }
-    catch (SuggestionParserException e) {
-      LOG.info (e.getMessage());
-      if (e.getCause() != null) LOG.info (e.getCause().getMessage());
-      throw e;
     }
     catch (Throwable t)
     {
@@ -117,141 +106,108 @@ public class SuggestionParser {
   public Vector<Suggestion> getSuggestions() {return v;}
 
 
-  private void parseSuggestions (Morphology morphology, List<SuggestionInput.Suggestion> s) throws SuggestionParserException
+  private void parseSuggestions (Morphology morphology, List<Object> s) // throws SuggestionParserException
   {
     for (int i = 0; i < s.size(); i++) {
-      final List<String> argument = s.get(i).getArgument();
-      final String name = s.get(i).getName();
-      LOG.debug (i + " " + name + " " + argument.toString());
-      switch (name) {
-        case "Apostrophe":
-          checkArguments (name, argument.size() == 0);
-          v.add (new ApostropheSuggestion (morphology));
+//      System.out.println (i + " " + s.get(i).getClass().getName());
+
+      // Tehdään Suggestion-luokat tässä, jotta Input-luokkien sisäistä rakennetta
+      // ei tarvitse viedä Suggestion-luokkien sisälle. Sen lisäksi, jos Input-luokkia
+      // muutetaan, muutokset Java-koodiin tarvitsee tehdä vain yhteen paikkaan, tähän.
+      // Input-luokat tehdään automaagisesti xsd-tiedostoista komennolla xjc.
+      //
+      switch (s.get(i).getClass().getName()) {
+        case "peltomaa.sukija.schema.CharInput":
+          {
+            final CharInput input = (CharInput)s.get(i);
+            v.add (new CharSuggestion (morphology, input.getFrom(), input.getTo()));
+          }
           break;
-        case "Char":
-          checkArguments (name, argument.size() == 2);
-          v.add (new CharSuggestion (morphology, argument.get(0), argument.get(1)));
+        case "peltomaa.sukija.schema.CompoundWordEndInput":
+          {
+            final CompoundWordEndInput input = (CompoundWordEndInput)s.get(i);
+            v.add (new CompoundWordEndSuggestion (morphology, fromList2(input.getInput())));
+          }
           break;
-        case "CompoundWordEnd":
-          checkArguments (name, argument.size() > 0);
-          v.add (new CompoundWordEndSuggestion (morphology, toList(argument)));
+        case "peltomaa.sukija.schema.EraseInput":
+          {
+            final EraseInput input = (EraseInput)s.get(i);
+            v.add (new EraseSuggestion (morphology, input.getFrom().charAt(0), input.getTo().charAt(0)));
+          }
           break;
-        case "Erase":
-          checkArguments (name, argument.size() == 2);
-          v.add (new EraseSuggestion (morphology, toChar(argument.get(0)), toChar(argument.get(1))));
+        case "peltomaa.sukija.schema.PrefixInput":
+          {
+            final PrefixInput input = (PrefixInput)s.get(i);
+            v.add (new PrefixSuggestion (morphology, input.getPrefix(), input.isSavePrefix(), input.isSaveWord()));
+          }
           break;
-        case "Hyphen":
-          checkArguments (name, argument.size() == 1);
-          v.add (new HyphenSuggestion (morphology, Boolean.valueOf(argument.get(0))));
+        case "peltomaa.sukija.schema.RegexInput":
+          {
+            final RegexInput input = (RegexInput)s.get(i);
+            v.add (new RegexSuggestion (morphology, fromListA(input.getInput()), input.isTryAll()));
+          }
           break;
-        case "Length3":
-          checkArguments (name, argument.size() == 0);
-          v.add (new Length3Suggestion (morphology));
+        case "peltomaa.sukija.schema.StartInput":
+          {
+            final StartInput input = (StartInput)s.get(i);
+            v.add (new StartSuggestion (morphology, input.getMinLength().intValue(), input.getMaxLength().intValue(), input.isBaseFormOnly()));
+          }
           break;
-        case "Prefix":
-          checkArguments (name, argument.size() >= 1);
-          v.add (new PrefixSuggestion (morphology, toList(argument)));
-          break;
-        case "Regex":
-          checkArguments (name, argument.size() >= 2);
-          v.add (new RegexSuggestion (morphology, parse(name,argument),
-                                      Boolean.valueOf(argument.get(argument.size()-1))));
-          break;
-        case "RegexCombination":
-          checkArguments (name, argument.size() >= 1);
-          v.add (new RegexCombinationSuggestion (morphology, toList(argument).toArray(new String[0])));
-          break;
-        case "Start":
-          checkArguments (name, argument.size() == 3);
-          v.add (new StartSuggestion (morphology, Integer.valueOf(argument.get(0)),
-                                      Integer.valueOf(argument.get(1)), Boolean.valueOf(argument.get(2))));
-          break;
-        case "String":
-          checkArguments (name, argument.size() >= 1);
-          v.add (new StringSuggestion (morphology, toArray2 (name, argument)));
+        case "peltomaa.sukija.schema.StringInput":
+          {
+            final StringInput input = (StringInput)s.get(i);
+            v.add (new StringSuggestion (morphology, toArray2(input.getInput())));
+          }
           break;
       }
     }
+//System.exit(1);
   }
 
 
-  private void checkArguments (String name, boolean expr) throws SuggestionParserException
-  {
-    if (!expr) throw new SuggestionParserException (name);
-  }
-
-
-  private List<String> toList (List<String> s)
+  private static final List<String> fromListA (List<JAXBElement<List<String>>> input)
   {
     List<String> u = new Vector<String>();
-    for (int i = 0; i < s.size(); i++) {
-      u.addAll (Arrays.asList (WHITESPACE.split(s.get(i))));
-    }
-    return u;
-  }
-
-
-  private List<String> parse (String name, List<String> argument) throws SuggestionParserException
-  {
-    List<String> u = new Vector<String>();
-    for (int i = 0; i < argument.size()-1; i++) {
-      String[] p = WHITESPACE.split (argument.get(i));
-      if (p.length == 1) {
-        u.add (p[0]);
-        u.add ("");
-      }
-      else if (p.length == 2) {
-        u.addAll (Arrays.asList (p));
-      }
-      else {
-        throw new SuggestionParserException (name + " " + p.length + ": virheellinen parametrilista: " + argument.toString());
+    for (int i = 0; i < input.size(); i++) {
+      switch (input.get(i).getValue().size()) {
+        case 1: 
+          u.add (input.get(i).getValue().get(0));
+          u.add ("");
+          break;
+        case 2:
+          u.addAll (input.get(i).getValue());
+          break;
+        default:
+          // Tätä ei pitäisi koskaan tapahtua.
+          LOG.error ("fromListA: listan pituus on väärä: " + input.get(i).getValue().size());
+          throw new RuntimeException ("fromListA: listan pituus on väärä: " + input.get(i).getValue().size());
       }
     }
     return u;
   }
 
 
-  private String[][] toArray2 (String name, List<String> argument) throws SuggestionParserException
+  private static final List<String> fromList2 (List<JAXBElement<List<String>>> input)
   {
-    String[][] s = new String[argument.size()][];
-    for (int i = 0; i < argument.size(); i++) {
-      String[] p = WHITESPACE.split (argument.get(i));
-      if (p.length >= 2) {
-        s[i] = p;
-      }
-      else {
-        throw new SuggestionParserException (name + ": virheellinen parametrilista: " + argument.toString());
-      }
+    List<String> u = new Vector<String>();
+    for (int i = 0; i < input.size(); i++) {
+      u.addAll (input.get(i).getValue());
+    }
+    return u;
+  }
+
+
+  private static final String[][] toArray2 (List<JAXBElement<List<String>>> input)
+  {
+    String[][] s = new String[input.size()][];
+    for (int i = 0; i < input.size(); i++) {
+      s[i] = input.get(i).getValue().toArray (new String[0]);
     }
     return s;
   }
 
 
-  private char toChar (String s) throws SuggestionParserException
-  {
-    if (s.length() != 1) throw new SuggestionParserException (s + " ei ole yksi merkki.");
-    return s.charAt (0);
-  }
-
-
-  private List<String> toList (String name, List<String> argument, int start, int end, int min, int max)
-    throws SuggestionParserException
-  {
-    List<String> u = new Vector<String>();
-    for (int i = start; i < end; i++) {
-      String[] p = WHITESPACE.split (argument.get(i));
-      if (p.length < min || p.length > max) {
-        u.addAll (Arrays.asList (p));        
-      }
-      else {
-        throw new SuggestionParserException (name + ": virheellinen parametrilista: " + argument.toString());
-      }
-    }
-    return u;    
-  }
-
-
-  public class SuggestionParserException extends Exception {
+  public static class SuggestionParserException extends Exception {
     private SuggestionParserException (String message)
     {
       super (message);
@@ -271,6 +227,5 @@ public class SuggestionParser {
   private Vector<Suggestion> v = new Vector<Suggestion>();
   private static final String CONTEXT_PATH = "peltomaa.sukija.schema";
   private static final String XSD_FILE = "/peltomaa/sukija/schema/SuggestionInput.xsd";
-  private static final Pattern WHITESPACE = Pattern.compile ("\\s+");
   private SuggestionInput si;
 }
