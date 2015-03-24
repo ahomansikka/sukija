@@ -146,6 +146,25 @@ public class SuggestionTester {
   }
 
 
+  public static void testSuggestionFilter (Reader reader, Morphology morphology, Vector<Suggestion> suggestion, boolean stopOnSuccess) throws IOException
+  {
+    Tokenizer u = new HVTokenizer (reader);
+    TokenStream t = new SuggestionFilter (u, morphology, suggestion, stopOnSuccess);
+    CharTermAttribute word = t.getAttribute (CharTermAttribute.class);
+
+    try {
+      t.reset();
+      while (t.incrementToken()) {
+        System.out.println ("Sana: " + word.toString());
+      }
+      t.end();
+    }
+    finally {
+      t.close();
+    }
+  }
+
+
   private static void print (String prefix, Collection<String> c)
   {
     System.out.print (" " + prefix);

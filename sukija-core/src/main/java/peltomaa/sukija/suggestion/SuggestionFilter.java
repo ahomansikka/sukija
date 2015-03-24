@@ -22,6 +22,7 @@ import java.io.FileReader;
 import java.io.InputStream;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.regex.Pattern;
 import java.util.Set;
@@ -32,7 +33,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import peltomaa.sukija.morphology.Morphology;
 import peltomaa.sukija.util.SukijaFilter;
-
 
 
 public class SuggestionFilter extends SukijaFilter {
@@ -92,6 +92,16 @@ public class SuggestionFilter extends SukijaFilter {
   }
 
 
+  public SuggestionFilter (TokenStream in, Morphology morphology, Vector<Suggestion> suggestion, boolean stopOnSuccess)
+  {
+    super (in);
+    this.morphology = morphology;
+    this.suggestion = suggestion;
+    this.successOnly = successOnly;
+    if (LOG.isDebugEnabled()) LOG.debug ("SuggestionFilter: creating class " + getClass().getName() + ".");
+  }
+
+
   protected void filter (String word)
   {
     set.clear();
@@ -123,6 +133,52 @@ System.out.println ("HUUUU " + suggestionSet.size());
 
   private Set<String> getSuggestions (String word)
   {
+    final Set<String> s = trySuggestions (word);
+    if (s != null) {
+      return s;
+    }
+    else {
+      final String[] array = SPLIT.split (word);
+      if (array.length > 1) {
+        return trySuggestions (array);
+      }
+      return null;
+    }
+  }
+
+
+  private Set<String> trySuggestions (String[] word)
+  {
+    Set<String> set = new HashSet<String>();
+    Set<String> tmp = new HashSet<String>();
+
+    for (int i = 0; i < word.length; i++) {
+      tmp.clear();
+      if (morphology.analyzeLowerCase (word[i], tmp)) {
+        set.addAll (tmp);
+      }
+      else {
+        Set<String> s = trySuggestions (word[i]);
+        System.out.println ("Huuhaa: " + word.length + " " + join(word) + " " + word[i] + " " + ((s==null) ? null : s.toString()));
+        if (s != null) set.addAll (s);
+      }
+    }
+
+    if (set.size() > 0) {
+      System.out.print ("SPLIT " + join (word) + ": ");
+      for (String p : word) System.out.print (p + " ");
+      System.out.println (" : " + set.toString());
+
+      return set;
+    }
+    else {
+      return null;
+    }
+  }
+
+
+  private Set<String> trySuggestions (String word)
+  {
     for (int i = 0; i < suggestion.size(); i++) {
       if (suggestion.get(i).suggest (word)) {
         return suggestion.get(i).getResult();
@@ -131,6 +187,18 @@ System.out.println ("HUUUU " + suggestionSet.size());
     String[] array = SPLIT.split (word);
     System.out.print ("SPLIT "); for (String p : array) System.out.print (p + " "); System.out.println ("");
     return null;
+  }
+
+
+  private String join (String[] s)
+  {
+    StringBuilder sb = new StringBuilder();
+
+    for (int i = 0; i < s.length; i++) {
+      sb.append (s[i]);
+      if (i < s.length-1) sb.append ('-');
+    }
+    return sb.toString();
   }
 
 
