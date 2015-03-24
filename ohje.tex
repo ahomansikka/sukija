@@ -39,10 +39,10 @@ Tika \\(http://tika.apache.org/) osaa lukea.
       (\verb=https://github.com/voikko/corevoikko=) \\
       hakemistossa suomimalaga.
 
-\item Apache Solr 4.10.3:
+\item Apache Solr 5.0.0:
       \verb=http://lucene.apache.org/solr/= \\
       Tässä dokumentissa Solr:sta käytetään nimeä solr-x.y.z,
-      missä x.y.z on version numero, esimerkiksi 4.10.3.
+      missä x.y.z on version numero, esimerkiksi 5.0.0.
 
 \item Ubuntun paketit \verb=libmalaga7= ja \verb=maven=.
 \end{itemize}
@@ -135,13 +135,14 @@ Komento                              & Morfologialuokka \\
 \verb=make voikko-suggestion-schema= & VoikkoMorphologySuggestionFilterFactory \\
 \verb=make vfst-schema=              & VoikkoMorphologyFilterFactory \\
 \verb=make vfst-suggestion-schema=   & VoikkoMorphologySuggestionFilterFactory \\
-\verb=make debug-schema=             &
+\verb=make debug-schema=             & \\
+\verb=make debug-vfst-schema=
 \end{tabular}
 
 Vfst on Voikko, joka käyttää uutta vfst-morfologiaa.
 
-Komentoa \verb=make debug-schema= käytetään vain Sukijan
-kehittämiseen.
+Komentoja \verb=make debug-schema= ja \verb=make debug-vfst-schema=
+käytetään vain Sukijan kehittämiseen.
 
 Saneistajan oletusarvo on FinnishTokenizerFactory, joka tulee Sukijan
 mukana, mutta sen voi vaihtaa muuttujalla TOKENIZER\_FACTORY
@@ -220,18 +221,14 @@ niihin hakemistoihin, joista Solr löytää ne.
 
 \begin{verbatim}
 cd $HOME/Lataukset/solr/solr-x.y.z/example
-java -jar start.jar
+../bin/solr start
+../bin/solr create -c sukija
 \end{verbatim}
 
-Jos Solr valittaa jna:sta, käynnistyskomento on
-
-\begin{verbatim}
-java -Djna.nosys=true -jar start.jar
-\end{verbatim}
 
 Solr:n käynnistymisen voi varmistaa selaimessa menemällä verkko-osoitteeseen
 
-\verb|http://localhost:8983/solr/admin/|
+\verb|http://localhost:8983/solr/|
 
 
 \subsection*{Solr:n loki}
@@ -282,7 +279,7 @@ Lokitulostus menee tiedostoon \verb=solr-x.y.z/example/logs/solr.log=
 
 Tiedostot indeksoidaan menemällä osoitteeseen
 
-\verb|http://localhost:8983/solr/dataimport?command=full-import|
+\verb|http://localhost:8983/solr/#/sukija/dataimport?command=full-import|
 
 Enemmän tai vähemmän pitkän ajan kuluttua indeksoinnin lopputuloksen
 voi katsoa osoitteesta
@@ -325,6 +322,37 @@ Tässä vaiheessa kaikki indeksoitavista tiedostoista luetut sanat on
 muutettu pieniksi kirjaimiksi eli tiedostossa
 \verb|finnish-suggestion.xml| olevat erisnimetkin pitää kirjoittaa
 pienellä alkukirjaimella.
+
+Konfiguroititiedoston formaatti on määritelty tiedostossa
+\verb=sukija-core/src/main/xsd/SuggestionInput.xsd=.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\verb=compoundWordEnd= tunnistaa yhdyssanan, jos se loppuu tiettyyn sanaan. Esimeriksi
+
+\begin{verbatim}
+  <compoundWordEnd>
+    <input>jo(k[ie]|e) joki</input>
+  </compoundWordEnd>
+\end{verbatim}
+
+tunnistaa esimerkiksi merkkijonon ''aatsajoelle''. Tällä tavalla
+voidaan tunnistaa paikannimiä, jotka eivät ole sanastossa.
+
+Jokaisessa argumentissa on kaksi osaa. Ensimmäinen on säännöllinen
+lauseke ja toinen jonkin sanan perusmuoto. Tunnistettaessa merkkijono
+katkaistaan siitä kohdasta, josta säännöllinen lauseke alkaa, ja jos
+merkkijonon loppuosan perusmuoto on argumentin toinen osa,
+perusmuotona palauteaan merkkijonon alkuosa + argumentin toinen osa.
+
+Esimeriksi ''aatsajoelle'' jaetaan kahtia osiin ''aatsa'' ja
+''joelle'', ja koska merkkijonon ''joelle'' perusmuoto on ''joki'',
+merkkijonon ''aatsajoelle'' perusmuodoksi tulee ''aatsajoki''.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 
 Konfiguroinnissa on komennon nimi, jota voi seurata argumentteja,
 esimerkiksi
@@ -383,30 +411,6 @@ yhden. \\ Esimerkiksi ''kauttta'' => ''kautta''.
 
 \bigskip
 
-\verb|CompoundWordEnd| tunnistaa yhdyssanan, jos se loppuu tiettyyn sanaan. Esimeriksi
-
-\begin{verbatim}
-  <suggestion name = "CompoundWordEnd">
-   <argument>aukio aukio</argument>
-   <argument>jo(k[ie]|e) joki</argument>
-  </suggestion>
-\end{verbatim}
-
-tunnistaa merkkijonot ''arkadianaukion'' ja ''aatsajoelle''. Tällä
-tavalla voidaan tunnistaa paikannimiä, jotka eivät ole sanastossa.
-
-Jokaisessa argumentissa on kaksi osaa. Ensimmäinen on säännöllinen
-lauseke ja toinen jonkin sanan perusmuoto. Tunnistettaessa merkkijono
-katkaistaan siitä kohdasta, josta säännöllinen lauseke alkaa, ja jos
-merkkijonon loppuosan perusmuoto on argumentin toinen osa,
-perusmuotona palauteaan merkkijonon alkuosa + argumentin toinen osa.
-
-Esimeriksi ''aatsajoelle'' jaetaan kahtia osiin ''aatsa'' ja
-''joelle'', ja koska merkkijonon ''joelle'' perusmuoto on ''joki'',
-merkkijonon ''aatsajoelle'' perusmuodoksi tulee ''aatsajoki''.
-
-
-\bigskip
 \verb|Regex| muuttaa säännöllisen lausekkeen. Esimerkiksi
 
 

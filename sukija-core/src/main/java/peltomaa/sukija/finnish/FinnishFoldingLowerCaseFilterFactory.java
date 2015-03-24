@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2013 Hannu Väisänen
+Copyright (©) 2013, 2015 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by

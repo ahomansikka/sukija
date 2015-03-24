@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2009-2014 Hannu Väisänen
+Copyright (©) 2009-2015 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -39,8 +39,8 @@ public class HVTokenizerFactory extends TokenizerFactory {
     super (args);
   }
 
-  public HVTokenizer create (AttributeFactory factory, Reader reader)
+  public HVTokenizer create (AttributeFactory factory)
   {
-    return new HVTokenizer (factory, reader);
+    return new HVTokenizer (factory);
   }
 }

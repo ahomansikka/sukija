@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2014 Hannu Väisänen
+Copyright (©) 2014-2015 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -27,16 +27,16 @@ import javax.swing.JLabel;
 
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.client.solrj.SolrQuery;
-import org.apache.solr.client.solrj.SolrServer;
+import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.common.SolrDocumentList;
 import org.apache.solr.common.SolrDocument;
 
 
 public class Query {
-  public Query (SolrServer server, JLabel messageField, JEditorPane editorPane)
+  public Query (SolrClient client, JLabel messageField, JEditorPane editorPane)
   {
-    this.server = server;
+    this.client = client;
     this.messageField = messageField;
     this.editorPane = editorPane;
   }
@@ -57,7 +57,7 @@ public class Query {
 
       // To choose a different request handler, for example, just set the qt parameter.
       query.set ("qt", "/sukija");
-      QueryResponse response = server.query (query);
+      QueryResponse response = client.query (query);
 
 //    for (String s : query.getTermsFields()) System.out.println ("Field " + s);
 //    QueryResponsePrinter.print (System.out, response);
@@ -129,7 +129,7 @@ public class Query {
   }
 
 
-  private SolrServer server;
+  private SolrClient client;
   private JLabel messageField;
   private JEditorPane editorPane;
 }

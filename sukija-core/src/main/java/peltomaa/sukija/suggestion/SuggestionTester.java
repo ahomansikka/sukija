@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2013-2014 Hannu Väisänen
+Copyright (©) 2013-2015 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -27,8 +27,12 @@ import java.util.TreeSet;
 import java.util.Vector;
 
 import org.apache.lucene.analysis.Tokenizer;
+import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
+import org.apache.lucene.analysis.tokenattributes.OffsetAttribute;
+import org.apache.lucene.analysis.tokenattributes.PositionIncrementAttribute;
 import peltomaa.sukija.finnish.HVTokenizer;
+import peltomaa.sukija.hyphen.HyphenFilter;
 import peltomaa.sukija.morphology.Morphology;
 
 
@@ -64,8 +68,9 @@ public class SuggestionTester {
     Set<String> set = new TreeSet<String>();
 
     Reader r = new StringReader (input);
-    Tokenizer t = new HVTokenizer (r);
-    CharTermAttribute word = t.addAttribute (CharTermAttribute.class);
+    Tokenizer t = new HVTokenizer();
+    t.setReader (r);
+    CharTermAttribute word = t.getAttribute (CharTermAttribute.class);
 
     try {
       t.reset();
@@ -100,15 +105,23 @@ public class SuggestionTester {
   public static void analyze (Reader reader, Morphology morphology, Vector<Suggestion> suggestion, boolean stopOnSuccess) throws IOException
   {
     Set<String> set = new TreeSet<String>();
-    Tokenizer t = new HVTokenizer (reader);
-    CharTermAttribute word = t.addAttribute (CharTermAttribute.class);
+    Tokenizer u = new HVTokenizer();
+    u.setReader (reader);
+    CharTermAttribute word = u.addAttribute (CharTermAttribute.class);
+    OffsetAttribute offsetAtt = u.getAttribute (OffsetAttribute.class);
+    PositionIncrementAttribute posIncrAtt = u.getAttribute (PositionIncrementAttribute.class);
+    TokenStream t = new HyphenFilter (u);
+
+    Vector<String> vword = new Vector<String>();
+    Set<String> vset = new TreeSet<String>();
+    boolean output = false;
 
     try {
       t.reset();
       set.clear();
       while (t.incrementToken()) {
         final String w = word.toString();
-        System.out.print ("Sana: " + w);
+        System.out.print ("Sana: " + posIncrAtt.getPositionIncrement() + " " + offsetAtt.startOffset() + " " + w);
         set.clear();
         if (morphology.analyzeLowerCase (w, set)) {
           print ("M", set);

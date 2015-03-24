@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2009-2011, 2013-2014 Hannu Väisänen
+Copyright (©) 2009-2011, 2013-2015 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -79,33 +79,16 @@ public class RegexSuggestion extends Suggestion {
   private boolean suggest (int i, String word)
   {
     reset();
-    set.clear();
-    Matcher m = pattern.get(i).matcher (word);
-    int start = 0;
+    Matcher m = pattern.get(i).matcher(word);
 
     while (m.find()) {
-/*
-System.out.println (sb.toString()
-                    + " " + word.toString()
-                    + " " + word.substring (start, m.start(1)).toString()
-                    + " " + m.group(0)
-                    + " " + m.group(1)
-                    + " " + pattern.get(i).pattern()
-                    + " [" + replacement.get(i)
-                    + "] " + start
-                    + " " + m.start()
-                    + " " + m.end()
-                    + " " + m.start(1)
-                    + " " + m.end(1));
-*/
-      sb.append (word.substring (start, m.start(1)));  // Append start of word.
-      sb.append (replacement.get(i));                  // Append replacement.
-      start = m.end (1);           // Continue searching after the previous match.
+      m.appendReplacement (sb, replacement.get(i));
       found = true;
     }
     if (!found) return false;
 
-    sb.append (word.substring (start, word.length())); // Append end of word.
+    m.appendTail (sb);
+    set.clear();
     return analyse (sb.toString(), set);
   }
 

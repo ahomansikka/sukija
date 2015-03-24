@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2014 Hannu Väisänen
+Copyright (©) 2014-2015 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -23,7 +23,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.Vector;
-
 import peltomaa.sukija.morphology.Morphology;
 import peltomaa.sukija.util.RegexUtil;
 
@@ -58,6 +57,7 @@ public class CompoundWordEndSuggestion extends Suggestion {
         result.clear();
         if (analyse (word.substring(matcher.start()), set)) {
           final String start = word.substring (0, matcher.start());
+          addStart (start);
           result.add (end.get(i));
           for (String s: set) {
             if (s.endsWith (end.get(i))) {
@@ -74,7 +74,23 @@ public class CompoundWordEndSuggestion extends Suggestion {
   }
 
 
+  private void addStart (String s)
+  {
+    startSet.clear();
+    analyse (s, startSet);
+    for (String p: startSet) {
+      if (p.endsWith ("-")) {
+        result.add (p.substring (0, p.length()-1));
+      }
+      else {
+        result.add (p);
+      }
+    }
+  }
+
+
   private Vector<Pattern> pattern = new Vector<Pattern>();
   private Vector<String> end = new Vector<String>();
   private Set<String> set = new TreeSet<String>();
+  private Set<String> startSet = new TreeSet<String>();
 }

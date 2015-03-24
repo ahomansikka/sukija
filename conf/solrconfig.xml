@@ -34,8 +34,9 @@
        get all bug fixes and improvements. It is highly recommended
        that you fully re-index after changing this setting as it can
        affect both how text is indexed and queried.
-  -->
   <luceneMatchVersion>LUCENE_41</luceneMatchVersion>
+  -->
+  <luceneMatchVersion>LUCENE_5_0_0</luceneMatchVersion>
 
   <!-- <lib/> directives can be used to instruct Solr to load an Jars
        identified and use them to resolve any "plugins" specified in
@@ -84,9 +85,9 @@
 <!-- OMA LISÄYS ALKAA. -->
   <lib path="${user.home}/.m2/repository/net/java/dev/jna/jna/3.4.0/jna-3.4.0.jar"/>
   <lib path="${user.home}/.m2/repository/org/puimula/voikko/libvoikko/3.7/libvoikko-3.7.jar"/>
-  <lib path="${user.home}/.m2/repository/peltomaa/sukija/sukija-voikko/1.0/sukija-voikko-1.0.jar"/>
-  <lib path="${user.home}/.m2/repository/peltomaa/sukija/sukija-malaga/1.0/sukija-malaga-1.0.jar"/>
-  <lib path="${user.home}/.m2/repository/peltomaa/sukija/sukija-core/1.0/sukija-core-1.0.jar"/>
+  <lib path="${user.home}/.m2/repository/peltomaa/sukija/sukija-voikko/1.1/sukija-voikko-1.1.jar"/>
+  <lib path="${user.home}/.m2/repository/peltomaa/sukija/sukija-malaga/1.1/sukija-malaga-1.1.jar"/>
+  <lib path="${user.home}/.m2/repository/peltomaa/sukija/sukija-core/1.1/sukija-core-1.1.jar"/>
   <lib dir="../../../dist/" regex="solr-dataimporthandler-.*\.jar" />
   <lib dir="../../../contrib/analysis-extras/lucene-libs" regex=".*\.jar" />
 <!-- OMA LISÄYS LOPPUU. -->
@@ -940,17 +941,6 @@
        -->
   </requestHandler>
 
-  <!-- For back compat with clients using /update/json and /update/csv -->  
-  <requestHandler name="/update/json" class="solr.JsonUpdateRequestHandler">
-        <lst name="defaults">
-         <str name="stream.contentType">application/json</str>
-       </lst>
-  </requestHandler>
-  <requestHandler name="/update/csv" class="solr.CSVRequestHandler">
-        <lst name="defaults">
-         <str name="stream.contentType">application/csv</str>
-       </lst>
-  </requestHandler>
 
   <!-- Solr Cell Update Request Handler
 

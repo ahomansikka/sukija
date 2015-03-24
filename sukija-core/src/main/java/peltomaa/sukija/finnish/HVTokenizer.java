@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2009-2014 Hannu Väisänen
+Copyright (©) 2009-2015 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -23,7 +23,6 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.io.Reader;
 
-import org.apache.lucene.analysis.Token;
 import org.apache.lucene.analysis.Tokenizer;
 import org.apache.lucene.analysis.tokenattributes.OffsetAttribute;
 import org.apache.lucene.analysis.tokenattributes.PositionIncrementAttribute;
@@ -42,9 +41,9 @@ public class HVTokenizer extends Tokenizer {
   /**
    * Creates a new HVTokenizer.
    */
-  public HVTokenizer (Reader input)
+  public HVTokenizer()
   {
-    super (input);
+    super();
     init();
   }
 
@@ -52,16 +51,16 @@ public class HVTokenizer extends Tokenizer {
   /** Creates a new HVTokenizer with a given
       {@link org.apache.lucene.util.AttributeSource.AttributeFactory}.
    */
-  public HVTokenizer (AttributeFactory factory, Reader input)
+  public HVTokenizer (AttributeFactory factory)
   {
-    super (factory, input);
+    super (factory);
     init();
   }
 
 
   private void init()
   {
-    this.scanner = new HVTokenizerImpl (input);
+    this.scanner = new HVTokenizerImpl (this.input);
   }
 
 

@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2014 Hannu Väisänen
+Copyright (©) 2014-2015 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -18,9 +18,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package peltomaa.sukija;
 
 import org.apache.solr.client.solrj.SolrQuery;
-import org.apache.solr.client.solrj.SolrServer;
+import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrServerException;
-import org.apache.solr.client.solrj.impl.HttpSolrServer;
+import org.apache.solr.client.solrj.impl.HttpSolrClient;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.BasicConfigurator;
@@ -89,9 +89,9 @@ public class Sukija extends JFrame {
     setSize (900, 500);
     setVisible (true);
 
-    server = new HttpSolrServer (url);
+    client = new HttpSolrClient (url);
 
-    query = new Query (server, messageField, editorPane);
+    query = new Query (client, messageField, editorPane);
 
 //    JFontChooser chooser = new JFontChooser();
 //    Font selectedFont = JFontChooser.showDialog (null, "Choose Font", null);
@@ -164,7 +164,7 @@ public class Sukija extends JFrame {
   }
 
 
-  private SolrServer server;
+  private SolrClient client;
   private JTextField queryField;
   private JLabel messageField;
   private FileDisplayer fileDisplayer = new FileDisplayer();

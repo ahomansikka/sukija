@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2009-2014 Hannu Väisänen
+Copyright (©) 2009-2015 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -40,8 +40,8 @@ public class FinnishTokenizerFactory extends TokenizerFactory {
     super (args);
   }
 
-  public FinnishTokenizer create (AttributeFactory factory, Reader reader)
+  public FinnishTokenizer create (AttributeFactory factory)
   {
-    return new FinnishTokenizer (factory, reader);
+    return new FinnishTokenizer (factory);
   }
 }
