@@ -148,7 +148,8 @@ public class SuggestionTester {
 
   public static void testSuggestionFilter (Reader reader, Morphology morphology, Vector<Suggestion> suggestion, boolean stopOnSuccess) throws IOException
   {
-    Tokenizer u = new HVTokenizer (reader);
+    Tokenizer u = new HVTokenizer();
+    u.setReader (reader);
     TokenStream t = new SuggestionFilter (u, morphology, suggestion, stopOnSuccess);
     CharTermAttribute word = t.getAttribute (CharTermAttribute.class);
 

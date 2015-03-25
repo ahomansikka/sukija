@@ -109,6 +109,7 @@ public class SuggestionFilter extends SukijaFilter {
       iterator = set.iterator();
     }
     else {
+      if (LOG.isDebugEnabled()) LOG.debug ("Suggest0 " + word);
       iterator = suggest (word.toLowerCase());
     }
   }
@@ -119,7 +120,7 @@ public class SuggestionFilter extends SukijaFilter {
   private Iterator<String> suggest (String word)
   {
     suggestionSet = getSuggestions (word);
-System.out.println ("HUUUU " + suggestionSet.size());
+
     if (suggestionSet == null) { /* No suggestions found. */
       if (LOG.isDebugEnabled()) LOG.debug ("Suggest1 " + word);
       return (successOnly ? null : set.iterator());
@@ -159,16 +160,17 @@ System.out.println ("HUUUU " + suggestionSet.size());
       }
       else {
         Set<String> s = trySuggestions (word[i]);
-        System.out.println ("Huuhaa: " + word.length + " " + join(word) + " " + word[i] + " " + ((s==null) ? null : s.toString()));
+//        System.out.println ("Huuhaa: " + word.length + " " + join(word) + " " + word[i] + " " + ((s==null) ? null : s.toString()));
         if (s != null) set.addAll (s);
       }
     }
 
     if (set.size() > 0) {
+/*
       System.out.print ("SPLIT " + join (word) + ": ");
       for (String p : word) System.out.print (p + " ");
       System.out.println (" : " + set.toString());
-
+*/
       return set;
     }
     else {
@@ -185,7 +187,7 @@ System.out.println ("HUUUU " + suggestionSet.size());
       }
     }
     String[] array = SPLIT.split (word);
-    System.out.print ("SPLIT "); for (String p : array) System.out.print (p + " "); System.out.println ("");
+//    System.out.print ("SPLIT "); for (String p : array) System.out.print (p + " "); System.out.println ("");
     return null;
   }
 

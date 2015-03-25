@@ -87,6 +87,7 @@ public class FinnishTokenizer extends Tokenizer {
     scanner.getText (termAtt);
     final int start = scanner.yychar();
     offsetAtt.setOffset (correctOffset(start), correctOffset(start+termAtt.length()));
+//System.out.println ("FinnishTokenizer: " + termAtt.toString() + " " + offsetAtt.startOffset() + " " + offsetAtt.endOffset());
     return true;
   }
 

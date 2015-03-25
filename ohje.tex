@@ -235,20 +235,23 @@ Solr:n käynnistymisen voi varmistaa selaimessa menemällä verkko-osoitteeseen
 
 Solr:n lokitulostus (\verb=http://wiki.apache.org/solr/SolrLogging=)
 konfiguroidaan tiedostossa
-\verb=solr-x.y.z/example/resources/log4j.properties=
+\verb=solr-x.y.z/server/resources/log4j.properties=
 Mahdollisimman suuren lokitulostuksen saa lisäämällä tämän tiedoston
 loppuun rivit
 
+%log4j.logger.peltomaa.sukija.finnish.FinnishTokenizer = ALL
+
 \begin{verbatim}
 log4j.logger.peltomaa.sukija.finnish.HVTokenizer = ALL
+log4j.logger.peltomaa.sukija.hyphen.HyphenFilter = ALL
+log4j.logger.peltomaa.sukija.malaga.MalagaMorphology = ALL
 log4j.logger.peltomaa.sukija.morphology.MorphologyFilter = ALL
 log4j.logger.peltomaa.sukija.suggestion.Suggestion = ALL
-log4j.logger.peltomaa.sukija.suggestion.SuccessFilter = ALL
 log4j.logger.peltomaa.sukija.suggestion.SuggestionFilter = ALL
-log4j.logger.peltomaa.sukija.malaga.MalagaMorphology = ALL
+log4j.logger.peltomaa.sukija.suggestion.SuggestionParser = ALL
+log4j.logger.peltomaa.sukija.voikko.VoikkoMorphologyFilterFactory = ALL
 log4j.logger.peltomaa.sukija.voikko.VoikkoMorphology = ALL
 log4j.logger.peltomaa.sukija.voikko.VoikkoMorphologySuggestionFilterFactory = ALL
-log4j.logger.peltomaa.sukija.hyphen.HyphenFilter = ALL
 \end{verbatim}
 
 Tuossa ovat kaikki Sukijan luokat, joissa on lokitulostus.
@@ -279,7 +282,7 @@ Lokitulostus menee tiedostoon \verb=solr-x.y.z/example/logs/solr.log=
 
 Tiedostot indeksoidaan menemällä osoitteeseen
 
-\verb|http://localhost:8983/solr/#/sukija/dataimport?command=full-import|
+\verb|http://localhost:8983/solr/sukija/dataimport?command=full-import|
 
 Enemmän tai vähemmän pitkän ajan kuluttua indeksoinnin lopputuloksen
 voi katsoa osoitteesta
@@ -475,3 +478,6 @@ Kun tiedostot on indeksoitu, niitä voidaan tutkia myös komennolla
 \verb|java -jar sukija-ui/target/sukija-ui-1.0.jar|
 
 \end{document}
+
+
+cp /home/hvaisane/Lataukset/solr/solr-5.0.0/example/example-DIH/solr/db/conf/admin-extra*.html ~/Lataukset/solr/solr-5.0.0/server/solr/sukija/conf/
