@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2013-2014 Hannu Väisänen
+Copyright (©) 2013-2015 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -17,11 +17,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 package peltomaa.sukija.voikko;
 
-import java.io.File;
 import java.io.InputStream;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.Vector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.apache.lucene.analysis.TokenFilter;
@@ -30,7 +30,8 @@ import org.apache.lucene.analysis.util.ResourceLoader;
 import org.apache.lucene.analysis.util.ResourceLoaderAware;
 import org.apache.lucene.analysis.util.TokenFilterFactory;
 import org.apache.solr.util.PropertiesUtil;
-import peltomaa.sukija.morphology.MorphologyFilter;
+import peltomaa.sukija.morphology.Morphology;
+import peltomaa.sukija.suggestion.Suggestion;
 import peltomaa.sukija.suggestion.SuggestionFilter;
 import peltomaa.sukija.suggestion.SuggestionParser;
 
@@ -52,16 +53,15 @@ import peltomaa.sukija.suggestion.SuggestionParser;
  * <p>Arguments path, libvoikkoPath and libraryPath are optional.
  * If they are not here defaults are used.
  */
-public class VoikkoMorphologySuggestionFilterFactory extends TokenFilterFactory implements ResourceLoaderAware {
+public class VoikkoMorphologySuggestionFilterFactory
+  extends VoikkoMorphologyFilterFactory implements ResourceLoaderAware {
+
   /** Create a new VoikkoMorphologySuggestionFilterFactory.
    */
   public VoikkoMorphologySuggestionFilterFactory (Map<String,String> args)
   {
     super (args);
-    dictionary     = get (args, "dictionary", "fi");
-    path           = getValue (args, "path");
-    libvoikkoPath  = getValue (args, "libvoikkoPath");
-    libraryPath    = getValue (args, "libraryPath");
+
     suggestionFile = getValue (args, "suggestionFile");
     success = getBoolean (args, "success", false);
 
@@ -78,23 +78,14 @@ public class VoikkoMorphologySuggestionFilterFactory extends TokenFilterFactory 
   public TokenFilter create (TokenStream input)
   {
     LOG.info ("create");
-    if (dictionary == null) {
-      LOG.error ("VoikkoMorphologySuggestionFilterFactory: dictionary == null.");
-      return null;
-    }
-    else if (path == null) {
-      return new SuggestionFilter (input, VoikkoMorphology.getInstance (dictionary), inputStream, success);
-    }
-    else if ((libvoikkoPath == null) && (libraryPath == null)) {
-      return new SuggestionFilter (input, VoikkoMorphology.getInstance (dictionary, path), inputStream, success);
-    }
-    else if ((libvoikkoPath != null) && (libraryPath != null)) {
-      return new SuggestionFilter (input, VoikkoMorphology.getInstance (dictionary, path, libvoikkoPath, libraryPath), inputStream, success);
-    }
-    else {
-      LOG.error ("VoikkoMorphologySuggestionFilterFactory: some parameters are null.");
-      return null;
-    }
+    LOG.info ("dictionary " + dictionary);
+    LOG.info ("path " + path);
+    LOG.info ("libvoikkoPath " + libvoikkoPath);
+    LOG.info ("libraryPath " + libraryPath);
+    LOG.info ("suggestionFile " + suggestionFile);
+    LOG.info ("success " + success);
+
+    return new SuggestionFilter (input, morphology, suggestion, success);
   }
 
 
@@ -102,23 +93,25 @@ public class VoikkoMorphologySuggestionFilterFactory extends TokenFilterFactory 
   public void inform (ResourceLoader loader) throws IOException
   {
     LOG.info ("inform1 " + loader.getClass().getName());
-    inputStream = loader.openResource (suggestionFile);
+    if (suggestion == null) {
+      InputStream inputStream = loader.openResource (suggestionFile);
+      morphology = getMorphology();
+      try {
+        SuggestionParser parser = new SuggestionParser (morphology, inputStream);
+        suggestion = parser.getSuggestions();
+      }
+      catch (SuggestionParser.SuggestionParserException e)
+      {
+        LOG.error (e.getMessage());
+        if (e.getCause() != null) LOG.error (e.getCause().getMessage());
+      }
+    }
     LOG.info ("inform2 " + loader.getClass().getName());
   }
 
 
-  private String getValue (Map<String,String> args, String name)
-  {
-    return PropertiesUtil.substituteProperty (get(args,name), null);
-  }
-
-
-  private String dictionary;
   private String suggestionFile;
-  private String path;
-  private String libvoikkoPath;
-  private String libraryPath;
   private boolean success;
   private static final Logger LOG = LoggerFactory.getLogger (VoikkoMorphologySuggestionFilterFactory.class);
-  private InputStream inputStream;
+  private Vector<Suggestion> suggestion;
 }

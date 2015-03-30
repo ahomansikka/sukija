@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2012-2013 Hannu Väisänen
+Copyright (©) 2012-2013, 2015 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -17,15 +17,22 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 package peltomaa.sukija.malaga;
 
+import java.io.IOException;
 import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.apache.lucene.analysis.TokenFilter;
 import org.apache.lucene.analysis.TokenStream;;
+import org.apache.lucene.analysis.util.ResourceLoader;
+import org.apache.lucene.analysis.util.ResourceLoaderAware;
 import org.apache.lucene.analysis.util.TokenFilterFactory;
+import org.apache.solr.util.PropertiesUtil;
+import peltomaa.sukija.morphology.Morphology;
 import peltomaa.sukija.morphology.MorphologyFilter;
-import peltomaa.sukija.util.PropertiesUtil;
+
 
 /**
- * Factory for {@link MorphologyFilter}. 
+ * Factory for {@link MalagaMorphologyFilter}. 
  * <pre class="prettyprint" >
  * &lt;fieldType name="text" class="solr.TextField"
  *   &lt;analyzer&gt;
@@ -34,24 +41,47 @@ import peltomaa.sukija.util.PropertiesUtil;
  *   &lt;/analyzer&gt;
  * &lt;/fieldType&gt;</pre> 
  */
-public class MalagaMorphologyFilterFactory extends TokenFilterFactory {
+public class MalagaMorphologyFilterFactory extends TokenFilterFactory implements ResourceLoaderAware {
   /** Create a new MalagaMorphologyFilterFactory.
    */
   public MalagaMorphologyFilterFactory (Map<String,String> args)
   {
     super (args);
-    malagaProjectFile = PropertiesUtil.replacePropertyNameWithValue (args.get ("malagaProjectFile"));
-//System.out.println ("mal1 " + malagaProjectFile);
+    malagaProjectFile = getValue (args, "malagaProjectFile");
+    LOG.info (malagaProjectFile);
   }
 
 
   @Override
   public TokenFilter create (TokenStream input)
   {
-//System.out.println ("mal2 " + malagaProjectFile);
-    return new MorphologyFilter (input, MalagaMorphology.getInstance (malagaProjectFile));
+    LOG.info ("MalagaMorphologyFilterFactory.create");
+    return new MorphologyFilter (input, morphology);
   }
 
 
+  @Override
+  public void inform (ResourceLoader loader) throws IOException
+  {
+    LOG.info ("inform1 " + loader.getClass().getName());
+    morphology = getMorphology();
+    LOG.info ("inform2 " + loader.getClass().getName());
+  }
+
+
+  protected Morphology getMorphology()
+  {
+    return MalagaMorphology.getInstance (malagaProjectFile);
+  }
+
+
+  protected String getValue (Map<String,String> args, String name)
+  {
+    return PropertiesUtil.substituteProperty (get(args,name), null);
+  }
+
+
+  protected Morphology morphology;
   private String malagaProjectFile;
+  private static final Logger LOG = LoggerFactory.getLogger (MalagaMorphologyFilterFactory.class);
 }

@@ -15,7 +15,7 @@ MALAGA_MORPHOLOGY_FILTER_FACTORY=filter class="peltomaa.sukija.malaga.MalagaMorp
 
 MALAGA_MORPHOLOGY_SUGGESTION_FILTER_FACTORY=filter class="peltomaa.sukija.malaga.MalagaMorphologySuggestionFilterFactory"\
                                  malagaProjectFile="$${user.home}/.sukija/suomi.pro"\
-                                 suggestionFile="solr/collection1/conf/finnish-suggestion.xml"\
+                                 suggestionFile="finnish-suggestion.xml"\
                                  success="false"
 
 VOIKKO_MORPHOLOGY_FILTER_FACTORY=filter class="peltomaa.sukija.voikko.VoikkoMorphologyFilterFactory"\

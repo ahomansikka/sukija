@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2012-2014 Hannu Väisänen
+Copyright (©) 2012-2015 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -17,17 +17,25 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 package peltomaa.sukija.malaga;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Map;
+import java.util.Vector;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.apache.lucene.analysis.TokenFilter;
 import org.apache.lucene.analysis.TokenStream;;
+import org.apache.lucene.analysis.util.ResourceLoader;
+import org.apache.lucene.analysis.util.ResourceLoaderAware;
 import org.apache.lucene.analysis.util.TokenFilterFactory;
 import org.apache.solr.util.PropertiesUtil;
-import peltomaa.sukija.morphology.MorphologyFilter;
+import peltomaa.sukija.suggestion.Suggestion;
 import peltomaa.sukija.suggestion.SuggestionFilter;
+import peltomaa.sukija.suggestion.SuggestionParser;
 
 
 /**
- * Factory for {@link SuggestionFilter} or {@link SuccesfulFilter}. 
+ * Factory for {@link MalagaMorphologySuggestionFilter}.
  * <pre class="prettyprint" >
  * &lt;fieldType name="text" class="solr.TextField"
  *   &lt;analyzer&gt;
@@ -39,14 +47,13 @@ import peltomaa.sukija.suggestion.SuggestionFilter;
  * &lt;/fieldType&gt;</pre> 
  * <p>If success is true filter accepts only words that it recognizes.
  */
-public class MalagaMorphologySuggestionFilterFactory extends TokenFilterFactory {
+public class MalagaMorphologySuggestionFilterFactory extends MalagaMorphologyFilterFactory implements ResourceLoaderAware {
   /** Create a new MalagaMorphologySuggestionFilterFactory.
    */
   public MalagaMorphologySuggestionFilterFactory (Map<String,String> args)
   {
     super (args);
-    malagaProjectFile = PropertiesUtil.substituteProperty ("malagaProjectFile", null);
-    suggestionFile = PropertiesUtil.substituteProperty ("suggestionFile", null);
+    suggestionFile = getValue (args, "suggestionFile");
     success = getBoolean (args, "success", false);
   }
 
@@ -54,11 +61,33 @@ public class MalagaMorphologySuggestionFilterFactory extends TokenFilterFactory 
   @Override
   public TokenFilter create (TokenStream input)
   {
-    return new SuggestionFilter (input, MalagaMorphology.getInstance (malagaProjectFile), suggestionFile, success);
+    return new SuggestionFilter (input, morphology, suggestion, success);
   }
 
 
-  private String malagaProjectFile;
+  @Override
+  public void inform (ResourceLoader loader) throws IOException
+  {
+    LOG.info ("inform1 " + loader.getClass().getName());
+    if (suggestion == null) {
+      InputStream inputStream = loader.openResource (suggestionFile);
+      morphology = getMorphology();
+      try {
+        SuggestionParser parser = new SuggestionParser (morphology, inputStream);
+        suggestion = parser.getSuggestions();
+      }
+      catch (SuggestionParser.SuggestionParserException e)
+      {
+        LOG.error (e.getMessage());
+        if (e.getCause() != null) LOG.error (e.getCause().getMessage());
+      }
+    }
+    LOG.info ("inform2 " + loader.getClass().getName());
+  }
+
+
   private String suggestionFile;
   private boolean success;
+  private static final Logger LOG = LoggerFactory.getLogger (MalagaMorphologySuggestionFilterFactory.class);
+  private Vector<Suggestion> suggestion;
 }

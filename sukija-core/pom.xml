@@ -11,6 +11,12 @@
   <artifactId>sukija-core</artifactId>
 
   <dependencies>
+   <dependency>
+      <groupId>org.apache.solr</groupId>
+      <artifactId>solr-dataimporthandler</artifactId>
+      <version>5.0.0</version>
+    </dependency>
+
     <dependency>
       <groupId>org.apache.tika</groupId>
       <artifactId>tika-parsers</artifactId>

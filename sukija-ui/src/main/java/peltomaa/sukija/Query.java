@@ -56,7 +56,7 @@ public class Query {
       query.setParam ("hl.maxAnalyzedChars", "-1");
 
       // To choose a different request handler, for example, just set the qt parameter.
-      query.set ("qt", "/sukija");
+      query.set ("qt", "/sukija/sukija");
       QueryResponse response = client.query (query);
 
 //    for (String s : query.getTermsFields()) System.out.println ("Field " + s);

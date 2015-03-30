@@ -47,16 +47,18 @@ public class SuggestionFilter extends SukijaFilter {
   {
     super (in);
     try {
-      LOG.info ("SuggestionFilter: aloitetaan.");
+      LOG.info ("SuggestionFilter: aloitetaan (1).");
       parser = new SuggestionParser (morphology, suggestionFile);
       suggestion = parser.getSuggestions();
       this.morphology = morphology;
       this.successOnly = successOnly;
-      if (LOG.isDebugEnabled()) LOG.debug ("SuggestionFilter: creating class " + getClass().getName() + ".");
     }
     catch (SuggestionParser.SuggestionParserException e)
     {
-      LOG.error ("SuggestionFilter: " + e.getMessage());
+      LOG.error ("SuggestionFilter(1): " + e.getMessage());
+      if (e.getCause() != null) {
+        LOG.error ("SuggestionFilter(2): " + e.getCause().getClass().getName() + " " + e.getCause().getMessage());
+      }
     }
   }
 
@@ -78,16 +80,16 @@ public class SuggestionFilter extends SukijaFilter {
   {
     super (in);
     try {
-      LOG.info ("SuggestionFilter: aloitetaan.");
-      parser = new SuggestionParser (morphology, is);
+      LOG.info ("SuggestionFilter: aloitetaan (2).");
+      if (parser == null) parser = new SuggestionParser (morphology, is);
       suggestion = parser.getSuggestions();
       this.morphology = morphology;
       this.successOnly = successOnly;
-      if (LOG.isDebugEnabled()) LOG.debug ("SuggestionFilter: creating class " + getClass().getName() + ".");
     }
     catch (SuggestionParser.SuggestionParserException e)
     {
       LOG.error ("SuggestionFilter: " + e.getMessage());
+      if (e.getCause() != null) LOG.error ("SuggestionFilter: " + e.getCause().getClass().getName() + " " + e.getCause().getMessage());
     }
   }
 
@@ -105,6 +107,11 @@ public class SuggestionFilter extends SukijaFilter {
   protected void filter (String word)
   {
     set.clear();
+
+    if (morphology == null) throw new RuntimeException ("morphology == null");
+    if (word == null) throw new RuntimeException ("word== null");
+    if (set == null) throw new RuntimeException ("set == null");
+
     if (morphology.analyzeLowerCase (word, set)) {
       iterator = set.iterator();
     }

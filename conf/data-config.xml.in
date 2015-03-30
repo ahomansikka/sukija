@@ -12,7 +12,7 @@
       <field column = "fileAbsolutePath" meta = "true" name = "id"/>
       <entity name = "tika"
               dataSource = "bin"
-              processor = "solr.handler.dataimport.TikaEntityProcessor"
+              processor = "peltomaa.sukija.util.TikaEntityProcessor"
               url = "${f.fileAbsolutePath}"
               format = "text"
               onError = "skip">

@@ -34,16 +34,20 @@ import peltomaa.sukija.schema.*;
 public class SuggestionParser {
   public SuggestionParser (Morphology morphology, InputStream is) throws SuggestionParserException
   {
+    if (parsed) return;
+
     try {
       LOG.info ("Aloitetaan.");
       si = JAXBUtil.unmarshal (is, XSD_FILE, CONTEXT_PATH, this.getClass().getClassLoader());
       parseSuggestions (morphology, si.getSuggestion());
+      parsed = true;
 
 //      print (System.out);
     }
     catch (Throwable t)
     {
-      LOG.info (t.getMessage());
+      LOG.error ("a " + t.getCause().getClass().getName() + " " + t.getCause().getMessage());
+      if (t.getCause() != null) LOG.error ("b " + t.getCause().getClass().getName() + " " + t.getCause().getMessage());
       throw new SuggestionParserException (t);
     }
   }
@@ -57,17 +61,21 @@ public class SuggestionParser {
 
   public SuggestionParser (Morphology morphology, String xmlFile, String xsdFile) throws SuggestionParserException
   {
+    if (parsed) return;
+
     try {
       LOG.info ("SuggestionParser: " + xmlFile + " " + xsdFile);
 
       si = JAXBUtil.unmarshal (xmlFile, xsdFile, CONTEXT_PATH, this.getClass().getClassLoader());
       parseSuggestions (morphology, si.getSuggestion());
+      parsed = true;
 
 //      print (System.out);
     }
     catch (Throwable t)
     {
-      LOG.info (t.getMessage());
+      LOG.error ("c " + t.getMessage());
+      if (t.getCause() != null) LOG.error ("d " + t.getCause().getMessage());
       throw new SuggestionParserException (t);
     }
   }
@@ -82,7 +90,8 @@ public class SuggestionParser {
     }
     catch (Throwable t)
     {
-      LOG.info (t.getMessage());
+      LOG.error ("e " + t.getMessage());
+      if (t.getCause() != null) LOG.error ("f " + t.getCause().getMessage());
       throw new SuggestionParserException (t);
     }
   }
@@ -97,7 +106,8 @@ public class SuggestionParser {
     }
     catch (Throwable t)
     {
-      LOG.info (t.getMessage());
+      LOG.error ("g " + t.getMessage());
+      if (t.getCause() != null) LOG.error ("h " + t.getCause().getMessage());
       throw new SuggestionParserException (t);
     }
   }
@@ -228,4 +238,5 @@ public class SuggestionParser {
   private static final String CONTEXT_PATH = "peltomaa.sukija.schema";
   private static final String XSD_FILE = "/peltomaa/sukija/schema/SuggestionInput.xsd";
   private SuggestionInput si;
+  private boolean parsed = false;
 }

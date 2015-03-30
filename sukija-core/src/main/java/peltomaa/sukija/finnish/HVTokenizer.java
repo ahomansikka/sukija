@@ -84,7 +84,7 @@ public class HVTokenizer extends Tokenizer {
     final int start = scanner.yychar();
     offsetAtt.setOffset (correctOffset(start), correctOffset(start+termAtt.length()));
     if (LOG.isDebugEnabled()) LOG.debug ("HVTokenizer: " + termAtt.toString() + " " + offsetAtt.startOffset() + " " + offsetAtt.endOffset());
-System.out.println ("HVTokenizer: " + termAtt.toString() + " " + offsetAtt.startOffset() + " " + offsetAtt.endOffset());
+//System.out.println ("HVTokenizer: " + termAtt.toString() + " " + offsetAtt.startOffset() + " " + offsetAtt.endOffset());
     return true;
   }
 
