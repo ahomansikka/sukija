@@ -4,6 +4,7 @@
 \usepackage[utf8]{inputenc}
 \usepackage{zref-lastpage,zref-user}
 \usepackage{fancyhdr}
+\usepackage{a4wide}
 \frenchspacing
 \lhead{Sukijan asennus- ja käyttöohje (Copyright © 2011--2015 Hannu Väisänen)}
 \rhead{\thepage(\zpageref{LastPage})}
@@ -107,13 +108,15 @@ taivutusmuotoja ja sanoja sekä yleisiä kirjoitusvirheitä.
 
 \subsection*{Sukijan kääntäminen ja asentaminen, Solr:n konfigurointi}
 
-Ensin käännetään Sukija komennolla
+Ensin käännetään ja asennetaan Sukija komennolla
 
-\verb=mvn package=
+\verb=mvn install=
 
 Komento imuroi netistä tarvitsemansa Javan jar-paketit eli ensimmäinen
 kääntäminen saattaa kestää kauan. Erityisen kauan se kestää, jos et
 ole aiemmin käyttänyt mavenia.
+
+Sukijan jar-tiedostot asennetaan maven-hakemistoon \verb|${HOME}/.m2|
 
 Testien aikana tulee virheilmoitus
 
@@ -121,109 +124,27 @@ SLF4J: Class path contains multiple SLF4J bindings.
 
 Siitä ei tarvitse välittää.
 
-\bigskip Toisessa vaiheessa asetetaan Solr:n konfigurointitiedostoon
-\verb=schema.xml= saneistajaluokka (ulkomaankielellä tokenizer), joka
-lukee sanat tiedostoista, ja morfologialuokka, joka muuttaa sanat
-perusmuotoon. Komennolla \verb|make ____-schema| on viisi eri
-vaihtoehtoa:
 
-\begin{tabular}{@{}ll}
-Komento                              & Morfologialuokka \\
-\verb=make malaga-schema=            & MalagaMorphologyFilterFactory \\
-\verb=make malaga-suggestion-schema= & MalagaMorphologySuggestionFilterFactory \\
-\verb=make voikko-schema=            & VoikkoMorphologyFilterFactory \\
-\verb=make voikko-suggestion-schema= & VoikkoMorphologySuggestionFilterFactory \\
-\verb=make vfst-schema=              & VoikkoMorphologyFilterFactory \\
-\verb=make vfst-suggestion-schema=   & VoikkoMorphologySuggestionFilterFactory \\
-\verb=make debug-schema=             & \\
-\verb=make debug-vfst-schema=
-\end{tabular}
+\bigskip Toisessa vaiheessa konfiguroidaan Solr tiedostossa \verb|sukija.properties|
+Katso ohjeet äsken mainitusta tiedostosta.
 
-Vfst on Voikko, joka käyttää uutta vfst-morfologiaa.
+Sen jälkeen kofiguroidaan Solr komennolla \verb|make asenna|
 
-Komentoja \verb=make debug-schema= ja \verb=make debug-vfst-schema=
-käytetään vain Sukijan kehittämiseen.
+Jos asentamisen jäkeen muuttaa tiedostoa
 
-Saneistajan oletusarvo on FinnishTokenizerFactory, joka tulee Sukijan
-mukana, mutta sen voi vaihtaa muuttujalla TOKENIZER\_FACTORY
-esimerkiksi näin:
+\verb|sukija.properties| tai 
+\verb|conf/sukija-context.xml|
 
-\verb|make voikko-schema TOKENIZER_FACTORY=solr.StandardTokenizerFactory|
-
-\verb=____FilterFactory= ja \verb=____SuggestionFilterFactory= eroavat
-toisistaan siten, että jos morfologialuokka ei tunnista sanaa,
-\verb=Suggestion="-luokissa sanaan tehdään muutoksia (esimerkiksi
-muutetaan w v:ksi) ja tunnistusta yritetään uudestaan. Tämä ei ole
-sama asia kuin Voikon oikeinkirjoituksen korjausehdotukset!
-
-\verb=Suggestion="-luokat konfiguroidaan tiedostossa
-\verb|finnish-suggestion.xml|. Katso sivu \zpageref{suggestionConfiguration}.
-
-\bigskip
-Indeksoitavat tiedostot asetetaan tiedostossa \verb|data-config.xml|.
-
-Katso \\
-\verb|http://wiki.apache.org/solr/DataImportHandler#FileListEntityProcessor| \\
-ja
-\verb|http://wiki.apache.org/solr/TikaEntityProcessor|.
-
-Tärkeimmät konfiguroitavat parametrit ovat:
-
-\begin{itemize}
-\item baseDir
-Hakemisto, jossa ja jonka alihakemistoissa tiedostot ovat.
-
-\item fileName
-Säännöllinen lauseke, joka valitsee indeksoitavat tiedostot.
-
-\item excludes
-Säännöllinen lauseke, joka valitsee tiedostot, joita ei indeksoida.
-\end{itemize}
-
-Komento \verb|make install| asettaa näiden oletusarvoiksi
-
-baseDir \verb|$HOME/Asiakirjat|
-
-fileName \verb|.*| eli kaikki tiedostot indeksoidaan.
-
-excludes \\
-{\footnotesize \verb+(?u)(?i).*[.](au|bmp|bz2|class|gif|gpg|gz|jar|jpg|jpeg|m|o|png|tif|tiff|wav|zip)$+}
-
-
-Näitä voidaan muuttaa parametreilla \verb|BASE_DIR|,
-\verb|FILE_NAME| ja
-\verb|EXCLUDES|. Esimerkiksi
-
-\verb|make install BASE_DIR=/usr/local/data|
-
-Säännöllisten lausekkeiden syntaksi on sama kuin Javan luokassa \\
-\verb=java.util.regex.Pattern=.
-
-Indeksoitavien tiedostojen asettamisen lisäksi komento
-\verb=make install= kopioi hakemistossa \verb=conf= olevat Solr:n ja
-Sukijan tarvitsemat tiedostot oikeisiin paikkoihin.
-
-Tiedostot
-\verb=data-config.xml=,
-\verb=suggestion.txt= ja
-\verb=synonyms.txt=
-kopioidaan hakemistoon \verb=$HOME/.sukija=
-ja tiedostot
-\verb=schema.xml=,
-\verb=solrconfig.xml=, \\
-\verb=sukija-context.xml=,
-\verb=sukija.xsl= ja
-alihakemisto \verb=velocity=
-niihin hakemistoihin, joista Solr löytää ne.
+muutokset voi viedä Solr:iin komennolla \verb|make päivitä-asennus|
 
 
 \subsection*{Solr:n käynnistäminen}
 
-\begin{verbatim}
-cd $HOME/Lataukset/solr/solr-x.y.z/example
-../bin/solr start
-../bin/solr create -c sukija
-\end{verbatim}
+\verb|make asenna| käynnistää Solr:n.
+
+Myöhemmin sen voi käynnistää komennolla
+
+\verb|~/Lataukset/solr/solr-x.y.z/bin/solr start|
 
 
 Solr:n käynnistymisen voi varmistaa selaimessa menemällä verkko-osoitteeseen
@@ -241,6 +162,7 @@ loppuun rivit
 
 %log4j.logger.peltomaa.sukija.finnish.FinnishTokenizer = ALL
 
+{\footnotesize
 \begin{verbatim}
 log4j.logger.peltomaa.sukija.finnish.HVTokenizer = ALL
 log4j.logger.peltomaa.sukija.hyphen.HyphenFilter = ALL
@@ -253,16 +175,14 @@ log4j.logger.peltomaa.sukija.voikko.VoikkoMorphologyFilterFactory = ALL
 log4j.logger.peltomaa.sukija.voikko.VoikkoMorphology = ALL
 log4j.logger.peltomaa.sukija.voikko.VoikkoMorphologySuggestionFilterFactory = ALL
 \end{verbatim}
+}
 
 Tuossa ovat kaikki Sukijan luokat, joissa on lokitulostus.
 
 Tällöin tulostus on paljon suurempi kuin indeksoitavat tiedostot (-:,
 mutta kaikkia ei tietenkään tarvitse lisätä, riittää kun laittaa
 luokat \verb=MorphologyFilter= sekä \\
-\verb=SuggestionFilter= tai \verb=SuccessFilter=.
-
-Luokkia \verb=SuggestionFilter= ja \verb=SuccessFilter= ei pidä
-käyttää yhtaikaa.
+\verb=SuggestionFilter=.
 
 Luokkaa \verb=HVTokenizer= ei tarvitse laittaa, jos ei käytä tätä
 saneistajaa, ja luokkia \\
@@ -275,7 +195,7 @@ erikseen, mikä muunnos sai aikaan sanan tunnistamisen (katso sivu
 Lokitulostuksen eri tasot (\verb=ALL=, jne) voi katsua luokan
 \verb=org.apache.log4j.Level= dokumentoinnista.
 
-Lokitulostus menee tiedostoon \verb=solr-x.y.z/example/logs/solr.log=
+Lokitulostus menee tiedostoon \verb=solr-x.y.z/server/logs/solr.log=
 
 
 \subsection*{Indeksointi}
@@ -287,12 +207,12 @@ Tiedostot indeksoidaan menemällä osoitteeseen
 Enemmän tai vähemmän pitkän ajan kuluttua indeksoinnin lopputuloksen
 voi katsoa osoitteesta
 
-\verb|http://localhost:8983/solr/dataimport|
+\verb|http://localhost:8983/solr/sukija/dataimport|
 
 
 \subsection*{Tietojen etsiminen}
 
-Sanoja etsitään menemällä osoitteeseen
+Sanoja etsitään menemällä osoitteeseen \\
 \verb=http://localhost:8983/solr/sukija/browse=
 
 Etsittävien sanojen tulee olla perusmuodossa. Etsittäessä sanoja ei
@@ -308,25 +228,26 @@ Eri tavalla muotoillun tulostuksen saa osoitteesta \\
 
 Esimerkiksi sanaa \verb=sana= etsitään näin:
 
-\verb|http://localhost:8983/solr/select?q=sana|
+\verb|http://localhost:8983/solr/sukija/select?q=sana|
 
 Tämän tulostuksen ulkonäköä voi muuttaa muuttamalla Sukijan mukana
-tulevaa tiedostoa \verb=conf/sukija.xsl=.
+tulevaa tiedostoa \verb=conf/xslt/sukija.xsl=.
 
 
-\subsection*{Tiedoston finnish-suggestion.xml konfigurointi}
+\subsection*{Tiedoston suggestions.xml konfigurointi}
 \zlabel{suggestionConfiguration}
 
-Tiedosto \verb|finnish-suggestion.xml| pitää konfiguroida erikseen
+
+Tiedosto \verb|suggestions.xml| pitää konfiguroida erikseen
 Sukijalle ja Voikolle. Nykyinen konfiguraatio on tehty Voikolle ja sen
 vfst"-morfologialle.
 
 Tässä vaiheessa kaikki indeksoitavista tiedostoista luetut sanat on
 muutettu pieniksi kirjaimiksi eli tiedostossa
-\verb|finnish-suggestion.xml| olevat erisnimetkin pitää kirjoittaa
+\verb|suggestions.xml| olevat erisnimetkin pitää kirjoittaa
 pienellä alkukirjaimella.
 
-Konfiguroititiedoston formaatti on määritelty tiedostossa
+Konfiguroititiedoston formaatti on määritelty tiedostossa \\
 \verb=sukija-core/src/main/xsd/SuggestionInput.xsd=.
 
 
@@ -465,9 +386,9 @@ merkkijonon ''sydämmellisesti'' merkkijonoksi ''sydämellisesti''.
 
 \bigskip
 Näitä komentoja voi antaa mielivaltaisen paljon missä tahansa
-järjestyksessä, ja \\ \verb|____SuggestionFilterFactory| palauttaa
+järjestyksessä, ja \\ \verb|*SuggestionFilterFactory| palauttaa
 perusmuotona ensimmäisen tunnistamansa muodon. Jos mitään ehdotusta ei
-tunnisteta, \verb|____SuggestionFilterFactory| palauttaa alkuperäisen
+tunnisteta, \verb|*SuggestionFilterFactory| palauttaa alkuperäisen
 merkkijonon.
 
 
@@ -475,9 +396,9 @@ merkkijonon.
 
 Kun tiedostot on indeksoitu, niitä voidaan tutkia myös komennolla
 
-\verb|java -jar sukija-ui/target/sukija-ui-1.0.jar|
+\verb|java -jar sukija-ui/target/sukija-ui-1.1.jar|
 
 \end{document}
 
 
-cp /home/hvaisane/Lataukset/solr/solr-5.0.0/example/example-DIH/solr/db/conf/admin-extra*.html ~/Lataukset/solr/solr-5.0.0/server/solr/sukija/conf/
+% cp /home/hvaisane/Lataukset/solr/solr-5.0.0/example/example-DIH/solr/db/conf/admin-extra*.html ~/Lataukset/solr/solr-5.0.0/server/solr/sukija/conf/

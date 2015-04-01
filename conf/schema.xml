@@ -1,48 +1,19 @@
-<?xml version="1.0" encoding="UTF-8"?>
-
-<!--
-Copyright (©) 2013-2014 Hannu Väisänen
-
-This program is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
--->
-
 <schema name="sukija" version="1.0">
   <fields>
     <field name="_version_" type="long" indexed="true" stored="true" multiValued="false"/>
     <field name="id" type="string" indexed="true" stored="true" required="true" multiValued="false"/>
     <field name="text" type="text" indexed="true" stored="true" termOffsets="true" termPositions="true" termVectors="true" multiValued="true"/>
   </fields>
-
   <defaultSearchField>text</defaultSearchField>
   <uniqueKey>id</uniqueKey>
-
-
   <types>
-    <!-- Solr 4.1.0 needs this field. -->
     <fieldType name="long" class="solr.TrieLongField" precisionStep="0" positionIncrementGap="0"/>
-
     <fieldType name="string" class="solr.StrField" sortMissingLast="true"/>
-
     <fieldType name="text" class="solr.TextField" positionIncrementGap="1">
       <analyzer type="index">
-        <tokenizer class="TOKENIZER_FACTORY"/>
+        <tokenizer class="peltomaa.sukija.finnish.FinnishTokenizerFactory"/>
         <filter class="peltomaa.sukija.hyphen.HyphenFilterFactory"/>
-        <MORPHOLOGY_FILTER_FACTORY/>
-        <filter class="solr.SynonymFilterFactory"
-                synonyms="finnish-synonyms.txt" 
-                ignoreCase="true"
-                expand="false"/> 
+        <filter class="peltomaa.sukija.voikko.VoikkoMorphologySuggestionFilterFactory" dictionary = "fi" path = "/home/hvaisane/vvfst/voikkodict" libvoikkoPath = "/home/hvaisane/vvfst/lib/libvoikko.so" libraryPath = "/home/hvaisane/vvfst/lib" suggestionFile = "suggestions.xml" success = "false"/>
         <!-- Tämä luokka tietää, että å, ä ja ö eivät ole aksentillisia merkkejä. -->
         <filter class="peltomaa.sukija.finnish.FinnishFoldingLowerCaseFilterFactory"/>
       </analyzer>
@@ -52,6 +23,5 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
       </analyzer>
     </fieldType>
   </types>
-
   <solrQueryParser defaultOperator="AND"/>
 </schema>

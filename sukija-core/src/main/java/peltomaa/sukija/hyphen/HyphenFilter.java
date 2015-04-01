@@ -27,6 +27,19 @@ import org.apache.lucene.analysis.TokenStream;
 import peltomaa.sukija.util.SukijaFilter;
 
 
+/**
+Poistetaan sanasta tarpeettomat yhdysviivat.<p>
+
+Esimerkiksi "poissa-olo" => poissaolo, mutta "linja-auto" => linja-auto.<p>
+
+Lisäksi sana katkaistaan yhdysviivan kohdalta ja jatkossa yritetään muuttaa
+perusmuotoon jokainen osa erikseen.<p>
+
+Esimerkiksi "poissa-olo" => poissa-olo, poissaolo, poissa, olo<p>
+"linja-auto" => linja-auto, linja, auto<p>
+"Maija-niminen" => Maija-niminen, Maijaniminen, Maija, niminen
+
+*/
 public class HyphenFilter extends SukijaFilter {
   public HyphenFilter (TokenStream in, String regex, String replacement)
   {
@@ -66,8 +79,6 @@ public class HyphenFilter extends SukijaFilter {
 
 
   /** Poistetaan sanasta tarpeettomat väliviivat.
-   *  Esimerkiksi "poissa-olo" => poissaolo, mutta
-   *  "linja-auto" => linja-auto.
    */
   private String dehyphen (String[] s)
   {
