@@ -58,9 +58,8 @@ Tämä asennusohje olettaaa, että corevoikko ja apache-solr ovat hakemistoissa 
 \verb=$HOME/Lataukset/corevoikko= ja
 \verb=$HOME/Lataukset/solr/solr-x.y.z=
 
-Jos ne ovat jossain muualla, tiedoston \verb=Makefile= alussa olevia
-muuttujia \verb=SOLR_HOME= ja \verb=JETTY_CONTEXTS_DIR= pitää muuttaa
-vastaavasti.
+Jos ne ovat jossain muualla, tiedoston \verb=Makefile= alussa oleaa
+muuttujaa \verb=SOLR= pitää muuttaa vastaavasti.
 
 \newpage
 \subsection*{Ohjelman rakenne}
@@ -130,8 +129,7 @@ Katso ohjeet äsken mainitusta tiedostosta.
 
 Sen jälkeen kofiguroidaan Solr komennolla \verb|make asenna|
 
-Jos asentamisen jäkeen muuttaa tiedostoa
-
+Jos asentamisen jäkeen muuttaa tiedostoa \\
 \verb|sukija.properties| tai 
 \verb|conf/sukija-context.xml|
 
@@ -142,13 +140,12 @@ muutokset voi viedä Solr:iin komennolla \verb|make päivitä-asennus|
 
 \verb|make asenna| käynnistää Solr:n.
 
-Myöhemmin sen voi käynnistää komennolla
-
+Myöhemmin sen voi käynnistää komennolla \\
 \verb|~/Lataukset/solr/solr-x.y.z/bin/solr start|
 
 
-Solr:n käynnistymisen voi varmistaa selaimessa menemällä verkko-osoitteeseen
-
+Solr:n käynnistymisen voi varmistaa selaimessa menemällä
+verkko"-osoitteeseen \\
 \verb|http://localhost:8983/solr/|
 
 
@@ -200,13 +197,11 @@ Lokitulostus menee tiedostoon \verb=solr-x.y.z/server/logs/solr.log=
 
 \subsection*{Indeksointi}
 
-Tiedostot indeksoidaan menemällä osoitteeseen
-
+Tiedostot indeksoidaan menemällä osoitteeseen \\
 \verb|http://localhost:8983/solr/sukija/dataimport?command=full-import|
 
 Enemmän tai vähemmän pitkän ajan kuluttua indeksoinnin lopputuloksen
 voi katsoa osoitteesta
-
 \verb|http://localhost:8983/solr/sukija/dataimport|
 
 
@@ -226,8 +221,7 @@ etsitäänkö kaikkia?
 Eri tavalla muotoillun tulostuksen saa osoitteesta \\
 \verb=http://localhost:8983/solr/sukija/select=
 
-Esimerkiksi sanaa \verb=sana= etsitään näin:
-
+Esimerkiksi sanaa \verb=sana= etsitään näin: \\
 \verb|http://localhost:8983/solr/sukija/select?q=sana|
 
 Tämän tulostuksen ulkonäköä voi muuttaa muuttamalla Sukijan mukana
@@ -250,11 +244,15 @@ pienellä alkukirjaimella.
 Konfiguroititiedoston formaatti on määritelty tiedostossa \\
 \verb=sukija-core/src/main/xsd/SuggestionInput.xsd=.
 
+Konfiguroititiedostossa olevien säännöllisten lausekkeiden syntaksi on
+sama kuin Javan luokassa \verb=java.util.regex.Pattern=.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-\verb=compoundWordEnd= tunnistaa yhdyssanan, jos se loppuu tiettyyn sanaan. Esimeriksi
+\bigskip
+\verb|compoundWordEnd| tunnistaa yhdyssanan, jos se loppuu tiettyyn sanaan.
+Esimerkiksi
 
 \begin{verbatim}
   <compoundWordEnd>
@@ -265,7 +263,7 @@ Konfiguroititiedoston formaatti on määritelty tiedostossa \\
 tunnistaa esimerkiksi merkkijonon ''aatsajoelle''. Tällä tavalla
 voidaan tunnistaa paikannimiä, jotka eivät ole sanastossa.
 
-Jokaisessa argumentissa on kaksi osaa. Ensimmäinen on säännöllinen
+Jokaisessa imput-lauseessa on kaksi osaa. Ensimmäinen on säännöllinen
 lauseke ja toinen jonkin sanan perusmuoto. Tunnistettaessa merkkijono
 katkaistaan siitä kohdasta, josta säännöllinen lauseke alkaa, ja jos
 merkkijonon loppuosan perusmuoto on argumentin toinen osa,
@@ -275,121 +273,116 @@ Esimeriksi ''aatsajoelle'' jaetaan kahtia osiin ''aatsa'' ja
 ''joelle'', ja koska merkkijonon ''joelle'' perusmuoto on ''joki'',
 merkkijonon ''aatsajoelle'' perusmuodoksi tulee ''aatsajoki''.
 
+Input-lauseita voi olla mielivaltainen määrä.
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-Konfiguroinnissa on komennon nimi, jota voi seurata argumentteja,
-esimerkiksi
+\bigskip
+\verb|prefix| tunnistaa etuliitteettömän sanan (''etuliite'' voi olla
+mikä tahansa merkkijono). Esimerkiksi
 
 \begin{verbatim}
-  <suggestion name = "CompoundWordEnd">
-    <argument>aukio aukio</argument>
-  </suggestion>
+  <prefix>
+    <prefix>abcdefg</prefix>
+    <savePrefix>true</savePrefix>
+    <saveWord>true</saveWord>
+  </prefix>
 \end{verbatim}
 
+poistaa sanan alusta merkkijohon ''abcdefg'' ja yrittää tunnistaa
+jäljelle jääneen sanan (''abcdefgsuomalaiselle'' => ''suomalaiselle'')
+ja tallentaa sen perusmuodon (''suomalainen''). Jos \verb|savePrefix|
+on true, tallentaa myös etuliitteen (''abcdefg'') ja jos
+\verb|saveWord| on true, tallentaa myös koko sanan perusmuodon
+('''abcdefgsuomalainen'').
 
-Komentojen nimet tulevat siitä,
-että ne on toteutettu samannimisinä Java-luokkina tai ainakin melkein:
-\verb|Apostrophe| on toteutettu luokassa \verb|ApostropheSuggestion|
-ja niin edelleen.
 
-
-\bigskip
-\verb|<suggestion name = "Apostrophe"/>|
-
-Poistaa sanasta heittomerkin ja yrittää tunnistaa sanan sen jälkeen.
-Jos tunnistaminen ei onnistu, poistaa sanasta heittomerkin ja kaikki
-sen jälkeiset merkit ja palauttaa jäljelle jääneet merkit sanan
-perusmuotona. Esimerkiksi yrittää tunnistaa merkkijonon
-\verb|centime'in| muodossa \verb|centimein|. Jos tunnistaminen ei
-onnistu, palauttaa merkkijonon \verb|centime|.
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
 \bigskip
-\verb|Char| Muuttaa sanassa olevat merkit toiseksi. Tämä vastaa Unixin komentoa \verb|tr|.
-
-Esimerkiksi
+\verb|char| muuttaa sanassa olevat merkit toiseksi. Tämä vastaa Unixin
+komentoa \verb|tr|. Esimerkiksi
 
 \begin{verbatim}
-  <suggestion name = "Char">
-    <argument>pk</argument>
-    <argument>bg</argument>
-  </suggestion>
+  <char>
+    <from>gbdkptvw</from>
+      <to>kptgbdwv</to>
+  </char>
 \end{verbatim}
 
-(1) muuttaa p:t b:iksi, jättää k:t ennalleen,
-(2) muuttaa k:t g:iksi, jättää p:t ennalleen, sekä
-(3) muuttaa p:t b:iksi ja k:t g:iksi.
-
-Siis jos tiedostosta luettu sana on ''piolokia'', komento yrittää
-tunnistaa sanat ''piolokia'', ''biolokia'', ''piologia'' ja ''biologia''.
+muuttaa g:n k:ksi, b:n p:ksi jne. Ohjelma testaa muutettavien
+kirjainten kaikki mahdolliset kombinaatiot. Esimerkiksi jos
+tiedostosta luettu sana on ''piolokia'', komento yrittää tunnistaa
+sanat ''piolokia'', ''biolokia'', ''piologia'' ja ''biologia''.
 
 
-\bigskip
-\verb|<suggestion name = "Length3"/>|
-
-poistaa kolmesta peräkkäisestä samasta kirjaimesta
-yhden. \\ Esimerkiksi ''kauttta'' => ''kautta''.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-\bigskip
-
-\verb|Regex| muuttaa säännöllisen lausekkeen. Esimerkiksi
-
+\verb|regex| muuttaa säännöllisen lausekkeen. Esimerkiksi
 
 \begin{verbatim}
-  <suggestion name = "Regex">
-    <argument>ai(j)[eou]  </argument>
-    <argument>C[ae](hi)C  i</argument> 
-    <argument>true</argument>
-  </suggestion>
+  <regex>
+   <input>(ai)(j)([eou])   $1$3</input>
+   <input>^([0-9]+)</input>
+   <tryAll>true</tryAll>
+  </regex>
 \end{verbatim}
 
-Ensimmäinen argumentti \verb|Regex "ai(j)[eou]" ""| poistaa
-j"-kirjaimen muun muassa sanoista ''aijemmin'', ''aijomme'' ja
-''kaijutin''.
+Ensimmäinen input"-lause poistaa j"-kirjaimen muun muassa sanoista
+''aijemmin'', ''aijomme'' ja ''kaijutin'', ja toinen poistaa numerot
+sanan alusta.
 
-Toinen argumentti \verb|C[ae](hi)C i|
-poistaa h"-kirjaimet muun muassa sanoista ''ainahinen'' ja
-''etehinen''
-
-Viimeinen argumentti on joko \verb|true|, jolloin kokeillaan kaikkia
-argumentteina olevia säännöllisiä lausekkeita ja palautetaan kaikki
-tunnistetut sanat, tai \verb|false|, jolloin lopetetaan, kun
-ensimmäinen säännöllinen lauseke on tunnistettu.
-
-Säännöllisessä lausekkeessa voi käyttää kirjainta \verb|C|
-tarkoittamaan konsonantteja ja kirjainta \verb|V| tarkoittamaan
-vokaaleja.
-
-Kirjaimia \verb|C| ja \verb|V| lukuun ottamatta säännöllisten
-lausekkeiden syntaksi on sama kuin Javan luokassa
-\verb=java.util.regex.Pattern=. Muita isoja kirjaimia ei tule
-käyttää säännöllisissä lausekkeissa, koska tässä vaiheessa kaikki
-tiedostoista luetut sanat on muutettu pieniksi kirjaimiksi, siis myös
-isokirjaimiset lyhenteet ja erisnimien alkukirjaimet.
-
-
-\bigskip
-\verb|String| muuttaa merkkijonon toiseksi. Esimerkiksi
+Säännöllisessä lausekkeessa voi käyttää seuraavia lyhenteitä:
 
 \begin{verbatim}
-  <suggestion name = "String">
-    <argument>tsh ts</argument>
-    <argument>sydämm sydäm</argument>
-  </suggestion>
+%A  [aä]
+%C  [bcdfghjklmnpqrsštvwxzž]
+%O  [oö]"
+%U  [uy]"
+%V  [aeiouyäö]
+%%  %
 \end{verbatim}
 
-muuttaa merkkijonon ''mantshuria'' merkkijonoksi ''mantsuria'' ja
-merkkijonon ''sydämmellisesti'' merkkijonoksi ''sydämellisesti''.
+Esimerkiksi \verb=<input>(%V)(h)(%V)  $1hd$3</input>=
+muuttaa h:n hd:ksi esimerkiksi sanassa ''puhistus''.
+
+Jos \verb=tryAll= on true, ohjelma kokeilee kaikkia säänöllisiä
+lausekkeita, jos se on false, ohjelma lopettaa ensimmäisen tunnistetun
+sanan jälkeen.
+
+Input"-lauseen ensimmäinen osa on säännöllinen lauseke ja toinen
+merkkijono, miksi se muutetaan. Sen syntaksi on sama kuin Javan
+luokassa \verb=java.util.regex.Matcher=.
+
+Jos toista osaa ei ole, säännöllisen lausekkeen tunnistama merkkijono
+poistetaan. Input"-lauseita voi olla mielivaltainen määrä.
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 
 \bigskip
-Näitä komentoja voi antaa mielivaltaisen paljon missä tahansa
-järjestyksessä, ja \\ \verb|*SuggestionFilterFactory| palauttaa
-perusmuotona ensimmäisen tunnistamansa muodon. Jos mitään ehdotusta ei
-tunnisteta, \verb|*SuggestionFilterFactory| palauttaa alkuperäisen
-merkkijonon.
+\verb=start= käy läpi kaikki sanan alut pisimmästä (maxLength) alkaen
+lyhimpään (minLength) asti ja lopettaa, kun löytyy ensimmäinen
+tunnistettu sana
+
+\begin{verbatim}
+  <start>
+    <minLength>4</minLength>
+    <maxLength>10</maxLength>
+    <baseFormOnly>true</baseFormOnly>
+  </start>
+\end{verbatim}
+
+Jos \verb=baseFormOnly= on true palautetaan sana vain, jos se on
+perusmuodossa (esim ''autowerwwwww'' palauttaa ''auto''), muuten
+palautetaan tunnistettu sana muutettuna perusmuotoon (''kuudenwwwww''
+palauttaa ''kuusi'', mutta jos \verb=baseFormOnly= on false, ei
+palauteta mitään).
 
 
 \subsection*{Javalla kirjoitettu käyttöliittymä}
@@ -402,3 +395,15 @@ Kun tiedostot on indeksoitu, niitä voidaan tutkia myös komennolla
 
 
 % cp /home/hvaisane/Lataukset/solr/solr-5.0.0/example/example-DIH/solr/db/conf/admin-extra*.html ~/Lataukset/solr/solr-5.0.0/server/solr/sukija/conf/
+
+
+
+\bigskip
+\verb|<suggestion name = "Apostrophe"/>|
+
+Poistaa sanasta heittomerkin ja yrittää tunnistaa sanan sen jälkeen.
+Jos tunnistaminen ei onnistu, poistaa sanasta heittomerkin ja kaikki
+sen jälkeiset merkit ja palauttaa jäljelle jääneet merkit sanan
+perusmuotona. Esimerkiksi yrittää tunnistaa merkkijonon
+\verb|centime'in| muodossa \verb|centimein|. Jos tunnistaminen ei
+onnistu, palauttaa merkkijonon \verb|centime|.
