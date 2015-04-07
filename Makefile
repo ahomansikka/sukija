@@ -4,26 +4,36 @@ SOLR=${HOME}/Lataukset/solr/solr-5.0.0
 
 SOLR_BIN=${SOLR}/bin
 SOLR_HOME=${SOLR}/server/solr/sukija
-JETTY_CONTEXTS_DIR=${SOLR}/server/contexts
 CONF=conf
 
 
-asenna:
-	javac SukijaAsennus.java
+asenna: SukijaAsennus.class
 	java SukijaAsennus
-	${SOLR_BIN}/solr start
-	${SOLR_BIN}/solr create -c sukija -d ${CONF}
-	cp ${CONF}/sukija-context.xml ${JETTY_CONTEXTS_DIR}
+	./asenna.sh
 
 
-päivitä-asennus:
+päivitä: SukijaAsennus.class
 	java SukijaAsennus
 	cp -r ${CONF}/* ${SOLR_HOME}/conf
-	cp ${CONF}/sukija-context.xml ${JETTY_CONTEXTS_DIR}
+
+
+service: SukijaAsennus.class
+	java SukijaAsennus
+	./asenna.sh -s
+
+
+service-update: SukijaAsennus.class
+	java SukijaAsennus
+	cp -r ${CONF}/* /var/solr/data/sukija/conf
+
+
+SukijaAsennus.class: SukijaAsennus.java
+	javac SukijaAsennus.java
 
 
 clean:
 	mvn clean
+	rm SukijaAsennus.class
 
 
 SUKIJA=sukija

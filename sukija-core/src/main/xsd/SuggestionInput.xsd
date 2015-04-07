@@ -4,6 +4,11 @@
             jxb:version="1.0"
 >
 
+
+<xsd:complexType name = "ApostropheInput">
+</xsd:complexType>
+
+
 <xsd:complexType name = "CharInput">
   <xsd:sequence>
     <xsd:element name = "from" type = "xsd:string"/>
@@ -71,6 +76,7 @@
   </xsd:sequence>
 </xsd:complexType>
 
+
 <xsd:complexType name = "StringInput">
   <xsd:sequence>
     <xsd:element name = "input" type = "List" minOccurs = "1" maxOccurs = "unbounded"/>
@@ -85,6 +91,7 @@
         <jxb:property name = "Suggestion"/>
       </xsd:appinfo>
     </xsd:annotation>
+    <xsd:element name = "apostrophe" type = "ApostropheInput"/>
     <xsd:element name = "char"   type = "CharInput"/>
     <xsd:element name = "compoundWordEnd" type = "CompoundWordEndInput"/>
     <xsd:element name = "erase"  type = "EraseInput"/>
