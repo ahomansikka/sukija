@@ -92,11 +92,13 @@
     <input>väyl[äi] väylä</input>
     <input>ylän[kg]ö ylänkö</input>
   </compoundWordEnd>
+<!--
   <prefix>
-    <prefix>uus</prefix>
+    <prefix>abcdefg</prefix>
     <savePrefix>true</savePrefix>
     <saveWord>true</saveWord>
   </prefix>
+-->
   <char>
     <from>gbdkptvw</from>
       <to>kptgbdwv</to>

@@ -62,6 +62,7 @@ Jos ne ovat jossain muualla, tiedoston \verb=Makefile= alussa olevaa
 muuttujaa \verb=SOLR= ja tiedoston \verb=asenna.sh= alussa olevia
 muuttujia pitää muuttaa vastaavasti.
 
+
 \newpage
 \subsection*{Ohjelman rakenne}
 
@@ -148,13 +149,12 @@ kopioi Solr:n tarvitsemat jar"-tiedostot hakemistoon \\
 
 \verb|make asenna| käynnistää Solr:n.
 
-Myöhemmin sen voi käynnistää komennolla
-
+Myöhemmin sen voi käynnistää komennolla \\
 \verb|~/Lataukset/solr/solr-x.y.z/bin/solr start|
 
 
-Solr:n käynnistymisen voi varmistaa selaimessa menemällä verkko-osoitteeseen
-
+Solr:n käynnistymisen voi varmistaa selaimessa menemällä
+verkko"-osoitteeseen \\
 \verb|http://localhost:8983/solr/|
 
 
@@ -264,13 +264,11 @@ Lokitulostus menee tiedostoon \\
 \subsection*{Indeksointi}
 \zlabel{indexing}
 
-Tiedostot indeksoidaan menemällä osoitteeseen
-
+Tiedostot indeksoidaan menemällä osoitteeseen \\
 \verb|http://localhost:8983/solr/sukija/dataimport?command=full-import|
 
 Enemmän tai vähemmän pitkän ajan kuluttua indeksoinnin lopputuloksen
 voi katsoa osoitteesta
-
 \verb|http://localhost:8983/solr/sukija/dataimport|
 
 
@@ -290,8 +288,7 @@ etsitäänkö kaikkia?
 Eri tavalla muotoillun tulostuksen saa osoitteesta \\
 \verb=http://localhost:8983/solr/sukija/select=
 
-Esimerkiksi sanaa \verb=sana= etsitään näin:
-
+Esimerkiksi sanaa \verb=sana= etsitään näin: \\
 \verb|http://localhost:8983/solr/sukija/select?q=sana|
 
 Tämän tulostuksen ulkonäköä voi muuttaa muuttamalla Sukijan mukana
@@ -324,7 +321,6 @@ tahansa XML"-editoria.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-\bigskip
 \bigskip
 \verb|compoundWordEnd| tunnistaa yhdyssanan, jos se loppuu tiettyyn sanaan.
 Esimerkiksi
@@ -397,7 +393,6 @@ sanat ''piolokia'', ''biolokia'', ''piologia'' ja ''biologia''.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-\bigskip
 \verb|regex| muuttaa säännöllisen lausekkeen. Esimerkiksi
 
 \begin{verbatim}
@@ -412,6 +407,7 @@ Ensimmäinen input"-lause poistaa j"-kirjaimen muun muassa sanoista
 ''aijemmin'', ''aijomme'' ja ''kaijutin'', ja toinen poistaa numerot
 sanan alusta.
 
+
 Säännöllisessä lausekkeessa voi käyttää seuraavia lyhenteitä:
 
 \begin{verbatim}
@@ -425,6 +421,7 @@ Säännöllisessä lausekkeessa voi käyttää seuraavia lyhenteitä:
 
 Esimerkiksi \verb=<input>(%V)(h)(%V)  $1hd$3</input>=
 muuttaa h:n hd:ksi esimerkiksi sanassa ''puhistus''.
+
 
 Jos \verb=tryAll= on true, ohjelma kokeilee kaikkia säänöllisiä
 lausekkeita, jos se on false, ohjelma lopettaa ensimmäisen tunnistetun
@@ -483,5 +480,6 @@ sen jälkeiset merkit ja palauttaa jäljelle jääneet merkit sanan
 perusmuotona. Esimerkiksi yrittää tunnistaa merkkijonon
 \verb|centime'in| muodossa \verb|centimein|. Jos tunnistaminen ei
 onnistu, palauttaa merkkijonon \verb|centime|.
+
 
 sudo rm -rf /var/solr/ /opt/solr* /etc/init.d/solr /etc/rc*/*solr*
