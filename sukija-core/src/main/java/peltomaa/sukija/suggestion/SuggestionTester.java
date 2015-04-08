@@ -156,7 +156,7 @@ public class SuggestionTester {
     try {
       t.reset();
       while (t.incrementToken()) {
-        System.out.println ("Sana: " + word.toString());
+//        System.out.println ("Sana: " + word.toString());
       }
       t.end();
     }

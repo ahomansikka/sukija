@@ -458,6 +458,26 @@ palauttaa ''kuusi'', mutta jos \verb=baseFormOnly= on false, ei
 palauteta mitään).
 
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\bigskip
+
+\verb=apostrophe= poistaa sanasta heittomerkin ja yrittää tunnistaa
+sanan sen jälkeen. Jos tunnistaminen ei onnistu, poistaa sanasta
+heittomerkin ja kaikki sen jälkeiset merkit ja palauttaa jäljelle
+jääneet merkit sanan perusmuotona. Esimerkiksi yrittää tunnistaa
+merkkijonon \verb=centime'in= muodossa \verb=centimein=. Jos
+tunnistaminen ei onnistu, palauttaa merkkijonon \verb=centime=.
+
+
+\begin{verbatim}
+  <apostrophe/>
+\end{verbatim}
+
+Tällä komennolla ei ole parametreja.
+
+
 \subsection*{Javalla kirjoitettu käyttöliittymä}
 
 Kun tiedostot on indeksoitu, niitä voidaan tutkia myös komennolla
@@ -468,18 +488,6 @@ Kun tiedostot on indeksoitu, niitä voidaan tutkia myös komennolla
 
 
 % cp /home/hvaisane/Lataukset/solr/solr-5.0.0/example/example-DIH/solr/db/conf/admin-extra*.html ~/Lataukset/solr/solr-5.0.0/server/solr/sukija/conf/
-
-
-
-\bigskip
-\verb|<suggestion name = "Apostrophe"/>|
-
-Poistaa sanasta heittomerkin ja yrittää tunnistaa sanan sen jälkeen.
-Jos tunnistaminen ei onnistu, poistaa sanasta heittomerkin ja kaikki
-sen jälkeiset merkit ja palauttaa jäljelle jääneet merkit sanan
-perusmuotona. Esimerkiksi yrittää tunnistaa merkkijonon
-\verb|centime'in| muodossa \verb|centimein|. Jos tunnistaminen ei
-onnistu, palauttaa merkkijonon \verb|centime|.
 
 
 sudo rm -rf /var/solr/ /opt/solr* /etc/init.d/solr /etc/rc*/*solr*

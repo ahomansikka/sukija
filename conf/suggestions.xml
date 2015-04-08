@@ -126,4 +126,5 @@
     <input>(\p{L})\1{2,} $1$1</input>      <!-- Korvaa 3 tai useampi sama kirjain 2:lla (kauttta => kautta). -->
     <tryAll>true</tryAll>
   </regex>
+  <apostrophe/>
 </suggestions>

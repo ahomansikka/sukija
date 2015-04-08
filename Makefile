@@ -33,7 +33,7 @@ SukijaAsennus.class: SukijaAsennus.java
 
 clean:
 	mvn clean
-	rm SukijaAsennus.class
+	rm -f SukijaAsennus.class
 
 
 SUKIJA=sukija

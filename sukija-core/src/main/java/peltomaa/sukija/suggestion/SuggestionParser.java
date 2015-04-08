@@ -119,7 +119,7 @@ public class SuggestionParser {
   private void parseSuggestions (Morphology morphology, List<Object> s) // throws SuggestionParserException
   {
     for (int i = 0; i < s.size(); i++) {
-//      System.out.println (i + " " + s.get(i).getClass().getName());
+//      System.out.println ("SuggestionParser: " + i + " " + s.get(i).getClass().getName());
 
       // Tehdään Suggestion-luokat tässä, jotta Input-luokkien sisäistä rakennetta
       // ei tarvitse viedä Suggestion-luokkien sisälle. Sen lisäksi, jos Input-luokkia
@@ -127,6 +127,11 @@ public class SuggestionParser {
       // Input-luokat tehdään automaagisesti xsd-tiedostoista komennolla xjc.
       //
       switch (s.get(i).getClass().getName()) {
+        case "peltomaa.sukija.schema.ApostropheInput":
+          {
+            v.add (new ApostropheSuggestion (morphology));
+          }
+          break;
         case "peltomaa.sukija.schema.CharInput":
           {
             final CharInput input = (CharInput)s.get(i);
