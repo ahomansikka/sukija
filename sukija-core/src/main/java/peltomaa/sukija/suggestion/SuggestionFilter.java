@@ -219,5 +219,5 @@ public class SuggestionFilter extends SukijaFilter {
   private SuggestionParser parser;
   private Vector<Suggestion> suggestion;
   private boolean successOnly;
-  private static final Pattern SPLIT = Pattern.compile ("(''|[\"\\'.])-*");
+  private static final Pattern SPLIT = Pattern.compile ("(''|[\"\\'.])-+");
 }
