@@ -33,7 +33,7 @@ import org.apache.lucene.util.AttributeFactory;
 /**
  * A class that uses HVTokenizerImpl.
  */
-public class HVTokenizer extends Tokenizer {
+public final class HVTokenizer extends Tokenizer {
 
   /** A private instance of the JFlex-constructed scanner */
   private HVTokenizerImpl scanner;
@@ -70,7 +70,7 @@ public class HVTokenizer extends Tokenizer {
    * @see org.apache.lucene.analysis.TokenStream#incrementToken()
    */
   @Override
-  public final boolean incrementToken() throws IOException
+  public boolean incrementToken() throws IOException
   {
     clearAttributes();
     final int tokenType = scanner.yylex();

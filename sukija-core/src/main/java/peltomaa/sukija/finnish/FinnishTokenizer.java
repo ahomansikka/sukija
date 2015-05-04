@@ -30,7 +30,7 @@ import org.apache.lucene.util.AttributeFactory;
 /**
  * A class that uses FinnishTokenizerImpl.
  */
-public class FinnishTokenizer extends Tokenizer {
+public final class FinnishTokenizer extends Tokenizer {
 
   /** A private instance of the JFlex-constructed scanner */
   private FinnishTokenizerImpl scanner;
@@ -75,7 +75,7 @@ public class FinnishTokenizer extends Tokenizer {
    * @see org.apache.lucene.analysis.TokenStream#incrementToken()
    */
   @Override
-  public final boolean incrementToken() throws IOException
+  public boolean incrementToken() throws IOException
   {
     final int tokenType = scanner.yylex();
 

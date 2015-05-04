@@ -27,8 +27,8 @@ import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 
 /**
  * Abstract base class for Sukija filters.
- *@see #filter
-*/
+   @see #filter
+ */
 public abstract class SukijaFilter extends TokenFilter {
   public SukijaFilter (TokenStream in)
   {

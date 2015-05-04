@@ -35,7 +35,7 @@ import peltomaa.sukija.morphology.Morphology;
 import peltomaa.sukija.util.SukijaFilter;
 
 
-public class SuggestionFilter extends SukijaFilter {
+public final class SuggestionFilter extends SukijaFilter {
   /**
    * @param in
    * @param morphology     Käytetty morfologia (Malaga tai Voikko).
