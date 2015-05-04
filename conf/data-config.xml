@@ -12,7 +12,7 @@
       <field column = "fileAbsolutePath" meta = "true" name = "id"/>
       <entity name = "tika"
               dataSource = "bin"
-              processor = "peltomaa.sukija.util.TikaEntityProcessor"
+              processor = "solr.handler.dataimport.TikaEntityProcessor"
               url = "${f0.fileAbsolutePath}"
               format = "text"
               onError = "skip">
@@ -29,7 +29,7 @@
       <field column = "fileAbsolutePath" meta = "true" name = "id"/>
       <entity name = "tika"
               dataSource = "bin"
-              processor = "peltomaa.sukija.util.TikaEntityProcessor"
+              processor = "solr.handler.dataimport.TikaEntityProcessor"
               url = "${f1.fileAbsolutePath}"
               format = "text"
               onError = "skip">

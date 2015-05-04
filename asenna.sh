@@ -2,7 +2,7 @@
 
 # Muuta nämä tarvittaessa.
 #
-SOLR=${HOME}/Lataukset/solr/solr-5.0.0
+SOLR=${HOME}/Lataukset/solr/solr-5.1.0
 MAVEN=${HOME}/.m2/repository
 SUKIJA=${SOLR}/server/solr/sukija
 JETTY=${SOLR}/server/contexts
@@ -47,20 +47,20 @@ cp conf2/sukija-context.xml ${JETTY}
 
 # Kopioi jar-tiedostot.
 #
-cp ${SOLR}/contrib/extraction/lib/*jar ${SUKIJA_LIB}
-cp ${SOLR}/dist/solr-cell*jar ${SUKIJA_LIB}
-cp ${SOLR}/contrib/clustering/lib/*.jar ${SUKIJA_LIB}
-cp ${SOLR}/dist/solr-clustering-*.jar ${SUKIJA_LIB}
-cp ${SOLR}/contrib/langid/lib/*.jar ${SUKIJA_LIB}
-cp ${SOLR}/dist/solr-langid-*.jar ${SUKIJA_LIB}
-cp ${SOLR}/contrib/velocity/lib/*.jar ${SUKIJA_LIB}
-cp ${SOLR}/dist/solr-velocity-*.jar ${SUKIJA_LIB}
-cp ${SOLR}/dist/solr-dataimporthandler-*.jar ${SUKIJA_LIB}
-cp ${MAVEN}/net/java/dev/jna/jna/3.4.0/jna-3.4.0.jar ${SUKIJA_LIB}
-cp ${MAVEN}/org/puimula/voikko/libvoikko/3.7/libvoikko-3.7.jar ${SUKIJA_LIB}
-cp ${MAVEN}/peltomaa/sukija/sukija-voikko/1.1/sukija-voikko-1.1.jar ${SUKIJA_LIB}
-cp ${MAVEN}/peltomaa/sukija/sukija-malaga/1.1/sukija-malaga-1.1.jar ${SUKIJA_LIB}
-cp ${MAVEN}/peltomaa/sukija/sukija-core/1.1/sukija-core-1.1.jar ${SUKIJA_LIB}
+#cp ${SOLR}/dist/solr-dataimporthandler-*.jar ${SUKIJA_LIB}
+#cp ${SOLR}/contrib/extraction/lib/*jar ${SUKIJA_LIB}
+#cp ${SOLR}/dist/solr-cell*jar ${SUKIJA_LIB}
+#cp ${SOLR}/contrib/clustering/lib/*.jar ${SUKIJA_LIB}
+#cp ${SOLR}/dist/solr-clustering-*.jar ${SUKIJA_LIB}
+#cp ${SOLR}/contrib/langid/lib/*.jar ${SUKIJA_LIB}
+#cp ${SOLR}/dist/solr-langid-*.jar ${SUKIJA_LIB}
+#cp ${SOLR}/contrib/velocity/lib/*.jar ${SUKIJA_LIB}
+#cp ${SOLR}/dist/solr-velocity-*.jar ${SUKIJA_LIB}
+#cp ${MAVEN}/net/java/dev/jna/jna/3.4.0/jna-3.4.0.jar ${SUKIJA_LIB}
+#cp ${MAVEN}/org/puimula/voikko/libvoikko/3.7/libvoikko-3.7.jar ${SUKIJA_LIB}
+#cp ${MAVEN}/peltomaa/sukija/sukija-voikko/1.1/sukija-voikko-1.1.jar ${SUKIJA_LIB}
+#cp ${MAVEN}/peltomaa/sukija/sukija-malaga/1.1/sukija-malaga-1.1.jar ${SUKIJA_LIB}
+#cp ${MAVEN}/peltomaa/sukija/sukija-core/1.1/sukija-core-1.1.jar ${SUKIJA_LIB}
 
 
 # Käynnistä Solr uudelleen.

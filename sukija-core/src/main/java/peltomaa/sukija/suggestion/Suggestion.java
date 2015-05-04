@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2009-2014 Hannu Väisänen
+Copyright (©) 2009-2015 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -21,6 +21,7 @@ import java.io.PrintStream;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.Vector;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -83,14 +84,6 @@ public abstract class Suggestion {
    *  {@link #suggest(String)} has corrected.
    */
   public Set<String> getResult() {return result;}
-
-
-  /** If {@link #suggest(String)} returns {@code true}
-   *  this function returns an iterator to the base form(s) of the {@code word}
-   *  {@link #suggest(String)} has corrected. This function is equal
-   *  to call {@code getResult().iterator()}.
-   */
-  public Iterator<String> iterator() {return result.iterator();}
 
 
   /** Set internal variables to initial values. You should call this
@@ -186,4 +179,17 @@ public abstract class Suggestion {
 
 
   protected static final Logger LOG = LoggerFactory.getLogger (Suggestion.class);
+
+
+  public static final Set<String> trySuggestions (Vector<Suggestion> suggestion, String word)
+  {
+    final String lowerCaseWord = word.toLowerCase();
+
+    for (int i = 0; i < suggestion.size(); i++) {
+      if (suggestion.get(i).suggest (lowerCaseWord)) {
+        return suggestion.get(i).getResult();
+      }
+    }
+    return null;
+  }
 }

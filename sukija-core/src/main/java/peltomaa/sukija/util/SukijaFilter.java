@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2014 Hannu Väisänen
+Copyright (©) 2014-2015 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -39,17 +39,18 @@ public abstract class SukijaFilter extends TokenFilter {
   @Override
   public final boolean incrementToken() throws IOException
   {
-    if ((iterator == null) || (!iterator.hasNext())) {
+    while ((iterator == null) || (!iterator.hasNext())) {
       if (!input.incrementToken()) {
          return false;
       }
       final String word = termAtt.toString();
       if (word == null || word.length() == 0) {
-        return false;
+        continue;  // Tätä ei pitäisi koskaan tapahtua.
       }
       filter (word);
       positionIncrement = 1;
       savedState = captureState();
+//System.out.println ("SukijaFilter1 " + word + " " + savedState.toString());
     }
 
     if (iterator.hasNext()) {
@@ -59,9 +60,11 @@ public abstract class SukijaFilter extends TokenFilter {
       termAtt.append (baseWord);
       posIncrAtt.setPositionIncrement (positionIncrement);
       positionIncrement = 0;
+//System.out.println ("SukijaFilter2 " + baseWord);
       return true;
     }
-    return false;
+// System.out.println ("SukijaFilter false " + termAtt.toString()); System.exit (1);
+    return true;
   }
 
 

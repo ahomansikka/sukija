@@ -17,10 +17,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 package peltomaa.sukija.suggestion;
 
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.InputStream;
+import java.io.IOException;
 import java.io.OutputStream;
 import java.io.Writer;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 import javax.xml.bind.JAXBElement;
@@ -116,7 +120,7 @@ public class SuggestionParser {
   public Vector<Suggestion> getSuggestions() {return v;}
 
 
-  private void parseSuggestions (Morphology morphology, List<Object> s) // throws SuggestionParserException
+  private void parseSuggestions (Morphology morphology, List<Object> s) throws FileNotFoundException, IOException
   {
     for (int i = 0; i < s.size(); i++) {
 //      System.out.println ("SuggestionParser: " + i + " " + s.get(i).getClass().getName());
@@ -141,7 +145,7 @@ public class SuggestionParser {
         case "peltomaa.sukija.schema.CompoundWordEndInput":
           {
             final CompoundWordEndInput input = (CompoundWordEndInput)s.get(i);
-            v.add (new CompoundWordEndSuggestion (morphology, fromList2(input.getInput())));
+            v.add (new CompoundWordEndSuggestion (morphology, fromList2(input.getInput()), input.isAddStart(), input.isAddEnd()));
           }
           break;
         case "peltomaa.sukija.schema.EraseInput":
@@ -174,6 +178,15 @@ public class SuggestionParser {
             v.add (new StringSuggestion (morphology, toArray2(input.getInput())));
           }
           break;
+        case "peltomaa.sukija.schema.WordInput":
+          {
+            final WordInput input = (WordInput)s.get(i);
+            v.add (new WordSuggestion (morphology, input.getFileName()));
+//          v.add (new WordSuggestion (morphology, new FileReader (input.getFileName())));
+          }
+          break;
+        default:
+          throw new RuntimeException ("SuggestionParser: tuntematon luokka: s.get(i).getClass().getName()");
       }
     }
 //System.exit(1);

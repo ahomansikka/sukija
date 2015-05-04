@@ -94,7 +94,7 @@ public class SuggestionFilter extends SukijaFilter {
   }
 
 
-  public SuggestionFilter (TokenStream in, Morphology morphology, Vector<Suggestion> suggestion, boolean stopOnSuccess)
+  public SuggestionFilter (TokenStream in, Morphology morphology, Vector<Suggestion> suggestion, boolean successOnly)
   {
     super (in);
     this.morphology = morphology;
@@ -109,7 +109,7 @@ public class SuggestionFilter extends SukijaFilter {
     set.clear();
 
     if (morphology == null) throw new RuntimeException ("morphology == null");
-    if (word == null) throw new RuntimeException ("word== null");
+    if (word == null) throw new RuntimeException ("word == null");
     if (set == null) throw new RuntimeException ("set == null");
 
     if (morphology.analyzeLowerCase (word, set)) {
@@ -123,10 +123,10 @@ public class SuggestionFilter extends SukijaFilter {
 
 
   /** Try suggestions.
-    */
+   */
   private Iterator<String> suggest (String word)
   {
-    suggestionSet = getSuggestions (word);
+    final Set<String> suggestionSet = Suggestion.trySuggestions (suggestion, word);
 
     if (suggestionSet == null) { /* No suggestions found. */
       if (LOG.isDebugEnabled()) LOG.debug ("Suggest1 " + word);
@@ -139,85 +139,11 @@ public class SuggestionFilter extends SukijaFilter {
   }
 
 
-  private Set<String> getSuggestions (String word)
-  {
-    final Set<String> s = trySuggestions (word);
-    if (s != null) {
-      return s;
-    }
-    else {
-      final String[] array = SPLIT.split (word);
-      if (array.length > 1) {
-        return trySuggestions (array);
-      }
-      return null;
-    }
-  }
-
-
-  private Set<String> trySuggestions (String[] word)
-  {
-    Set<String> set = new HashSet<String>();
-    Set<String> tmp = new HashSet<String>();
-
-    for (int i = 0; i < word.length; i++) {
-      tmp.clear();
-      if (morphology.analyzeLowerCase (word[i], tmp)) {
-        set.addAll (tmp);
-      }
-      else {
-        Set<String> s = trySuggestions (word[i]);
-//        System.out.println ("Huuhaa: " + word.length + " " + join(word) + " " + word[i] + " " + ((s==null) ? null : s.toString()));
-        if (s != null) set.addAll (s);
-      }
-    }
-
-    if (set.size() > 0) {
-/*
-      System.out.print ("SPLIT " + join (word) + ": ");
-      for (String p : word) System.out.print (p + " ");
-      System.out.println (" : " + set.toString());
-*/
-      return set;
-    }
-    else {
-      return null;
-    }
-  }
-
-
-  private Set<String> trySuggestions (String word)
-  {
-    for (int i = 0; i < suggestion.size(); i++) {
-      if (suggestion.get(i).suggest (word)) {
-        return suggestion.get(i).getResult();
-      }
-    }
-    String[] array = SPLIT.split (word);
-//    System.out.print ("SPLIT "); for (String p : array) System.out.print (p + " "); System.out.println ("");
-    return null;
-  }
-
-
-  private String join (String[] s)
-  {
-    StringBuilder sb = new StringBuilder();
-
-    for (int i = 0; i < s.length; i++) {
-      sb.append (s[i]);
-      if (i < s.length-1) sb.append ('-');
-    }
-    return sb.toString();
-  }
-
-
   private static final Logger LOG = LoggerFactory.getLogger (SuggestionFilter.class);
 
   private Set<String> set = new TreeSet<String>();
-  private Set<String> suggestionSet;
   private Morphology morphology;
   private SuggestionParser parser;
   private Vector<Suggestion> suggestion;
   private boolean successOnly;
-  private static final Pattern SPLIT = Pattern.compile ("(''|[\"\\'.])-+");
 }

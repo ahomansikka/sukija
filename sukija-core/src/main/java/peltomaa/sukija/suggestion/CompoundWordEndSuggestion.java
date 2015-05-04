@@ -28,21 +28,37 @@ import peltomaa.sukija.util.RegexUtil;
 
 
 public class CompoundWordEndSuggestion extends Suggestion {
-  public CompoundWordEndSuggestion (Morphology morphology, String regex, String last)
+  public CompoundWordEndSuggestion (Morphology morphology, String regex, String last, boolean addStart, boolean addEnd)
   {
     super (morphology);
     pattern.add (RegexUtil.makePattern (regex));
     end.add (last);
+    this.addStart = addStart;
+    this.addEnd = addEnd;
   }
 
 
-  public CompoundWordEndSuggestion (Morphology morphology, List<String> s)
+  public CompoundWordEndSuggestion (Morphology morphology, String regex, String last)
+  {
+    this (morphology, regex, last, true, true);
+  }
+
+
+  public CompoundWordEndSuggestion (Morphology morphology, List<String> s, boolean addStart, boolean addEnd)
   {
     super (morphology);
     for (int i = 0; i < s.size(); i += 2) {
       pattern.add (RegexUtil.makePattern (s.get(i)));
       end.add (s.get(i+1));
     }
+    this.addStart = addStart;
+    this.addEnd = addEnd;
+  }
+
+
+  public CompoundWordEndSuggestion (Morphology morphology, List<String> s)
+  {
+    this (morphology, s, true, true);
   }
 
 
@@ -50,22 +66,24 @@ public class CompoundWordEndSuggestion extends Suggestion {
   {
     for (int i = 0; i < pattern.size(); i++) {
       Matcher matcher = pattern.get(i).matcher (word);
-
+//System.out.println ("Huu " + word + " " + pattern.get(i).pattern());
       if (matcher.find()) {
+//System.out.println ("Haa " + word + " " + pattern.get(i).pattern());
         reset();
         set.clear();
         result.clear();
         if (analyse (word.substring(matcher.start()), set)) {
           final String start = word.substring (0, matcher.start());
-          addStart (start);
-          result.add (end.get(i));
+          if (addStart) addStart (start);
+          if (addEnd) result.add (end.get(i));
           for (String s: set) {
             if (s.endsWith (end.get(i))) {
-//System.out.println ("\n\nHuu [" + word + "] [" + s + "] [" + (start+s) + "] [" + end.get(i));
+//System.out.println ("Huu [" + word + "] [" + s + "] [" + start + "] [" + s + "] [" + (start+s) + "] [" + end.get(i) + "]");
               result.add (start + s);
               found = true;
             }
           }
+//System.out.println (result.toString());
           return found;
         }
       }
@@ -93,4 +111,6 @@ public class CompoundWordEndSuggestion extends Suggestion {
   private Vector<String> end = new Vector<String>();
   private Set<String> set = new TreeSet<String>();
   private Set<String> startSet = new TreeSet<String>();
+  private boolean addStart;
+  private boolean addEnd;
 }

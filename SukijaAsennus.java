@@ -193,13 +193,14 @@ public class SukijaAsennus {
     "      <field column = \"fileAbsolutePath\" meta = \"true\" name = \"id\"/>\n" +
     "      <entity name = \"tika\"\n" +
     "              dataSource = \"bin\"\n" +
-    "              processor = \"peltomaa.sukija.util.TikaEntityProcessor\"\n" +
+    "              processor = \"solr.handler.dataimport.TikaEntityProcessor\"\n" +
     "              url = \"${f%d.fileAbsolutePath}\"\n" +
     "              format = \"text\"\n" +
     "              onError = \"skip\">\n" +
     "      </entity>\n" +
     "    </entity>\n";
 
+//    "              processor = \"peltomaa.sukija.util.TikaEntityProcessor\"\n" +
 
   private static final String schemaFileStart =
     "<schema name=\"sukija\" version=\"1.0\">\n" +

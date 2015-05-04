@@ -40,10 +40,10 @@ Tika \\(\verb=http://tika.apache.org/=) osaa lukea.
       (\verb=https://github.com/voikko/corevoikko=) \\
       hakemistossa suomimalaga.
 
-\item Apache Solr 5.0.0:
+\item Apache Solr 5.1.0:
       \verb=http://lucene.apache.org/solr/= \\
       Tässä dokumentissa Solr:sta käytetään nimeä solr-x.y.z,
-      missä x.y.z on version numero, esimerkiksi 5.0.0.
+      missä x.y.z on version numero, esimerkiksi 5.1.0.
 
 \item Ubuntun paketit \verb=libmalaga7= ja \verb=maven=.
 \end{itemize}
@@ -167,12 +167,12 @@ Jos olet asentanut Solr:n skriptillä \verb=install_solr_service.sh=
 Service Installation Script),
 Solr konfiguroidaan Sukijaa varten näin.
 
-Skripti asentaa Solr:n hakemistoihin \verb=/opt/solr-5.0.0= ja
+Skripti asentaa Solr:n hakemistoihin \verb=/opt/solr-x.y.z= ja
 \verb=/var/solr=. Niiden omistajaksi tehdään käyttäjä \verb=solr=,
 mutta jos käytät lippua \verb=-u=, voi asettaa hakemistojen
 omistajaksi itsesi:
 
-\verb=sudo bash ./install_solr_service.sh solr-5.0.0.tgz -u username=
+\verb=sudo bash ./install_solr_service.sh solr-x.y.z.tgz -u username=
 
 missä username on oma käyttäjätunnuksesi. Nämä asennusohjeet
 olettavat, että olet tehnyt näin, että olet asentanut Solr:n
@@ -181,7 +181,7 @@ hakemistossa, jossa on tiedosto ohje.tex.
 
 Asennus konfiguroidaan komennolla \verb=make service=
 joka yksinkertaisesti kopioi hakemiston
-\verb=${HOME}/Lataukset/solr/solr-5.0.0/server/solr/sukija=
+\verb=${HOME}/Lataukset/solr/solr-x.y.z/server/solr/sukija=
 hakemistoon \\
 \verb=/var/solr/data= ja tiedoston
 \verb=conf2/sukija-context.xml= hakemistoon \\
@@ -487,7 +487,7 @@ Kun tiedostot on indeksoitu, niitä voidaan tutkia myös komennolla
 \end{document}
 
 
-% cp /home/hvaisane/Lataukset/solr/solr-5.0.0/example/example-DIH/solr/db/conf/admin-extra*.html ~/Lataukset/solr/solr-5.0.0/server/solr/sukija/conf/
+% cp /home/hvaisane/Lataukset/solr/solr-x.y.z/example/example-DIH/solr/db/conf/admin-extra*.html ~/Lataukset/solr/solr-5.0.0/server/solr/sukija/conf/
 
 
 sudo rm -rf /var/solr/ /opt/solr* /etc/init.d/solr /etc/rc*/*solr*

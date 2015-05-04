@@ -1,5 +1,5 @@
 # Muuta tämä, jos Solr on jossain muualla.
-SOLR=${HOME}/Lataukset/solr/solr-5.0.0
+SOLR=${HOME}/Lataukset/solr/solr-5.1.0
 
 
 SOLR_BIN=${SOLR}/bin
@@ -15,6 +15,10 @@ asenna: SukijaAsennus.class
 päivitä: SukijaAsennus.class
 	java SukijaAsennus
 	cp -r ${CONF}/* ${SOLR_HOME}/conf
+
+
+poista:
+	rm -rf ${SOLR_HOME}
 
 
 service: SukijaAsennus.class
