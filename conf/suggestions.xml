@@ -91,6 +91,8 @@
     <input>vuoristo vuoristo</input>
     <input>väyl[äi] väylä</input>
     <input>ylän[kg]ö ylänkö</input>
+    <addStart>true</addStart>
+    <addEnd>true</addEnd>
   </compoundWordEnd>
 <!--
   <prefix>

@@ -5,7 +5,7 @@
             dataSource = "null"
             rootEntity = "false"
             processor = "solr.handler.dataimport.FileListEntityProcessor"
-            baseDir = "/home/hannu/Asiakirjat/jutut"
+            baseDir = "/home/hvaisane/Asiakirjat/Lönnrot"
             fileName = ".*"
             excludes = "(?u)(?i).*[.](au|bmp|bz2|class|gif|gpg|gz|jar|jpg|jpeg|m|o|png|tif|tiff|wav|zip)$"
             recursive = "true">
@@ -14,23 +14,6 @@
               dataSource = "bin"
               processor = "solr.handler.dataimport.TikaEntityProcessor"
               url = "${f0.fileAbsolutePath}"
-              format = "text"
-              onError = "skip">
-      </entity>
-    </entity>
-    <entity name = "f1"
-            dataSource = "null"
-            rootEntity = "false"
-            processor = "solr.handler.dataimport.FileListEntityProcessor"
-            baseDir = "/home/hannu/Asiakirjat/suku"
-            fileName = ".*"
-            excludes = "(?u)(?i).*[.](au|bmp|bz2|class|gif|gpg|gz|jar|jpg|jpeg|m|o|png|tif|tiff|wav|zip)$"
-            recursive = "true">
-      <field column = "fileAbsolutePath" meta = "true" name = "id"/>
-      <entity name = "tika"
-              dataSource = "bin"
-              processor = "solr.handler.dataimport.TikaEntityProcessor"
-              url = "${f1.fileAbsolutePath}"
               format = "text"
               onError = "skip">
       </entity>

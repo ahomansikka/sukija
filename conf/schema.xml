@@ -13,7 +13,7 @@
       <analyzer type="index">
         <tokenizer class="peltomaa.sukija.finnish.FinnishTokenizerFactory"/>
         <filter class="peltomaa.sukija.hyphen.HyphenFilterFactory"/>
-        <filter class="peltomaa.sukija.voikko.VoikkoMorphologySuggestionFilterFactory" dictionary = "fi" path = "/home/hannu/vvfst/voikkodict" libvoikkoPath = "/home/hannu/vvfst/lib/libvoikko.so" libraryPath = "/home/hannu/vvfst/lib" suggestionFile = "suggestions.xml" success = "false"/>
+        <filter class="peltomaa.sukija.voikko.VoikkoMorphologySuggestionFilterFactory" dictionary = "fi" path = "/home/hvaisane/vvfst/voikkodict" libvoikkoPath = "/home/hvaisane/vvfst/lib/libvoikko.so" libraryPath = "/home/hvaisane/vvfst/lib" suggestionFile = "suggestions.xml" success = "false"/>
         <!-- Tämä luokka tietää, että å, ä ja ö eivät ole aksentillisia merkkejä. -->
         <filter class="peltomaa.sukija.finnish.FinnishFoldingLowerCaseFilterFactory"/>
       </analyzer>

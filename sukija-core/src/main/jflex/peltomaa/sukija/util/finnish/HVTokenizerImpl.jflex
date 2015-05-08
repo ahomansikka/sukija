@@ -46,7 +46,13 @@ public final void getText (org.apache.lucene.analysis.tokenattributes.CharTermAt
 }
 %}
 
-LETTER = [:letter:]+
+//LETTER = [:letter:]+
+
+// A-Za-Z:        C0 Controls and Basic Latin
+// À-ÖØ-öø-ÿ:     C1 Controls and Latin-1 Supplement
+// \u0100-\u017F: Latin Extended-A
+//
+LETTER = [A-Za-zÀ-ÖØ-öø-ÿ\u0100-\u017F]+
 DIGIT  = [:digit:]+
 WHITESPACE = \r\n | [ \r\n\t\f]
 NUM = {DIGIT}([-.,:_/]+{DIGIT})*(:{LETTER})?

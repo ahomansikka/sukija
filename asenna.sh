@@ -65,10 +65,10 @@ cp conf2/sukija-context.xml ${JETTY}
 
 # Käynnistä Solr uudelleen.
 #
-if [ $# -gt 0 ]; then
-  sudo service solr restart
-else
-  ${SOLR_BIN}/solr start
-  ${SOLR_BIN}/solr create -c sukija -d conf
-  ${SOLR_BIN}/solr restart
-fi
+#if [ $# -gt 0 ]; then
+#  sudo service solr restart
+#else
+#  ${SOLR_BIN}/solr start
+#  ${SOLR_BIN}/solr create -c sukija -d conf
+#  ${SOLR_BIN}/solr restart
+#fi
