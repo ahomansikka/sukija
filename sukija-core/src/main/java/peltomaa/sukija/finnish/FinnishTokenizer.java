@@ -69,6 +69,7 @@ public final class FinnishTokenizer extends Tokenizer {
   private final PositionIncrementAttribute posIncrAtt = addAttribute (PositionIncrementAttribute.class);
 //  private final TypeAttribute typeAtt = addAttribute (TypeAttribute.class);
 
+
   /*
    * (non-Javadoc)
    *
@@ -91,19 +92,25 @@ public final class FinnishTokenizer extends Tokenizer {
     return true;
   }
 
+
   @Override
-  public final void end()
+  public final void end() throws IOException
   {
+    super.end();
     // Set final offset,
     int finalOffset = correctOffset (scanner.yychar() + scanner.yylength());
     offsetAtt.setOffset (finalOffset, finalOffset);
   }
 
-  /*
-   * (non-Javadoc)
-   *
-   * @see org.apache.lucene.analysis.TokenStream#reset()
-   */
+
+  @Override
+  public void close() throws IOException
+  {
+    super.close();
+    scanner.yyreset (input);
+  }
+
+
   public void reset() throws IOException
   {
     super.reset();

@@ -19,6 +19,7 @@ package peltomaa.sukija.finnish;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import peltomaa.sukija.util.Constants;
 %%
 %class HVTokenizerImpl
 %unicode
@@ -30,6 +31,7 @@ import org.slf4j.LoggerFactory;
 
 %{
 private static final Logger LOG = LoggerFactory.getLogger (HVTokenizerImpl.class);
+
 
 public final int yychar()
 {
@@ -46,27 +48,33 @@ public final void getText (org.apache.lucene.analysis.tokenattributes.CharTermAt
 }
 %}
 
+
+// Definitions for LaTeX files.
+// T = ("\\"([~\^`'\"=.][A-Za-z]|[uvHcdbr]\{[A-Za-z]\}|t\{[A-Za-z][A-Za-z]\}))+
+// W = ({DIGIT}|{LETTER}|{T})
 //LETTER = [:letter:]+
 
 // A-Za-Z:        C0 Controls and Basic Latin
 // À-ÖØ-öø-ÿ:     C1 Controls and Latin-1 Supplement
 // \u0100-\u017F: Latin Extended-A
-//
-LETTER = [A-Za-zÀ-ÖØ-öø-ÿ\u0100-\u017F]+
+// \u0180-\u0245: Latin Extended-B
+
+LETTER = [A-Za-zÀ-ÖØ-öø-ÿ\u0100-\u017F\u0180-\u0245]+
 DIGIT  = [:digit:]+
 WHITESPACE = \r\n | [ \r\n\t\f]
 NUM = {DIGIT}([-.,:_/]+{DIGIT})*(:{LETTER})?
+HYPHEN = ("\"-"|"''-"|"\\-"|"'-"|"--"|".-"|"-")
+PUNCT = [.:']
+W1 = ({DIGIT}|{LETTER})({PUNCT}({DIGIT}|{LETTER}))*
 
-// Definitions for LaTeX files.
-T = ("\\"([~\^`'\"=.][A-Za-z]|[uvHcdbr]\{[A-Za-z]\}|t\{[A-Za-z][A-Za-z]\}))+
+W2 = {W1}(("["{LETTER}"]")({W1})*)+ | (("["{LETTER}"]"){W1})+("["{LETTER}"]")?
 
-W = ({DIGIT}|{LETTER}|{T})
 
-E = {W}(("\"-"|"''-"|"\\-"|"'-"|"--"|".-"|"-"|[.:']){W})*
-
-F = ("["{LETTER}"]")?({E}("["{LETTER}"]")?)+
 
 LPAR = "{"[0-9a-zA-Z]+"}"
+
+V1 = {W1}({HYPHEN}{W1})+
+V2 = {W2}({HYPHEN}{W2})+
 
 %%
 
@@ -91,6 +99,26 @@ LPAR = "{"[0-9a-zA-Z]+"}"
 }
 
 
-{F} {return 1;}
+{W1} {
+//  System.out.println ("W1 {" + yytext() + "}");
+  return Constants.WORD;
+}
+
+{W2} {
+//  System.out.println ("W2 {" + yytext() + "}");
+  return (Constants.WORD & Constants.BRACKET);
+}
+
+
+{V1} {
+//  System.out.println ("V1 {" + yytext() + "}");
+  return Constants.HYPHEN;
+}
+
+{V2} {
+//  System.out.println ("V2 {" + yytext() + "}");
+  return (Constants.HYPHEN & Constants.BRACKET);
+}
+
 
 . | {WHITESPACE}   {} /* Ignore the rest. */
