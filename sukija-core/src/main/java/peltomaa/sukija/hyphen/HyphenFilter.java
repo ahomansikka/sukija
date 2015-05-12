@@ -23,7 +23,9 @@ import java.util.Arrays;
 import java.util.Vector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.apache.lucene.analysis.tokenattributes.FlagsAttribute;
 import org.apache.lucene.analysis.TokenStream;
+import peltomaa.sukija.util.Constants;
 import peltomaa.sukija.util.SukijaFilter;
 
 
@@ -61,20 +63,20 @@ public final class HyphenFilter extends SukijaFilter {
     v.clear();
     v.add (word);
 
-    final String[] s = pattern.split (word);
+    if (Constants.hasFlag (flagsAtt, Constants.HYPHEN)) {
+      final String[] s = pattern.split (word);
 //    if (LOG.isDebugEnabled()) LOG.debug (word + " " + s.length);
 
-    if (s.length > 1) {
       final String w = pattern.matcher(word).replaceAll(replacement);
-//      System.out.println (word + " " + w);
       v.addAll (Arrays.asList(s));
       if (!word.equals(w)) v.add (w);
       final String h = dehyphen (s);
       if (h != null) v.add (h);
 //      for (String u : v) System.out.println ("    " + u);
+      System.out.println ("HyphenFilter " + word + " " + v.toString());
     }  
     iterator = v.iterator();
-    if (LOG.isDebugEnabled() && v.size() > 1) LOG.debug (word + " " + v.toString());
+//    if (LOG.isDebugEnabled() && v.size() > 1) LOG.debug (word + " " + v.toString());
   }
 
 

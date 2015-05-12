@@ -24,10 +24,10 @@ import java.io.IOException;
 import java.io.Reader;
 
 import org.apache.lucene.analysis.Tokenizer;
+import org.apache.lucene.analysis.tokenattributes.FlagsAttribute;
 import org.apache.lucene.analysis.tokenattributes.OffsetAttribute;
 import org.apache.lucene.analysis.tokenattributes.PositionIncrementAttribute;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
-import org.apache.lucene.analysis.tokenattributes.TypeAttribute;
 import org.apache.lucene.util.AttributeFactory;
 
 /**
@@ -79,6 +79,7 @@ public final class HVTokenizer extends Tokenizer {
       return false;
     }
 
+    flagsAtt.setFlags (tokenType);
     posIncrAtt.setPositionIncrement (1);
     scanner.getText (termAtt);
     final int start = scanner.yychar();
@@ -89,13 +90,13 @@ public final class HVTokenizer extends Tokenizer {
   }
 
 
-  // This tokenizer generates three attributes:
-  // offset, positionIncrement and type.
+  // This tokenizer generates four attributes:
+  // offset, positionIncrement and flags.
   //
   private final CharTermAttribute termAtt = addAttribute (CharTermAttribute.class);
   private final OffsetAttribute offsetAtt = addAttribute (OffsetAttribute.class);
   private final PositionIncrementAttribute posIncrAtt = addAttribute (PositionIncrementAttribute.class);
-//  private final TypeAttribute typeAtt = addAttribute (TypeAttribute.class);
+  private final FlagsAttribute flagsAtt = addAttribute (FlagsAttribute.class);
 
 
   @Override

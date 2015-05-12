@@ -18,10 +18,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package peltomaa.sukija.util;
 
 
+import org.apache.lucene.analysis.tokenattributes.FlagsAttribute;
+
 public final class Constants {
   private Constants() {}
 
   public static final int WORD = 2;
   public static final int HYPHEN = 4;
   public static final int BRACKET = 8; // []
+
+  public static final boolean hasFlag (FlagsAttribute flagsAtt, int flag)
+  {
+    return ((flagsAtt.getFlags() & flag) != 0);
+  }
 }

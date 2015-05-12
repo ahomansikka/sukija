@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.util.Iterator;
 import org.apache.lucene.analysis.TokenFilter;
 import org.apache.lucene.analysis.TokenStream;
+import org.apache.lucene.analysis.tokenattributes.FlagsAttribute;
 import org.apache.lucene.analysis.tokenattributes.PositionIncrementAttribute;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 
@@ -73,6 +74,7 @@ public abstract class SukijaFilter extends TokenFilter {
   protected Iterator<String> iterator;
   protected int positionIncrement = 1;
   protected State savedState;
+  protected final FlagsAttribute flagsAtt = addAttribute (FlagsAttribute.class);
   protected final CharTermAttribute termAtt = addAttribute (CharTermAttribute.class);
   protected final PositionIncrementAttribute posIncrAtt = addAttribute (PositionIncrementAttribute.class);
 }
