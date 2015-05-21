@@ -45,8 +45,14 @@ Esimerkiksi "poissa-olo" => poissa-olo, poissaolo, poissa, olo<p>
 public final class HyphenFilter extends SukijaFilter {
   public HyphenFilter (TokenStream in, String regex, String replacement)
   {
+    this (in, Pattern.compile(regex), replacement);
+  }
+
+
+  public HyphenFilter (TokenStream in, Pattern regex, String replacement)
+  {
     super (in);
-    this.pattern = Pattern.compile (regex);
+    this.pattern = regex;
     this.replacement = replacement;
     if (LOG.isDebugEnabled()) LOG.debug ("Tehdään luokka " + getClass().getName() + ".");
   }
@@ -54,7 +60,7 @@ public final class HyphenFilter extends SukijaFilter {
 
   public HyphenFilter (TokenStream in)
   {
-    this (in, "-+|\"-+|–+|''-+|[.]-+", "-");
+    this (in, Constants.HYPHEN_REGEX, "-");
   }
 
 

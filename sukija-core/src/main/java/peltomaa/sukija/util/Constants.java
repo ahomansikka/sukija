@@ -17,8 +17,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 package peltomaa.sukija.util;
 
-
+import java.util.regex.Pattern;
 import org.apache.lucene.analysis.tokenattributes.FlagsAttribute;
+
 
 public final class Constants {
   private Constants() {}
@@ -31,4 +32,7 @@ public final class Constants {
   {
     return ((flagsAtt.getFlags() & flag) != 0);
   }
+
+
+  public static final Pattern HYPHEN_REGEX = Pattern.compile ("-+|\"-+|–+|''-+|'-+|[.]-+");
 }

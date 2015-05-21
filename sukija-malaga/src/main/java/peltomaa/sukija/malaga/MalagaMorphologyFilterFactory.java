@@ -17,8 +17,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 package peltomaa.sukija.malaga;
 
+import java.io.InputStream;
 import java.io.IOException;
 import java.util.Map;
+import java.util.Vector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.apache.lucene.analysis.TokenFilter;
@@ -29,17 +31,24 @@ import org.apache.lucene.analysis.util.TokenFilterFactory;
 import org.apache.solr.util.PropertiesUtil;
 import peltomaa.sukija.morphology.Morphology;
 import peltomaa.sukija.morphology.MorphologyFilter;
+import peltomaa.sukija.suggestion.Suggestion;
+import peltomaa.sukija.suggestion.SuggestionFilter;
+import peltomaa.sukija.suggestion.SuggestionParser;
 
 
 /**
- * Factory for {@link MalagaMorphologyFilter}. 
+ * Factory for {@link MorphologyFilter} or {@link SuggestionFilter} using Malaga morphology. 
  * <pre class="prettyprint" >
  * &lt;fieldType name="text" class="solr.TextField"
  *   &lt;analyzer&gt;
  *     &lt;filter class="peltomaa.sukija.malaga.MalagaMorphologyFilterFactory"
-              malagaProjectFile="${user.home}/.sukija/suomi.pro"/&gt;
+              malagaProjectFile="${user.home}/.sukija/suomi.pro"
+              suggestionFile="suggestion.txt"
+              success="false"/&gt;
  *   &lt;/analyzer&gt;
  * &lt;/fieldType&gt;</pre> 
+ * <p>
+ * Muuttujat suggestionFile ja suggest ovat valinnaisia.
  */
 public class MalagaMorphologyFilterFactory extends TokenFilterFactory implements ResourceLoaderAware {
   /** Create a new MalagaMorphologyFilterFactory.
@@ -48,6 +57,8 @@ public class MalagaMorphologyFilterFactory extends TokenFilterFactory implements
   {
     super (args);
     malagaProjectFile = getValue (args, "malagaProjectFile");
+    suggestionFile = getValue (args, "suggestionFile");
+    success = getBoolean (args, "success", false);
     LOG.info (malagaProjectFile);
   }
 
@@ -56,7 +67,12 @@ public class MalagaMorphologyFilterFactory extends TokenFilterFactory implements
   public TokenFilter create (TokenStream input)
   {
     LOG.info ("MalagaMorphologyFilterFactory.create");
-    return new MorphologyFilter (input, morphology);
+    if (suggestion == null) {
+      return new MorphologyFilter (input, morphology);
+    }
+    else {
+      return new SuggestionFilter (input, morphology, suggestion, success);
+    }
   }
 
 
@@ -64,24 +80,34 @@ public class MalagaMorphologyFilterFactory extends TokenFilterFactory implements
   public void inform (ResourceLoader loader) throws IOException
   {
     LOG.info ("inform1 " + loader.getClass().getName());
-    morphology = getMorphology();
+    morphology = MalagaMorphology.getInstance (malagaProjectFile);
+
+    if (suggestionFile != null && suggestion == null) {
+      InputStream inputStream = loader.openResource (suggestionFile);
+      try {
+        SuggestionParser parser = new SuggestionParser (morphology, inputStream);
+        suggestion = parser.getSuggestions();
+      }
+      catch (SuggestionParser.SuggestionParserException e)
+      {
+        LOG.error (e.getMessage());
+        if (e.getCause() != null) LOG.error (e.getCause().getMessage());
+      }
+    }
     LOG.info ("inform2 " + loader.getClass().getName());
   }
 
 
-  protected Morphology getMorphology()
-  {
-    return MalagaMorphology.getInstance (malagaProjectFile);
-  }
-
-
-  protected String getValue (Map<String,String> args, String name)
+  private String getValue (Map<String,String> args, String name)
   {
     return PropertiesUtil.substituteProperty (get(args,name), null);
   }
 
 
-  protected Morphology morphology;
+  private Morphology morphology;
   private String malagaProjectFile;
+  private String suggestionFile;
+  private boolean success;
+  private Vector<Suggestion> suggestion;
   private static final Logger LOG = LoggerFactory.getLogger (MalagaMorphologyFilterFactory.class);
 }
