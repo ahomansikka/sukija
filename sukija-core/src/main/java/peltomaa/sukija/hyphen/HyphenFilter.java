@@ -79,7 +79,7 @@ public final class HyphenFilter extends SukijaFilter {
       final String h = dehyphen (s);
       if (h != null) v.add (h);
 //      for (String u : v) System.out.println ("    " + u);
-      System.out.println ("HyphenFilter " + word + " " + v.toString());
+//      System.out.println ("HyphenFilter " + word + " " + v.toString());
     }  
     iterator = v.iterator();
 //    if (LOG.isDebugEnabled() && v.size() > 1) LOG.debug (word + " " + v.toString());
