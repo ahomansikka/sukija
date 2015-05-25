@@ -49,7 +49,7 @@ public final class HVTokenizer extends Tokenizer {
 
 
   /** Creates a new HVTokenizer with a given
-      {@link org.apache.lucene.util.AttributeSource.AttributeFactory}.
+      org.apache.lucene.util.AttributeSource.AttributeFactory.
    */
   public HVTokenizer (AttributeFactory factory)
   {

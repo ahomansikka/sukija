@@ -46,7 +46,7 @@ public final class FinnishTokenizer extends Tokenizer {
 
 
   /** Creates a new FinnishTokenizer with a given
-      {@link org.apache.lucene.util.AttributeSource.AttributeFactory}.
+      org.apache.lucene.util.AttributeSource.AttributeFactory.
    */
   public FinnishTokenizer (AttributeFactory factory)
   {
