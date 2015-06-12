@@ -1,5 +1,5 @@
 # Muuta tämä, jos Solr on jossain muualla.
-SOLR=${HOME}/Lataukset/solr/solr-5.1.0
+SOLR=${HOME}/Lataukset/solr/solr-5.2.0
 
 
 SOLR_BIN=${SOLR}/bin
@@ -11,10 +11,21 @@ asenna: SukijaAsennus.class
 	java SukijaAsennus
 	./asenna.sh
 
-
 päivitä: SukijaAsennus.class
 	java SukijaAsennus
 	cp -r ${CONF}/* ${SOLR_HOME}/conf
+
+solr-start:
+	${SOLR_BIN}/solr start
+
+solr-create:
+	${SOLR_BIN}/solr create -c sukija -d conf
+
+solr-stop:
+	${SOLR_BIN}/solr stop
+
+solr-restart:
+	${SOLR_BIN}/solr restart
 
 
 poista:

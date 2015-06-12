@@ -2,7 +2,7 @@
 
 # Muuta nämä tarvittaessa.
 #
-SOLR=${HOME}/Lataukset/solr/solr-5.1.0
+SOLR=${HOME}/Lataukset/solr/solr-5.2.0
 MAVEN=${HOME}/.m2/repository
 SUKIJA=${SOLR}/server/solr/sukija
 JETTY=${SOLR}/server/contexts

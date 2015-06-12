@@ -45,10 +45,10 @@ Tika (\verb=http://tika.apache.org/=) osaa lukea.
       (\verb=https://github.com/voikko/corevoikko=)
       hakemistossa suomimalaga.
 
-\item Apache Solr 5.1.0:
+\item Apache Solr 5.2.0:
       \verb=http://lucene.apache.org/solr/=
       Tässä dokumentissa Solr:sta käytetään nimeä solr-x.y.z,
-      missä x.y.z on version numero, esimerkiksi 5.1.0.
+      missä x.y.z on version numero, esimerkiksi 5.2.0.
 
 \item Ubuntun paketit \verb=libmalaga7= ja \verb=maven=.
 \end{itemize}
@@ -144,18 +144,35 @@ Jos asentamisen jäkeen muuttaa tiedostoa
 \verb|conf2/sukija-context.xml|
 muutokset voi viedä Solr:iin komennolla \verb|make päivitä|
 
-\verb=make asenna= tekee saman kuin Solr:n komennot
-\verb=bin/solr start; bin/solr create -c sukija -d conf=, mutta lisäksi se
-kopioi Solr:n tarvitsemat jar-tiedostot hakemistoon
-\verb=$HOME/Lataukset/solr/solr-x.y.z/server/solr/sukija/lib=
 
 
 \subsection*{Solr:n käynnistäminen}
 
-\verb|make asenna| käynnistää Solr:n.
+Asennuksen jälkeen Solr käynnistetään komennolla
 
-Myöhemmin sen voi käynnistää komennolla
 \verb|~/Lataukset/solr/solr-x.y.z/bin/solr start|
+
+Sukijan 'core' tehdään komennolla
+
+\verb|~/Lataukset/solr/solr-x.y.z/bin/solr create -c sukija -d conf|
+
+Solr pysäytetään komennolla
+
+\verb|~/Lataukset/solr/solr-x.y.z/bin/solr stop|
+
+Solr käynnistetään uudelleen komennolla
+
+\verb|~/Lataukset/solr/solr-x.y.z/bin/solr restart|
+
+
+Nämä voi antaa myös komennoilla
+
+\begin{tabular}{@{}l}
+\verb|make solr-start| \\
+\verb|make solr-create| \\
+\verb|make solr-stop| \\
+\verb|make solr-restart|
+\end{tabular}
 
 
 Solr:n käynnistymisen voi varmistaa selaimessa menemällä
@@ -486,7 +503,7 @@ Tällä komennolla ei ole parametreja.
 
 Kun tiedostot on indeksoitu, niitä voidaan tutkia myös komennolla
 
-{\footnotesize
+{\scriptsize
 \verb|java -jar $HOME/.m2/repository/peltomaa/sukija/sukija-ui/1.1/sukija-ui-1.1.jar|
 }
 
