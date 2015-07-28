@@ -7,12 +7,14 @@ SOLR_HOME=${SOLR}/server/solr/sukija
 CONF=conf
 
 
-asenna: SukijaAsennus.class
-	java SukijaAsennus
+asetukset: SukijaAsennus.class
+	   java SukijaAsennus
+
+
+asenna:
 	./asenna.sh
 
-päivitä: SukijaAsennus.class
-	java SukijaAsennus
+päivitä:
 	cp -r ${CONF}/* ${SOLR_HOME}/conf
 
 solr-start:
@@ -32,13 +34,11 @@ poista:
 	rm -rf ${SOLR_HOME}
 
 
-service: SukijaAsennus.class
-	java SukijaAsennus
+service:
 	./asenna.sh -s
 
 
-service-update: SukijaAsennus.class
-	java SukijaAsennus
+service-update:
 	cp -r ${CONF}/* /var/solr/data/sukija/conf
 
 
@@ -48,7 +48,7 @@ SukijaAsennus.class: SukijaAsennus.java
 
 clean:
 	mvn clean
-	rm -f SukijaAsennus.class
+	rm -f SukijaAsennus.class conf/data-config.xml conf/schema.xml
 
 
 SUKIJA=sukija

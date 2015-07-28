@@ -132,16 +132,21 @@ SLF4J: Class path contains multiple SLF4J bindings.
 Siitä ei tarvitse välittää.
 
 
-\subsection*{Solr:n konfigurointi (1)}
+\subsection*{Sukijan konfigurointi}
 
-Solr:n parametrit asetetaan tiedostossa \verb|sukija.properties|,
+Sukijan parametrit asetetaan tiedostossa \verb|sukija.properties|,
 jossa on myös tarvittavat ohjeet.
 
-Sen jälkeen kofiguroidaan Solr komennolla \verb|make asenna|
+Sen jälkeen konfiguroidaan Sukija komennolla \verb|make asetukset|
 
-Jos asentamisen jäkeen muuttaa tiedostoa
-\verb|sukija.properties| tai
-\verb|conf2/sukija-context.xml|
+
+\subsection*{Solr:n konfigurointi (1)}
+
+Ennen Solr:n konfigurointia Sukija on pitänyt konfiguroida.
+
+Solr konfiguroidaan komennolla \verb|make asenna|
+
+Jos asentamisen jälkeen konfiguroi Sukijaa,
 muutokset voi viedä Solr:iin komennolla \verb|make päivitä|
 
 
@@ -182,38 +187,37 @@ verkko-osoitteeseen
 
 \subsection*{Solr:n konfigurointi (2)}
 
-Tämä voidaan tehdä vasta sen jälkeen kun on tehty Solr:n konfigurointi (1).
+Solr voidaan asentaa palveluksi Solr:n skriptillä
+\verb=install_solr_service.sh= 
+(katso Apache Solr Reference Guide
+kohta Service Installation Script).
 
-Jos olet asentanut Solr:n skriptillä \verb=install_solr_service.sh=
-(katso Apache Solr Reference Guide kohta
-Service Installation Script),
-Solr konfiguroidaan Sukijaa varten näin.
+Jos et malta katsoa, se tehdään hakemistossa
+\verb=$HOME/Lataukset/solr/solr-x.y.z= tällä tavalla
+
+{\footnotesize
+\verb=sudo bash solr-x.y.z/bin/install_solr_service.sh solr-x.y.z.tgz -u username=
+}
+
+missä username on oma käyttäjätunnuksesi.
+
 
 Skripti asentaa Solr:n hakemistoihin \verb=/opt/solr-x.y.z= ja
 \verb=/var/solr=. Niiden omistajaksi tehdään käyttäjä \verb=solr=,
 mutta jos käytät lippua \verb=-u=, voi asettaa hakemistojen
 omistajaksi itsesi:
 
-\verb=sudo bash ./install_solr_service.sh solr-x.y.z.tgz -u username=
 
-missä username on oma käyttäjätunnuksesi. Nämä asennusohjeet
-olettavat, että olet tehnyt näin, että olet asentanut Solr:n
-oletushakemistoihin ja että olet Sukijan päähakemistossa eli
-hakemistossa, jossa on tiedosto ohje.tex.
+Nämä asennusohjeet olettavat, että olet tehnyt näin, että olet
+asentanut Solr:n oletushakemistoihin ja että olet Sukijan
+päähakemistossa eli hakemistossa, jossa on tiedosto ohje.tex.
+
+Ennen Solr:n konfigurointia Sukija on pitänyt konfiguroida.
 
 Asennus konfiguroidaan komennolla \verb=make service=
-joka yksinkertaisesti kopioi hakemiston
-\verb=${HOME}/Lataukset/solr/solr-x.y.z/server/solr/sukija=
-hakemistoon
-\verb=/var/solr/data= ja tiedoston
-\verb=conf2/sukija-context.xml= hakemistoon
-\verb=/opt/solr/server/contexts=.
 
-
-Jos asentamisen jäkeen muuttaa tiedostoa
-\verb|sukija.properties| tai
-\verb|conf2/sukija-context.xml|
-muutokset viedään Solr:iin komennolla
+Jos asentamisen jälkeen konfiguroi Sukijaa,
+muutokset voi viedä Solr:iin komennolla
 \verb=make service-update=
 
 Seuraavaksi mennään osoitteeseen \verb=http://localhost:8983/solr/=
@@ -512,7 +516,7 @@ Copyright © 2011--2015 Hannu Väisänen.
 \end{document}
 
 
-% cp /home/hvaisane/Lataukset/solr/solr-x.y.z/example/example-DIH/solr/db/conf/admin-extra*.html ~/Lataukset/solr/solr-5.0.0/server/solr/sukija/conf/
+% cp $HOME/Lataukset/solr/solr-x.y.z/example/example-DIH/solr/db/conf/admin-extra*.html ~/Lataukset/solr/solr-5.0.0/server/solr/sukija/conf/
 
 
 sudo rm -rf /var/solr/ /opt/solr* /etc/init.d/solr /etc/rc*/*solr*
