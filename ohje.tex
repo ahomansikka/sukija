@@ -267,19 +267,8 @@ log4j.logger.peltomaa.sukija.voikko.VoikkoMorphologyFilterFactory = ALL
 Tuossa ovat kaikki Sukijan luokat, joissa on lokitulostus.
 
 Tällöin tulostus on paljon suurempi kuin indeksoitavat tiedostot (-:,
-mutta kaikkia ei tietenkään tarvitse lisätä, riittää kun laittaa
+mutta kaikkia ei tietenkään tarvitse lisätä.
 luokan \verb=MorphologyFilter= tai \verb=SuggestionFilter=.
-
-Luokkaa \verb=HVTokenizer= ei tarvitse laittaa, jos ei käytä tätä
-saneistajaa, ja luokkia
-\verb=MalagaMorphology= ja \verb=VoikkoMorphology= Sukija ei käytä
-yhtaikaa. \verb=SuggestionFilter= tuottaa lokitulostuksen kaikista
-yrityksistä muuttaa sana perusmuotoon, \verb=Suggestion= kertoo
-erikseen, mikä muunnos sai aikaan sanan tunnistamisen (katso sivu
-\zpageref{suggestionConfiguration}).
-
-Lokitulostuksen eri tasot (\verb=ALL=, jne) voi katsua luokan
-\verb=org.apache.log4j.Level= dokumentoinnista.
 
 Lokitulostus menee tiedostoon
 \verb=$HOME/Lataukset/solr/solr-x.y.z/server/logs/solr.log= tai
@@ -291,6 +280,8 @@ Lokitulostus menee tiedostoon
 
 Tiedostot indeksoidaan menemällä osoitteeseen
 \verb|http://localhost:8983/solr/sukija/dataimport?command=full-import|
+
+Indeksoinnin voi aloittaa myös Solr:n käyttöliittymästä.
 
 Enemmän tai vähemmän pitkän ajan kuluttua indeksoinnin lopputuloksen
 voi katsoa osoitteesta
@@ -309,7 +300,6 @@ on sanojen ''alusta'', ''alustaa'', ''alku'', ''alunen'' ja ''alus''
 taivutusmuoto. Tällöin herää kysymys, mitä sanaa pitää etsiä, vai
 etsitäänkö kaikkia?
 
-
 Eri tavalla muotoillun tulostuksen saa osoitteesta
 \verb=http://localhost:8983/solr/sukija/select=
 
@@ -318,6 +308,8 @@ Esimerkiksi sanaa \verb=sana= etsitään näin:
 
 Tämän tulostuksen ulkonäköä voi muuttaa muuttamalla Sukijan mukana
 tulevaa tiedostoa \verb=conf/xslt/sukija.xsl=.
+
+Tietoja voi etsiä myös Solr:n käyttöliittymällä.
 
 
 \subsection*{Tiedoston suggestions.xml konfigurointi}
