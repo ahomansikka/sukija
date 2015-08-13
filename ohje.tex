@@ -345,11 +345,14 @@ Esimerkiksi
 \begin{verbatim}
   <compoundWordEnd>
     <input>jo(k[ie]|e) joki</input>
+    <addStart>true</addStart>
+    <addEnd>true</addEnd>
   </compoundWordEnd>
 \end{verbatim}
 
 tunnistaa esimerkiksi merkkijonon ''aatsajoelle''. Tällä tavalla
-voidaan tunnistaa paikannimiä, jotka eivät ole sanastossa.
+voidaan tunnistaa paikannimiä, jotka eivät ole sanastossa. (Kaikki tällaiset
+sanat eivät välttämättä ole paikannimiä.)
 
 Jokaisessa input-lauseessa on kaksi osaa. Ensimmäinen on säännöllinen
 lauseke ja toinen jonkin sanan perusmuoto. Tunnistettaessa merkkijono
@@ -363,6 +366,8 @@ merkkijonon ''aatsajoelle'' perusmuodoksi tulee ''aatsajoki''.
 
 Input-lauseita voi olla mielivaltainen määrä.
 
+Jos \verb|addStart| on true, indeksiin lisätään myös sanan alkuosa (''aatsa''), ja jos
+\verb|addEnd| on true, indeksiin lisätään sanan loppuosa (''joki'').
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
