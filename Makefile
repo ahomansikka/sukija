@@ -1,5 +1,5 @@
 # Muuta tämä, jos Solr on jossain muualla.
-SOLR=${HOME}/Lataukset/solr/solr-5.2.1
+SOLR=${HOME}/Lataukset/solr/solr-5.3.0
 
 
 SOLR_BIN=${SOLR}/bin

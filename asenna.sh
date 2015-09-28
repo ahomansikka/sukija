@@ -2,11 +2,20 @@
 
 # Muuta nämä tarvittaessa.
 #
-SOLR=${HOME}/Lataukset/solr/solr-5.2.1
+SOLR=${HOME}/Lataukset/solr/solr-5.3.0
 MAVEN=${HOME}/.m2/repository
 SUKIJA=${SOLR}/server/solr/sukija
 JETTY=${SOLR}/server/contexts
 
+if [ ! -e SukijaAsennus.class ]; then
+  echo 'Käännä ensin SukijaAsennus.java'
+  exit 1
+fi
+
+if [ ! -e ${SOLR} ]; then
+  echo Hakemistoa ${SOLR} ei ole olemassa.
+  exit 1
+fi
 
 if [ $# -gt 0 ]; then
   case $1 in
@@ -26,6 +35,8 @@ fi
 SUKIJA_LIB=${SUKIJA}/lib
 SOLR_BIN=${SOLR}/bin
 
+
+echo Asennetaan Sukija hakemistoon ${SUKIJA}.
 
 #echo $SUKIJA
 #echo $JETTY
