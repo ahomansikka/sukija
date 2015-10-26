@@ -1,0 +1,52 @@
+/*
+Copyright (©) 2015 Hannu Väisänen
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+package peltomaa.sukija.voikko;
+
+import java.util.Iterator;
+import org.apache.lucene.analysis.TokenStream;
+import peltomaa.sukija.util.Constants;
+import peltomaa.sukija.util.SukijaFilter;
+import org.puimula.libvoikko.*;
+
+
+public class VoikkoFilter extends SukijaFilter {
+  public VoikkoFilter (TokenStream in, Voikko voikko)
+  {
+    super (in, voikko);
+  }
+
+
+  @Override
+  public Iterator<Analysis> filter()
+  {
+    analysis = voikko.analyze (word);
+//System.out.println ("VoikkoFilter1 " + word + " " + Constants.toString(flagsAtt));
+    if (analysis.isEmpty()) {
+      //
+      // Voikko ei tunnistanut sanaa, mutta jokaisella sanalla pitää olla perusmuoto.
+      //
+      analysis.add (VoikkoUtils.newBaseForm (word));
+      flagsAtt.setFlags (flagsAtt.getFlags() | Constants.UNKNOWN);
+    }
+    else {
+      flagsAtt.setFlags (flagsAtt.getFlags() & ~Constants.UNKNOWN);
+    }
+//System.out.println ("VoikkoFilter2 " + word + " " + Constants.toString(flagsAtt));
+    return analysis.iterator();
+  }
+}

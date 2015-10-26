@@ -1,0 +1,3 @@
+Hakemistossa vanha-sukija on Sukijan vanhan version koodi.
+
+Tämä uusi versio käyttää libvoikkoa ja vfst-morfologiaa.

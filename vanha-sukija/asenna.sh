@@ -7,7 +7,6 @@ MAVEN=${HOME}/.m2/repository
 SUKIJA=${SOLR}/server/solr/sukija
 JETTY=${SOLR}/server/contexts
 
-
 if [ ! -e SukijaAsennus.class ]; then
   echo 'Käännä ensin SukijaAsennus.java'
   exit 1
@@ -37,6 +36,8 @@ SUKIJA_LIB=${SUKIJA}/lib
 SOLR_BIN=${SOLR}/bin
 
 
+echo Asennetaan Sukija hakemistoon ${SUKIJA}.
+
 #echo $SUKIJA
 #echo $JETTY
 #echo $SUKIJA_LIB
@@ -53,15 +54,3 @@ mkdir -p ${SUKIJA}/{conf,data,lib}
 #
 cp -r conf/* ${SUKIJA}/conf
 cp conf2/sukija-context.xml ${JETTY}
-
-
-
-# Käynnistä Solr uudelleen.
-#
-#if [ $# -gt 0 ]; then
-#  sudo service solr restart
-#else
-#  ${SOLR_BIN}/solr start
-#  ${SOLR_BIN}/solr create -c sukija -d conf
-#  ${SOLR_BIN}/solr restart
-#fi

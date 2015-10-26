@@ -16,11 +16,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 
-/* Tämä tiedosto voidaan kääntää komennolla
-   javac SukijaAsennus.java
-*/
-
-import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -70,9 +65,6 @@ public class SukijaAsennus {
                "   <document>\n");
 
     for (int i = 0; i < BASE_DIR.length; i++) {
-      if (!directoryOK (BASE_DIR[i])) {
-        throw new RuntimeException (BASE_DIR[i] + " ei ole olemassa tai se ei ole hakemisto.");
-      }
       out.write (String.format (dataConfigEntity,
                                 i,
                                 BASE_DIR[i],
@@ -97,7 +89,7 @@ public class SukijaAsennus {
       out.write (String.format ("        <filter class=\"%s\"/>\n", HYPHEN_FILTER));
     }
 
-    out.write (getBaseFormFilter (p));
+    out.write (getMorphologyFilter (p));
 
     final String SYNONYM_FILTER = getSynonymFilter (p);
     if (SYNONYM_FILTER != null) {
@@ -108,20 +100,28 @@ public class SukijaAsennus {
   }
 
 
-  private String getBaseFormFilter (Properties p)
+  private String getMorphologyFilter (Properties p)
   {
-    final String FACTORY = "peltomaa.sukija.baseform.BaseFormFilterFactory";
+    final String MORPHOLOGY = getProperty (p, "sukija.Morphology", "peltomaa.sukija.voikko.VoikkoMorphologySuggestionFilterFactory");
 
     StringBuilder sb = new StringBuilder();
 
-    sb.append (String.format ("        <filter class=\"%s\"", FACTORY));
+    sb.append (String.format ("        <filter class=\"%s\"", MORPHOLOGY));
 
-    append (sb, p, "language", "sukija.voikko.language", "fi");
-    append_if (sb, p, "path",           "sukija.voikko.path");
-    append_if (sb, p, "libvoikkoPath",  "sukija.voikko.libvoikkoPath");
-    append_if (sb, p, "libraryPath",    "sukija.voikko.libraryPath");
-    append_if (sb, p, "suggestionFile", "sukija.suggestionFile");
-    append_if (sb, p, "successOnly",    "sukija.successOnly");
+    if (MORPHOLOGY.indexOf ("Malaga") >= 0) {
+      append (sb, p, "malagaProjectFile", "sukija.malagaProjectFile", "${user.home}/.sukija/suomi.pro");
+    }
+    else if (MORPHOLOGY.indexOf ("Voikko") >= 0) {
+      append (sb, p, "dictionary", "sukija.voikko.dictionary", "fi");
+      append_if (sb, p, "path",          "sukija.voikko.path");
+      append_if (sb, p, "libvoikkoPath", "sukija.voikko.libvoikkoPath");
+      append_if (sb, p, "libraryPath",   "sukija.voikko.libraryPath");
+    }
+
+    if (MORPHOLOGY.indexOf ("Suggestion") >= 0) {
+      append (sb, p, "suggestionFile", "sukija.suggestionFile", "suggestions.xml");
+      append (sb, p, "success", "sukija.success", "false");
+    }
     sb.append ("/>\n");
     return sb.toString();
   }
@@ -173,13 +173,6 @@ public class SukijaAsennus {
   {
     final String s = p.getProperty (key);
     return (s == null) ? def.replace ("${user.home}", HOME) : s.replace ("${user.home}", HOME);
-  }
-
-
-  private boolean directoryOK (String fileName)
-  {
-    final File file = new File (fileName);
-    return (file.exists() && file.isDirectory());
   }
 
 

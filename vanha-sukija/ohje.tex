@@ -36,22 +36,28 @@ Tika (\verb=http://tika.apache.org/=) osaa lukea.
 \subsection*{Mitä tarvitaan ja mistä ne saa?}
 
 \begin{itemize}
+
 \item Sukija:
       \verb=https://github.com/ahomansikka/sukija=
       Koska luet tätä tekstiä, olet jo imuroinut tämän. (-:
 
-\item Corevoikko:
-      \verb=https://github.com/voikko/corevoikko=
+\item Suomi-Malaga: Se on corevoikossa
+      (\verb=https://github.com/voikko/corevoikko=)
+      hakemistossa suomimalaga.
 
 \item Apache Solr 5.3.0:
       \verb=http://lucene.apache.org/solr/=
       Tässä dokumentissa Solr:sta käytetään nimeä solr-x.y.z,
       missä x.y.z on version numero, esimerkiksi 5.3.0.
-\end{itemize}
 
+\item Ubuntun paketit \verb=libmalaga7= ja \verb=maven=.
+\end{itemize}
 
 Lisäksi Sukija tarvitsee erinäisiä jar-tiedostoja, mutta Maven imuroi
 ne verkosta automaagisesti.
+
+Sukijaa voi käyttää myös Voikon Java-version kanssa. Tällöin tarvitaan
+Ubuntun paketti \verb=libvoikko1=.
 
 Tämä asennusohje olettaaa, että corevoikko ja apache-solr ovat hakemistoissa
 \verb=$HOME/Lataukset/corevoikko= ja
@@ -63,6 +69,50 @@ muuttujia pitää muuttaa vastaavasti.
 
 
 \newpage
+\subsection*{Ohjelman rakenne}
+
+Sukijassa on neljä osaa:
+
+\begin{itemize}
+\item sukija-core     Java-luokkia, joita muut ohjelman osat tarvitsevat.
+\item sukija-malaga   Solr:n liitännäinen, joka käyttää Suomi-Malagan
+                      Sukija-versiota muuttamaan sanat perusmuotoon.
+\item sukija-voikko   Solr:n liitännäinen, joka käyttää Voikkoa
+                      (Malaga- tai Vfst-morfologiaa) muuttamaan sanat perusmuotoon.
+\item sukija-ui       Javalla tehty käyttöliittymä (keskeneräinen).
+\end{itemize}
+
+
+\subsection*{Suomi-Malagan asentaminen}
+
+Suomi-Malagasta on kaksi versiota, Voikko-versio on tarkoitettu
+oikolukuun ja Sukija tiedostojen indeksointiin. Sukija-versio
+käännetään komennolla
+
+\begin{verbatim}
+cd $HOME/Lataukset/corevoikko/suomimalaga
+make sukija
+\end{verbatim}
+
+Tee alihakemisto \verb=$HOME/.sukija= ja kopioi sinne tiedostot
+\verb=suomimalaga/sukija/{suomi.*_l,suomi.pro}=
+
+Myös Voikko-versiota voi käyttää indeksointiin, kun sen kääntää ja
+asentaa komennoilla
+
+\begin{verbatim}
+cd $HOME/Lataukset/corevoikko/suomimalaga
+make voikko-sukija
+make voikko-install DESTDIR=~/.voikko
+\end{verbatim}
+
+\verb|DESTDIR| voi olla myös joitan muuta kuin \verb|~/.voikko|.
+
+Versioiden erot ovat siinä, että Sukija-versio tunnistaa myös vanhoja
+taivutusmuotoja ja sanoja sekä yleisiä kirjoitusvirheitä.
+
+
+
 \subsection*{Sukijan kääntäminen ja asentaminen}
 
 Ensin käännetään ja asennetaan Sukija komennolla
@@ -82,12 +132,12 @@ SLF4J: Class path contains multiple SLF4J bindings.
 Siitä ei tarvitse välittää.
 
 
-\subsection*{Sukijan konfigurointi (1)}
+\subsection*{Sukijan konfigurointi}
 
-Solr:n parametrit asetetaan tiedostossa \verb|sukija.properties|,
+Sukijan parametrit asetetaan tiedostossa \verb|sukija.properties|,
 jossa on myös tarvittavat ohjeet.
 
-Sen jälkeen kofiguroidaan Solr komennolla \verb|make asetukset|
+Sen jälkeen konfiguroidaan Sukija komennolla \verb|make asetukset|
 
 
 \subsection*{Solr:n konfigurointi (1)}
@@ -96,8 +146,9 @@ Ennen Solr:n konfigurointia Sukija on pitänyt konfiguroida.
 
 Solr konfiguroidaan komennolla \verb|make asenna|
 
-Jos asentamisen jälkeen konfiguroi Sukijaa, muutokset voi viedä
-Solr:iin komennolla \verb|make päivitä|
+Jos asentamisen jälkeen konfiguroi Sukijaa,
+muutokset voi viedä Solr:iin komennolla \verb|make päivitä|
+
 
 
 \subsection*{Solr:n käynnistäminen}
@@ -127,6 +178,7 @@ Nämä voi antaa myös komennoilla
 \verb|make solr-stop| \\
 \verb|make solr-restart|
 \end{tabular}
+
 
 Solr:n käynnistymisen voi varmistaa selaimessa menemällä
 verkko-osoitteeseen
@@ -201,6 +253,9 @@ loppuun rivit
 \begin{verbatim}
 log4j.logger.peltomaa.sukija.finnish.HVTokenizer = ALL
 log4j.logger.peltomaa.sukija.hyphen.HyphenFilter = ALL
+log4j.logger.peltomaa.sukija.malaga.MalagaMorphology = ALL
+log4j.logger.peltomaa.sukija.voikko.MalagaMorphologyFilterFactory = ALL
+log4j.logger.peltomaa.sukija.morphology.MorphologyFilter = ALL
 log4j.logger.peltomaa.sukija.suggestion.Suggestion = ALL
 log4j.logger.peltomaa.sukija.suggestion.SuggestionFilter = ALL
 log4j.logger.peltomaa.sukija.suggestion.SuggestionParser = ALL
@@ -213,9 +268,7 @@ Tuossa ovat kaikki Sukijan luokat, joissa on lokitulostus.
 
 Tällöin tulostus on paljon suurempi kuin indeksoitavat tiedostot (-:,
 mutta kaikkia ei tietenkään tarvitse lisätä.
-
-Lokitulostuksen eri tasot (\verb=ALL=, jne) voi katsua luokan
-\verb=org.apache.log4j.Level= dokumentoinnista.
+luokan \verb=MorphologyFilter= tai \verb=SuggestionFilter=.
 
 Lokitulostus menee tiedostoon
 \verb=$HOME/Lataukset/solr/solr-x.y.z/server/logs/solr.log= tai
@@ -247,7 +300,6 @@ on sanojen ''alusta'', ''alustaa'', ''alku'', ''alunen'' ja ''alus''
 taivutusmuoto. Tällöin herää kysymys, mitä sanaa pitää etsiä, vai
 etsitäänkö kaikkia?
 
-
 Eri tavalla muotoillun tulostuksen saa osoitteesta
 \verb=http://localhost:8983/solr/sukija/select=
 
@@ -263,13 +315,18 @@ Tietoja voi etsiä myös Solr:n käyttöliittymällä.
 \subsection*{Tiedoston suggestions.xml konfigurointi}
 \zlabel{suggestionConfiguration}
 
+
+Tiedosto \verb|suggestions.xml| pitää konfiguroida erikseen
+Sukijalle ja Voikolle. Nykyinen konfiguraatio on tehty Voikolle ja sen
+vfst-morfologialle.
+
 Tässä vaiheessa kaikki indeksoitavista tiedostoista luetut sanat on
 muutettu pieniksi kirjaimiksi eli tiedostossa
 \verb|suggestions.xml| olevat erisnimetkin pitää kirjoittaa
 pienellä alkukirjaimella.
 
 Konfiguroititiedoston formaatti on määritelty tiedostossa
-\verb=/src/main/xsd/SuggestionInput.xsd=.
+\verb=sukija-core/src/main/xsd/SuggestionInput.xsd=.
 
 Konfigurointitiedostossa olevien säännöllisten lausekkeiden syntaksi on
 sama kuin Javan luokassa \verb=java.util.regex.Pattern=
@@ -288,11 +345,14 @@ Esimerkiksi
 \begin{verbatim}
   <compoundWordEnd>
     <input>jo(k[ie]|e) joki</input>
+    <addStart>true</addStart>
+    <addEnd>true</addEnd>
   </compoundWordEnd>
 \end{verbatim}
 
 tunnistaa esimerkiksi merkkijonon ''aatsajoelle''. Tällä tavalla
-voidaan tunnistaa paikannimiä, jotka eivät ole sanastossa.
+voidaan tunnistaa paikannimiä, jotka eivät ole sanastossa. (Kaikki tällaiset
+sanat eivät välttämättä ole paikannimiä.)
 
 Jokaisessa input-lauseessa on kaksi osaa. Ensimmäinen on säännöllinen
 lauseke ja toinen jonkin sanan perusmuoto. Tunnistettaessa merkkijono
@@ -306,6 +366,8 @@ merkkijonon ''aatsajoelle'' perusmuodoksi tulee ''aatsajoki''.
 
 Input-lauseita voi olla mielivaltainen määrä.
 
+Jos \verb|addStart| on true, indeksiin lisätään myös sanan alkuosa (''aatsa''), ja jos
+\verb|addEnd| on true, indeksiin lisätään sanan loppuosa (''joki'').
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -442,7 +504,7 @@ Tällä komennolla ei ole parametreja.
 
 Kun tiedostot on indeksoitu, niitä voidaan tutkia myös komennolla
 
-{\footnotesize
+{\scriptsize
 \verb|java -jar $HOME/.m2/repository/peltomaa/sukija/sukija-ui/1.1/sukija-ui-1.1.jar|
 }
 
@@ -451,7 +513,7 @@ Copyright © 2011--2015 Hannu Väisänen.
 \end{document}
 
 
-% cp /home/hvaisane/Lataukset/solr/solr-x.y.z/example/example-DIH/solr/db/conf/admin-extra*.html ~/Lataukset/solr/solr-5.0.0/server/solr/sukija/conf/
+% cp $HOME/Lataukset/solr/solr-x.y.z/example/example-DIH/solr/db/conf/admin-extra*.html ~/Lataukset/solr/solr-5.0.0/server/solr/sukija/conf/
 
 
 sudo rm -rf /var/solr/ /opt/solr* /etc/init.d/solr /etc/rc*/*solr*

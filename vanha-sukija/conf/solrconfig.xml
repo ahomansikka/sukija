@@ -54,8 +54,9 @@
 
   <lib path="${user.home}/.m2/repository/net/java/dev/jna/jna/3.4.0/jna-3.4.0.jar"/>
   <lib path="${user.home}/.m2/repository/org/puimula/voikko/libvoikko/3.7/libvoikko-3.7.jar"/>
-  <lib path="${user.home}/.m2/repository/peltomaa/sukija/sukija/2.0/sukija-2.0.jar"/>
-
+  <lib path="${user.home}/.m2/repository/peltomaa/sukija/sukija-core/1.1/sukija-core-1.1.jar"/>
+  <lib path="${user.home}/.m2/repository/peltomaa/sukija/sukija-malaga/1.1/sukija-malaga-1.1.jar"/>
+  <lib path="${user.home}/.m2/repository/peltomaa/sukija/sukija-voikko/1.1/sukija-voikko-1.1.jar"/>
 
   <!-- Data Directory
 

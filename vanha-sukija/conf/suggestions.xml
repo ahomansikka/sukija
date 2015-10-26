@@ -32,6 +32,8 @@
     <input>kön[kg]ä köngäs</input>
     <input>laakso laakso</input>
     <input>lah(ti|de) lahti</input>
+    <input>lai(s|nen) lainen</input>
+    <input>läi(s|nen) läinen</input>
     <input>lam(pi|me) lampi</input>
     <input>lamm[ie] lammi</input>
     <input>leh[td]o lehto</input>
@@ -55,6 +57,7 @@
     <input>pel[tl]o pelto</input>
     <input>perä perä</input>         <!-- Monikossa tulee liikaa vääriä tunnistuksia. -->
     <input>pih[ao] piha</input>
+    <input>po(ik[ai]|j[ai]) poika</input>
     <input>pol[ku] polku</input>
     <input>puisto puisto</input>
     <input>puro puro</input>
@@ -76,6 +79,7 @@
     <input>talo talo</input>
     <input>tundr[aio] tundra</input>
     <input>tuntur[ie] tunturi</input>
+    <input>tytt?är tytär</input>
     <input>törm[äi] törmä</input>
     <input>vaar[ao] vaara</input>
     <input>vainio vainio</input>
@@ -87,15 +91,7 @@
     <input>vuoristo vuoristo</input>
     <input>väyl[äi] väylä</input>
     <input>ylän[kg]ö ylänkö</input>
-
-    <input>lai(s|nen) lainen</input>
-    <input>lähtöi(s|nen) lähtöinen</input>
-    <input>läi(s|nen) läinen</input>
-    <input>po(ik[ai]|j[ai]) poika</input>
-    <input>telai[ns] telainen</input>
-    <input>tytt?är tytär</input>
     <addStart>true</addStart>
-    <addBaseFormOnly>false</addBaseFormOnly>
     <addEnd>true</addEnd>
   </compoundWordEnd>
 <!--
