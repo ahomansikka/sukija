@@ -26,7 +26,16 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.nio.file.Files;
+import java.nio.file.FileSystem;
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Properties;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.Set;
+import static java.nio.file.StandardCopyOption.*;
 
 
 public class SukijaAsennus {
@@ -51,12 +60,57 @@ public class SukijaAsennus {
      Properties p = new Properties();
      p.load (new FileReader (propertiesFile));
 
-//     p.list (System.out);
+     final String SUKIJA = getProperty (p, "sukija.sukija");
+     makeDirectory (SUKIJA + "/conf");
+     makeDirectory (SUKIJA + "/data");
+     makeDirectory (SUKIJA + "/lib");
+
+//     Set<String> set = p.stringPropertyNames();
+//     for (String s : set) System.out.println (s + " " + p.getProperty(s) + " " + getProperty(p,s));
+//     System.exit (1);
+//     p.list (System.out); System.exit (1);
 //     printDataConfigFile (p, new OutputStreamWriter (System.out));
 //     printSchemaFile (p, new OutputStreamWriter (System.out));
 
      printDataConfigFile (p, new FileWriter ("conf/data-config.xml"));
      printSchemaFile     (p, new FileWriter ("conf/schema.xml"));
+
+     copyFile ("conf2/sukija-context.xml",
+               getProperty (p, "sukija.jetty") + "/sukija-context.xml");
+     copyDirectory (new File ("conf"),
+                    new File (SUKIJA + "/conf"));
+  }
+
+
+  private void copyFile (String from, String to) throws IOException
+  {
+//System.out.println ("COPY2 " + from + " " + to);
+    Files.copy (Paths.get(from), Paths.get(to), REPLACE_EXISTING);
+  }
+
+
+  private void copyDirectory (File from, File to) throws IOException
+  {
+    if (from.isDirectory()) {
+//System.out.println ("COPY1 " + from.toString() + " " + to.toString());
+      if (!to.exists()) {
+        to.mkdir();
+      }
+      String[] files = from.list();
+      for (String f : files) {
+        copyDirectory (new File (from, f), new File (to, f));
+      }
+    }
+    else {
+      copyFile (from.getPath(), to.getPath());
+    }
+  }
+
+
+  private boolean makeDirectory (String file)
+  {
+    File f = new File (file);
+    return f.mkdirs();
   }
 
 
@@ -162,17 +216,49 @@ public class SukijaAsennus {
   }
 
 
+
+  private String findProperty (Properties p, String s)
+  {
+    String u = p.getProperty (s);
+    if (u == null) {
+      return systemProperties.getProperty (s);
+    }
+    else {
+      return u;
+    }
+  }
+
+
+
+  // Korvataan ympäristömuuttujat.
+  //
+  private String replace (Properties p, String s)
+  {
+    Matcher m = PATTERN.matcher (s);
+    if (m.find()) {
+      String u = findProperty (p, m.group(1));
+      if (u == null) {
+        throw new RuntimeException ("Ominaisuutta " + m.group(1) + " ei ole määritelty.");
+      }
+      return replace (p, s.replace(m.group(),u));
+    }
+    else {
+      return s;
+    }
+  }
+
+
   private String getProperty (Properties p, String key)
   {
     final String s = p.getProperty (key);
-    return (s == null) ? null : s.replace ("${user.home}", HOME);
+    return (s == null) ? null : replace (p, s);
   }
 
 
   private String getProperty (Properties p, String key, String def)
   {
     final String s = p.getProperty (key);
-    return (s == null) ? def.replace ("${user.home}", HOME) : s.replace ("${user.home}", HOME);
+    return (s == null) ? replace (p, def) : replace (p, s);
   }
 
 
@@ -183,9 +269,15 @@ public class SukijaAsennus {
   }
 
 
-  private static final String HOME = System.getProperty ("user.home");
   private static final String PATH_SEPARATOR = System.getProperty ("path.separator");
   private static final String SUKIJA_PROPERTIES = "sukija.properties";
+
+  // Jos merkkijono on "${user.home}/.sukija", tämä tunnistaa osan "${user.home}"
+  // ja ulommaiset sulut (group(1)) osan "user.home".
+  private static final Pattern PATTERN = Pattern.compile ("[$][{]((\\p{L}|[-.0-9])+)[}]");
+
+  private static final Properties systemProperties = System.getProperties();
+  private static final FileSystem fileSystem = FileSystems.getDefault();
 
 
   private static final String dataConfigEntity =

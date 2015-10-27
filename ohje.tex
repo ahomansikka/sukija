@@ -20,8 +20,8 @@
 \section*{Sukijan asennus- ja käyttöohje}
 
 
-Sukija on Javalla kirjoitettu ohjelma suomenkielisten tekstien
-indeksointiin.
+Sukija on Javalla kirjoitettu Solr:n liitännäinen suomenkielisten
+tekstien indeksointiin.
 
 Sukija analysoi sanat morfologisesti, muuttaa sanat perusmuotoon (joka
 on sanakirjoissa) ja indeksoi perusmuodot, jotta sanan kaikki
@@ -43,7 +43,7 @@ Tika (\verb=http://tika.apache.org/=) osaa lukea.
 \item Corevoikko:
       \verb=https://github.com/voikko/corevoikko=
 
-\item Apache Solr 5.3.0:
+\item Solr 5.3.0:
       \verb=http://lucene.apache.org/solr/=
       Tässä dokumentissa Solr:sta käytetään nimeä solr-x.y.z,
       missä x.y.z on version numero, esimerkiksi 5.3.0.
@@ -53,16 +53,26 @@ Tika (\verb=http://tika.apache.org/=) osaa lukea.
 Lisäksi Sukija tarvitsee erinäisiä jar-tiedostoja, mutta Maven imuroi
 ne verkosta automaagisesti.
 
-Tämä asennusohje olettaaa, että corevoikko ja apache-solr ovat hakemistoissa
+Tämä asennusohje olettaaa, että corevoikko ja solr ovat hakemistoissa
 \verb=$HOME/Lataukset/corevoikko= ja
 \verb=$HOME/Lataukset/solr/solr-x.y.z=
 
 Jos ne ovat jossain muualla, tiedoston \verb=Makefile= alussa olevaa
-muuttujaa \verb=SOLR= ja tiedoston \verb=asenna.sh= alussa olevia
-muuttujia pitää muuttaa vastaavasti.
+muuttujaa \verb=SOLR= ja tiedoston \verb=sukija.properties= alussa
+olevia muuttujia pitää muuttaa vastaavasti.
 
 
-\newpage
+\subsection*{Solr:n asentaminen (1)}
+
+Solr:ia ei tarvitse asentaa, vaan sitä voi käyttää suoraan
+hakemistosta \verb=$HOME/Lataukset/solr/solr-x.y.z=.
+
+Tuotantokäyttöä varten Solr on parasta asentaa palveluna (service).
+Palaan siihen myöhemmin, koska Sukija konfiguroidaan samalla tavalla
+riippumatta siitä, miten Solr on asennettu.
+
+
+
 \subsection*{Sukijan kääntäminen ja asentaminen}
 
 Ensin käännetään ja asennetaan Sukija komennolla
@@ -73,7 +83,7 @@ Komento imuroi netistä tarvitsemansa Javan jar-paketit eli ensimmäinen
 kääntäminen saattaa kestää kauan. Erityisen kauan se kestää, jos et
 ole aiemmin käyttänyt mavenia.
 
-Sukijan jar-tiedostot asennetaan maven-hakemistoon \verb|${HOME}/.m2|
+Sukijan jar-tiedosto asennetaan maven-hakemistoon \verb|${HOME}/.m2|
 
 Testien aikana tulee virheilmoitus
 
@@ -82,19 +92,13 @@ SLF4J: Class path contains multiple SLF4J bindings.
 Siitä ei tarvitse välittää.
 
 
-\subsection*{Sukijan konfigurointi (1)}
+\subsection*{Sukijan konfigurointi}
 
-Solr:n parametrit asetetaan tiedostossa \verb|sukija.properties|,
+
+Sukijan parametrit asetetaan tiedostossa \verb|sukija.properties|,
 jossa on myös tarvittavat ohjeet.
 
-Sen jälkeen kofiguroidaan Solr komennolla \verb|make asetukset|
-
-
-\subsection*{Solr:n konfigurointi (1)}
-
-Ennen Solr:n konfigurointia Sukija on pitänyt konfiguroida.
-
-Solr konfiguroidaan komennolla \verb|make asenna|
+Sen jälkeen asetukset viedään Solr:iin komennolla \verb|make asenna|
 
 Jos asentamisen jälkeen konfiguroi Sukijaa, muutokset voi viedä
 Solr:iin komennolla \verb|make päivitä|
@@ -102,13 +106,18 @@ Solr:iin komennolla \verb|make päivitä|
 
 \subsection*{Solr:n käynnistäminen}
 
-Asennuksen jälkeen Solr käynnistetään komennolla
+Jos Sukija on asennettu Solr:n lähdekoodihakemistoon,
+asennuksen jälkeen Solr käynnistetään komennolla
 
 \verb|~/Lataukset/solr/solr-x.y.z/bin/solr start|
 
-Sukijan 'core' tehdään komennolla
+Tämän jälkeen Sukijan 'core' tehdään komennolla
 
 \verb|~/Lataukset/solr/solr-x.y.z/bin/solr create -c sukija -d conf|
+
+Sittten voidaan ryhtyä indeksoimaan tiedostoja. Katso sivu
+\zpageref{indexing}.
+
 
 Solr pysäytetään komennolla
 
@@ -133,15 +142,16 @@ verkko-osoitteeseen
 \verb|http://localhost:8983/solr/|
 
 
-\subsection*{Solr:n konfigurointi (2)}
 
-Solr voidaan asentaa palveluksi Solr:n skriptillä
+\section*{Solr:n asentaminen palveluna}
+
+Solr asennetaan palveluna skriptillä
 \verb=install_solr_service.sh= 
 (katso Apache Solr Reference Guide
 kohta Service Installation Script).
 
 Jos et malta katsoa, se tehdään hakemistossa
-\verb=$HOME/Lataukset/solr/solr-x.y.z= tällä tavalla
+\verb=$HOME/Lataukset/solr/= tällä tavalla
 
 {\footnotesize
 \verb=sudo bash solr-x.y.z/bin/install_solr_service.sh solr-x.y.z.tgz -u username=
@@ -149,26 +159,25 @@ Jos et malta katsoa, se tehdään hakemistossa
 
 missä username on oma käyttäjätunnuksesi.
 
+Skripti asentaa Solr:n hakemistoihin \verb=/opt/solr= ja
+\verb=/var/solr=. Jos lipun \verb=-u username= jättää pois,
+hakemistojen omistajaksi tulee \verb=solr=, mutta silloin nämä
+asennusohjeet eivät toimi.
 
-Skripti asentaa Solr:n hakemistoihin \verb=/opt/solr-x.y.z= ja
-\verb=/var/solr=. Niiden omistajaksi tehdään käyttäjä \verb=solr=,
-mutta jos käytät lippua \verb=-u=, voi asettaa hakemistojen
-omistajaksi itsesi:
+Sitten konfiguroidaan Sukija. Tärkeää on valita tiedoston
+\verb=sukija.properties= alusta rivit
+
+\begin{verbatim}
+sukija.sukija = /var/solr/data/sukija
+sukija.jetty = /opt/solr/server/contexts
+\end{verbatim}
 
 
-Nämä asennusohjeet olettavat, että olet tehnyt näin, että olet
-asentanut Solr:n oletushakemistoihin ja että olet Sukijan
-päähakemistossa eli hakemistossa, jossa on tiedosto ohje.tex.
+Tämän jälkeen asennetaan Sukija Solr:ään komennolla
+\verb=make asenna=
 
-Ennen Solr:n konfigurointia Sukija on pitänyt konfiguroida.
 
-Asennus konfiguroidaan komennolla \verb=make service=
-
-Jos asentamisen jälkeen konfiguroi Sukijaa,
-muutokset voi viedä Solr:iin komennolla
-\verb=make service-update=
-
-Seuraavaksi mennään osoitteeseen \verb=http://localhost:8983/solr/=
+Seuraavaksi mennään selaimella osoitteeseen \verb=http://localhost:8983/solr/=
 Vasemmalla paneelin alalaidassa lukee 
 
 \begin{verbatim}
@@ -274,8 +283,9 @@ Konfiguroititiedoston formaatti on määritelty tiedostossa
 Konfigurointitiedostossa olevien säännöllisten lausekkeiden syntaksi on
 sama kuin Javan luokassa \verb=java.util.regex.Pattern=
 
-Konfiguroinnille ei ole käyttöliittymää, koska siinä voi käyttää mitä
-tahansa XML-editoria.
+Konfiguroinnille ei ole käyttöliittymää, koska tiedoston
+\verb=suggestions.xml= muokkaamiseen voi käyttää mitä tahansa
+XML-editoria.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -329,6 +339,7 @@ on true, tallentaa myös etuliitteen (''abcdefg'') ja jos
 \verb|saveWord| on true, tallentaa myös koko sanan perusmuodon
 ('''abcdefgsuomalainen'').
 
+Prefix-lauseita voi olla mielivaltainen määrä.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -373,8 +384,8 @@ Säännöllisessä lausekkeessa voi käyttää seuraavia lyhenteitä:
 \begin{verbatim}
 %A  [aä]
 %C  [bcdfghjklmnpqrsštvwxzž]
-%O  [oö]"
-%U  [uy]"
+%O  [oö]
+%U  [uy]
 %V  [aeiouyäö]
 %%  %
 \end{verbatim}
@@ -412,7 +423,7 @@ tunnistettu sana
 \end{verbatim}
 
 Jos \verb=baseFormOnly= on true palautetaan sana vain, jos se on
-perusmuodossa (esim ''autowerwwwww'' palauttaa ''auto''), muuten
+perusmuodossa (esim. ''autowerwwwww'' palauttaa ''auto''), muuten
 palautetaan tunnistettu sana muutettuna perusmuotoon (''kuudenwwwww''
 palauttaa ''kuusi'', mutta jos \verb=baseFormOnly= on false, ei
 palauteta mitään).
@@ -436,6 +447,7 @@ tunnistaminen ei onnistu, palauttaa merkkijonon \verb=centime=.
 \end{verbatim}
 
 Tällä komennolla ei ole parametreja.
+\end{document}
 
 
 \subsection*{Javalla kirjoitettu käyttöliittymä}
