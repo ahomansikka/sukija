@@ -43,7 +43,7 @@ Tika (\verb=http://tika.apache.org/=) osaa lukea.
 
 \item Suomi-Malaga: Se on corevoikossa
       (\verb=https://github.com/voikko/corevoikko=)
-      hakemistossa suomimalaga.
+      hakemistossa voikko-fi.
 
 \item Apache Solr 5.3.0:
       \verb=http://lucene.apache.org/solr/=
@@ -90,18 +90,18 @@ oikolukuun ja Sukija tiedostojen indeksointiin. Sukija-versio
 käännetään komennolla
 
 \begin{verbatim}
-cd $HOME/Lataukset/corevoikko/suomimalaga
+cd $HOME/Lataukset/corevoikko/voikko-fi
 make sukija
 \end{verbatim}
 
 Tee alihakemisto \verb=$HOME/.sukija= ja kopioi sinne tiedostot
-\verb=suomimalaga/sukija/{suomi.*_l,suomi.pro}=
+\verb=voikko-fi/sukija/{suomi.*_l,suomi.pro}=
 
 Myös Voikko-versiota voi käyttää indeksointiin, kun sen kääntää ja
 asentaa komennoilla
 
 \begin{verbatim}
-cd $HOME/Lataukset/corevoikko/suomimalaga
+cd $HOME/Lataukset/corevoikko/voikko-fi
 make voikko-sukija
 make voikko-install DESTDIR=~/.voikko
 \end{verbatim}
