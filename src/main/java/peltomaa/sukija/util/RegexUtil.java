@@ -64,7 +64,7 @@ different letters in Finnish but only two forms of the same letter. :-).
 
 
   /**
-   * Compile character sequece into {@code Pattern}.<p>
+   * Compile character sequence into {@code Pattern}.<p>
    *
    * This function calls {@link #makePatternString(String)}
    * and compiles the character string that function returns.

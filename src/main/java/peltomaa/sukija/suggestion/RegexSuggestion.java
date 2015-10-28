@@ -79,6 +79,31 @@ public class RegexSuggestion extends Suggestion {
 
   private boolean suggest (int i, String word)
   {
+    Matcher m = pattern.get(i).matcher(word);
+    int start = 0;
+
+    while (m.find (start)) {
+      if (analyse (m, i, word)) {
+        return true;
+      }
+      start = m.end();
+    }
+    return Xsuggest (i, word);
+  }
+
+
+  private boolean analyse (Matcher m, int i, String word)
+  {
+    sb.delete (0, sb.length());
+    m.appendReplacement (sb, replacement.get(i));
+    m.appendTail (sb);
+    set.clear();
+    return VoikkoUtils.analyze (voikko, sb.toString(), set);
+  }
+
+
+  private boolean Xsuggest (int i, String word)
+  {
     boolean found = false;
     sb.delete (0, sb.length());
     Matcher m = pattern.get(i).matcher(word);
