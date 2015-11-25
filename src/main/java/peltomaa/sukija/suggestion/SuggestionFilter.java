@@ -47,7 +47,7 @@ import peltomaa.sukija.voikko.VoikkoUtils;
 public final class SuggestionFilter extends SukijaFilter {
 
   /**
-   * @param in
+   * @param input          Virta, jota suodatetaan.
    * @param voikko         Voikko.
    * @param suggestionFile Tiedosto, josta korjausehdotukset luetaan.
    * @param successOnly    Jos 'true', suodatin päästää läpi vain ne sanat, jotka tunnistetaan,
@@ -75,8 +75,8 @@ public final class SuggestionFilter extends SukijaFilter {
   /**
    * Sama kuin {@code SuggestionFilter (input, voikko, suggestionFile, false)}.<p>
    *
-   * @param in
-   * @param voikko     Käytetty morfologia (Malaga tai Voikko).
+   * @param input          Virta, jota suodatetaan.
+   * @param voikko         Voikko.
    * @param suggestionFile Tiedosto, josta korjausehdotukset luetaan.
    */
   public SuggestionFilter (TokenStream input, Voikko voikko, String suggestionFile)
@@ -85,6 +85,13 @@ public final class SuggestionFilter extends SukijaFilter {
   }
 
 
+  /*
+   * @param input          Virta, jota suodatetaan.
+   * @param voikko         Voikko.
+   * @param is             Virta, josta korjausehdotukset luetaan.
+   * @param successOnly    Jos 'true', suodatin päästää läpi vain ne sanat, jotka tunnistetaan,
+   *                       jos false, myös tunnistamattomat sanat päästetään läpi.
+   */
   public SuggestionFilter (TokenStream input, Voikko voikko, InputStream is, boolean successOnly)
   {
     super (input, voikko);
@@ -102,6 +109,13 @@ public final class SuggestionFilter extends SukijaFilter {
   }
 
 
+  /*
+   * @param input          Virta, jota suodatetaan.
+   * @param voikko         Voikko.
+   * @param suggestion     Korjaushedotukset.
+   * @param successOnly    Jos 'true', suodatin päästää läpi vain ne sanat, jotka tunnistetaan,
+   *                       jos false, myös tunnistamattomat sanat päästetään läpi.
+   */
   public SuggestionFilter (TokenStream input, Voikko voikko, Vector<Suggestion> suggestion, boolean successOnly)
   {
     super (input, voikko);
