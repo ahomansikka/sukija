@@ -144,7 +144,8 @@ public class SukijaAsennus {
 
   private void printSchemaFile (Properties p, Writer out) throws IOException
   {
-    out.write (String.format (schemaFileStart, getProperty (p, "sukija.Tokenizer", "peltomaa.sukija.finnish.FinnishTokenizerFactory")));
+    final String TOKENIZER = getProperty (p, "sukija.Tokenizer", "peltomaa.sukija.finnish.FinnishTokenizerFactory");
+    printTokenizer (p, TOKENIZER, out);
 
     final String HYPHEN_FILTER = getProperty (p, "sukija.HyphenFilter");
     if (HYPHEN_FILTER != null) {
@@ -152,6 +153,10 @@ public class SukijaAsennus {
     }
 
     out.write (getBaseFormFilter (p));
+    out.write (FINNISH_FOLDING_LOWER_CASE_FILTER);
+    if (TOKENIZER.indexOf ("VoikkoTokenizerFactory") >= 0) {
+     out.write (VOIKKO_TOKENIZER_TRIM_FILTER);
+    }
 
     final String SYNONYM_FILTER = getSynonymFilter (p);
     if (SYNONYM_FILTER != null) {
@@ -162,6 +167,29 @@ public class SukijaAsennus {
   }
 
 
+  private void printTokenizer (Properties p, String tokenizer, Writer out) throws IOException
+  {
+    StringBuilder sb = new StringBuilder();
+
+    sb.append (tokenizer);
+    if (tokenizer.indexOf ("VoikkoTokenizerFactory") >= 0) {
+      appendVoikkoProperties (sb, p);
+      append (sb, p, "ignoreNL", "sukija.voikko.tokenizer.ignoreNL", "true");
+    }
+    out.write (sb.toString());
+    out.flush();
+  }
+
+
+  private void appendVoikkoProperties (StringBuilder sb, Properties p)
+  {
+    append (sb, p, "language", "sukija.voikko.language", "fi");
+    append_if (sb, p, "path",           "sukija.voikko.path");
+    append_if (sb, p, "libvoikkoPath",  "sukija.voikko.libvoikkoPath");
+    append_if (sb, p, "libraryPath",    "sukija.voikko.libraryPath");
+  }
+
+
   private String getBaseFormFilter (Properties p)
   {
     final String FACTORY = "peltomaa.sukija.baseform.BaseFormFilterFactory";
@@ -169,13 +197,7 @@ public class SukijaAsennus {
     StringBuilder sb = new StringBuilder();
 
     sb.append (String.format ("        <filter class=\"%s\"", FACTORY));
-
-    append (sb, p, "language", "sukija.voikko.language", "fi");
-    append_if (sb, p, "path",           "sukija.voikko.path");
-    append_if (sb, p, "libvoikkoPath",  "sukija.voikko.libvoikkoPath");
-    append_if (sb, p, "libraryPath",    "sukija.voikko.libraryPath");
-    append_if (sb, p, "suggestionFile", "sukija.suggestionFile");
-    append_if (sb, p, "successOnly",    "sukija.successOnly");
+    appendVoikkoProperties (sb, p);
     sb.append ("/>\n");
     return sb.toString();
   }
@@ -279,7 +301,6 @@ public class SukijaAsennus {
   private static final Properties systemProperties = System.getProperties();
   private static final FileSystem fileSystem = FileSystems.getDefault();
 
-
   private static final String dataConfigEntity =
     "    <entity name = \"f%d\"\n" +
     "            dataSource = \"null\"\n" +
@@ -317,9 +338,14 @@ public class SukijaAsennus {
     "      <analyzer type=\"index\">\n" +
     "        <tokenizer class=\"%s\"/>\n";
 
-  private static final String schemaFileEnd =
+  private static final String FINNISH_FOLDING_LOWER_CASE_FILTER =
     "        <!-- Tämä luokka tietää, että å, ä ja ö eivät ole aksentillisia merkkejä. -->\n" +
-    "        <filter class=\"peltomaa.sukija.finnish.FinnishFoldingLowerCaseFilterFactory\"/>\n" +
+    "        <filter class=\"peltomaa.sukija.finnish.FinnishFoldingLowerCaseFilterFactory\"/>\n";
+
+  private static final String VOIKKO_TOKENIZER_TRIM_FILTER =
+    "        <filter class=\"peltomaa.sukija.voikko.tokenizer.VoikkoTokenizerTrimFilterFactory\"/>\n";
+
+  private static final String schemaFileEnd =
     "      </analyzer>\n" +
     "      <analyzer type=\"query\">\n" +
     "        <tokenizer class=\"solr.WhitespaceTokenizerFactory\"/>\n" +

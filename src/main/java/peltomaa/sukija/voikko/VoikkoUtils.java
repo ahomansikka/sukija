@@ -43,6 +43,9 @@ public final class VoikkoUtils {
   private VoikkoUtils() {}
 
 
+  private static Voikko voikko = null;
+
+
   /**
    * Palautetaan Voikko-objekti.<p>
    *
@@ -56,44 +59,34 @@ public final class VoikkoUtils {
                                         String libraryPath,
                                         String libvoikkoPath)
   {
-    if (language == null) {
-      new RuntimeException ("VoikkoUtils: language == null");
+    if (voikko == null) {
+      if (language == null) {
+        new RuntimeException ("VoikkoUtils: language == null");
+      }
+      else if (path == null) {
+        voikko = new Voikko (language);
+      }
+      else if (libraryPath == null && libvoikkoPath == null) {
+        voikko = new Voikko (language, path);
+      }
+      else if (libraryPath != null && libvoikkoPath != null) {
+        Voikko.addLibraryPath (libraryPath);
+        System.load (libvoikkoPath);
+        voikko = new Voikko (language, path);
+      }
+      else {
+        throw new RuntimeException ("VoikkoUtils: virheelliset parametrit");
+      }
     }
-    else if (path == null) {
-      return new Voikko (language);
-    }
-    else if (libraryPath == null && libvoikkoPath == null) {
-      return new Voikko (language, path);
-    }
-    else if (libraryPath != null && libvoikkoPath != null) {
-      Voikko.addLibraryPath (libraryPath);
-      System.load (libvoikkoPath);
-      return new Voikko (language, path);
-    }
-    else {
-      throw new RuntimeException ("VoikkoUtils: virheelliset parametrit");
-    }
-    return null;
+    return voikko;
   }
 
 
-  /**
-   * Palautetaan Voikko-objekti, jonka parametrit ovat<p>
-   * Tämä on sama kuin kutsu
-   * <pre>
-     getVoikko ("fi", HOME + "/vvfst/voikkodict", HOME + "/vvfst/lib", HOME + "/vvfst/lib/libvoikko.so")
-   * </pre>
-   * missä
-   * <pre>
-     String HOME = System.getProperty ("user.home");
-   * </pre>
-   */
-  public static final Voikko getVoikko()
+  public static Voikko getVoikko (String language)
   {
-//    Voikko.addLibraryPath (LIBRARY_PATH);
-    System.load (LIBVOIKKO);
-    return new Voikko (LANGUAGE, PATH);
+    return getVoikko (language, null, null, null);
   }
+
 
 
   /** Libvoikossa osa sijamuodoista on väärin kirjoitettu.
@@ -218,12 +211,6 @@ public final class VoikkoUtils {
     return (result.size() > 0);
   }
 
-
-  private static final String HOME = System.getProperty ("user.home");
-  private static final String PATH = HOME + "/vvfst/voikkodict";
-  private static final String LIBVOIKKO = HOME + "/vvfst/lib/libvoikko.so";
-  private static final String LANGUAGE = "fi";
-  private static final String LIBRARY_PATH = HOME + "/vvfst/lib";
   private static final Map<String,String> caseMap = new HashMap<String,String>();
 
   static {

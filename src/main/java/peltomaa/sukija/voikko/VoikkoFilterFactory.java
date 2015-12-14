@@ -87,20 +87,16 @@ public class VoikkoFilterFactory extends TokenFilterFactory implements ResourceL
   @Override
   public void inform (ResourceLoader loader) throws IOException
   {
-/*
-    LOG.info ("inform1 " + loader.getClass().getName());
-    voikko = VoikkoUtils.getVoikko();
-    LOG.info ("inform2 " + loader.getClass().getName());
-*/
   }
 
 
+/*
   @Override
   protected void finalize() throws Throwable
   {
     voikko.terminate();
   }
-
+*/
 
   private String getValue (Map<String,String> args, String name)
   {

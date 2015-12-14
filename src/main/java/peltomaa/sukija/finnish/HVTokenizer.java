@@ -92,8 +92,7 @@ public final class HVTokenizer extends Tokenizer {
   }
 
 
-  // This tokenizer generates four attributes:
-  // offset, positionIncrement and flags.
+  // This tokenizer generates four attributes.
   //
   private final CharTermAttribute termAtt = addAttribute (CharTermAttribute.class);
   private final OffsetAttribute offsetAtt = addAttribute (OffsetAttribute.class);

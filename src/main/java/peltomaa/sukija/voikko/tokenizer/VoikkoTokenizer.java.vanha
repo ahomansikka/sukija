@@ -1,0 +1,200 @@
+/*
+Copyright (©) 2015 Hannu Väisänen
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+
+package peltomaa.sukija.voikko.tokenizer;
+
+import java.io.IOException;
+import java.io.BufferedReader;
+import java.io.Reader;
+import java.util.List;
+
+
+import org.apache.lucene.analysis.Tokenizer;
+import org.apache.lucene.analysis.tokenattributes.FlagsAttribute;
+import org.apache.lucene.analysis.tokenattributes.OffsetAttribute;
+import org.apache.lucene.analysis.tokenattributes.PositionIncrementAttribute;
+import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
+import org.apache.lucene.analysis.tokenattributes.TypeAttribute;
+import org.apache.lucene.util.AttributeFactory;
+import org.puimula.libvoikko.TokenType;
+import org.puimula.libvoikko.Voikko;
+
+
+/** Tokenizer, joka käyttää Voikon tokens-funktiota.<p>
+
+Asetetaan attribuutit CharTermAttribute, OffsetAttribute ja
+PositionIncrementAttribute.<p>
+
+OffsetAttribute'n startOffset ja endOffset ovat väärin, jos joku
+tiedoston rivi loppuu merkkijonoon "\r\n", mutta kaikki muut loppuvat
+merkkijonoon "\n".
+
+*/
+public class VoikkoTokenizer extends Tokenizer {
+
+  /** Creates a new VoikkoTokenizer.
+   */
+  public VoikkoTokenizer (Voikko voikko)
+  {
+    init (voikko);
+  }
+
+
+  /** Creates a new VoikkoTokenizer with a given
+      org.apache.lucene.util.AttributeSource.AttributeFactory.
+   */
+  public VoikkoTokenizer (AttributeFactory factory, Voikko voikko)
+  {
+    super (factory);
+    init (voikko);
+  }
+
+  /*
+   * (non-Javadoc)
+   *
+   * @see org.apache.lucene.analysis.TokenStream#incrementToken()
+   */
+  @Override
+  public boolean incrementToken() throws IOException
+  {
+    clearAttributes();
+
+    if (list == null || index >= list.size()) {
+      if (!readLine()) {
+        return false;
+      }
+//System.out.println ("line [" + line + "]");
+    }
+
+/*
+System.out.println ("token = [" + list.get(index).getText() + "]");
+System.out.println ("index = " + index + " size = " + list.size() + "\n");
+*/
+    while (list.get(index).getType() != TokenType.WORD)
+    {
+      startOffset = endOffset;
+      endOffset += list.get(index).getText().length();
+
+/*
+System.out.println (list.get(index).getType() + " " +
+                    startOffset + " " + endOffset + " " +
+                    list.get(index).getText().length() + " [" +
+                    list.get(index).getText() + "] " +
+                    LINE_SEPARATOR_LENGTH);
+*/
+      index++;
+      if (index >= list.size()) {
+        if (!readLine()) {
+          return false;
+        }
+      }
+    }
+
+    startOffset = endOffset;
+    endOffset += list.get(index).getText().length();
+
+    termAtt.setEmpty().append (list.get(index).getText());
+    posIncrAtt.setPositionIncrement (1);
+    offsetAtt.setOffset (startOffset-1, endOffset-1);
+
+/*
+System.out.println (list.get(index).getText() + " " +
+                    startOffset + " " + endOffset);
+
+System.out.println (list.get(index).getType() + " " +
+                    startOffset + " " + endOffset + " " +
+                    list.get(index).getText().length() + " " +
+                    list.get(index).getText());
+*/
+
+    index++;
+    return true;
+  }
+
+
+  @Override
+  public final void end() throws IOException
+  {
+    super.end();
+    // Set final offset.
+    int finalOffset = endOffset - 1;
+    offsetAtt.setOffset (finalOffset, finalOffset);
+  }
+
+
+/*
+  @Override
+  public void close() throws IOException
+  {
+    super.close();
+  }
+*/
+
+
+  @Override
+  public void reset() throws IOException
+  {
+    super.reset();
+    index = 0;
+    startOffset = 0;
+    endOffset = 0;
+    bufferedReader = new BufferedReader (input);
+ }
+
+
+  private void init (Voikko voikko)
+  {
+    this.voikko = voikko;
+  }
+
+
+  // This tokenizer generates three attributes.
+  //
+  private final CharTermAttribute termAtt = addAttribute (CharTermAttribute.class);
+  private final OffsetAttribute offsetAtt = addAttribute (OffsetAttribute.class);
+  private final PositionIncrementAttribute posIncrAtt = addAttribute (PositionIncrementAttribute.class);
+
+  private Voikko voikko;
+  private List<org.puimula.libvoikko.Token> list;
+  private int index = 0;
+  private BufferedReader bufferedReader;
+  private String line;
+  private int startOffset;
+  private int endOffset;
+  private static final int LINE_SEPARATOR_LENGTH = System.getProperty("line.separator").length();
+
+  private boolean readLine()
+  {
+    try {
+      while (true) {
+        line = bufferedReader.readLine();
+        if (line == null) return false; // End of file.
+        startOffset += LINE_SEPARATOR_LENGTH;
+        endOffset += LINE_SEPARATOR_LENGTH;
+        if (line.length() > 0) break;
+      }
+      list = voikko.tokens (line);
+      index = 0;
+      return true;
+    }
+    catch (IOException e)
+    {
+      return false;
+    }
+  }
+}

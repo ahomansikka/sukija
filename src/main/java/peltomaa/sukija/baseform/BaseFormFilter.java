@@ -62,9 +62,6 @@ public final class BaseFormFilter extends SukijaFilter {
   }
 
 
-  private int positionIncrement = 1;
-  private Iterator<String> iterator;
-
   private Set<String> baseForms = new HashSet<String>();
   private final boolean successOnly;
 }
