@@ -171,7 +171,7 @@ public class SukijaAsennus {
   {
     StringBuilder sb = new StringBuilder();
 
-    sb.append (tokenizer);
+    sb.append (String.format (schemaFileStart, tokenizer));
     if (tokenizer.indexOf ("VoikkoTokenizerFactory") >= 0) {
       appendVoikkoProperties (sb, p);
       append (sb, p, "ignoreNL", "sukija.voikko.tokenizer.ignoreNL", "true");
