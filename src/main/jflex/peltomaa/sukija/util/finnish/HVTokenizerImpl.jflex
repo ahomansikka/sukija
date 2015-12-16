@@ -49,27 +49,21 @@ public final void getText (org.apache.lucene.analysis.tokenattributes.CharTermAt
 %}
 
 
-// Definitions for LaTeX files.
-// T = ("\\"([~\^`'\"=.][A-Za-z]|[uvHcdbr]\{[A-Za-z]\}|t\{[A-Za-z][A-Za-z]\}))+
-// W = ({DIGIT}|{LETTER}|{T})
-//LETTER = [:letter:]+
-
 // A-Za-Z:        C0 Controls and Basic Latin
 // À-ÖØ-öø-ÿ:     C1 Controls and Latin-1 Supplement
 // \u0100-\u017F: Latin Extended-A
 // \u0180-\u0245: Latin Extended-B
 
-LETTER = [A-Za-zÀ-ÖØ-öø-ÿ\u0100-\u017F\u0180-\u0245]+
-DIGIT  = [:digit:]+
+LETTER_OR_DIGIT = [0-9A-Za-zÀ-ÖØ-öø-ÿ\u0100-\u017F\u0180-\u0245]+
+DIGIT  = [0-9]+
 WHITESPACE = \r\n | [ \r\n\t\f]
-NUM = {DIGIT}([-.,:_/]+{DIGIT})*(:{LETTER})?
+NUM = {DIGIT}([-.,:_/]+{DIGIT})*(:{LETTER_OR_DIGIT})?
 HYPHEN = ("\"-"|"''-"|"\\-"|"'-"|"--"|".-"|"-")
 PUNCT = [.:']
-W1 = ({DIGIT}|{LETTER})({PUNCT}({DIGIT}|{LETTER}))*
 
-W2 = {W1}(("["{LETTER}"]")({W1})*)+ | (("["{LETTER}"]"){W1})+("["{LETTER}"]")?
+W1 = ({LETTER_OR_DIGIT})({PUNCT}({LETTER_OR_DIGIT}))*
 
-//W3 = "["{LETTER}"]"
+W2 = {W1}(("["{LETTER_OR_DIGIT}"]")({W1})*)+ | (("["{LETTER_OR_DIGIT}"]"){W1})+("["{LETTER_OR_DIGIT}"]")?
 
 
 LPAR = "{"[0-9a-zA-Z]+"}"
