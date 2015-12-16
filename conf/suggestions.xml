@@ -128,8 +128,9 @@
     <input>(illi)(nen|s)  i$2</input>      <!-- Akateemillinen => akateeminen. -->
     <input>(uu|yy)(e)     $1de</input>     <!-- Uuen => uuden. -->
     <input>(ai)(j)([eou])   $1$3</input>   <!-- Ai(j)emmin, ai(j)omme, kai(j)utin. -->
-    <input>^([0-9]+)</input>               <!-- Poista numerot sanan alusta. -->
+    <input>^([0-9-]+)</input>              <!-- Poista numerot ja '-' sanan alusta. -->
     <input>(\p{L})\1{2,} $1$1</input>      <!-- Korvaa 3 tai useampi sama kirjain 2:lla (kauttta => kautta). -->
+    <input>1 l</input>
     <tryAll>true</tryAll>
   </regex>
   <apostrophe/>
