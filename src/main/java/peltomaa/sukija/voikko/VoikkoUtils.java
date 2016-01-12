@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2015 Hannu Väisänen
+Copyright (©) 2015-2016 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -29,6 +29,8 @@ import java.util.Vector;
 import org.apache.lucene.analysis.util.CharArraySet;
 import org.puimula.libvoikko.Analysis;
 import org.puimula.libvoikko.Voikko;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import peltomaa.sukija.attributes.VoikkoAttribute;
 import peltomaa.sukija.util.CharCombinator;
 import peltomaa.sukija.suggestion.Suggestion;
@@ -44,6 +46,7 @@ public final class VoikkoUtils {
 
 
   private static Voikko voikko = null;
+  private static final Logger LOG = LoggerFactory.getLogger (VoikkoUtils.class);
 
 
   /**
@@ -51,7 +54,7 @@ public final class VoikkoUtils {
    *
    * @param language    Kielikoodi. Tämän pitää olla "fi".
    * @param path        Polku, josta sanastoja etsitään.
-   * @param libraryPath
+   * @param libraryPath Polku, josta löytyy tiedosto libvoikko.so.
    * @param libvoikkoPath Libvoikon kirjasto (esim. /usr/local/library/libvoikko.so).
    */
   public static final Voikko getVoikko (String language,
@@ -60,6 +63,11 @@ public final class VoikkoUtils {
                                         String libvoikkoPath)
   {
     if (voikko == null) {
+      LOG.info ("language " + language);
+      LOG.info ("path " + path);
+      LOG.info ("libraryPath " + libraryPath);
+      LOG.info ("libvoikkoPath " + libvoikkoPath);
+
       if (language == null) {
         new RuntimeException ("VoikkoUtils: language == null");
       }
@@ -152,6 +160,7 @@ public final class VoikkoUtils {
     }
     else {
       for (Analysis a : analysis) {
+//LOG.info ("Analysis " + a.toString());
         result.add (a.get("BASEFORM").toLowerCase());
       }
       return true;

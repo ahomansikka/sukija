@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2015 Hannu Väisänen
+Copyright (©) 2015-2016 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -45,6 +45,15 @@ public class VoikkoTokenizerFactory extends TokenizerFactory implements Resource
     libvoikkoPath = getValue (args, "libvoikkoPath");
     libraryPath   = getValue (args, "libraryPath");
     ignoreNL      = getBoolean (args, "ignoreNL", false);
+
+    ignore_dot = get (args, "ignore_dot");
+    ignore_numbers = get (args, "ignore_numbers");
+    ignore_uppercase = get (args, "ignore_uppercase");
+    ignore_nonwords = get (args, "ignore_nonwords");
+    accept_first_uppercase = get (args, "accept_first_uppercase");
+    accept_all_uppercase = get (args, "accept_all_uppercase");
+    accept_extra_hyphens = get (args, "accept_extra_hyphens");
+    accept_missing_hyphens = get (args, "accept_missing_hyphens");
   }
 
 
@@ -59,6 +68,15 @@ public class VoikkoTokenizerFactory extends TokenizerFactory implements Resource
   {
     LOG.info ("VoikkoTokenizerFactory " + loader.getClass().getName());
     voikko = VoikkoUtils.getVoikko (language, path, libraryPath, libvoikkoPath);
+
+    if (ignore_dot != null) voikko.setIgnoreDot (Boolean.parseBoolean (ignore_dot));
+    if (ignore_numbers != null) voikko.setIgnoreNumbers (Boolean.parseBoolean (ignore_numbers));
+    if (ignore_uppercase != null) voikko.setIgnoreUppercase (Boolean.parseBoolean (ignore_uppercase));
+    if (ignore_nonwords != null) voikko.setIgnoreNonwords (Boolean.parseBoolean (ignore_nonwords));
+    if (accept_first_uppercase != null) voikko.setAcceptFirstUppercase (Boolean.parseBoolean (accept_first_uppercase));
+    if (accept_all_uppercase != null) voikko.setAcceptAllUppercase (Boolean.parseBoolean (accept_all_uppercase));
+    if (accept_extra_hyphens != null) voikko.setAcceptExtraHyphens (Boolean.parseBoolean (accept_extra_hyphens));
+    if (accept_missing_hyphens != null) voikko.setAcceptMissingHyphens (Boolean.parseBoolean (accept_missing_hyphens));
   }
 
 
@@ -67,7 +85,6 @@ public class VoikkoTokenizerFactory extends TokenizerFactory implements Resource
     return PropertiesUtil.substituteProperty (get(args,name), null);
   }
 
-
   private Voikko voikko;
   private String language;
   private String path;
@@ -75,4 +92,13 @@ public class VoikkoTokenizerFactory extends TokenizerFactory implements Resource
   private String libraryPath;
   private boolean ignoreNL; // Hylkää sanat, joissa ei ole yhtään kirjainta (esim. "1234" tai "1234-").
   private static final Logger LOG = LoggerFactory.getLogger (VoikkoTokenizerFactory.class);
+
+  private String ignore_dot;
+  private String ignore_numbers;
+  private String ignore_uppercase;
+  private String ignore_nonwords;
+  private String accept_first_uppercase;
+  private String accept_all_uppercase;
+  private String accept_extra_hyphens;
+  private String accept_missing_hyphens;
 }

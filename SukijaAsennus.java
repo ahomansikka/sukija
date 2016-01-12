@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2015 Hannu Väisänen
+Copyright (©) 2015-2016 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -187,7 +187,31 @@ public class SukijaAsennus {
     append_if (sb, p, "path",           "sukija.voikko.path");
     append_if (sb, p, "libvoikkoPath",  "sukija.voikko.libvoikkoPath");
     append_if (sb, p, "libraryPath",    "sukija.voikko.libraryPath");
+
+    for (String option : voikkoOption) {
+      final String s = getProperty (p, option);
+      if (s != null) {
+        if (s.equalsIgnoreCase("true") || s.equalsIgnoreCase("false")) {
+          append (sb, option.substring(21), s);
+        }
+        else {
+          throw new RuntimeException ("Väärä parametrin " + option + " arvo " + s + " (pitää olla true tai false).");
+        }
+      }
+    }
   }
+
+
+  private static final String[] voikkoOption = {
+    "sukija.voikko.option.ignore_dot",
+    "sukija.voikko.option.ignore_numbers",
+    "sukija.voikko.option.ignore_uppercase",
+    "sukija.voikko.option.ignore_nonwords",
+    "sukija.voikko.option.accept_first_uppercase",
+    "sukija.voikko.option.accept_all_uppercase",
+    "sukija.voikko.option.accept_extra_hyphens",
+    "sukija.voikko.option.accept_missing_hyphens"
+  };
 
 
   private String getBaseFormFilter (Properties p)
