@@ -21,41 +21,27 @@ import java.io.InputStream;
 import java.io.IOException;
 import java.util.Map;
 import java.util.Vector;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.apache.lucene.analysis.TokenFilter;
 import org.apache.lucene.analysis.TokenStream;;
 import org.apache.lucene.analysis.util.ResourceLoader;
 import org.apache.lucene.analysis.util.ResourceLoaderAware;
-import org.apache.lucene.analysis.util.TokenFilterFactory;
 import org.apache.solr.util.PropertiesUtil;
 import org.puimula.libvoikko.*;
 import peltomaa.sukija.suggestion.Suggestion;
 import peltomaa.sukija.suggestion.SuggestionFilter;
 import peltomaa.sukija.suggestion.SuggestionParser;
+import peltomaa.sukija.util.SukijaFilterFactory;
 import peltomaa.sukija.voikko.VoikkoUtils;
 
 
-public class BaseFormFilterFactory extends TokenFilterFactory implements ResourceLoaderAware {
+public class BaseFormFilterFactory extends SukijaFilterFactory implements ResourceLoaderAware {
   /** Tehdään uusi BaseFormFilterFactory.
    */
   public BaseFormFilterFactory (Map<String,String> args)
   {
     super (args);
-
-    language       = get (args, "language", "fi");
-    path           = getValue (args, "path");
-    libvoikkoPath  = getValue (args, "libvoikkoPath");
-    libraryPath    = getValue (args, "libraryPath");
     suggestionFile = getValue (args, "suggestionFile");
     successOnly    = getBoolean (args, "successOnly", false);
-
-    LOG.info ("language " + language);
-    LOG.info ("path " + path);
-    LOG.info ("libraryPath " + libraryPath);
-    LOG.info ("libvoikkoPath " + libvoikkoPath);
-    LOG.info ("suggestionFile " + suggestionFile);
-    LOG.info ("successOnly " + successOnly);
   }
 
 
@@ -75,7 +61,7 @@ public class BaseFormFilterFactory extends TokenFilterFactory implements Resourc
   public void inform (ResourceLoader loader) throws IOException
   {
     LOG.info ("inform1 " + loader.getClass().getName());
-    voikko = VoikkoUtils.getVoikko (language, path, libraryPath, libvoikkoPath);
+    createVoikko();
 
     if (suggestionFile != null && suggestion == null) {
       InputStream inputStream = loader.openResource (suggestionFile);
@@ -92,20 +78,7 @@ public class BaseFormFilterFactory extends TokenFilterFactory implements Resourc
     LOG.info ("inform2 " + loader.getClass().getName());
   }
 
-
-  private String getValue (Map<String,String> args, String name)
-  {
-    return PropertiesUtil.substituteProperty (get(args,name), null);
-  }
-
-
-  private Voikko voikko;
-  private String language;
-  private String path;
-  private String libvoikkoPath;
-  private String libraryPath;
   private String suggestionFile;
   private boolean successOnly;
   private Vector<Suggestion> suggestion = null;
-  private static final Logger LOG = LoggerFactory.getLogger (BaseFormFilterFactory.class);
 }
