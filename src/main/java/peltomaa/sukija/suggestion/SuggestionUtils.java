@@ -52,19 +52,34 @@ public final class SuggestionUtils {
     Collection<String> suggestionResult = getSuggestions (suggestion, word);
 
     if (suggestionResult == null) {
-      suggestionResult = getSuggestions (word, suggestion, from, to); 
+      suggestionResult = getSuggestions (suggestion, word, from, to); 
     }
 
     if (suggestionResult != null) {
       result.addAll (suggestionResult);
       return true;
     }
-    return false;
+    else {
+      result.add (word);
+      return false;
+    }
+  }
+
+
+  public static final Vector<Suggestion> removeSuggestions (Vector<Suggestion> suggestion, String className)
+  {
+    Vector<Suggestion> v = new Vector<Suggestion>();
+    for (int i = 0; i < suggestion.size(); i++) {
+      if (suggestion.get(i).getClass().getName().indexOf(className) == -1) {
+        v.add (suggestion.get(i));
+      }
+    }
+    return v;
   }
 
 
   private static final Collection<String> getSuggestions
-    (String word, Vector<Suggestion> suggestion, String from, String to)
+    (Vector<Suggestion> suggestion, String word, String from, String to)
   {
     CharCombinator charCombinator = new CharCombinator (word, from, to);
     Iterator<String> iterator = charCombinator.iterator();

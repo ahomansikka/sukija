@@ -55,6 +55,9 @@ public abstract class SukijaFilterFactory extends TokenFilterFactory {
   }
 
 
+  protected Voikko getVoikko() {return voikko;}
+
+
   private String language;
   private String path;
   private String libvoikkoPath;

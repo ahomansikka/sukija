@@ -56,6 +56,7 @@ public class CharCombinator implements Iterator<String> {
     this.size = size();
     hasNextCombination = this.size < MAX_SIZE;
     sb.append (word);
+//System.out.println ("CharCombinator.size " + this.size);
   }
 
 

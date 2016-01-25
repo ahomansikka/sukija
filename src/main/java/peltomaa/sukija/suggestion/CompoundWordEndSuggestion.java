@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2014-2015 Hannu Väisänen
+Copyright (©) 2014-2016 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -57,6 +57,7 @@ public class CompoundWordEndSuggestion extends Suggestion {
     boolean found = false;
 
     for (int i = 0; i < pattern.size(); i++) {
+//System.out.println ("CompoundWordEndSuggestion " + pattern.get(i).pattern());
       Matcher matcher = pattern.get(i).matcher (word);
       if (matcher.find(1)) {
         result.clear();
@@ -70,11 +71,11 @@ public class CompoundWordEndSuggestion extends Suggestion {
             if (s.endsWith (end.get(i))) {
 //System.out.println ("Huu [" + word + "] [" + s + "] [" + start + "] [" + s + "] [" + (start+s) + "] [" + end.get(i) + "]");
               result.add (start + s);
-              found = true;
+              found = true; // Vielä ei voida palata, koska tuloksia on ehkä enemmän kuin yksi.
             }
           }
+          if (found) return true;
 //System.out.println (result.toString());
-          return found;
         }
       }
     }

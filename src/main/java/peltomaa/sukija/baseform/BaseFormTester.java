@@ -35,6 +35,7 @@ import peltomaa.sukija.hyphen.HyphenFilter;
 import peltomaa.sukija.util.Constants;
 import peltomaa.sukija.attributes.OriginalWordAttribute;
 import peltomaa.sukija.attributes.VoikkoAttribute;
+import peltomaa.sukija.suggestion.MultiSuggestionFilter;
 import peltomaa.sukija.suggestion.Suggestion;
 import peltomaa.sukija.suggestion.SuggestionFilter;
 
@@ -49,11 +50,22 @@ public class BaseFormTester {
   public static void test (Reader reader, Writer writer, Voikko voikko, Vector<Suggestion> suggestion,
                            boolean successOnly) throws IOException
   {
+    test (reader, writer, voikko, null, null, suggestion, successOnly);
+  }
+
+
+  public static void test (Reader reader, Writer writer, Voikko voikko,
+                           String from, String to, Vector<Suggestion> suggestion,
+                           boolean successOnly) throws IOException
+  {
     TokenStream t = new HVTokenizer();
     ((Tokenizer)t).setReader (reader);
     t = new HyphenFilter (t);
     if (suggestion == null) {
       t = new BaseFormFilter (t, voikko, successOnly);
+    }
+    else if (from != null) {
+      t = new MultiSuggestionFilter (t, voikko, from, to, suggestion, successOnly);
     }
     else {
       t = new SuggestionFilter (t, voikko, suggestion, successOnly);

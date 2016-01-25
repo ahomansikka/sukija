@@ -44,7 +44,7 @@ import peltomaa.sukija.util.SukijaFilter;
 import peltomaa.sukija.voikko.VoikkoUtils;
 
 
-public final class SuggestionFilter extends SukijaFilter {
+public class SuggestionFilter extends SukijaFilter {
 
   /**
    * @param input          Virta, jota suodatetaan.
@@ -58,6 +58,7 @@ public final class SuggestionFilter extends SukijaFilter {
     super (input, voikko);
     try {
       LOG.info ("SuggestionFilter: aloitetaan (1).");
+System.out.println ("SuggestionFilter: aloitetaan (1).");
       parser = new SuggestionParser (voikko, suggestionFile);
       suggestion = parser.getSuggestions();
       this.successOnly = successOnly;
@@ -82,6 +83,7 @@ public final class SuggestionFilter extends SukijaFilter {
   public SuggestionFilter (TokenStream input, Voikko voikko, String suggestionFile)
   {
     this (input, voikko, suggestionFile, false);
+    LOG.info ("SuggestionFilter: aloitetaan (2).");
   }
 
 
@@ -96,7 +98,7 @@ public final class SuggestionFilter extends SukijaFilter {
   {
     super (input, voikko);
     try {
-      LOG.info ("SuggestionFilter: aloitetaan (2).");
+      LOG.info ("SuggestionFilter: aloitetaan (3).");
       if (parser == null) parser = new SuggestionParser (voikko, is);
       suggestion = parser.getSuggestions();
       this.successOnly = successOnly;
@@ -140,6 +142,15 @@ public final class SuggestionFilter extends SukijaFilter {
   }
 
 
+  protected Vector<Suggestion> getSuggestions()
+  {
+//System.out.println ("SuggestionFilter.getSuggestions");
+    return suggestion;
+  }
+
+  protected boolean getSuccessOnly() {return successOnly;}
+
+
   /** Try suggestions.
    */
   private Iterator<String> suggest (String word)
@@ -162,6 +173,7 @@ public final class SuggestionFilter extends SukijaFilter {
     else {
       if (LOG.isDebugEnabled()) LOG.debug ("Suggest " + word + " " + Arrays.toString (suggestionResult.toArray (new String[0])));
 //System.out.println ("Suggest3 " + word + " " + Arrays.toString (suggestionResult.toArray (new String[0])));
+      flagsAtt.setFlags (flagsAtt.getFlags() | Constants.WORD);
       return suggestionResult.iterator();
     }
   }

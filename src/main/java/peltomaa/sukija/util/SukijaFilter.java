@@ -48,7 +48,7 @@ public abstract class SukijaFilter extends TokenFilter {
 //System.out.println ("SukijaFilter0 " + word + " " + termAtt.toString());
 
     // Etsitään uusi analysoitava sana. Tässä silmukassa pyöritään,
-    // kunnes metodi'filter()' palauttaa iteraattorin luetun
+    // kunnes metodi 'filter()' palauttaa iteraattorin luetun
     // sanan analyyseihin. Metodissa 'filter()' voidaan ohittaa
     // mielivaltainen määrä sanoja, jotka luetaan tässä silmukassa
     // kutsulla 'input.incrementToken()'.
