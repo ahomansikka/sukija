@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2012-2015 Hannu Väisänen
+Copyright (©) 2012-2016 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -184,6 +184,13 @@ public class SuggestionParser {
             v.add (new StringDistanceSuggestion (voikko, input.getFileName(),
                                                  input.getDistanceClass().value(),
                                                  input.getParameter(), input.getThreshold()));
+          }
+          break;
+        case "peltomaa.sukija.schema.VoikkoAttributeInput":
+          {
+            final VoikkoAttributeInput input = (VoikkoAttributeInput)s.get(i);
+            v.add (new VoikkoAttributeSuggestion (voikko, fromListA(input.getInput()), input.getAttribute(),
+                                                  input.getRegex(), input.isTryAll()));
           }
           break;
         default:
