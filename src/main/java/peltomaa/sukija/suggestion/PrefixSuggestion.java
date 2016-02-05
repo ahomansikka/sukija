@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2013-2015 Hannu Väisänen
+Copyright (©) 2013-2016 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -21,7 +21,6 @@ import java.util.List;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.Vector;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.puimula.libvoikko.Voikko;

@@ -23,7 +23,6 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.Set;
-import java.util.Vector;
 import peltomaa.sukija.util.RegexUtil;
 import peltomaa.sukija.voikko.VoikkoUtils;
 import org.puimula.libvoikko.Analysis;
@@ -31,21 +30,22 @@ import org.puimula.libvoikko.Voikko;
 
 
 public class CompoundWordEndSuggestion extends Suggestion {
-  public CompoundWordEndSuggestion (Voikko voikko, String regex, String last,
-                                    boolean addStart, boolean addBaseFormOnly, boolean addEnd)
-  {
-    this (voikko, Arrays.asList (regex, last), addStart, addBaseFormOnly, addEnd);
-  }
-
-
-  public CompoundWordEndSuggestion (Voikko voikko, List<String> s,
+  /**
+   * Muodostin.
+   *
+   * @param voikko Voikko.
+   * @param pattern
+   * @param end
+   * @param addStart
+   * @param addBaseFormOnly
+   * @param addEnd
+   */
+  public CompoundWordEndSuggestion (Voikko voikko, Pattern[] pattern, String[] end,
                                     boolean addStart, boolean addBaseFormOnly, boolean addEnd)
   {
     super (voikko);
-    for (int i = 0; i < s.size(); i += 2) {
-      pattern.add (RegexUtil.makePattern (s.get(i)));
-      end.add (s.get(i+1));
-    }
+    this.pattern = pattern;
+    this.end = end;
     this.addStart = addStart;
     this.addBaseFormOnly = addBaseFormOnly;
     this.addEnd = addEnd;
@@ -56,9 +56,9 @@ public class CompoundWordEndSuggestion extends Suggestion {
   {
     boolean found = false;
 
-    for (int i = 0; i < pattern.size(); i++) {
+    for (int i = 0; i < pattern.length; i++) {
 //System.out.println ("CompoundWordEndSuggestion " + pattern.get(i).pattern());
-      Matcher matcher = pattern.get(i).matcher (word);
+      Matcher matcher = pattern[i].matcher (word);
       if (matcher.find(1)) {
         result.clear();
         set.clear();
@@ -66,10 +66,10 @@ public class CompoundWordEndSuggestion extends Suggestion {
         if (VoikkoUtils.analyze (voikko, word.substring(matcher.start()), set)) {
           final String start = word.substring (0, matcher.start());
           if (addStart) addStart (start);
-          if (addEnd) result.add (end.get(i));
+          if (addEnd) result.add (end[i]);
           for (String s: set) {
-            if (s.endsWith (end.get(i))) {
-//System.out.println ("Huu [" + word + "] [" + s + "] [" + start + "] [" + s + "] [" + (start+s) + "] [" + end.get(i) + "]");
+            if (s.endsWith (end[i])) {
+//System.out.println ("Huu [" + word + "] [" + s + "] [" + start + "] [" + s + "] [" + (start+s) + "] [" + end[i] + "]");
               result.add (start + s);
               found = true; // Vielä ei voida palata, koska tuloksia on ehkä enemmän kuin yksi.
             }
@@ -107,8 +107,8 @@ public class CompoundWordEndSuggestion extends Suggestion {
   }
 
 
-  private Vector<Pattern> pattern = new Vector<Pattern>();
-  private Vector<String> end = new Vector<String>();
+  private final Pattern[] pattern;
+  private final String[] end;
   private Set<String> set = new HashSet<String>();
   private Set<String> startSet = new HashSet<String>();
   private final boolean addStart;

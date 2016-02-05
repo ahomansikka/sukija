@@ -21,7 +21,6 @@ package peltomaa.sukija.suggestion;
 import java.io.InputStream;
 import java.io.IOException;
 import java.util.Map;
-import java.util.Vector;
 import org.apache.lucene.analysis.TokenFilter;
 import org.apache.lucene.analysis.TokenStream;;
 import org.apache.lucene.analysis.util.ResourceLoader;

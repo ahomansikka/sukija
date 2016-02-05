@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2009-2011, 2013-2015 Hannu Väisänen
+Copyright (©) 2009-2011, 2013-2016 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -22,7 +22,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.Vector;
 import peltomaa.sukija.util.RegexUtil;
 import peltomaa.sukija.voikko.VoikkoUtils;
 import org.puimula.libvoikko.Voikko;
@@ -40,19 +39,19 @@ public class RegexSuggestion extends Suggestion {
   public RegexSuggestion (Voikko voikko, String regex, String replacement)
   {
     super (voikko);
-    this.pattern.add (RegexUtil.makePattern (regex));
-    this.replacement.add (replacement);
+    this.pattern = new Pattern[1];
+    this.replacement = new String[1];
+    this.pattern[0] = RegexUtil.makePattern (regex);
+    this.replacement[0] = replacement;
+    this.tryAll = true;
   }
 
 
-  public RegexSuggestion (Voikko voikko, List<String> input, boolean tryAll)
+  public RegexSuggestion (Voikko voikko, Pattern[] pattern, String[] replacement, boolean tryAll)
   {
     super (voikko);
-
-    for (int i = 0; i < input.size(); i += 2) {
-      this.pattern.add (RegexUtil.makePattern (input.get (i)));
-      this.replacement.add (input.get (i+1));
-    }
+    this.pattern = pattern;
+    this.replacement = replacement;
     this.tryAll = tryAll;
   }
 
@@ -62,7 +61,7 @@ public class RegexSuggestion extends Suggestion {
     boolean success = false;
     result.clear();
 
-    for (int i = 0; i < pattern.size(); i++) {
+    for (int i = 0; i < pattern.length; i++) {
       if (suggest (i, word)) {
         result.addAll (set);
         if (tryAll) {
@@ -79,7 +78,7 @@ public class RegexSuggestion extends Suggestion {
 
   private boolean suggest (int i, String word)
   {
-    Matcher m = pattern.get(i).matcher(word);
+    Matcher m = pattern[i].matcher(word);
     int start = 0;
 
     while (m.find (start)) {
@@ -95,8 +94,9 @@ public class RegexSuggestion extends Suggestion {
   private boolean analyse (Matcher m, int i, String word)
   {
     sb.delete (0, sb.length());
-    m.appendReplacement (sb, replacement.get(i));
+    m.appendReplacement (sb, replacement[i]);
     m.appendTail (sb);
+//System.out.println ("i " + i + " " + word + " " + replacement[i] + " " + sb.toString());
     set.clear();
     return VoikkoUtils.analyze (voikko, sb.toString(), set);
   }
@@ -106,10 +106,10 @@ public class RegexSuggestion extends Suggestion {
   {
     boolean found = false;
     sb.delete (0, sb.length());
-    Matcher m = pattern.get(i).matcher(word);
+    Matcher m = pattern[i].matcher(word);
 
     while (m.find()) {
-      m.appendReplacement (sb, replacement.get(i));
+      m.appendReplacement (sb, replacement[i]);
       found = true;
     }
     if (!found) return false;
@@ -119,9 +119,9 @@ public class RegexSuggestion extends Suggestion {
     return VoikkoUtils.analyze (voikko, sb.toString(), set);
   }
 
-  private Vector<Pattern> pattern = new Vector<Pattern>();
-  private Vector<String> replacement = new Vector<String>();
+  private final Pattern[] pattern;
+  private final String[] replacement;
   private Set<String> set = new TreeSet<String>();
-  private boolean tryAll;
+  private final boolean tryAll;
   private StringBuffer sb = new StringBuffer (500);
 }

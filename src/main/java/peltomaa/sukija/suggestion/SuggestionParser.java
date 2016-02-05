@@ -26,11 +26,13 @@ import java.io.Writer;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.regex.Pattern;
 import java.util.Vector;
 import javax.xml.bind.JAXBElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import peltomaa.sukija.util.JAXBUtil;
+import peltomaa.sukija.util.RegexUtil;
 import peltomaa.sukija.schema.*;
 import org.puimula.libvoikko.Voikko;
 
@@ -146,8 +148,10 @@ public class SuggestionParser {
         case "peltomaa.sukija.schema.CompoundWordEndInput":
           {
             final CompoundWordEndInput input = (CompoundWordEndInput)s.get(i);
-            v.add (new CompoundWordEndSuggestion (voikko, fromList2(input.getInput()),
-                                                  input.isAddStart(), input.isAddBaseFormOnly(), input.isAddEnd()));
+            v.add (new CompoundWordEndSuggestion (voikko, makePattern (input.getInput()),
+                                                  makeReplacement (input.getInput()),
+                                                  input.isAddStart(), input.isAddBaseFormOnly(),
+                                                  input.isAddEnd()));
           }
           break;
 /*
@@ -167,7 +171,8 @@ public class SuggestionParser {
         case "peltomaa.sukija.schema.RegexInput":
           {
             final RegexInput input = (RegexInput)s.get(i);
-            v.add (new RegexSuggestion (voikko, fromListA(input.getInput()), input.isTryAll()));
+            v.add (new RegexSuggestion (voikko, makePattern (input.getInput()),
+                                        makeReplacement (input.getInput()), input.isTryAll()));
           }
           break;
         case "peltomaa.sukija.schema.StartInput":
@@ -189,7 +194,8 @@ public class SuggestionParser {
         case "peltomaa.sukija.schema.VoikkoAttributeInput":
           {
             final VoikkoAttributeInput input = (VoikkoAttributeInput)s.get(i);
-            v.add (new VoikkoAttributeSuggestion (voikko, fromListA(input.getInput()), input.getAttribute(),
+            v.add (new VoikkoAttributeSuggestion (voikko, makePattern (input.getInput()), makeReplacement (input.getInput()),
+                                                  input.getAttribute(),
                                                   input.getRegex(), input.isTryAll()));
           }
           break;
@@ -201,43 +207,31 @@ public class SuggestionParser {
   }
 
 
-  private static final List<String> fromListA (List<JAXBElement<List<String>>> input)
+  private static final Pattern[] makePattern (List<JAXBElement<List<String>>> input)
   {
-    List<String> u = new Vector<String>();
+    Pattern[] p = new Pattern[input.size()];
+    for (int i = 0; i < input.size(); i++) {
+      p[i] = RegexUtil.makePattern (input.get(i).getValue().get(0));
+    }
+    return p;
+  }
+
+
+  private static final String[] makeReplacement (List<JAXBElement<List<String>>> input)
+  {
+    String[] s = new String[input.size()];
     for (int i = 0; i < input.size(); i++) {
       switch (input.get(i).getValue().size()) {
-        case 1: 
-          u.add (input.get(i).getValue().get(0));
-          u.add ("");
+        case 1:
+          s[i] = "";
           break;
         case 2:
-          u.addAll (input.get(i).getValue());
+          s[i] = input.get(i).getValue().get(1);
           break;
         default:
           // Tätä ei pitäisi koskaan tapahtua.
-          LOG.error ("fromListA: listan pituus on väärä: " + input.get(i).getValue().size());
-          throw new RuntimeException ("fromListA: listan pituus on väärä: " + input.get(i).getValue().size());
+          throw new RuntimeException ("Listan pituus on väärä: " + input.get(i).getValue().size());
       }
-    }
-    return u;
-  }
-
-
-  private static final List<String> fromList2 (List<JAXBElement<List<String>>> input)
-  {
-    List<String> u = new Vector<String>();
-    for (int i = 0; i < input.size(); i++) {
-      u.addAll (input.get(i).getValue());
-    }
-    return u;
-  }
-
-
-  private static final String[][] toArray2 (List<JAXBElement<List<String>>> input)
-  {
-    String[][] s = new String[input.size()][];
-    for (int i = 0; i < input.size(); i++) {
-      s[i] = input.get(i).getValue().toArray (new String[0]);
     }
     return s;
   }

@@ -36,6 +36,18 @@ public class VoikkoAttributeSuggestion extends Suggestion {
   }
 
 
+  public VoikkoAttributeSuggestion (Voikko voikko, Pattern[] pattern, String[] replacement,
+                                    String attribute, String regex, boolean tryAll)
+  {
+    super (voikko);
+    this.pattern = pattern;
+    this.replacement = replacement;
+    this.attribute = attribute;
+    this.regex = Pattern.compile (regex);
+    this.tryAll = tryAll;
+  }
+
+
   public boolean suggest (String word)
   {
     boolean success = false;
