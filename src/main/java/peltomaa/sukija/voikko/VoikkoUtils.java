@@ -202,7 +202,7 @@ public final class VoikkoUtils {
 
 
   public static final boolean copyIf (Collection<String> from, CharArraySet wordSet, Collection<String> result,
-                                      Vector<Suggestion> suggestion)
+                                      Suggestion[] suggestion)
   {
     result.clear();
     for (String s : from) {

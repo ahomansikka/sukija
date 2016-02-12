@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2015 Hannu Väisänen
+Copyright (©) 2015-2016 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -39,7 +39,7 @@ import peltomaa.sukija.voikko.VoikkoUtils;
 
 
 public final class KeepFilter extends SukijaFilter {
-  public KeepFilter (TokenStream in, Voikko voikko, CharArraySet wordSet, String from, String to, Vector<Suggestion> suggestion)
+  public KeepFilter (TokenStream in, Voikko voikko, CharArraySet wordSet, String from, String to, Suggestion[] suggestion)
   {
     super (in, voikko);
     this.wordSet = wordSet;
@@ -89,7 +89,7 @@ public final class KeepFilter extends SukijaFilter {
 
 
   private CharArraySet wordSet;
-  private Vector<Suggestion> suggestion;
+  private Suggestion[] suggestion;
   private Set<String> tmp = new HashSet<String>();
   private Set<String> baseForms = new HashSet<String>();
   private String from;

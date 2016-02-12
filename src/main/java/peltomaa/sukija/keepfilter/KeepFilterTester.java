@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2015 Hannu Väisänen
+Copyright (©) 2015-2016 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -49,7 +49,7 @@ public class KeepFilterTester {
   private KeepFilterTester() {}
 
   public static void test (Reader reader, Writer writer, Voikko voikko, CharArraySet wordSet, String from, String to,
-                           Vector<Suggestion> suggestion, boolean stopOnSuccess) throws IOException
+                           Suggestion[] suggestion, boolean stopOnSuccess) throws IOException
   {
     Set<String> set = new TreeSet<String>();
     TokenStream t = new HVTokenizer();

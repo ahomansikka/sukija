@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2015 Hannu Väisänen
+Copyright (©) 2015-2016 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -47,7 +47,7 @@ public class BaseFormTester {
   private BaseFormTester() {}
 
 
-  public static void test (Reader reader, Writer writer, Voikko voikko, Vector<Suggestion> suggestion,
+  public static void test (Reader reader, Writer writer, Voikko voikko, Suggestion[] suggestion,
                            boolean successOnly) throws IOException
   {
     test (reader, writer, voikko, null, null, suggestion, successOnly);
@@ -55,7 +55,7 @@ public class BaseFormTester {
 
 
   public static void test (Reader reader, Writer writer, Voikko voikko,
-                           String from, String to, Vector<Suggestion> suggestion,
+                           String from, String to, Suggestion[] suggestion,
                            boolean successOnly) throws IOException
   {
     TokenStream t = new HVTokenizer();

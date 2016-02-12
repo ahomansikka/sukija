@@ -120,11 +120,13 @@ public class SuggestionParser {
   }
 
 
-  public Vector<Suggestion> getSuggestions() {return v;}
+  public Suggestion[] getSuggestions() {return v;}
 
 
   private void parseSuggestions (Voikko voikko, List<Object> s) throws FileNotFoundException, IOException
   {
+    v = new Suggestion[s.size()];
+
     for (int i = 0; i < s.size(); i++) {
 //      System.out.println ("SuggestionParser: " + i + " " + s.get(i).getClass().getName());
 
@@ -136,67 +138,67 @@ public class SuggestionParser {
       switch (s.get(i).getClass().getName()) {
         case "peltomaa.sukija.schema.ApostropheInput":
           {
-            v.add (new ApostropheSuggestion (voikko));
+            v[i] = new ApostropheSuggestion (voikko);
           }
           break;
         case "peltomaa.sukija.schema.CharInput":
           {
             final CharInput input = (CharInput)s.get(i);
-            v.add (new CharSuggestion (voikko, input.getFrom(), input.getTo()));
+            v[i] = new CharSuggestion (voikko, input.getFrom(), input.getTo());
           }
           break;
         case "peltomaa.sukija.schema.CompoundWordEndInput":
           {
             final CompoundWordEndInput input = (CompoundWordEndInput)s.get(i);
-            v.add (new CompoundWordEndSuggestion (voikko, makePattern (input.getInput()),
+            v[i] = new CompoundWordEndSuggestion (voikko, makePattern (input.getInput()),
                                                   makeReplacement (input.getInput()),
                                                   input.isAddStart(), input.isAddBaseFormOnly(),
-                                                  input.isAddEnd()));
+                                                  input.isAddEnd());
           }
           break;
 /*
         case "peltomaa.sukija.schema.EraseInput":
           {
             final EraseInput input = (EraseInput)s.get(i);
-            v.add (new EraseSuggestion (voikko, input.getFrom().charAt(0), input.getTo().charAt(0)));
+            v[i] = new EraseSuggestion (voikko, input.getFrom().charAt(0), input.getTo().charAt(0));
           }
           break;
 */
         case "peltomaa.sukija.schema.PrefixInput":
           {
             final PrefixInput input = (PrefixInput)s.get(i);
-            v.add (new PrefixSuggestion (voikko, input.getPrefix(), input.isSavePrefix(), input.isSaveWord()));
+            v[i] = new PrefixSuggestion (voikko, input.getPrefix(), input.isSavePrefix(), input.isSaveWord());
           }
           break;
         case "peltomaa.sukija.schema.RegexInput":
           {
             final RegexInput input = (RegexInput)s.get(i);
-            v.add (new RegexSuggestion (voikko, makePattern (input.getInput()),
-                                        makeReplacement (input.getInput()), input.isTryAll()));
+            v[i] = new RegexSuggestion (voikko, makePattern (input.getInput()),
+                                        makeReplacement (input.getInput()), input.isTryAll());
           }
           break;
         case "peltomaa.sukija.schema.StartInput":
           {
             final StartInput input = (StartInput)s.get(i);
-            v.add (new StartSuggestion (voikko, input.getMinLength().intValue(),
+            v[i] = new StartSuggestion (voikko, input.getMinLength().intValue(),
                                         input.getMaxLength().intValue(), input.isBaseFormOnly(),
-                                        input.isTryAll()));
+                                        input.isTryAll());
           }
           break;
         case "peltomaa.sukija.schema.StringDistanceInput":
           {
             final StringDistanceInput input = (StringDistanceInput)s.get(i);
-            v.add (new StringDistanceSuggestion (voikko, input.getFileName(),
+            v[i] = new StringDistanceSuggestion (voikko, input.getFileName(),
                                                  input.getDistanceClass().value(),
-                                                 input.getParameter(), input.getThreshold()));
+                                                 input.getParameter(), input.getThreshold());
           }
           break;
         case "peltomaa.sukija.schema.VoikkoAttributeInput":
           {
             final VoikkoAttributeInput input = (VoikkoAttributeInput)s.get(i);
-            v.add (new VoikkoAttributeSuggestion (voikko, makePattern (input.getInput()), makeReplacement (input.getInput()),
+            v[i] = new VoikkoAttributeSuggestion (voikko, makePattern (input.getInput()), makeReplacement (input.getInput()),
                                                   input.getAttribute(),
-                                                  input.getRegex(), input.isTryAll()));
+                                                  input.getRegex(), input.isTryAll());
           }
           break;
         default:
@@ -254,7 +256,7 @@ public class SuggestionParser {
 
 
   private static final Logger LOG = LoggerFactory.getLogger (SuggestionParser.class);
-  private Vector<Suggestion> v = new Vector<Suggestion>();
+  private Suggestion[] v;
   private static final String CONTEXT_PATH = "peltomaa.sukija.schema";
   private static final String XSD_FILE = "SuggestionInput.xsd";
 //  private static final String XSD_FILE = "peltomaa/sukija/schema/SuggestionInput.xsd";

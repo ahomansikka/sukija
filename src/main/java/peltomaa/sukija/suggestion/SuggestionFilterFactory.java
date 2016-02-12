@@ -71,5 +71,5 @@ public class SuggestionFilterFactory extends SukijaFilterFactory implements Reso
 
   protected String suggestionFile;
   protected boolean successOnly;
-  protected Vector<Suggestion> suggestion = null;
+  protected Suggestion[] suggestion;
 }

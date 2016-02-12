@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2015 Hannu Väisänen
+Copyright (©) 2015-2016 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -80,5 +80,5 @@ public class BaseFormFilterFactory extends SukijaFilterFactory implements Resour
 
   private String suggestionFile;
   private boolean successOnly;
-  private Vector<Suggestion> suggestion = null;
+  private Suggestion[] suggestion;
 }

@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2012-2015 Hannu Väisänen
+Copyright (©) 2012-2016 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -118,7 +118,7 @@ System.out.println ("SuggestionFilter: aloitetaan (1).");
    * @param successOnly    Jos 'true', suodatin päästää läpi vain ne sanat, jotka tunnistetaan,
    *                       jos false, myös tunnistamattomat sanat päästetään läpi.
    */
-  public SuggestionFilter (TokenStream input, Voikko voikko, Vector<Suggestion> suggestion, boolean successOnly)
+  public SuggestionFilter (TokenStream input, Voikko voikko, Suggestion[] suggestion, boolean successOnly)
   {
     super (input, voikko);
     this.suggestion = suggestion;
@@ -142,7 +142,7 @@ System.out.println ("SuggestionFilter: aloitetaan (1).");
   }
 
 
-  protected Vector<Suggestion> getSuggestions()
+  protected Suggestion[] getSuggestions()
   {
 //System.out.println ("SuggestionFilter.getSuggestions");
     return suggestion;
@@ -186,6 +186,6 @@ System.out.println ("SuggestionFilter: aloitetaan (1).");
   private Collection<String> suggestionResult;
 
   private SuggestionParser parser;
-  private Vector<Suggestion> suggestion;
+  private Suggestion[] suggestion;
   private boolean successOnly;
 }

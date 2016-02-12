@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2013-2014 Hannu Väisänen
+Copyright (©) 2013-2014, 2016 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -44,7 +44,7 @@ import org.puimula.libvoikko.Voikko;
 public class SuggestionTester {
   private SuggestionTester() {}
 
-  public static void analyze (Reader reader, Writer writer, Voikko voikko, Vector<Suggestion> suggestion, boolean stopOnSuccess) throws IOException
+  public static void analyze (Reader reader, Writer writer, Voikko voikko, Suggestion[] suggestion, boolean stopOnSuccess) throws IOException
   {
     List<Analysis> analysis = null;
     Set<String> set = new TreeSet<String>();

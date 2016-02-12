@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2012-2015 Hannu Väisänen
+Copyright (©) 2012-2016 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -60,7 +60,7 @@ public final class MultiSuggestionFilter extends SuggestionFilter {
    *                       jos false, myös tunnistamattomat sanat päästetään läpi.
    */
   public MultiSuggestionFilter (TokenStream input, Voikko voikko, String from, String to,
-                                Vector<Suggestion> suggestion, boolean successOnly)
+                                Suggestion[] suggestion, boolean successOnly)
   {
     super (input, voikko, suggestion, successOnly);
     init (from, to);
@@ -120,5 +120,5 @@ public final class MultiSuggestionFilter extends SuggestionFilter {
   private Set<String> baseForms = new HashSet<String>();
   private Collection<String> suggestionResult;
   private SuggestionParser parser;
-  Vector<Suggestion> multiSuggestion;
+  Suggestion[] multiSuggestion;
 }

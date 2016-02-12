@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2015 Hannu Väisänen
+Copyright (©) 2015-2016 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -33,11 +33,11 @@ public final class SuggestionUtils {
   private SuggestionUtils() {}
 
 
-  public static final Collection<String> getSuggestions (Vector<Suggestion> suggestion, String word)
+  public static final Collection<String> getSuggestions (Suggestion[] suggestion, String word)
   {
-    for (int i = 0; i < suggestion.size(); i++) {
-      if (suggestion.get(i).suggest (word)) {
-        return suggestion.get(i).getResult();
+    for (int i = 0; i < suggestion.length; i++) {
+      if (suggestion[i].suggest (word)) {
+        return suggestion[i].getResult();
       }
     }
     return null;
@@ -45,7 +45,7 @@ public final class SuggestionUtils {
 
 
   public static final boolean analyze (String word, Collection<String> result,
-                                       Vector<Suggestion> suggestion, String from, String to)
+                                       Suggestion[] suggestion, String from, String to)
   {
     result.clear();
 
@@ -66,20 +66,20 @@ public final class SuggestionUtils {
   }
 
 
-  public static final Vector<Suggestion> removeSuggestions (Vector<Suggestion> suggestion, String className)
+  public static final Suggestion[] removeSuggestions (Suggestion[] suggestion, String className)
   {
     Vector<Suggestion> v = new Vector<Suggestion>();
-    for (int i = 0; i < suggestion.size(); i++) {
-      if (suggestion.get(i).getClass().getName().indexOf(className) == -1) {
-        v.add (suggestion.get(i));
+    for (int i = 0; i < suggestion.length; i++) {
+      if (suggestion[i].getClass().getName().indexOf(className) == -1) {
+        v.add (suggestion[i]);
       }
     }
-    return v;
+    return v.toArray (new Suggestion[0]);
   }
 
 
   private static final Collection<String> getSuggestions
-    (Vector<Suggestion> suggestion, String word, String from, String to)
+    (Suggestion[] suggestion, String word, String from, String to)
   {
     CharCombinator charCombinator = new CharCombinator (word, from, to);
     Iterator<String> iterator = charCombinator.iterator();
