@@ -134,4 +134,22 @@
     <tryAll>true</tryAll>
   </regex>
   <apostrophe/>
+  <voikkoAttribute>
+    <input>(i)([aouäöy]) ij$2</input>  <!-- Kulkioille => kulkijoille yms. -->
+    <attribute>FSTOUTPUT</attribute>
+    <regex>\[Xj\]j[aä]\[X\]</regex>
+    <tryAll>true</tryAll>
+  </voikkoAttribute>
+  <voikkoAttribute>
+    <input>([^i])(siin)$ $1isiin</input>
+    <attribute>FSTOUTPUT</attribute>
+    <regex>\[Sill\]\[Nm\]|\[Te\]\[Ap\]\[P4\]\[Ef\]t[aä]isiin</regex>
+    <tryAll>true</tryAll>
+  </voikkoAttribute>
+  <voikkoAttribute>
+    <input>(in)$ ni</input>
+    <attribute>FSTOUTPUT</attribute>
+    <regex>\[O1y\]ni</regex>
+    <tryAll>true</tryAll>
+  </voikkoAttribute>
 </suggestions>

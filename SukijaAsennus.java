@@ -338,6 +338,7 @@ public class SukijaAsennus {
     "      <entity name = \"tika\"\n" +
     "              dataSource = \"bin\"\n" +
     "              processor = \"solr.handler.dataimport.TikaEntityProcessor\"\n" +
+    "              tikaConfig = \"tika-config.xml\"\n" +
     "              url = \"${f%d.fileAbsolutePath}\"\n" +
     "              format = \"text\"\n" +
     "              onError = \"skip\">\n" +

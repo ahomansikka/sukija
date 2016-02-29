@@ -1,5 +1,5 @@
 /*
-Copyright (@) 2008-2012 Hannu Väisänen (Firstname.Lastname@uef.fi)
+Copyright (@) 2008-2012, 2016 Hannu Väisänen (Firstname.Lastname@uef.fi)
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -21,6 +21,9 @@ package peltomaa.sukija.finnish;
  * Finnish tokenizer constructed with JFlex.
  */
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 %%
 %class FinnishTokenizerImpl
 %unicode
@@ -31,6 +34,9 @@ package peltomaa.sukija.finnish;
 %final
 
 %{
+private static final Logger LOG = LoggerFactory.getLogger (FinnishTokenizerImpl.class);
+
+
 public final int yychar()
 {
   return yychar;
@@ -52,6 +58,8 @@ DIGIT  = [:digit:]+
 
 ALPHANUM = ({LETTER}|{DIGIT})
 
+// ALPHANUM = [0-9A-Za-zÀ-ÖØ-öø-ÿ\u0100-\u017F\u0180-\u0245]+
+
 // Linja-auto, abc:n, Bordeaux'iin, ev.-lut.
 SEPARATOR = ([-:']|".-")
 
@@ -60,6 +68,9 @@ WORD = {ALPHANUM}({SEPARATOR}{ALPHANUM})*
 WHITESPACE = \r\n | [ \r\n\t\f]
 %%
 
-{WORD}       {return 1;}
+{WORD} {
+  if (LOG.isDebugEnabled()) LOG.debug ("[" + yytext() + "]");
+  return 1;
+}
 
 . | {WHITESPACE}   {} /* Ignore the rest. */

@@ -241,8 +241,10 @@
 
          Setting The value to true will instruct the underlying Lucene
          IndexWriter to write its debugging info the specified file
+
+     <infoStream file="INFOSTREAM.txt">true</infoStream> 
       -->
-     <!-- <infoStream file="INFOSTREAM.txt">false</infoStream> --> 
+     <infoStream>false</infoStream> 
   </indexConfig>
 
 
@@ -988,8 +990,10 @@
        Admin Handlers - This will register all the standard admin
        RequestHandlers.  
     -->
+<!--
   <requestHandler name="/admin/" 
                   class="solr.admin.AdminHandlers" />
+-->
   <!-- This single handler is equivalent to the following... -->
   <!--
      <requestHandler name="/admin/luke"       class="solr.admin.LukeRequestHandler" />
