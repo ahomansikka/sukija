@@ -24,8 +24,9 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.Writer;
 import java.util.Arrays;
-import java.util.Iterator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
 import java.util.Vector;
 import javax.xml.bind.JAXBElement;
@@ -188,9 +189,17 @@ public class SuggestionParser {
         case "peltomaa.sukija.schema.StringDistanceInput":
           {
             final StringDistanceInput input = (StringDistanceInput)s.get(i);
-            v[i] = new StringDistanceSuggestion (voikko, input.getFileName(),
+            v[i] = new StringDistanceSuggestion (voikko,
+                                                 input.getFileName(),
                                                  input.getDistanceClass().value(),
-                                                 input.getParameter(), input.getThreshold());
+                                                 input.getParameter(),
+                                                 input.getThreshold());
+          }
+          break;
+        case "peltomaa.sukija.schema.StringInput":
+          {
+            final StringInput input = (StringInput)s.get(i);
+            v[i] = new StringSuggestion (voikko, makeMap (input.getInput()));
           }
           break;
         case "peltomaa.sukija.schema.VoikkoAttributeInput":
@@ -206,6 +215,27 @@ public class SuggestionParser {
       }
     }
 //System.exit(1);
+  }
+
+
+  private static final Map<String,String> makeMap (List<JAXBElement<List<String>>> input)
+  {
+    Map<String,String> map = new HashMap<String,String>();
+
+    for (int i = 0; i < input.size(); i++) {
+      switch (input.get(i).getValue().size()) {
+        case 1:
+          map.put (input.get(i).getValue().get(0), "");
+          break;
+        case 2:
+          map.put (input.get(i).getValue().get(0), input.get(i).getValue().get(1));
+          break;
+        default:
+          // Tätä ei pitäisi koskaan tapahtua.
+          throw new RuntimeException ("Listan pituus on väärä: " + input.get(i).getValue().size());
+      }
+    }
+    return map;
   }
 
 

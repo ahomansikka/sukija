@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2015 Hannu Väisänen
+Copyright (©) 2015-2016 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -24,7 +24,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.Reader;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.HashMap;
@@ -35,47 +34,33 @@ import org.apache.lucene.search.spell.LuceneLevenshteinDistance;
 import org.apache.lucene.search.spell.NGramDistance;
 import org.apache.lucene.search.spell.StringDistance;
 
-
 import org.puimula.libvoikko.Analysis;
 import org.puimula.libvoikko.Voikko;
 import peltomaa.sukija.voikko.VoikkoUtils;
 
-public class StringDistanceSuggestion  extends Suggestion {
-  /**
-   * Muodostin.
-   *
-   * @param voikko            Voikko.
-   * @param reader            Lukija, josta merkkijonokartta luetaan.
-   * @param distanceClassName Luokka, joka laskee kahden merkkijonon samanlaisuuden. Sallitut arvot ovat
-                              @{code JaroWinklerDistance}, @{code LevensteinDistance},
-                              @{code LuceneLevenshteinDistance} ja @{code NGramDistance}.
-   * @param parameter         NGramDistance-luokan muodostimen argumentti.
-   * @param threshold
-   */
-  public StringDistanceSuggestion (Voikko voikko, Reader reader, String distanceClassName, String parameter, float threshold) throws IOException
-  {
-    super (voikko);
-    map = readMap (reader);
-    sd = getDistanceClass (distanceClassName, parameter);
-    this.threshold = threshold;
-  }
 
-
+public class StringDistanceSuggestion extends Suggestion {
   /**
    * Muodostin.
    *
    * @param voikko            Voikko.
    * @param fileName          Tiedosto, josta merkkijonokartta luetaan.
    * @param distanceClassName Luokka, joka laskee kahden merkkijonon samanlaisuuden. Sallitut arvot ovat
-                              @{code JaroWinklerDistance}, @{code LevensteinDistance},
-                              @{code LuceneLevenshteinDistance} ja @{code NGramDistance}.
-   * @param parameter         NGramDistance-luokan muodostimen argumentti.
-   * @param threshold
+                              {@code JaroWinklerDistance}, {@code LevensteinDistance},
+                              {@code LuceneLevenshteinDistance} ja {@code NGramDistance}.
+   * @param parameter         Joko NGramDistance-luokan muodostimen argumentti (int, oletus 2),
+   *                          tai JaroWinklerDistance-luokan bonus (float, oletus 0.7).
+                              jos tämä on {@code null}, käytetään oletusarvoja.
+   * @param threshold      Kaksi merkkijonoa ovat samanlaiset, jos luokan distanceClass
+   *                       palauttama arvo on >= kuin tämä arvo.
    */
-  public StringDistanceSuggestion (Voikko voikko, String fileName, String distanceClassName, String parameter, float threshold)
-    throws FileNotFoundException, IOException
+   public StringDistanceSuggestion (Voikko voikko, String fileName, String distanceClassName, String parameter, float threshold)
+     throws IOException
   {
-    this (voikko, new FileReader (fileName), distanceClassName, parameter, threshold);
+    super (voikko);
+    this.map = readMap (new FileReader (fileName));
+    this.sd = getDistanceClass (distanceClassName, parameter);
+    this.threshold = threshold;
   }
 
 
@@ -186,8 +171,8 @@ public class StringDistanceSuggestion  extends Suggestion {
   }
 
 
-  private final StringDistance sd;
   private final Map<String, Set<String>> map;
   private final float threshold;
+  private final StringDistance sd;
   private int keyLength = 0;
 }

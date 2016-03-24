@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2009-2015 Hannu Väisänen
+Copyright (©) 2009-2016 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -32,8 +32,7 @@ This is an abstract class and you should extend this class and provide
 an implementation for function {@link #suggest(String)}.<p>
 
 Function {@link #suggest(String)} should correct the spelling of
-the word and then try to convert the corrected word to a base form
-with function {@link #analyse()} or {@link #analyse(Set)}.<p>
+the word and then try to convert the corrected word to a base form.<p>
 
 If those functions return {@code true} {@link #suggest(String)}
 should return {@code true}, otherwise it should return {@code false}.
