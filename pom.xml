@@ -9,7 +9,7 @@
   <groupId>peltomaa.sukija</groupId>
   <artifactId>sukija</artifactId>
   <packaging>jar</packaging>
-  <version>2.1.1</version>
+  <version>2.1.2</version>
 
   <name>sukija</name>
   <url>http://maven.apache.org</url>
@@ -39,13 +39,13 @@
     <dependency>
       <groupId>org.apache.solr</groupId>
       <artifactId>solr-core</artifactId>
-      <version>5.4.0</version>
+      <version>6.0.0</version>
     </dependency>
 
    <dependency>
       <groupId>org.apache.solr</groupId>
       <artifactId>solr-solrj</artifactId>
-      <version>5.4.0</version>
+      <version>6.0.0</version>
     </dependency>
 
     <dependency>
@@ -57,7 +57,7 @@
     <dependency>
       <groupId>org.puimula.voikko</groupId>
       <artifactId>libvoikko</artifactId>
-      <version>3.7</version>
+      <version>4.0.1</version>
     </dependency>
 
     <dependency>
@@ -68,6 +68,12 @@
   </dependencies>
 
   <build>
+    <resources>
+      <resource>
+        <directory>src/main/xsd</directory>
+      </resource>
+    </resources>
+
     <plugins>
       <plugin>
         <groupId>de.jflex</groupId>
@@ -85,14 +91,20 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.3</version>
+        <version>3.5.1</version>
         <configuration>
-          <source>1.7</source>
-          <target>1.7</target>
-          <compilerArgument>-Xlint:all</compilerArgument>
+          <source>1.8</source>
+          <target>1.8</target>
+          <staleMillis>1</staleMillis>
+          <useIncrementalCompilation>false</useIncrementalCompilation>
+          <showDeprecation>true</showDeprecation>
+          <showWarnings>true</showWarnings>
 <!--
-          <compilerArgument>-Xlint:deprecation</compilerArgument>
-          <compilerArgument>-Xlint:unchecked</compilerArgument>
+          <compilerArgs>
+            <arg>-Xlint:all</arg>
+            <arg>-Xlint:deprecation</arg>
+            <arg>-Xlint:unchecked</arg>
+          </compilerArgs>
 -->
         </configuration>
       </plugin>
@@ -123,7 +135,7 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>jaxb2-maven-plugin</artifactId>
-        <version>1.6</version>
+        <version>2.2</version>
         <executions>
           <execution>
             <id>xjc</id>

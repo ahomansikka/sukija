@@ -52,9 +52,9 @@
   <lib dir="${solr.install.dir:../../../..}/contrib/velocity/lib" regex=".*\.jar" />
   <lib dir="${solr.install.dir:../../../..}/dist/" regex="solr-velocity-\d.*\.jar" />
 
-  <lib path="${user.home}/.m2/repository/net/java/dev/jna/jna/3.4.0/jna-3.4.0.jar"/>
-  <lib path="${user.home}/.m2/repository/org/puimula/voikko/libvoikko/3.7/libvoikko-3.7.jar"/>
-  <lib path="${user.home}/.m2/repository/peltomaa/sukija/sukija/2.1/sukija-2.1.jar"/>
+  <lib path="${user.home}/.m2/repository/net/java/dev/jna/jna/4.2.1/jna-4.2.1.jar"/>
+  <lib path="${user.home}/.m2/repository/org/puimula/voikko/libvoikko/4.0.1/libvoikko-4.0.1.jar"/>
+  <lib path="${user.home}/.m2/repository/peltomaa/sukija/sukija/2.1.2/sukija-2.1.2.jar"/>
 
 
   <!-- Data Directory

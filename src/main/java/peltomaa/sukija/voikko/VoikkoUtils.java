@@ -26,13 +26,17 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
+import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
+import org.apache.lucene.analysis.tokenattributes.FlagsAttribute;
 import org.apache.lucene.analysis.util.CharArraySet;
 import org.puimula.libvoikko.Analysis;
 import org.puimula.libvoikko.Voikko;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import peltomaa.sukija.attributes.BaseFormAttribute;
 import peltomaa.sukija.attributes.VoikkoAttribute;
 import peltomaa.sukija.util.CharCombinator;
+import peltomaa.sukija.util.Constants;
 import peltomaa.sukija.suggestion.Suggestion;
 import peltomaa.sukija.suggestion.SuggestionUtils;
 
@@ -52,7 +56,7 @@ public final class VoikkoUtils {
   /**
    * Palautetaan Voikko-objekti.<p>
    *
-   * @param language    Kielikoodi. Tämän pitää olla "fi".
+   * @param language    Kielikoodi.
    * @param path        Polku, josta sanastoja etsitään.
    * @param libraryPath Polku, josta löytyy tiedosto libvoikko.so.
    * @param libvoikkoPath Libvoikon kirjasto (esim. /usr/local/library/libvoikko.so).
@@ -79,7 +83,14 @@ public final class VoikkoUtils {
       }
       else if (libraryPath != null && libvoikkoPath != null) {
         Voikko.addLibraryPath (libraryPath);
-        System.load (libvoikkoPath);
+        try {
+          System.load (libvoikkoPath);
+        }
+        catch (UnsatisfiedLinkError e) {
+          if (!e.getMessage().matches (".*Native Library.*libvoikko.*already loaded in another classloader")) {
+            throw e;
+          }
+        }
         voikko = new Voikko (language, path);
       }
       else {
@@ -128,56 +139,46 @@ public final class VoikkoUtils {
   }
 
 
-  public static final void printAnalysisResult (VoikkoAttribute voikkoAtt, PrintStream out)
+  public static final void printAnalysisResult (Analysis analysis, String[] what, PrintStream out)
+  {
+    if (what == null) {
+      printAnalysisResult (analysis, out);
+    }
+    else {
+      for (String key: what) {
+        String value = analysis.get (key);
+        if (value != null && key.equals("SIJAMUOTO")) value = sijamuoto (value);
+        out.print (value + " ");
+      }
+    }
+  }
+
+
+  public static final void printAnalysisResult (VoikkoAttribute voikkoAtt, String[] what, PrintStream out)
   {
     List<Analysis> list = voikkoAtt.getAnalysis();
 //System.out.println ("VoikkoUtils " + (list == null));
     if (list == null) return;
 
     for (int i = 0; i < list.size(); i++) {
-      printAnalysisResult (list.get(i), out);
+      printAnalysisResult (list.get(i), what, out);
       out.println ("");
     }
   }
 
 
-  /**
-   * Etsitään sanan {@code word} perusmuodot (niitä voi olla useampi kuin yksi).<p>
-   *
-   * Jos {@code voikko} löytää sanan perusmuodot, palautetaan arvo {@code true}, muuten
-   * palautetaan arvo {@code false}.
-   * Sanan persumuodot palautetaan oliossa {@code result}. Jos perusmuoto(j)a ei löydy,
-   * olioon {@code result} palautetaan {@code word}. Olion {@code result} arvot muutetaan
-   * pieniksi kirjaimiksi.
-   */
-  public static final boolean analyze (Voikko voikko, String word, Collection<String> result)
-  {
-    result.clear();
-    List<Analysis> analysis = voikko.analyze (word);
-    if (analysis.size() == 0) {
-      result.add (word.toLowerCase());
-      return false;
-    }
-    else {
-      for (Analysis a : analysis) {
-//LOG.info ("Analysis " + a.toString());
-        result.add (a.get("BASEFORM").toLowerCase());
-      }
-      return true;
-    }
-  }
-
-
-  public static final boolean analyze (Voikko voikko, String word, Collection<String> result,
-                                       String from, String to)
+  public static final boolean panalyze (Voikko voikko, String word, Set<String> result,
+                                        String from, String to)
   {
     CharCombinator charCombinator = new CharCombinator (word, from, to);
 
-//System.out.println ("VoikkoUtils " + word + " " + charCombinator.size());
     Iterator<String> iterator = charCombinator.iterator();
     while (iterator.hasNext()) {
       final String s = iterator.next();
-      if (analyze (voikko, s, result)) {
+      List<Analysis> list = voikko.analyze (s);
+      if (list.size() > 0) {
+        result.clear();
+        result.addAll (getBaseForms (list));
         return true;
       }
     }
@@ -185,40 +186,24 @@ public final class VoikkoUtils {
   }
 
 
-  /**
-   * Kopioi oliosta 'from' olioon 'result' sanat, jotka
-   * ovat oliossa 'wordSet'.
-   */
-  public static final boolean copyIf (Collection<String> from, CharArraySet wordSet, Collection<String> result)
+  public static final Set<String> getBaseForms (List<Analysis> analysis)
   {
-    result.clear();
-    for (String s : from) {
-      if (wordSet.contains (s)) {
-        result.add (s);
-      }
+    if (analysis == null) {
+      throw new RuntimeException ("analysis == null.");
     }
-    return (result.size() > 0);
+
+    return aho.getCorrections (analysis);
   }
 
 
-  public static final boolean copyIf (Collection<String> from, CharArraySet wordSet, Collection<String> result,
-                                      Suggestion[] suggestion)
+  public static final Analysis newBaseForm (String baseForm)
   {
-    result.clear();
-    for (String s : from) {
-      if (wordSet.contains (s)) {
-        result.add (s);
-      }
-      else {
-        Collection<String> p = SuggestionUtils.getSuggestions (suggestion, s);
-        if (p != null) {
-          result.addAll (p);
-//System.out.println ("VoikkoUtils " + s + " " + p.toString());
-        }
-      }
-    }
-    return (result.size() > 0);
+    Analysis analysis = new Analysis();
+    analysis.put ("BASEFORM", baseForm);
+    return analysis;
   }
+
+  private static final AhoCorasickCorrector aho = new AhoCorasickCorrector();
 
   private static final Map<String,String> caseMap = new HashMap<String,String>();
 

@@ -24,6 +24,23 @@ package peltomaa.sukija.util;
  * if any of the arguments is {@code null}.
  */
 public class StringUtil {
+  public static final boolean isVowel (char c)
+  {
+    switch (c) {
+      case 'a':
+      case 'e':
+      case 'i':
+      case 'o':
+      case 'u':
+      case 'y':
+      case 'ä':
+      case 'ö':
+        return true;
+      default:
+        return false;
+    }
+  }
+
   /**
    * Count the number of chars in a character sequence.
    *

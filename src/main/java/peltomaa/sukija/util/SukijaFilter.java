@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2014-2015 Hannu Väisänen
+Copyright (©) 2014-2016 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -19,15 +19,16 @@ package peltomaa.sukija.util;
 
 import java.io.IOException;
 import java.util.Iterator;
-import java.util.List;
+import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
+import org.apache.lucene.analysis.tokenattributes.FlagsAttribute;
+import org.apache.lucene.analysis.tokenattributes.OffsetAttribute;
+import org.apache.lucene.analysis.tokenattributes.PositionIncrementAttribute;
 import org.apache.lucene.analysis.TokenFilter;
 import org.apache.lucene.analysis.TokenStream;
-import org.apache.lucene.analysis.tokenattributes.FlagsAttribute;
-import org.apache.lucene.analysis.tokenattributes.PositionIncrementAttribute;
-import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.puimula.libvoikko.*;
+import peltomaa.sukija.attributes.BaseFormAttribute;
 import peltomaa.sukija.attributes.OriginalWordAttribute;
-//import peltomaa.sukija.attributes.VoikkoAttribute;
+import peltomaa.sukija.attributes.VoikkoAttribute;
 
 
 /**
@@ -45,6 +46,8 @@ public abstract class SukijaFilter extends TokenFilter {
   @Override
   public final boolean incrementToken() throws IOException
   {
+//System.out.println ("SukijaFilter0 " + word + " " + hasAttribute(BaseFormAttribute.class));
+//System.out.println ("SukijaFilter0 " + word + " " + hasAttribute(FlagsAttribute.class));
 //System.out.println ("SukijaFilter0 " + word + " " + termAtt.toString());
 
     // Etsitään uusi analysoitava sana. Tässä silmukassa pyöritään,
@@ -54,43 +57,45 @@ public abstract class SukijaFilter extends TokenFilter {
     // kutsulla 'input.incrementToken()'.
     //
     while ((iterator == null) || (!iterator.hasNext())) {
-//System.out.println ("SukijaFilterA " + word + " " + termAtt.toString());
+//System.out.println ("SukijaFilterA " + word + " " + termAtt.toString() + " [" + originalWordAtt.getOriginalWord());
       if (!input.incrementToken()) {
-//System.out.println ("SukijaFilterB " + word + " " + termAtt.toString());
          return false;
       }
-      word = termAtt.toString().toLowerCase();
-//System.out.println ("SukijaFilter1 " + word + " " + termAtt.toString());
       originalWordAtt.setOriginalWord (termAtt);
+      word = termAtt.toString().toLowerCase();
+//System.out.println ("SukijaFilter1 " + word + " " + termAtt.toString() + " [" + originalWordAtt.getOriginalWord());
       positionIncrement = 1;
       iterator = filter();
     }
 
-//System.out.println ("SukijaFilter2 " + word + " " + termAtt.toString());
+//System.out.println ("SukijaFilter2 " + word + " " + termAtt.toString() + " [" + originalWordAtt.getOriginalWord());
 
 
-    // Pyöritään silmukassa, kunnes kaikki sanan analyysit on käyty läpi.
+    // Käydään läpi kaikki sanan analyysit.
     //
     if (iterator.hasNext()) {
       termAtt.setEmpty().append (iterator.next());
-//System.out.println ("SukijaFilter3 " + word + " " + termAtt.toString() + " " + originalWordAtt.getOriginalWord());
+//System.out.println ("SukijaFilter3 " + word + " " + termAtt.toString() + " [" + originalWordAtt.getOriginalWord());
       posIncrAtt.setPositionIncrement (positionIncrement);
       positionIncrement = 0;
+System.out.println ("SukijaFilter4 " + word + " " + baseFormAtt.getBaseForms().toString());
       return true;
     }
-//System.out.println ("SukijaFilter4 " + word + " " + termAtt.toString() + " " + originalWordAtt.getOriginalWord());
+//System.out.println ("SukijaFilter3 " + word + " " + termAtt.toString() + " [" + originalWordAtt.getOriginalWord());
     return true;
   }
 
 
   protected abstract Iterator<String> filter();
 
-  private int positionIncrement = 1;
-  protected final OriginalWordAttribute originalWordAtt = addAttribute  (OriginalWordAttribute.class);
-  protected final FlagsAttribute flagsAtt = input.addAttribute (FlagsAttribute.class);
+  protected final BaseFormAttribute baseFormAtt = addAttribute  (BaseFormAttribute.class);
   protected final CharTermAttribute termAtt = addAttribute (CharTermAttribute.class);
+  protected final FlagsAttribute flagsAtt = input.addAttribute (FlagsAttribute.class);
+  protected final OriginalWordAttribute originalWordAtt = addAttribute  (OriginalWordAttribute.class);
   protected final PositionIncrementAttribute posIncrAtt = addAttribute (PositionIncrementAttribute.class);
-//  protected final VoikkoAttribute voikkoAtt = addAttribute (VoikkoAttribute.class);
+  protected final VoikkoAttribute voikkoAtt = addAttribute (VoikkoAttribute.class);
+
+  private int positionIncrement = 1;
   protected String word;
   protected Voikko voikko;
   protected Iterator<String> iterator;

@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2014-2015 Hannu Väisänen
+Copyright (©) 2014-2016 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -17,10 +17,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 package peltomaa.sukija.suggestion;
 
-import java.util.HashSet;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.ArrayList;
+import java.util.List;
+import org.puimula.libvoikko.Analysis;
 import org.puimula.libvoikko.Voikko;
+import peltomaa.sukija.attributes.VoikkoAttribute;
 import peltomaa.sukija.voikko.VoikkoUtils;
 
 
@@ -41,33 +42,39 @@ public class StartSuggestion extends Suggestion {
 
 
   @Override
-  public boolean suggest (String word)
+  public boolean suggest (String word, VoikkoAttribute voikkoAtt)
   {
-    result.clear();
-
+    List<Analysis> analysisList = new ArrayList<Analysis>();
 
     // Käydään läpi kaikki sanan alut pisimmästä alkaen.
     //
     for (int i = Math.min (maxLength, word.length()-1); i >= minLength; i--) {
       final String startOfWord = word.substring (0, i);
+      List<Analysis> analysis = voikko.analyze (word);
+
       if (baseFormOnly) {
-        if (VoikkoUtils.analyze (voikko, startOfWord, set)) {
-//System.out.println ("\nStart1 " + startOfWord + " " + set.toString());
-          for (String s: set) {
-            if (startOfWord.equals (s)) {
-              result.add (s);
-            }
+        for (Analysis a: analysis) {
+          if (startOfWord.equals (a.get("BASEFORM").toLowerCase())) {
+            analysisList.add (a);
           }
-          if (!tryAll && result.size() > 0) return true;
+        }
+        if (!tryAll && analysisList.size() > 0) {
+          voikkoAtt.addAnalysis (analysisList);
+          return true;
         }
       }
-      else if (VoikkoUtils.analyze (voikko, startOfWord, set)) {
-//System.out.println ("\nStart2 " + startOfWord + " " + set.toString());
-        result.addAll (set);
-        if (!tryAll) return true;
+      else {
+        if (analysis.size() > 0) {
+          analysisList.addAll (analysis);
+          if (!tryAll) {
+            voikkoAtt.addAnalysis (analysisList);
+            return true;
+          }
+        }
       }      
     }
-    return (result.size() > 0);
+    voikkoAtt.addAnalysis (analysisList);
+    return (analysisList.size() > 0);
   }
 
 
@@ -75,5 +82,4 @@ public class StartSuggestion extends Suggestion {
   private final int maxLength;
   private final boolean baseFormOnly;
   private final boolean tryAll;
-  private Set<String> set = new HashSet<String>();
 }

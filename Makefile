@@ -1,5 +1,7 @@
-# Muuta tämä, jos Solr on jossain muualla.
-SOLR=${HOME}/Lataukset/solr/solr-5.4.0
+# Muuta tämä, jos Solr on jossain muualla. Muuta myös tiedoston
+# sukija.properties alussa oleva muuttuja sukija.solr.
+#
+SOLR=${HOME}/Lataukset/solr/solr-6.0.0
 
 
 SOLR_BIN=${SOLR}/bin
@@ -10,7 +12,7 @@ CONF=conf
 asenna: SukijaAsennus.class
 	   java SukijaAsennus
 
-päivitä:
+päivitä: asenna
 	cp -r ${CONF}/* ${SOLR_HOME}/conf
 
 solr-start:
@@ -30,7 +32,7 @@ poista:
 	rm -rf ${SOLR_HOME}
 
 
-service-update:
+service-update: asenna
 	cp -r ${CONF}/* /var/solr/data/sukija/conf
 
 
@@ -43,7 +45,7 @@ clean:
 	rm -f SukijaAsennus.class conf/data-config.xml conf/schema.xml
 
 
-SUKIJA=sukija
+SUKIJA=sukija-2.1.2
 tar:
 	if [ -e $(SUKIJA) ]; then \
 	  rm -f $(SUKIJA).tar.bz2; \

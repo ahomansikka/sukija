@@ -40,4 +40,16 @@ public interface VoikkoAttribute extends Attribute {
     * Tämä vastaa kutsua {@code getAnalysis().get(n);}.
    */
   public Analysis getAnalysis (int n);
+
+
+  /** Lisätään 'analysis' aiempaan tulokseen. */
+  public void addAnalysis (List<Analysis> analysis);
+
+
+  /** Lisätään 'analysis' aiempaan tulokseen. */
+  public void addAnalysis (Analysis analysis);
+
+
+  /** Poistetaan analyysin tulokset. */
+  public void clear();
 }

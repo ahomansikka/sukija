@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2015 Hannu Väisänen
+Copyright (©) 2016 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -17,42 +17,48 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 package peltomaa.sukija.attributes;
 
-import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 import org.apache.lucene.util.AttributeImpl;
 import org.apache.lucene.util.AttributeReflector;
 
 
-public class OriginalWordAttributeImpl extends AttributeImpl implements OriginalWordAttribute, Cloneable {
-  private String originalWord;
+public class BaseFormAttributeImpl extends AttributeImpl implements BaseFormAttribute, Cloneable {
+  private Set<String> baseForms;
 
-  public OriginalWordAttributeImpl() {}
+  public BaseFormAttributeImpl() {baseForms = new HashSet<String>();}
 
 
   @Override
-  public String getOriginalWord()
+  public Set<String> getBaseForms() {return baseForms;}
+
+
+  @Override
+  public void addBaseForms (Set<String> baseForms)
   {
-    return originalWord;
+    this.baseForms.addAll (baseForms);
   }
 
 
   @Override
-  public void setOriginalWord (CharTermAttribute termAtt)
+  public void addBaseForm (String baseForm)
   {
-    originalWord = termAtt.toString(); //new String (termAtt.buffer(), 0, termAtt.length());
+    this.baseForms.add (baseForm);
   }
 
 
   @Override
   public void clear()
   {
-    originalWord = null;
+    baseForms.clear();
   }
 
 
   @Override
   public void copyTo (AttributeImpl target)
   {
-    ((OriginalWordAttributeImpl)target).originalWord = originalWord;
+    ((BaseFormAttributeImpl)target).baseForms = baseForms;
   }
 
 
@@ -63,13 +69,12 @@ public class OriginalWordAttributeImpl extends AttributeImpl implements Original
       return true;
     }
     
-    if (other instanceof OriginalWordAttributeImpl) {
-      final OriginalWordAttributeImpl o = (OriginalWordAttributeImpl)other;
-      return (this.originalWord == null
-              ? o.originalWord == null
-              : this.originalWord.equals (originalWord));
+    if (other instanceof BaseFormAttributeImpl) {
+      final BaseFormAttributeImpl o = (BaseFormAttributeImpl)other;
+      return (this.baseForms == null
+              ? o.baseForms == null
+              : this.baseForms.equals (baseForms));
     }
-
     return false;
   }
 
@@ -77,13 +82,13 @@ public class OriginalWordAttributeImpl extends AttributeImpl implements Original
   @Override
   public int hashCode()
   {
-    return (originalWord == null) ? 0 : originalWord.hashCode();
+    return (baseForms == null) ? 0 : baseForms.hashCode();
   }
 
 
   @Override
   public void reflectWith (AttributeReflector reflector)
   {
-    reflector.reflect (OriginalWordAttribute.class, "originalWord", originalWord);
+    reflector.reflect (BaseFormAttribute.class, "baseForms", baseForms.toString());
   }
 }

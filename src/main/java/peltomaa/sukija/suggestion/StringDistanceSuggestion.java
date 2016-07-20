@@ -36,7 +36,7 @@ import org.apache.lucene.search.spell.StringDistance;
 
 import org.puimula.libvoikko.Analysis;
 import org.puimula.libvoikko.Voikko;
-import peltomaa.sukija.voikko.VoikkoUtils;
+import peltomaa.sukija.attributes.VoikkoAttribute;
 
 
 public class StringDistanceSuggestion extends Suggestion {
@@ -64,7 +64,8 @@ public class StringDistanceSuggestion extends Suggestion {
   }
 
 
-  public boolean suggest (String word)
+  @Override
+  public boolean suggest (String word, VoikkoAttribute voikkoAtt)
   {
 //System.out.println ("1");
     if (word.length() <= keyLength) return false;
@@ -80,8 +81,7 @@ public class StringDistanceSuggestion extends Suggestion {
     }
     else {
 //System.out.println ("4");
-      result.clear();
-      return VoikkoUtils.analyze (voikko, entry.string, result);
+      return analyze (entry.string, voikkoAtt);
     }
   }
 

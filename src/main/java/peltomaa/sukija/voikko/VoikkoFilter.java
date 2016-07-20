@@ -18,8 +18,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package peltomaa.sukija.voikko;
 
 import java.io.IOException;
-import org.apache.lucene.analysis.tokenattributes.FlagsAttribute;
-import org.apache.lucene.analysis.tokenattributes.PositionIncrementAttribute;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.apache.lucene.analysis.TokenFilter;
 import org.apache.lucene.analysis.TokenStream;
@@ -66,9 +64,7 @@ public final class VoikkoFilter extends TokenFilter {
   }
 
 
-  private final Voikko voikko;
-  private final FlagsAttribute flagsAtt = addAttribute (FlagsAttribute.class);
   private final CharTermAttribute termAtt = addAttribute (CharTermAttribute.class);
-  private final PositionIncrementAttribute posIncrAtt = addAttribute (PositionIncrementAttribute.class);
-  private final VoikkoAttribute voikkoAtt = addAttribute  (VoikkoAttribute.class);
+  private final VoikkoAttribute voikkoAtt = addAttribute (VoikkoAttribute.class);
+  private final Voikko voikko;
 }

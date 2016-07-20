@@ -75,8 +75,19 @@ public class SukijaAsennus {
      printDataConfigFile (p, new FileWriter ("conf/data-config.xml"));
      printSchemaFile     (p, new FileWriter ("conf/schema.xml"));
 
-     copyFile ("conf2/sukija-context.xml",
-               getProperty (p, "sukija.jetty") + "/sukija-context.xml");
+     final String JETTY_PROPERTY = getProperty (p, "sukija.jetty");
+
+     if (JETTY_PROPERTY.startsWith ("/opt/solr")) {
+       final String COMMAND = String.format ("sudo cp conf2/sukija-context.xml %s/sukija-context.xml", JETTY_PROPERTY);
+       Process pr = Runtime.getRuntime().exec (COMMAND);
+       final int n = pr.waitFor();
+       if (n != 0) {
+         throw new RuntimeException ("Komento '" + COMMAND + "' epäonnistui.");
+       }
+     }
+     else {
+       copyFile ("conf2/sukija-context.xml", JETTY_PROPERTY + "/sukija-context.xml");
+     }
      copyDirectory (new File ("conf"),
                     new File (SUKIJA + "/conf"));
   }
@@ -146,11 +157,6 @@ public class SukijaAsennus {
   {
     final String TOKENIZER = getProperty (p, "sukija.Tokenizer", "peltomaa.sukija.finnish.FinnishTokenizerFactory");
     printTokenizer (p, TOKENIZER, out);
-
-    final String HYPHEN_FILTER = getProperty (p, "sukija.HyphenFilter");
-    if (HYPHEN_FILTER != null) {
-      out.write (String.format ("        <filter class=\"%s\"/>\n", HYPHEN_FILTER));
-    }
 
     out.write (getBaseFormFilter (p));
     out.write (FINNISH_FOLDING_LOWER_CASE_FILTER);
@@ -345,7 +351,6 @@ public class SukijaAsennus {
     "      </entity>\n" +
     "    </entity>\n";
 
-//    "              processor = \"peltomaa.sukija.util.TikaEntityProcessor\"\n" +
 
   private static final String schemaFileStart =
     "<schema name=\"sukija\" version=\"1.0\">\n" +

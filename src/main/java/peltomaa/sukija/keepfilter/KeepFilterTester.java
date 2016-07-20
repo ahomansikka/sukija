@@ -26,19 +26,18 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.Vector;
 
+import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
+import org.apache.lucene.analysis.tokenattributes.FlagsAttribute;
 import org.apache.lucene.analysis.Tokenizer;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.util.CharArraySet;
 import org.apache.lucene.analysis.util.WordlistLoader;
-import org.apache.lucene.analysis.tokenattributes.FlagsAttribute;
-import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
-import org.apache.lucene.analysis.tokenattributes.OffsetAttribute;
-import org.apache.lucene.analysis.tokenattributes.PositionIncrementAttribute;
 import org.puimula.libvoikko.*;
 import peltomaa.sukija.finnish.HVTokenizer;
 import peltomaa.sukija.hyphen.HyphenFilter;
 import peltomaa.sukija.util.Constants;
 import peltomaa.sukija.util.SukijaFilter;
+import peltomaa.sukija.attributes.BaseFormAttribute;
 import peltomaa.sukija.attributes.OriginalWordAttribute;
 import peltomaa.sukija.attributes.VoikkoAttribute;
 import peltomaa.sukija.suggestion.Suggestion;
@@ -48,7 +47,8 @@ import peltomaa.sukija.suggestion.SuggestionFilter;
 public class KeepFilterTester {
   private KeepFilterTester() {}
 
-  public static void test (Reader reader, Writer writer, Voikko voikko, CharArraySet wordSet, String from, String to,
+  public static void test (Reader reader, Writer writer, Voikko voikko, CharArraySet wordSet,
+                           String from, String to,
                            Suggestion[] suggestion, boolean stopOnSuccess) throws IOException
   {
     Set<String> set = new TreeSet<String>();
@@ -56,17 +56,19 @@ public class KeepFilterTester {
     ((Tokenizer)t).setReader (reader);
 
     t = new KeepFilter (t, voikko, wordSet, from, to, suggestion);
-    CharTermAttribute word = t.addAttribute (CharTermAttribute.class);
+
+    CharTermAttribute termAtt = t.addAttribute (CharTermAttribute.class);
+    BaseFormAttribute baseFormAtt = t.addAttribute (BaseFormAttribute.class);
     FlagsAttribute flagsAtt = t.addAttribute (FlagsAttribute.class);
     OriginalWordAttribute originalWordAtt = t.addAttribute (OriginalWordAttribute.class);
-    VoikkoAttribute voikkoAtt = t.addAttribute (VoikkoAttribute.class);
 
     try {
       t.reset();
       while (t.incrementToken()) {
         writer.write ("Sana: " + originalWordAtt.getOriginalWord()
-                      + " " + word.toString()
+                      + " " + termAtt.toString()
                       + " " + Constants.toString (flagsAtt)
+                      + " " + baseFormAtt.getBaseForms().toString()
                       + "\n");
         writer.flush();
       }

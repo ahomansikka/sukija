@@ -17,27 +17,32 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 package peltomaa.sukija.suggestion;
 
-import java.util.Collection;
+import java.util.List;
 import java.util.Set;
-import java.util.TreeSet;
 //import org.slf4j.Logger;
 //import org.slf4j.LoggerFactory;
+import org.puimula.libvoikko.Analysis;
 import org.puimula.libvoikko.Voikko;
+import peltomaa.sukija.attributes.VoikkoAttribute;
+import peltomaa.sukija.voikko.VoikkoUtils;
 
 
 /**
 Suggest a correct spelling for misspelled word.<p>
 
 This is an abstract class and you should extend this class and provide
-an implementation for function {@link #suggest(String)}.<p>
+an implementation for function {@link #suggest(String,VoikkoAttribute)}.<p>
 
-Function {@link #suggest(String)} should correct the spelling of
+Function {@link #suggest(String,VoikkoAttribute)} should correct the spelling of
 the word and then try to convert the corrected word to a base form.<p>
 
-If those functions return {@code true} {@link #suggest(String)}
+If those functions return {@code true} {@link #suggest(String,VoikkoAttribute)}
 should return {@code true}, otherwise it should return {@code false}.
 */
 public abstract class Suggestion {
+  protected Voikko voikko;
+
+
   public Suggestion (Voikko voikko)
   {
     this.voikko = voikko;
@@ -45,16 +50,26 @@ public abstract class Suggestion {
 
 
   /**
-   * A function that should return {@code true} if spelling correction is
-   * succesful, otherwise it should return {@code false}.
+   * Funktio joka palauttaa arvon {@code true}, jos Voikko tunnistaa
+   * korjatun sanan, muuten palauttaa arvon {@code false}.
    *
-   * @param word  A word whose spelling is to be corrected.
+   * @param word  Sana, jonka oikeinkirjoitus yritetään korjata.
    */
-  public abstract boolean suggest (String word);
+  public abstract boolean suggest (String word, VoikkoAttribute voikkoAtt);
 
 
-  public Collection<String> getResult() {return result;}
+  /**
+   * Jos funktio {@code success} tekee perusmuotoja muuten kuin Voikon
+   * kautta, tämä funktio palauttaa ne. Jos {@code success} ei tee
+   * ylimääräisiä perusmuotoja, tämä funktio palauttaa arvon {@code null}.
+   */
+  public Set<String> getExtraBaseForms() {return null;}
 
-  protected Voikko voikko;
-  protected Set<String> result = new TreeSet<String>();
+
+  protected boolean analyze (String word, VoikkoAttribute voikkoAtt)
+  {
+    List<Analysis> analysis = voikko.analyze (word);
+    voikkoAtt.addAnalysis (analysis);
+    return (analysis.size() > 0);
+  }
 }

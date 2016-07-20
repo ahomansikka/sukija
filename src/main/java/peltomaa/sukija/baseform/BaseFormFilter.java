@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2015 Hannu Väisänen
+Copyright (©) 2015-2016 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -22,8 +22,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.HashSet;
 import java.util.Set;
+import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
+import org.apache.lucene.analysis.tokenattributes.FlagsAttribute;
+import org.apache.lucene.analysis.tokenattributes.OffsetAttribute;
+import org.apache.lucene.analysis.tokenattributes.PositionIncrementAttribute;
 import org.apache.lucene.analysis.TokenStream;
 import org.puimula.libvoikko.*;
+import peltomaa.sukija.attributes.BaseFormAttribute;
 import peltomaa.sukija.util.Constants;
 import peltomaa.sukija.util.SukijaFilter;
 import peltomaa.sukija.voikko.VoikkoUtils;
@@ -49,19 +54,29 @@ public final class BaseFormFilter extends SukijaFilter {
   @Override
   public Iterator<String> filter()
   {
-    if (VoikkoUtils.analyze (voikko, word, baseForms)) {
-      return baseForms.iterator();
-    }
-    else if (successOnly) {
-      return null;
+    List<Analysis> analysis = voikko.analyze (termAtt.toString());
+
+    if (analysis.size() ==  0) {
+      baseFormAtt.addBaseForm (termAtt.toString());
+      flagsAtt.setFlags (flagsAtt.getFlags() | Constants.UNKNOWN);
     }
     else {
-      flagsAtt.setFlags (Constants.UNKNOWN);
-      return baseForms.iterator();
+      baseFormAtt.addBaseForms (VoikkoUtils.getBaseForms(analysis));
+      flagsAtt.setFlags (flagsAtt.getFlags() | Constants.FOUND);
+//System.out.println (analysis.toString());
     }
+    return baseFormAtt.getBaseForms().iterator();
   }
 
 
-  private Set<String> baseForms = new HashSet<String>();
   private final boolean successOnly;
+
+  private final BaseFormAttribute baseFormAtt = addAttribute (BaseFormAttribute.class);
+
+/*
+  private final CharTermAttribute termAtt = addAttribute (CharTermAttribute.class);
+  private final FlagsAttribute flagsAtt = addAttribute (FlagsAttribute.class);
+  private final OffsetAttribute offsetAtt = addAttribute (OffsetAttribute.class);
+  private final PositionIncrementAttribute posIncrAtt = addAttribute (PositionIncrementAttribute.class);
+*/
 }

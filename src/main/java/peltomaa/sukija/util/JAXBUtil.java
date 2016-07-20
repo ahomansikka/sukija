@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2014-2015 Hannu Väisänen
+Copyright (©) 2014-2016 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -105,10 +105,13 @@ public class JAXBUtil {
   private static final Unmarshaller getUnmarshaller (String schemaFile, String schemaLocation, String contextPath, ClassLoader classLoader)
     throws JAXBException, SAXException
   {
-//System.out.println ("Path " + "/" + schemaLocation + "/" + schemaFile);
+// System.out.println ("Path " + "/" + schemaLocation + "/" + schemaFile);
     SchemaFactory sf = SchemaFactory.newInstance (XMLConstants.W3C_XML_SCHEMA_NS_URI);
+//
+// Miten schemaFile löytyy näyttää muutuvan jokaisessa Java-versiossa. (-:
 //    Schema schema = sf.newSchema (classLoader.getResource (schemaFile));
-    Schema schema = sf.newSchema (JAXBUtil.class.getResource ("/" + schemaLocation + "/" + schemaFile));
+//    Schema schema = sf.newSchema (JAXBUtil.class.getResource ("/" + schemaLocation + "/" + schemaFile));
+    Schema schema = sf.newSchema (JAXBUtil.class.getResource ("/" + schemaFile));
     JAXBContext jc = JAXBContext.newInstance (contextPath, classLoader);
     Unmarshaller u = jc.createUnmarshaller();
     u.setSchema (schema);

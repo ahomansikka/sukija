@@ -17,14 +17,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 package peltomaa.sukija.suggestion;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.Set;
 import java.util.TreeSet;
-import peltomaa.sukija.util.RegexUtil;
-import peltomaa.sukija.voikko.VoikkoUtils;
+import org.puimula.libvoikko.Analysis;
 import org.puimula.libvoikko.Voikko;
+import peltomaa.sukija.util.RegexUtil;
+import peltomaa.sukija.attributes.VoikkoAttribute;
 
 
 /**
@@ -56,14 +58,13 @@ public class RegexSuggestion extends Suggestion {
   }
 
 
-  public boolean suggest (String word)
+  @Override
+  public boolean suggest (String word, VoikkoAttribute voikkoAtt)
   {
     boolean success = false;
-    result.clear();
 
     for (int i = 0; i < pattern.length; i++) {
-      if (suggest (i, word)) {
-        result.addAll (set);
+      if (suggest (i, word, voikkoAtt)) {
         if (tryAll) {
           success = true;
         }
@@ -76,33 +77,32 @@ public class RegexSuggestion extends Suggestion {
   }
 
 
-  private boolean suggest (int i, String word)
+  private boolean suggest (int i, String word, VoikkoAttribute voikkoAtt)
   {
     Matcher m = pattern[i].matcher(word);
     int start = 0;
 
     while (m.find (start)) {
-      if (analyse (m, i, word)) {
+      if (analyse (m, i, word, voikkoAtt)) {
         return true;
       }
       start = m.end();
     }
-    return Xsuggest (i, word);
+    return Xsuggest (i, word, voikkoAtt);
   }
 
 
-  private boolean analyse (Matcher m, int i, String word)
+  private boolean analyse (Matcher m, int i, String word, VoikkoAttribute voikkoAtt)
   {
     sb.delete (0, sb.length());
     m.appendReplacement (sb, replacement[i]);
     m.appendTail (sb);
 //System.out.println ("i " + i + " " + word + " " + replacement[i] + " " + sb.toString());
-    set.clear();
-    return VoikkoUtils.analyze (voikko, sb.toString(), set);
+    return analyze (sb.toString(), voikkoAtt);
   }
 
 
-  private boolean Xsuggest (int i, String word)
+  private boolean Xsuggest (int i, String word, VoikkoAttribute voikkoAtt)
   {
     boolean found = false;
     sb.delete (0, sb.length());
@@ -115,13 +115,11 @@ public class RegexSuggestion extends Suggestion {
     if (!found) return false;
 
     m.appendTail (sb);
-    set.clear();
-    return VoikkoUtils.analyze (voikko, sb.toString(), set);
+    return analyze (sb.toString(), voikkoAtt);
   }
 
   private final Pattern[] pattern;
   private final String[] replacement;
-  private Set<String> set = new TreeSet<String>();
   private final boolean tryAll;
   private StringBuffer sb = new StringBuffer (500);
 }

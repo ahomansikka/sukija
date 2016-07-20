@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2015 Hannu Väisänen
+Copyright (©) 2015-2016 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -21,6 +21,7 @@ package peltomaa.sukija.attributes;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.lucene.util.AttributeImpl;
+import org.apache.lucene.util.AttributeReflector;
 import peltomaa.sukija.voikko.VoikkoUtils;
 import org.puimula.libvoikko.Analysis;
 
@@ -49,6 +50,27 @@ public class VoikkoAttributeImpl extends AttributeImpl implements VoikkoAttribut
   public Analysis getAnalysis (int n)
   {
     return analysis.get (n);
+  }
+
+
+  @Override
+  public void addAnalysis (List<Analysis> analysis)
+  {
+    if (this.analysis == null) {
+      this.analysis = analysis;
+    }
+    else {
+      this.analysis.addAll (analysis);
+    }
+  }
+
+
+  public void addAnalysis (Analysis analysis)
+  {
+    if (this.analysis == null) {
+      this.analysis = new ArrayList<Analysis>();
+    }
+    this.analysis.add (analysis);
   }
 
 
@@ -106,5 +128,12 @@ public class VoikkoAttributeImpl extends AttributeImpl implements VoikkoAttribut
     VoikkoAttributeImpl cloned = new VoikkoAttributeImpl();
     this.copyTo (cloned);
     return cloned;
+  }
+
+
+  @Override
+  public void reflectWith (AttributeReflector reflector)
+  {
+    reflector.reflect (VoikkoAttribute.class, "voikkoAttribute", analysis.toString());
   }
 }

@@ -1,5 +1,5 @@
 /*
-Copyright (@) 2008-2012, 2015 Hannu Väisänen (Firstname.Lastname@uef.fi)
+Copyright (@) 2008-2012, 2015-2016 Hannu Väisänen (Firstname.Lastname@uef.fi)
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -101,14 +101,8 @@ V2 = {W2}({HYPHEN}{W2})+
 
 {W2} {
 //  System.out.println ("W2 {" + yytext() + "}");
-  return (Constants.WORD & Constants.BRACKET);
+  return (Constants.BRACKET);
 }
-
-/*
-{W3} {
-  return (Constants.WORD & Constants.BRACKET);
-}
-*/
 
 
 {V1} {

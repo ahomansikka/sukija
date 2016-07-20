@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2015 Hannu Väisänen
+Copyright (©) 2015-2016 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -28,10 +28,13 @@ public final class Constants {
 
   // Arvojen täytyy olla kakkosen potensseja: 2, 4, 8, 16, 32, ...
   //
-  public static final int WORD = 2;
-  public static final int HYPHEN = 4;  // Linja-auto.
-  public static final int BRACKET = 8; // []
-  public static final int UNKNOWN = 16; // Sana, jota morfologia tai filtteri ei ole tunnistanut.
+  public static final int WORD    =  2; // Tiedostosta luettu tavallinen sana.
+  public static final int HYPHEN  =  4; // Sana, jossa on väliviiva (esim. linja-auto).
+  public static final int BRACKET =  8; // Sana, jossa on hakasulut (esim. sitte[n]).
+  public static final int FOUND   = 16; // Sana, jonka Voikko tunnisti muutoksitta.
+  public static final int SUGGEST = 32; // Sana, jonka joku Suggestion-luokist tunnisti.
+  public static final int UNKNOWN = 64; // Sana, jota morfologia tai filtteri ei ole tunnistanut.
+
 
   public static final boolean hasFlag (FlagsAttribute flagsAtt, int flag)
   {
@@ -43,27 +46,34 @@ public final class Constants {
 
   public static final String toString (FlagsAttribute flagsAtt)
   {
-    final int n = flagsAtt.getFlags();
+//System.out.println ("Constants.toString " + flagsAtt.getFlags());
     final StringBuilder sb = new StringBuilder();
     sb.append (toString (flagsAtt, WORD)).append (" ");
     sb.append (toString (flagsAtt, HYPHEN)).append (" ");
     sb.append (toString (flagsAtt, BRACKET)).append (" ");
+    sb.append (toString (flagsAtt, FOUND)).append (" ");
+    sb.append (toString (flagsAtt, SUGGEST)).append (" ");
     sb.append (toString (flagsAtt, UNKNOWN)).append (" ");
     final String s = sb.toString();
     return s.substring (0, s.length()-1);
   }
 
 
-  public static final String toString (int n)
+  private static final String valueToString (int n)
   {
     final String s = flagMap.get (n);
-    return ((s == null) ? "" : s);
+    if (s == null) {
+      throw new RuntimeException ("Constants: ei lippua " + n + ".");
+    }
+    else {
+      return s;
+    }
   }
 
 
   private static final String toString (FlagsAttribute flagsAtt, int flag)
   {
-    return (hasFlag (flagsAtt, flag) ? toString(flag) : "");
+    return (hasFlag (flagsAtt, flag) ? valueToString(flag) : "");
   }
 
 
@@ -72,6 +82,8 @@ public final class Constants {
     flagMap.put (WORD,    "WORD");
     flagMap.put (HYPHEN,  "HYPHEN");
     flagMap.put (BRACKET, "BRACKET");
+    flagMap.put (FOUND,   "FOUND");
+    flagMap.put (SUGGEST, "SUGGEST");
     flagMap.put (UNKNOWN, "UNKNOWN");
   }
 }

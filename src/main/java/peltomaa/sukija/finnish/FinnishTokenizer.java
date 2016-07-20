@@ -78,6 +78,7 @@ public final class FinnishTokenizer extends Tokenizer {
   @Override
   public boolean incrementToken() throws IOException
   {
+    clearAttributes();
     final int tokenType = scanner.yylex();
 
     if (tokenType == FinnishTokenizerImpl.YYEOF) {

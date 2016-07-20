@@ -18,44 +18,33 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package peltomaa.sukija.suggestion;
 
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 import org.puimula.libvoikko.*;
+import peltomaa.sukija.attributes.VoikkoAttribute;
 
 
 public class VoikkoAttributeSuggestion extends Suggestion {
-  public VoikkoAttributeSuggestion (Voikko voikko, List<String> input, String attribute, String regex, boolean tryAll)
+
+  public VoikkoAttributeSuggestion (Voikko voikko,
+                                    VoikkoAttributeParameter parameter)
   {
     super (voikko);
-    this.pattern = makePattern (input);
-    this.replacement = makeReplacement (input);
-    this.attribute = attribute;
-    this.regex = Pattern.compile (regex);
-    this.tryAll = tryAll;
+    this.parameter = parameter;
   }
 
 
-  public VoikkoAttributeSuggestion (Voikko voikko, Pattern[] pattern, String[] replacement,
-                                    String attribute, String regex, boolean tryAll)
-  {
-    super (voikko);
-    this.pattern = pattern;
-    this.replacement = replacement;
-    this.attribute = attribute;
-    this.regex = Pattern.compile (regex);
-    this.tryAll = tryAll;
-  }
-
-
-  public boolean suggest (String word)
+  @Override
+  public boolean suggest (String word, VoikkoAttribute voikkoAtt)
   {
     boolean success = false;
-    result.clear();
-
-    for (int i = 0; i < pattern.length; i++) {
-      if (suggest (i, word)) {
-        if (tryAll) {
+    final int N = parameter.item.length;
+    for (int i = 0; i < parameter.item.length; i++) {
+//System.out.println ("Ding dong.");
+      if (suggest (i, word, voikkoAtt)) {
+        if (parameter.tryAll) {
           success = true;
         }
         else {
@@ -67,58 +56,42 @@ public class VoikkoAttributeSuggestion extends Suggestion {
   }
 
 
-  private boolean suggest (int i, String word)
+  private boolean suggest (int i, String word, VoikkoAttribute voikkoAtt)
   {
     boolean success = false;
-    Matcher m = pattern[i].matcher(word);
+    Matcher m = parameter.item[i].pattern.matcher (word);
 
     if (m.find()) {
-      final String u = m.replaceAll (replacement[i]);
-      final List<Analysis> analysis = voikko.analyze (u);
-      for (Analysis a: analysis) {
-        if (ok (a)) {
-          result.add (a.get("BASEFORM").toLowerCase());
-          success = true;
+      for (int j = 0; j < parameter.item[i].replacement.length; j++) {
+        for (int k = 0; k < parameter.item[i].replacement[j].list.length; k++) {
+          final String u = m.replaceAll (parameter.item[i].replacement[j].list[k]);
+          final List<Analysis> analysis = voikko.analyze (u);
+          for (Analysis a: analysis) {
+            if (ok (i, j, a)) {
+              voikkoAtt.addAnalysis (a);
+              success = true;
+            }
+          }
         }
-      }
+      } 
     }
     return success;
   }
 
 
-  private Pattern[] makePattern (List<String> input)
+  private boolean ok (int i, int j, Analysis analysis)
   {
-    Pattern[] p = new Pattern[input.size()/2];
-    for (int i = 0; i < input.size(); i += 2) {
-      p[i] = Pattern.compile (input.get (i));
+    if (parameter.item[i].replacement[j].attribute.length() == 0) {
+      return true;
     }
-    return p;
-  }
 
-
-  private String[] makeReplacement (List<String> input)
-  {
-    String[] s = new String[input.size()/2];
-    for (int i = 0; i < input.size(); i += 2) {
-      s[i] = input.get (i+1);
-    }
-    return s;
-  }
-
-
-  private boolean ok (Analysis analysis)
-  {
-    final String key = analysis.get (attribute);
+    final String key = analysis.get (parameter.item[i].replacement[j].attribute);
     if (key != null) {
-      return regex.matcher(key).find();
+      return parameter.item[i].replacement[j].regex.matcher(key).find();
     }
     return false;
   }
 
 
-  private final Pattern[] pattern;
-  private final String[] replacement;
-  private final String attribute;
-  private final Pattern regex;
-  private final boolean tryAll;
+  private final VoikkoAttributeParameter parameter;
 }

@@ -20,22 +20,20 @@ package peltomaa.sukija.baseform;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
-import java.util.Vector;
+import java.util.Set;
+import java.util.TreeSet;
 
+import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
+import org.apache.lucene.analysis.tokenattributes.FlagsAttribute;
+import org.apache.lucene.analysis.tokenattributes.FlagsAttributeImpl;
 import org.apache.lucene.analysis.Tokenizer;
 import org.apache.lucene.analysis.TokenStream;
-import org.apache.lucene.analysis.tokenattributes.FlagsAttribute;
-import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
-import org.apache.lucene.analysis.tokenattributes.OffsetAttribute;
-import org.apache.lucene.analysis.tokenattributes.PositionIncrementAttribute;
 import org.puimula.libvoikko.*;
-import peltomaa.sukija.baseform.BaseFormFilter;
 import peltomaa.sukija.finnish.HVTokenizer;
 import peltomaa.sukija.hyphen.HyphenFilter;
 import peltomaa.sukija.util.Constants;
+import peltomaa.sukija.attributes.BaseFormAttribute;
 import peltomaa.sukija.attributes.OriginalWordAttribute;
-import peltomaa.sukija.attributes.VoikkoAttribute;
-import peltomaa.sukija.suggestion.MultiSuggestionFilter;
 import peltomaa.sukija.suggestion.Suggestion;
 import peltomaa.sukija.suggestion.SuggestionFilter;
 
@@ -47,41 +45,60 @@ public class BaseFormTester {
   private BaseFormTester() {}
 
 
-  public static void test (Reader reader, Writer writer, Voikko voikko, Suggestion[] suggestion,
-                           boolean successOnly) throws IOException
-  {
-    test (reader, writer, voikko, null, null, suggestion, successOnly);
-  }
-
-
   public static void test (Reader reader, Writer writer, Voikko voikko,
-                           String from, String to, Suggestion[] suggestion,
                            boolean successOnly) throws IOException
   {
     TokenStream t = new HVTokenizer();
     ((Tokenizer)t).setReader (reader);
-    t = new HyphenFilter (t);
-    if (suggestion == null) {
-      t = new BaseFormFilter (t, voikko, successOnly);
-    }
-    else if (from != null) {
-      t = new MultiSuggestionFilter (t, voikko, from, to, suggestion, successOnly);
-    }
-    else {
-      t = new SuggestionFilter (t, voikko, suggestion, successOnly);
-    }
 
-    CharTermAttribute word = t.addAttribute (CharTermAttribute.class);
+    t = new BaseFormFilter (t, voikko, successOnly);
+
+    CharTermAttribute termAtt = t.addAttribute (CharTermAttribute.class);
+    BaseFormAttribute baseFormAtt = t.addAttribute (BaseFormAttribute.class);
     FlagsAttribute flagsAtt = t.addAttribute (FlagsAttribute.class);
     OriginalWordAttribute originalWordAtt = t.addAttribute (OriginalWordAttribute.class);
-    VoikkoAttribute voikkoAtt = t.addAttribute (VoikkoAttribute.class);
+
+String orig = "";
+TreeSet<String> tset = new TreeSet<String>();
+FlagsAttribute flagsA = new FlagsAttributeImpl();
 
     try {
       t.reset();
       while (t.incrementToken()) {
+        if (!orig.equals("") && !orig.equals(originalWordAtt.getOriginalWord())) {
+          writer.write ("Sana: " + orig);
+          if (Constants.hasFlag (flagsA, Constants.FOUND)) {
+            writer.write (" M " + toString(tset));
+          }
+          writer.write ("\n");
+          writer.flush();
+          tset.clear();
+        }
+        orig = originalWordAtt.getOriginalWord();
+        tset.addAll (baseFormAtt.getBaseForms());
+        flagsA.setFlags (flagsAtt.getFlags());
+      }
+      
+      writer.write ("Sana: " + orig);
+      if (Constants.hasFlag (flagsA, Constants.FOUND)) {
+        writer.write (" M " + toString(tset));
+      }
+      writer.write ("\n");
+      writer.flush();
+      t.end();
+    }
+    finally {
+      t.close();
+    }
+
+/*
+    try {
+      t.reset();
+      while (t.incrementToken()) {
         writer.write ("Sana: " + originalWordAtt.getOriginalWord()
-                      + " " + word.toString()
+                      + " " + termAtt.toString()
                       + " " + Constants.toString (flagsAtt)
+                      + " " + baseFormAtt.getBaseForms().toString()
                       + "\n");
         writer.flush();
       }
@@ -90,5 +107,13 @@ public class BaseFormTester {
     finally {
       t.close();
     }
+*/
+  }
+
+
+  private static final String toString (Set<String> set)
+  {
+    final String s = set.toString().replaceAll (",", "");
+    return s.substring (1, s.length()-1);
   }
 }

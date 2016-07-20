@@ -17,13 +17,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 package peltomaa.sukija.suggestion;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.puimula.libvoikko.Analysis;
 import org.puimula.libvoikko.Voikko;
+import peltomaa.sukija.attributes.VoikkoAttribute;
 import peltomaa.sukija.voikko.VoikkoUtils;
 
 
@@ -74,9 +77,10 @@ public class PrefixSuggestion extends Suggestion {
   }
 
 
-  public boolean suggest (String word)
+  @Override
+  public boolean suggest (String word, VoikkoAttribute voikkoAtt)
   {
-    result.clear();
+    analysisList.clear();
 
     // Käydään läpi kaikki etuliitteet pisimmästä alkaen ja
     // lopetetaan, kun löytyy eka tunnistettu sana.
@@ -84,18 +88,28 @@ public class PrefixSuggestion extends Suggestion {
     for (int i = Math.min (maxLength, word.length()); i >= minLength; i--) {
       final String p = word.substring (0, i);    // Sanan alku.
       if (prefixSet.contains (p)) {              // Onko etuliite?
-        set.clear();
-        if (VoikkoUtils.analyze (voikko, word.substring(i), set)) {
+        List<Analysis> list = voikko.analyze (word.substring(i));
+        if (list.size() > 0) {
           //
           // Etuliitteetön sana tunnistettiin.
           //
-          result.clear();
-          if (savePrefix) result.add (p);
-          for (String s: set) {
-            result.add (p + s);
-            if (saveWord) result.add (s);
+          if (saveWord) {
+            analysisList.addAll (list);
           }
-//if (word.indexOf("-") >= 0) System.out.println ("XXXX " + word + " " + result.toString());
+          if (savePrefix) {
+            List<Analysis> prefixList = voikko.analyze (p);
+            if (prefixList.size() > 0) {
+              analysisList.addAll (prefixList);
+            }
+            else {
+              analysisList.add (VoikkoUtils.newBaseForm (p));
+            }
+          }
+
+          for (Analysis a: list) {
+            analysisList.add (VoikkoUtils.newBaseForm (p + a.get("BASEFORM")));
+          }
+          voikkoAtt.addAnalysis (analysisList);
           return true;
         }
       }
@@ -103,10 +117,10 @@ public class PrefixSuggestion extends Suggestion {
     return false;
   }
 
-  private Set<String> set = new TreeSet<String>();
   private Set<String> prefixSet;  // Etuliitteet.
   private int minLength;  // Lyhimmän etuliitteen pituus.
   private int maxLength;  // Pisimmän etuliitteen pituus.
   private boolean savePrefix;
   private boolean saveWord;
+  private List<Analysis> analysisList = new ArrayList<Analysis>();
 }

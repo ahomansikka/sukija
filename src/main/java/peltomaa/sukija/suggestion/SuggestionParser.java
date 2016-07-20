@@ -41,15 +41,12 @@ import org.puimula.libvoikko.Voikko;
 public class SuggestionParser {
   public SuggestionParser (Voikko voikko, InputStream is) throws SuggestionParserException
   {
-    if (parsed) return;
-
     try {
-      LOG.info ("Aloitetaan.");
+      LOG.info ("SuggestionParser: Aloitetaan.");
       si = JAXBUtil.unmarshal (is, XSD_FILE, SCHEMA_LOCATION, CONTEXT_PATH, this.getClass().getClassLoader());
       parseSuggestions (voikko, si.getSuggestion());
-      parsed = true;
 
-      print (System.out);
+//      print (System.out);
     }
     catch (Throwable t)
     {
@@ -68,15 +65,12 @@ public class SuggestionParser {
 
   public SuggestionParser (Voikko voikko, String xmlFile, String xsdFile) throws SuggestionParserException
   {
-    if (parsed) return;
-
     try {
       LOG.info ("SuggestionParser: " + xmlFile + " " + xsdFile);
 
       si = JAXBUtil.unmarshal (xmlFile, xsdFile, SCHEMA_LOCATION, CONTEXT_PATH, this.getClass().getClassLoader());
 //      JAXBUtil.marshal ((new ObjectFactory()).createSuggestions(si), CONTEXT_PATH, System.out, this.getClass().getClassLoader()); System.exit(1);
       parseSuggestions (voikko, si.getSuggestion());
-      parsed = true;
 
 //      print (System.out);
     }
@@ -123,6 +117,9 @@ public class SuggestionParser {
 
   public Suggestion[] getSuggestions() {return v;}
 
+  public String getFrom() {return (si.getChar() == null) ? "" : si.getChar().getFrom();}
+  public String getTo()   {return (si.getChar() == null) ? "" : si.getChar().getTo();}
+
 
   private void parseSuggestions (Voikko voikko, List<Object> s) throws FileNotFoundException, IOException
   {
@@ -142,12 +139,14 @@ public class SuggestionParser {
             v[i] = new ApostropheSuggestion (voikko);
           }
           break;
+/*
         case "peltomaa.sukija.schema.CharInput":
           {
             final CharInput input = (CharInput)s.get(i);
             v[i] = new CharSuggestion (voikko, input.getFrom(), input.getTo());
           }
           break;
+*/
         case "peltomaa.sukija.schema.CompoundWordEndInput":
           {
             final CompoundWordEndInput input = (CompoundWordEndInput)s.get(i);
@@ -205,12 +204,12 @@ public class SuggestionParser {
         case "peltomaa.sukija.schema.VoikkoAttributeInput":
           {
             final VoikkoAttributeInput input = (VoikkoAttributeInput)s.get(i);
-            v[i] = new VoikkoAttributeSuggestion (voikko, makePattern (input.getInput()), makeReplacement (input.getInput()),
-                                                  input.getAttribute(),
-                                                  input.getRegex(), input.isTryAll());
+            v[i] = new VoikkoAttributeSuggestion (voikko,
+                                                  new VoikkoAttributeParameter (input));
           }
           break;
         default:
+          // Tätä ei pitäisi koskaan tapahtua.
           throw new RuntimeException ("SuggestionParser: tuntematon luokka: s.get(i).getClass().getName()");
       }
     }
@@ -223,16 +222,18 @@ public class SuggestionParser {
     Map<String,String> map = new HashMap<String,String>();
 
     for (int i = 0; i < input.size(); i++) {
-      switch (input.get(i).getValue().size()) {
-        case 1:
-          map.put (input.get(i).getValue().get(0), "");
-          break;
-        case 2:
-          map.put (input.get(i).getValue().get(0), input.get(i).getValue().get(1));
-          break;
-        default:
-          // Tätä ei pitäisi koskaan tapahtua.
-          throw new RuntimeException ("Listan pituus on väärä: " + input.get(i).getValue().size());
+      if (input.get(i).getValue().size() == 2) {
+        final String KEY = input.get(i).getValue().get(0);
+        if (map.containsKey (KEY)) {
+          throw new RuntimeException ("Kaksi samaa avainkentän arvoa " + KEY + ".");
+        }
+        else {        
+          map.put (KEY, input.get(i).getValue().get(1));
+        }
+      }
+      else {
+        throw new RuntimeException ("Listassa pitää olla 2 alkiota, on "
+                                    + input.get(i).getValue().size() + ".");
       }
     }
     return map;
@@ -282,6 +283,7 @@ public class SuggestionParser {
     {
       super (cause);
     }
+    private static final long serialVersionUID = 1L;
   }
 
 
@@ -292,5 +294,4 @@ public class SuggestionParser {
 //  private static final String XSD_FILE = "peltomaa/sukija/schema/SuggestionInput.xsd";
   private static final String SCHEMA_LOCATION = "peltomaa/sukija/schema";
   private SuggestionInput si;
-  private boolean parsed = false;
 }

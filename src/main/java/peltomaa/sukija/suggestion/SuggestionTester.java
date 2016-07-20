@@ -21,18 +21,24 @@ import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
 import java.io.Writer;
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.Vector;
 
-import org.apache.lucene.analysis.Tokenizer;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
+import org.apache.lucene.analysis.tokenattributes.FlagsAttribute;
+import org.apache.lucene.analysis.tokenattributes.FlagsAttributeImpl;
+import org.apache.lucene.analysis.tokenattributes.OffsetAttribute;
+import org.apache.lucene.analysis.tokenattributes.PositionIncrementAttribute;
+import org.apache.lucene.analysis.Tokenizer;
 import org.apache.lucene.analysis.TokenStream;
+import peltomaa.sukija.attributes.BaseFormAttribute;
+import peltomaa.sukija.attributes.OriginalWordAttribute;
 import peltomaa.sukija.attributes.VoikkoAttribute;
+import peltomaa.sukija.hyphen.HyphenFilter;
 import peltomaa.sukija.finnish.HVTokenizer;
+import peltomaa.sukija.util.Constants;
 import peltomaa.sukija.voikko.*;
 import org.puimula.libvoikko.Analysis;
 import org.puimula.libvoikko.Voikko;
@@ -44,44 +50,33 @@ import org.puimula.libvoikko.Voikko;
 public class SuggestionTester {
   private SuggestionTester() {}
 
-  public static void analyze (Reader reader, Writer writer, Voikko voikko, Suggestion[] suggestion, boolean stopOnSuccess) throws IOException
+  public static void analyze (Reader reader, Writer writer, Voikko voikko,
+                              String suggestionFile, boolean stopOnSuccess,
+                              boolean useHyphenFilter) throws IOException
   {
     List<Analysis> analysis = null;
-    Set<String> set = new TreeSet<String>();
     TokenStream t = new HVTokenizer();
     ((Tokenizer)t).setReader (reader);
 
-    t = new VoikkoFilter (t, voikko);
+//    t = new VoikkoFilter (t, voikko);
 
-    CharTermAttribute charTermAtt = t.addAttribute (CharTermAttribute.class);
-//    VoikkoAttribute voikkoAtt = t.addAttribute (VoikkoAttribute.class);
+    if (useHyphenFilter) {
+      t = new HyphenFilter (t);
+    }
+    t = new SuggestionFilter (t, voikko, suggestionFile, false);
 
-//System.out.println ("VoikkoAttribute " + (voikkoAtt == null));
+    CharTermAttribute termAtt = t.addAttribute (CharTermAttribute.class);
+    BaseFormAttribute baseFormAtt = t.addAttribute (BaseFormAttribute.class);
+    FlagsAttribute flagsAtt = t.addAttribute (FlagsAttribute.class);
+    OriginalWordAttribute originalWordAtt = t.addAttribute (OriginalWordAttribute.class);
+
     try {
       t.reset();
-      set.clear();
       while (t.incrementToken()) {
-//    VoikkoUtils.printAnalysisResult (voikkoAtt, System.out);
-        final String word = charTermAtt.toString();
-        writer.write ("Sana: " + word);
-        set.clear();
-        if (VoikkoUtils.analyze (voikko, word, set)) {
-          print (writer, "M", set);
-        }
-        else if (suggestion != null) {
-          for (Suggestion s : suggestion) {
-            if (s.suggest(word)) {
-              print (writer, "S", s.getResult());
-              if (stopOnSuccess) {
-                break;
-              }
-            }
-          }
-        }
-//        voikkoAtt.setAnalysis (analysis);
+        writer.write ("Sana: " + originalWordAtt.getOriginalWord() + " | " + termAtt.toString() + " | ");
+        writer.write (Constants.toString(flagsAtt));
         writer.write ("\n");
         writer.flush();
-//        VoikkoUtils.printAnalysisResult (voikkoAtt, System.out);
       }
       t.end();
     }
@@ -91,11 +86,9 @@ public class SuggestionTester {
   }
 
 
-  private static void print (Writer writer, String prefix, Collection<String> c) throws IOException
+  private static final String toString (Set<String> set)
   {
-    writer.write (" " + prefix);
-    for (String s: c) {
-      writer.write (" " + s);
-    }
+    final String s = set.toString().replaceAll (",", "");
+    return s.substring (1, s.length()-1);
   }
 }

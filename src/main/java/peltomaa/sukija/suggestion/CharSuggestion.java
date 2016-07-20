@@ -18,9 +18,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package peltomaa.sukija.suggestion;
 
 import java.util.Iterator;
-import peltomaa.sukija.util.CharCombinator;
 import org.puimula.libvoikko.Voikko;
-import peltomaa.sukija.voikko.VoikkoUtils;
+import peltomaa.sukija.util.CharCombinator;
+import peltomaa.sukija.attributes.VoikkoAttribute;
 
 
 /**
@@ -39,7 +39,8 @@ public class CharSuggestion extends Suggestion {
   }
 
 
-  public boolean suggest (String word)
+  @Override
+  public boolean suggest (String word, VoikkoAttribute voikkoAtt)
   {
     charCombinator = new CharCombinator (word, from, to);
 //System.out.println ("\nCharSuggestion " + word + " " + from + " " + to);
@@ -47,10 +48,9 @@ public class CharSuggestion extends Suggestion {
     Iterator<String> i = charCombinator.iterator();
 
     while (i.hasNext()) {
-//    if (VoikkoUtils.analyze (voikko, i.next(), result)) {
       final String s = i.next();
 //System.out.println ("\nCharSuggestion " + word + " " + s);
-      if (VoikkoUtils.analyze (voikko, s, result)) {
+      if (analyze (s, voikkoAtt)) {
         return true;  // Muutettu sana tunnistettiin.
       }
     }

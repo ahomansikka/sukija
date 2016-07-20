@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2009-2011, 2013-2015 Hannu Väisänen
+Copyright (©) 2009-2011, 2013-2016 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -17,16 +17,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 package peltomaa.sukija.suggestion;
 
+import java.util.HashSet;
+import java.util.Set;
 import org.puimula.libvoikko.Analysis;
 import org.puimula.libvoikko.Voikko;
-import peltomaa.sukija.voikko.VoikkoUtils;
+import peltomaa.sukija.attributes.VoikkoAttribute;
 
 
 public class ApostropheSuggestion extends Suggestion {
   /**
-   * Constructor.
+   * Muodostin
    *
-   * @param voikko  An instance Of voikko.
+   * @param voikko  Voikko.
    */
   public ApostropheSuggestion (Voikko voikko)
   {
@@ -36,10 +38,10 @@ public class ApostropheSuggestion extends Suggestion {
 
 
   /**
-   * Constructor.
+   * Muodostin
    *
-   * @param voikko  An instance Of voikko.
-   * @param ch      Character to be used instead of apostrophe.
+   * @param voikko  Voikko.
+   * @param ch      Merkki, jota käytetään erottimena heittomerkin asemesta.
    */
   public ApostropheSuggestion (Voikko voikko, char ch)
   {
@@ -60,24 +62,39 @@ public class ApostropheSuggestion extends Suggestion {
   Bordeauxiin} and if Voikko does not recognize that, set the base form
   to {@code Bordeaux} and return true.
   */
-  public boolean suggest (String word)
+  @Override
+  public boolean suggest (String word, VoikkoAttribute voikkoAtt)
   {
     final int n = word.indexOf (ch);
     if (n == -1) return false;
 
-    result.clear();
+    final String START = word.substring(0,n);
 
     sb.delete (0, sb.length());
-    sb.append (word.substring (0, n)).append (word.substring (n+1, word.length()));
+    sb.append (START).append (word.substring (n+1, word.length()));
 
-    if (VoikkoUtils.analyze (voikko, word, result)) return true;
+    if (analyze (sb.toString(), voikkoAtt)) {
+      return true;
+    }
+    else if (analyze (START, voikkoAtt)) {
+      return true;
+    }
+    else {
+      extraBaseForms.clear();
+      extraBaseForms.add (START);
+      return true;
+    }
+  }
 
-    result.clear();
-    result.add (word.substring(0,n).toString().toLowerCase());
-    return true;
+
+  @Override
+  public Set<String> getExtraBaseForms()
+  {
+    return extraBaseForms;
   }
 
 
   private final char ch;
   private StringBuilder sb = new StringBuilder (500);
+  private HashSet<String> extraBaseForms = new HashSet<String>();
 }

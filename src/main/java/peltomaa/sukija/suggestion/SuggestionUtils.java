@@ -21,11 +21,17 @@ package peltomaa.sukija.suggestion;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 import java.util.Vector;
+import org.apache.lucene.analysis.tokenattributes.FlagsAttribute;
 import org.apache.lucene.analysis.util.CharArraySet;
 import org.puimula.libvoikko.*;
+import peltomaa.sukija.attributes.BaseFormAttribute;
+import peltomaa.sukija.attributes.VoikkoAttribute;
+import peltomaa.sukija.util.AnalysisUtils;
 import peltomaa.sukija.util.CharCombinator;
+import peltomaa.sukija.util.Constants;
 import peltomaa.sukija.voikko.VoikkoUtils;
 
 
@@ -33,68 +39,71 @@ public final class SuggestionUtils {
   private SuggestionUtils() {}
 
 
-  public static final Collection<String> getSuggestions (Suggestion[] suggestion, String word)
+  public static final boolean getSuggestions (Suggestion[] suggestion, String word, VoikkoAttribute voikkoAtt,
+                                              BaseFormAttribute baseFormAtt)
   {
+    if (suggestion == null) throw new RuntimeException ("suggestion == null");
     for (int i = 0; i < suggestion.length; i++) {
-      if (suggestion[i].suggest (word)) {
-        return suggestion[i].getResult();
+//System.out.println ("Analyze5 " + word + " " + suggestion[i].getClass().getName());
+      if (suggestion[i].suggest (word, voikkoAtt)) {
+//System.out.println ("Analyze6 " + word);
+        baseFormAtt.clear();
+        Set<String> BF = suggestion[i].getExtraBaseForms();
+        if (BF != null) {
+          for (String s : BF) {
+            baseFormAtt.addBaseForm (s.toLowerCase());
+          }                                
+        }                                
+        baseFormAtt.addBaseForms (VoikkoUtils.getBaseForms (voikkoAtt.getAnalysis()));
+        return true;
       }
     }
-    return null;
+    return false;
   }
 
 
-  public static final boolean analyze (String word, Collection<String> result,
+  public static final boolean analyze (Voikko voikko, String word, VoikkoAttribute voikkoAtt,
+                                       BaseFormAttribute baseFormAtt, FlagsAttribute flagsAtt,
                                        Suggestion[] suggestion, String from, String to)
   {
-    result.clear();
+//System.out.println ("Analyze1 " + from + " " + to + " " + word);
+    boolean suggestionResult = getSuggestions (suggestion, word, voikkoAtt, baseFormAtt);
 
-    Collection<String> suggestionResult = getSuggestions (suggestion, word);
-
-    if (suggestionResult == null) {
-      suggestionResult = getSuggestions (suggestion, word, from, to); 
-    }
-
-    if (suggestionResult != null) {
-      result.addAll (suggestionResult);
-      return true;
-    }
-    else {
-      result.add (word);
-      return false;
-    }
-  }
-
-
-  public static final Suggestion[] removeSuggestions (Suggestion[] suggestion, String className)
-  {
-    Vector<Suggestion> v = new Vector<Suggestion>();
-    for (int i = 0; i < suggestion.length; i++) {
-      if (suggestion[i].getClass().getName().indexOf(className) == -1) {
-        v.add (suggestion[i]);
+    if (!suggestionResult) {
+      if (from.length() > 0) {
+//System.out.println ("Analyze2 " + from + " " + to + " " + word);
+        suggestionResult = getSuggestions (voikko, word, voikkoAtt, baseFormAtt, flagsAtt, suggestion, from, to); 
       }
     }
-    return v.toArray (new Suggestion[0]);
+
+//System.out.println ("AnalyzeÖ " + from + " " + to + " " + word + " " + suggestionResult);
+
+    return suggestionResult;
   }
 
 
-  private static final Collection<String> getSuggestions
-    (Suggestion[] suggestion, String word, String from, String to)
+  private static final boolean getSuggestions
+    (Voikko voikko, String word, VoikkoAttribute voikkoAtt,
+     BaseFormAttribute baseFormAtt, FlagsAttribute flagsAtt,
+     Suggestion[] suggestion, String from, String to)
   {
+//System.out.println ("Analyze3 " + from + " " + to + " " + word);
+
     CharCombinator charCombinator = new CharCombinator (word, from, to);
     Iterator<String> iterator = charCombinator.iterator();
-//System.out.println ("SuggestionUtils " + charCombinator.size() + " " + word);
 
     while (iterator.hasNext()) {
       final String s = iterator.next();
-//System.out.println ("SuggestionUtils " + s);
-      Collection<String> suggestionResult = getSuggestions (suggestion, s);
-      if (suggestionResult != null) {
-//System.out.println ("SuggestionUtils Huu");
-        return suggestionResult;
+
+      if (AnalysisUtils.analyze (voikko, s, voikkoAtt, baseFormAtt, flagsAtt)) {
+//System.out.println ("Analyze4 " + from + " " + to + " " + word + " " + s);
+        return true;
+      }
+      if (getSuggestions (suggestion, s, voikkoAtt, baseFormAtt)) {
+//System.out.println ("Analyze9 " + from + " " + to + " " + word + " " + s);
+        return true;
       }
     }
-//System.out.println ("SuggestionUtils Haa");
-    return null;
+    return false;
   }
 }

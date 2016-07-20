@@ -22,18 +22,19 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.Set;
 import java.util.Vector;
 import org.apache.lucene.analysis.util.CharArraySet;
-import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.apache.lucene.analysis.TokenFilter;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.util.WordlistLoader;
 import org.puimula.libvoikko.*;
 import peltomaa.sukija.suggestion.Suggestion;
 import peltomaa.sukija.suggestion.SuggestionUtils;
+import peltomaa.sukija.attributes.VoikkoAttribute;
 import peltomaa.sukija.util.SukijaFilter;
 import peltomaa.sukija.voikko.VoikkoUtils;
 
@@ -56,35 +57,62 @@ public final class KeepFilter extends SukijaFilter {
     baseForms.clear();
     tmp.clear();
 
+    List<Analysis> list = voikko.analyze (word);
+    if (list.size() > 0) {
+      if (copyIf (VoikkoUtils.getBaseForms(list), baseForms)) {
+        return baseForms.iterator();
+      }
+    }
+
+/*
 //System.out.println ("KeepFilter0 " + word);
 
-    if (VoikkoUtils.analyze (voikko, word, tmp)) {
-//System.out.println ("KeepFilter1 " + word);
-      if (VoikkoUtils.copyIf (tmp, wordSet, baseForms, suggestion)) {
+    Set<String> set = VoikkoUtils.AconvertToBaseForms (voikko, word);
+    if (set != null) {
+      if (copyIf (set, baseForms)) {
 //System.out.println ("KeepFilter1 " + word);
         return baseForms.iterator();
       }
     }
     else {
 //System.out.println ("KeepFilterA " + word);
-      if (VoikkoUtils.analyze (voikko, word, tmp, from, to)) {
+      if (VoikkoUtils.panalyze (voikko, word, tmp, from, to)) {
 //System.out.println ("KeepFilter3 " + word + " " + tmp.toString());
-        if (VoikkoUtils.copyIf (tmp, wordSet, baseForms, suggestion)) {
+        if (copyIf (tmp, baseForms)) {
 //System.out.println ("KeepFilter4 " + word + " " + baseForms.toString());
           return baseForms.iterator();
         }
 //System.out.println ("KeepFilterB " + word);
       }
 //System.out.println ("KeepFilter5 " + word);
-      if (SuggestionUtils.analyze (word, tmp, suggestion, from, to)) {
+      if (SuggestionUtils.analyze (suggestion, word, voikkoAtt, baseFormAtt, from, to)) {
 //for (String s : tmp) System.out.println ("KeepFilter6 " + word + " " + s);
         baseForms.addAll (tmp);
         return baseForms.iterator();
       }
     }
-
 //System.out.println ("KeepFilter7 " + word);
+*/
     return null;
+  }
+
+
+  private boolean copyIf (Set<String> from, Set<String> to)
+  {
+    to.clear();
+    for (String s : from) {
+      if (wordSet.contains (s)) {
+        to.add (s);
+      }
+      else {
+        boolean p = SuggestionUtils.getSuggestions (suggestion, s, voikkoAtt, baseFormAtt);
+        if (p) {
+          to.addAll (baseFormAtt.getBaseForms());
+//System.out.println ("VoikkoUtils " + s + " " + p.toString());
+        }
+      }
+    }
+    return (to.size() > 0);
   }
 
 

@@ -11,7 +11,6 @@ import org.puimula.libvoikko.*;
 import peltomaa.sukija.finnish.HVTokenizer;
 import peltomaa.sukija.voikko.VoikkoFilter;
 import peltomaa.sukija.voikko.VoikkoUtils;
-import peltomaa.sukija.attributes.OriginalWordAttribute;
 import peltomaa.sukija.attributes.VoikkoAttribute;
 import peltomaa.sukija.hyphen.HyphenFilter;
 import org.apache.lucene.analysis.TokenStream;
@@ -74,14 +73,14 @@ public class AppTest  extends TestCase
     t = new HyphenFilter (t);
     t = new VoikkoFilter (t, voikko);
     t.reset();
+    VoikkoAttribute sukijaAtt = t.addAttribute (VoikkoAttribute.class);
     CharTermAttribute termAtt = t.addAttribute (CharTermAttribute.class);
-    VoikkoAttribute voikkoAtt = t.addAttribute (VoikkoAttribute.class);
 
     while (t.incrementToken()) {
       System.out.println ("AppTest " + termAtt.toString());
-      for (int i = 0; i < voikkoAtt.getAnalysis().size(); i++) {
-        System.out.println (voikkoAtt.getAnalysis(i).get("BASEFORM"));
-//        VoikkoUtils.printAnalysisResult (voikkoAtt.getAnalysis(i), System.out);
+      for (int i = 0; i < sukijaAtt.getAnalysis().size(); i++) {
+        System.out.println (sukijaAtt.getAnalysis(i).get("BASEFORM"));
+//        VoikkoUtils.printAnalysisResult (sukijaAtt.getAnalysis(i), System.out);
       }
       System.out.println ("");
     }
