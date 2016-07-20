@@ -78,7 +78,7 @@ public abstract class SukijaFilter extends TokenFilter {
 //System.out.println ("SukijaFilter3 " + word + " " + termAtt.toString() + " [" + originalWordAtt.getOriginalWord());
       posIncrAtt.setPositionIncrement (positionIncrement);
       positionIncrement = 0;
-System.out.println ("SukijaFilter4 " + word + " " + baseFormAtt.getBaseForms().toString());
+//System.out.println ("SukijaFilter4 " + word + " " + baseFormAtt.getBaseForms().toString());
       return true;
     }
 //System.out.println ("SukijaFilter3 " + word + " " + termAtt.toString() + " [" + originalWordAtt.getOriginalWord());

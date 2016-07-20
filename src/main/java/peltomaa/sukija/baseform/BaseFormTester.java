@@ -30,7 +30,6 @@ import org.apache.lucene.analysis.Tokenizer;
 import org.apache.lucene.analysis.TokenStream;
 import org.puimula.libvoikko.*;
 import peltomaa.sukija.finnish.HVTokenizer;
-import peltomaa.sukija.hyphen.HyphenFilter;
 import peltomaa.sukija.util.Constants;
 import peltomaa.sukija.attributes.BaseFormAttribute;
 import peltomaa.sukija.attributes.OriginalWordAttribute;

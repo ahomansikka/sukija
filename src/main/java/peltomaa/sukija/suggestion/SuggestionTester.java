@@ -36,7 +36,6 @@ import org.apache.lucene.analysis.TokenStream;
 import peltomaa.sukija.attributes.BaseFormAttribute;
 import peltomaa.sukija.attributes.OriginalWordAttribute;
 import peltomaa.sukija.attributes.VoikkoAttribute;
-import peltomaa.sukija.hyphen.HyphenFilter;
 import peltomaa.sukija.finnish.HVTokenizer;
 import peltomaa.sukija.util.Constants;
 import peltomaa.sukija.voikko.*;
@@ -60,9 +59,6 @@ public class SuggestionTester {
 
 //    t = new VoikkoFilter (t, voikko);
 
-    if (useHyphenFilter) {
-      t = new HyphenFilter (t);
-    }
     t = new SuggestionFilter (t, voikko, suggestionFile, false);
 
     CharTermAttribute termAtt = t.addAttribute (CharTermAttribute.class);

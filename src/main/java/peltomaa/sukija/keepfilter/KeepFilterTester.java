@@ -34,7 +34,6 @@ import org.apache.lucene.analysis.util.CharArraySet;
 import org.apache.lucene.analysis.util.WordlistLoader;
 import org.puimula.libvoikko.*;
 import peltomaa.sukija.finnish.HVTokenizer;
-import peltomaa.sukija.hyphen.HyphenFilter;
 import peltomaa.sukija.util.Constants;
 import peltomaa.sukija.util.SukijaFilter;
 import peltomaa.sukija.attributes.BaseFormAttribute;

@@ -12,7 +12,6 @@ import peltomaa.sukija.finnish.HVTokenizer;
 import peltomaa.sukija.voikko.VoikkoFilter;
 import peltomaa.sukija.voikko.VoikkoUtils;
 import peltomaa.sukija.attributes.VoikkoAttribute;
-import peltomaa.sukija.hyphen.HyphenFilter;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.Tokenizer;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
@@ -70,7 +69,6 @@ public class AppTest  extends TestCase
     Reader r = new StringReader (input);
     TokenStream t = new HVTokenizer();
     ((Tokenizer)t).setReader (r);
-    t = new HyphenFilter (t);
     t = new VoikkoFilter (t, voikko);
     t.reset();
     VoikkoAttribute sukijaAtt = t.addAttribute (VoikkoAttribute.class);
