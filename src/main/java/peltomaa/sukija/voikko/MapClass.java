@@ -501,5 +501,8 @@ class MapClass {
     map.put ("pannoittaa", new String[]{"pannot", "pannoit"});
     map.put ("silloittaa", new String[]{"sillot", "silloit"});
     map.put ("hölkötellä", new String[]{"hölköit", "hölköt"});
-    map.put ("polisi", new String[]{"polis", "poliis"});  };
+    map.put ("polisi", new String[]{"polis", "poliis"});
+    map.put ("kimnaasi", new String[]{"kimnaas", "kymnaas"});
+    map.put ("kymnaasi", new String[]{"kymnaas", "kimnaas"});
+  };
 }
