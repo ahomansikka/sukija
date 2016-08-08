@@ -21,13 +21,16 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.Map;
 import java.util.Set;
 import peltomaa.sukija.attributes.VoikkoAttribute;
 import peltomaa.sukija.util.RegexUtil;
 import peltomaa.sukija.util.StringUtil;
 import peltomaa.sukija.voikko.VoikkoUtils;
+import org.ahocorasick.interval.*;
+import org.ahocorasick.trie.*;
+import org.ahocorasick.trie.handler.*;
+
 import org.puimula.libvoikko.Analysis;
 import org.puimula.libvoikko.Voikko;
 
@@ -43,12 +46,20 @@ public class CompoundWordEndSuggestion extends Suggestion {
    * @param addBaseFormOnly
    * @param addEnd
    */
-  public CompoundWordEndSuggestion (Voikko voikko, Pattern[] pattern, String[] end,
+  public CompoundWordEndSuggestion (Voikko voikko, Map<String,String> map,
                                     boolean addStart, boolean addBaseFormOnly, boolean addEnd)
   {
     super (voikko);
-    this.pattern = pattern;
-    this.end = end;
+    this.map = map;
+//System.out.println (map.toString());
+    Trie.TrieBuilder builder = Trie.builder();
+
+    for (String s : this.map.keySet()) {
+      builder.addKeyword (s);
+    }
+    trie = builder.build();
+
+
     this.addStart = addStart;
     this.addBaseFormOnly = addBaseFormOnly;
     this.addEnd = addEnd;
@@ -61,24 +72,27 @@ public class CompoundWordEndSuggestion extends Suggestion {
     extraBaseForms.clear();
     boolean found = false;
 
-    for (int i = 0; i < pattern.length; i++) {
-//System.out.println ("CompoundWordEndSuggestion2 " + word + " " + pattern[i].pattern());
-      Matcher matcher = pattern[i].matcher (word);
-      if (matcher.find(1)) {
-        List<Analysis> list = voikko.analyze (word.substring (matcher.start()));
-        if (list.size() > 0) {
-          String start = word.substring (0, matcher.start());
+    sb.delete (0, sb.length());
+    boolean hasToken = false;
 
+    for (Token token : trie.tokenize (word)) {
+//System.out.println ("CompoundWordEndSuggestion1 " + word + " " + token.getFragment());
+      if (token.isMatch()) {
+//System.out.println ("CompoundWordEndSuggestion2 " + word + " " + token.getFragment() + " " + word.substring (token.getEmit().getStart()));
+        List<Analysis> list = voikko.analyze (word.substring (token.getEmit().getStart()));
+        if (list.size() > 0) {
+          String start = word.substring (0, token.getEmit().getStart());
           for (Analysis a : list) {
             final String BASEFORM = a.get("BASEFORM").toLowerCase();
-//System.out.println ("CompoundWordEndSuggestion3 " + word + " " + pattern[i].pattern() + " " + BASEFORM);
+//System.out.println ("CompoundWordEndSuggestion3 " + word + " " + token.getFragment() + " " + BASEFORM);
 
-            if (BASEFORM.endsWith (end[i])) {
+            final String END = map.get (token.getFragment());
+
+            if (BASEFORM.endsWith (END)) {
               if (addStart) addStart (start, voikkoAtt);
-              if (addEnd) extraBaseForms.add (end[i]);
+              if (addEnd) extraBaseForms.add (END);
 
-//System.out.println ("CompoundWordEndSuggestion4 [" + word + "] base=[" + BASEFORM + "] start=[" + start
-//                    + "] start+base=[" + (start+BASEFORM) + "] end=[" + end[i] + "]");
+//System.out.println ("CompoundWordEndSuggestion4 " + word + " " + (start + BASEFORM));
               extraBaseForms.add (start + BASEFORM);
               final String DH = dehyphen (start, BASEFORM);
               if (DH != null) extraBaseForms.add (DH);
@@ -87,8 +101,8 @@ public class CompoundWordEndSuggestion extends Suggestion {
           }
           if (found) {
             voikkoAtt.addAnalysis (list);
-//System.out.println ("CompoundWordEndSuggestion5 " + word + " " + pattern[i].pattern() + " " + VoikkoUtils.getBaseForms(voikkoAtt.getAnalysis()));
-//System.out.println ("CompoundWordEndSuggestion6 " + word + " " + (voikkoAtt.getAnalysis() == null));
+//System.out.println ("CompoundWordEndSuggestion5 " + word + " " + token.getFragment()
+//                    + " " + VoikkoUtils.getBaseForms(voikkoAtt.getAnalysis()) + " " + extraBaseForms.toString());
             return true;
           }
         }
@@ -147,8 +161,10 @@ public class CompoundWordEndSuggestion extends Suggestion {
   }
 
 
-  private final Pattern[] pattern;
-  private final String[] end;
+  private StringBuilder sb = new StringBuilder (500);
+  private Map<String,String> map;
+  private Trie trie;
+
   private final boolean addStart;
   private final boolean addBaseFormOnly;
   private final boolean addEnd;

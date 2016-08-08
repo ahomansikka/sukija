@@ -4137,8 +4137,8 @@
     <input>sagittalis sagittaalis</input>
     <input>šakale šakaale</input>
     <input>sakale sakaale</input>
-    <input>sakali sakaali</input>
     <input>šakali šakaali</input>
+    <input>sakali sakaali</input>
     <input>sakrale sakraale</input>
     <input>sakrali sakraali</input>
     <input>saksofoone saksofone</input>
@@ -5026,9 +5026,12 @@
     <input>zoom-objektive zoom-objektiive</input>
     <input>zoom-objektivi zoom-objektiivi</input>
     <input>aartehisto aarteisto</input>
+    <input>aae aade</input>             <!-- Kaaetaan => kaadetaan. -->
     <input>abessiini abessini</input>
     <input>abyssiini abessini</input>
     <input>abyssini abessini</input>
+    <input>advokat advokaat</input>
+    <input>affäär afäär</input>
     <input>afghanistan afganistan</input>
     <input>agave agaave</input>
     <input>aggressivi aggressiivi</input>
@@ -5041,15 +5044,20 @@
     <input>ainahi ainai</input>
     <input>ainehisto aineisto</input>
     <input>aivotu aivoitu</input>
+    <input>akademilli akateemi</input>
+    <input>akateemilli akateemi</input>
     <input>akatemi akateemi</input>
     <input>aksiom aksioom</input>
     <input>aksioom aksiom</input>
+    <input>akustilli akusti</input>
     <input>alammai alamai</input>
     <input>alimai alimmai</input>
     <input>alkaal alkal</input>
     <input>alkoov alkov</input>
     <input>ameeb ameb</input>
+    <input>amerikalai amerikkalai</input>
     <input>amfiiteaatter amfiteatter</input>
+    <input>analytti analyytti</input>
     <input>apash apass</input>
     <input>apteekar apteekkar</input>
     <input>aptekar apteekkar</input>
@@ -5066,33 +5074,53 @@
     <input>biljaard biljard</input>
     <input>bloga blogga</input>
     <input>borsh borss</input>
+    <input>botaanilli botaani</input>
     <input>bushmani busmanni</input>
     <input>bushmann busmann</input>
+    <input>christilli kristilli</input>
     <input>dervisch derviss</input>
     <input>dervish derviss</input>
     <input>diadem diadeem</input>
     <input>disco disko</input>
+    <input>didaktilli didakti</input>
     <input>divan divaan</input>
     <input>drakhm drakm</input>
+    <input>drastilli drasti</input>
+    <input>epilli eeppi</input>
+    <input>eepilli eeppi</input>
     <input>ees edes</input>
+    <input>eetilli eetti</input>
     <input>eilline eiline</input>
     <input>eillis eilis</input>
+    <input>eksentrilli eksentri</input>
     <input>ekumeni ekumeeni</input>
+    <input>elastilli elasti</input>
+    <input>elehvant elefant</input>
+    <input>elegilli elegi</input>
     <input>emalje emale</input>
     <input>emalji emali</input>
     <input>emaljo emalo</input>
     <input>emblem embleem</input>
     <input>emir emiir</input>
+    <input>endeemilli endeemi</input>
+    <input>energilli energi</input>
     <input>ensimäi ensimmäi</input>
     <input>ensinmäi ensimmäi</input>
     <input>erillai erilai</input>
     <input>erinlai erilai</input>
     <input>erinnäi erinäi</input>
+    <input>esinty esiinty</input>
     <input>eskadron eskadroon</input>
+    <input>esteetilli esteetti</input>
+    <input>esteettilli esteetti</input>
+    <input>eteerilli eteeri</input>
     <input>etehi etei</input>
+    <input>etnilli etni</input>
     <input>evankeeli evankeli</input>
     <input>fakir fakiir</input>
     <input>fäärsaarelai färsaarelai</input>
+    <input>faktilli fakti</input>
+    <input>fyysilli fyysi</input>
     <input>galvani galvaani</input>
     <input>gentleman getlemann</input>
     <input>german germaan</input>
@@ -5113,7 +5141,10 @@
     <input>humpuukk humpuuk</input>
     <input>husar husaar</input>
     <input>hygieni hygieeni</input>
+    <input>hysteerilli hysteeri</input>
     <input>ideal ideaal</input>
+<!--    <input>illinen inen</input>  < ! - - Liian paljon  -->
+<!--    <input>illis is</input>      < ! - - vääriä tunnistuksia. -->
     <input>ilmottau ilmoittau</input>
     <input>indiviid individ</input>
     <input>inhimmilli inhimilli</input>
@@ -5124,6 +5155,7 @@
     <input>insenjöör insinöör</input>
     <input>insinör insinöör</input>
     <input>invaliid invalid</input>
+    <input>ironilli ironi</input>
     <input>jaapan japan</input>
     <input>jaappan japan</input>
     <input>jacarand jakarand</input>
@@ -5132,7 +5164,11 @@
     <input>janitschar janitsaar</input>
     <input>janitshaar janitsaar</input>
     <input>juliani juliaani</input>
+    <input>jumalilli jumali</input>
+    <input>juonilli juonelli</input>
+    <input>juridilli juridi</input>
     <input>juriidi juridi</input>
+    <input>juriidilli juridi</input>
     <input>kaaootti kaootti</input>
     <input>kaaotti kaootti</input>
     <input>kabalist kabbalist</input>
@@ -5179,6 +5215,7 @@
     <input>kheruub kerub</input>
     <input>kimnasist kymnasist</input>
     <input>kirjotelm kirjoitelm</input>
+    <input>kliinilli kliini</input>
     <input>kliniik klinik</input>
     <input>koilis koillis</input>
     <input>kolleeg kolleg</input>
@@ -5188,10 +5225,12 @@
     <input>konehisto koneisto</input>
     <input>konnossement konossement</input>
     <input>kontoor konttor</input>
+    <input>koomilli koomi</input>
     <input>korstein korsteen</input>
     <input>kortier kortteer</input>
     <input>kortter kortteer</input>
     <input>korttier kortteer</input>
+    <input>kosmilli kosmi</input>
     <input>kraate kraatte</input>
     <input>kraater kraatter</input>
     <input>kraati kraatti</input>
@@ -5207,7 +5246,9 @@
     <input>krati kraati</input>
     <input>krenatyör krenatöör</input>
     <input>krenatör krenatöör</input>
+    <input>ksilli kselli</input> <!-- Esim. merkityksillinen => merkityksellinen. -->
     <input>kulttur kulttuur</input>
+    <input>kulttuurilli kulttuuri</input>
     <input>kultuur kulttuur</input>
     <input>kummali kummalli</input>
     <input>kurier kuriir</input>
@@ -5215,11 +5256,14 @@
     <input>kurtini kurtiini</input>
     <input>kuuluut kuulut</input>
     <input>kuvernör kuvernöör</input>
+    <input>kyläi kyläläi</input>       <!-- Yhdyssanan jälkiosana: kyläläinen. -->
     <input>kymnaas kimnaas</input>
     <input>kymnas kimnaas</input>
+    <input>kyynilli kyyni</input>
     <input>köpenhamin kööpenhamin</input>
     <input>laestadiolai lestadiolai</input>
     <input>laitimai laitimmai</input>
+    <input>lakonilli lakoni</input>
     <input>lauvanta lauanta</input>
     <input>legiona legioona</input>
     <input>legioni legiooni</input>
@@ -5234,6 +5278,7 @@
     <input>luteerilai luterilai</input>
     <input>lutheerilai luterilai</input>
     <input>lutherilai luterilai</input>
+    <input>lyyrilli lyyri</input>
     <input>lähimäi lähimmäi</input>
     <input>maaoottelu maaottelu</input>
     <input>mahomettilai muhamettilai</input>
@@ -5252,9 +5297,11 @@
     <input>martyyr marttyyr</input>
     <input>matemaatilli matemaatti</input>
     <input>matrikel matrikkel</input>
+    <input>mekaanilli mekaani</input>
     <input>mekani mekaani</input>
     <input>melankooli melankoli</input>
     <input>mieluhi mielui</input>
+    <input>miimilli miimi</input>
     <input>minaret minareet</input>
     <input>mitaale mitale</input>
     <input>mitaali mitali</input>
@@ -5276,6 +5323,7 @@
     <input>nuubi nubi</input>
     <input>oittau ottau</input>
     <input>ooppium oopium</input>
+    <input>optilli opti</input>
     <input>oraakel oraakkel</input>
     <input>orakel oraakkel</input>
     <input>ottau oittau</input>
@@ -5283,6 +5331,7 @@
     <input>paitse paitsi</input>
     <input>palkoilli palkolli</input>
     <input>pankkir pankkiir</input>
+    <input>panteistilli panteisti</input>
     <input>pantomim pantomiim</input>
     <input>paradiis paratiis</input>
     <input>paradis paratiis</input>
@@ -5294,6 +5343,7 @@
     <input>pastoral pastoraal</input>
     <input>pasun pasuun</input>
     <input>pataljon pataljoon</input>
+    <input>pateetilli pateetti</input>
     <input>patris patriis</input>
     <input>patron patruun</input>
     <input>patroon patruun</input>
@@ -5311,22 +5361,28 @@
     <input>pisp piisp</input>
     <input>pistol pistool</input>
     <input>pital pitaal</input>
+    <input>platonilli platoni</input>
     <input>plank lank</input>    <!-- Myös: planko -> lanko -->
     <input>platan plataan</input>
     <input>plebej plebeij</input>
     <input>pluton plutoon</input>
     <input>pohjimai pohjimmai</input>
+    <input>poliitilli poliitti</input>
+    <input>politilli poliitti</input>
     <input>polyneesi polynesi</input>
     <input>porsliin posliin</input>
     <input>porslin posliin</input>
     <input>posetiv posetiiv</input>
     <input>positiv positiiv</input>
     <input>poslin posliin</input>
+    <input>praktilli prakti</input>
     <input>preetor preettor</input>
     <input>presbyter presbyteer</input>
     <input>pretorian pretoriaan</input>
     <input>pretor preettor</input>
     <input>problem probleem</input>
+    <input>psykilli psyykki</input>
+    <input>psyykilli psyykki</input>
     <input>puolimai puolimmai</input>
     <input>pyramiid pyramid</input>
     <input>päälik päällik</input>
@@ -5335,6 +5391,7 @@
     <input>päällimäi päällimmäi</input>
     <input>päärona päärynä</input>
     <input>pääskyi pääsky</input>
+    <input>rakehilli rakei</input>
     <input>rangastu rangaistu</input>
     <input>rankaistu rangaistu</input>
     <input>reetor reettor</input>
@@ -5345,6 +5402,7 @@
     <input>romantilli romantti</input>
     <input>romanti romantti</input>
     <input>rtelle rrelle</input> <!-- Vaikertellen => vaikerrellen. -->
+    <input>ruumilli ruumiilli</input>
     <input>sabat sapat</input>
     <input>safir safiir</input>
     <input>saipu saippu</input>
@@ -5354,12 +5412,13 @@
     <input>sairaloi sairaalloi</input>
     <input>salamander salamanter</input>
     <input>samallainen samanlainen</input> <!-- Nämä pitää olla erikseen tai -->
-    <input>samallais samanlais</input>    <!-- tulee samallailla -> samanlaki. -->
+    <input>samallais samanlais</input>     <!-- tulee samallailla -> samanlaki. -->
     <input>samojeed samojed</input>
     <input>samppanj sampanj</input>
     <input>sankariu sankaruu</input>
     <input>sapeel sapel</input>
     <input>sarasen saraseen</input>
+    <input>sardonilli sardoni</input>
     <input>sarkofaag sarkofag</input>
     <input>seminar seminaar</input>
     <input>senaator senaattor</input>
@@ -5373,6 +5432,7 @@
     <input>sigarr sikar</input>
     <input>sihter sihteer</input>
     <input>sihtier sihteer</input>
+    <input>siionis sionis</input>
     <input>sikaar sikar</input>
     <input>siren sireen</input>
     <input>sitron sitruun</input>
@@ -5381,6 +5441,8 @@
     <input>sitte sitten</input>
     <input>siviilisaatio sivilisaatio</input>
     <input>sivil siviil</input>
+    <input>skeptilli skepti</input>
+    <input>skolastilli skolasti</input>
     <input>skorpioon skorpion</input>
     <input>skorppioon skorpion</input>
     <input>slave slaave</input>
@@ -5394,6 +5456,7 @@
     <input>sulhain sulhan</input>
     <input>sulhais sulhas</input>
     <input>suomalis suomalais</input>
+    <input>suunit suunnit</input>       <!-- Suun(n)itella. -->
     <input>supressio suppressio</input>
     <input>sydämmisty sydämisty</input>
     <input>sydämmysty sydämisty</input>
@@ -5408,6 +5471,7 @@
     <input>teaatter teatter</input>
     <input>teater teatter</input>
     <input>tehottomanpi tehottomampi</input>
+    <input>teknilli tekni</input>
     <input>tempperament temperament</input>
     <input>thraaki traaki</input>
     <input>thraki traaki</input>
@@ -5422,11 +5486,14 @@
     <input>tulimai tulimmai</input>
     <input>tulpaan tulppaan</input>
     <input>tuorsta torsta</input>
+    <input>typpilli tyypilli</input>
+    <input>tyyppilli tyypilli</input>
     <input>uloimmai ulommai</input>
     <input>uloittei ulottei</input>
     <input>unioon union</input>
     <input>upser upseer</input>
     <input>upsier upseer</input>
+    <input>uue uude</input>      <!-- Uuen => uuden. -->
     <input>vaijen vaien</input>
     <input>vaillinnai vaillinai</input>
     <input>vaivaloi vaivalloi</input>
@@ -5445,6 +5512,7 @@
     <input>yheksä yhdeksä</input>
     <input>ylimäi ylimmäi</input>
     <input>ylähä ylhää</input>
+    <input>yye yyde</input>      <!-- Syvyyen => syvyyden. -->
     <input>zarahustr zarathustr</input>
     <input>öilli öi</input>
   </string>
@@ -5457,8 +5525,7 @@
     <input>(%Oi)(ts[ie]) $1</input>        <!-- Hallinnoitsija => hallinnoija, hallinnoi(tse)n. -->
     <input>(%U)(v)(%A) $1$3</input>        <!-- Lauvantai => lauantai, kauvan => kauvan. -->
     <input>([aäoö])(i)(lli) $1$3</input>   <!-- Kirjaillisuus => kirjallisuus. -->
-    <input>(illi)(nen|s)  i$2</input>      <!-- Akateemillinen => akateeminen. -->
-    <input>(uu|yy)(e)     $1de</input>     <!-- Uuen => uuden. -->
+<!--    <input>(illi)(nen|s)  i$2</input>      < ! - - Akateemillinen => akateeminen. -->
     <input>^([0-9]+)</input>               <!-- Poista numerot sanan alusta. -->
     <input>(\p{L})\1{2,} $1$1</input>      <!-- Korvaa 3 tai useampi sama kirjain 2:lla (kauttta => kautta). -->
     <input>(l%Ai)s$ $1nen</input>          <!-- Suomalais => suomalainen. -->
@@ -5470,101 +5537,185 @@
   </regex>
   <compoundWordEnd>
     <input>aukio aukio</input>
-    <input>hall[ie] halli</input>
+    <input>halle halli</input>
+    <input>halli halli</input>
     <input>harju harju</input>
     <input>hiek hiekka</input>
-    <input>jo(k[ie]|e) joki</input>
-    <input>jän[kg] jänkä</input>
-    <input>järv[ie] järvi</input>
-    <input>kair[ao] kaira</input>
+    <input>joki joki</input>
+    <input>joke joki</input>
+    <input>joe joki</input>
+    <input>jäng jänkä</input>
+    <input>jänk jänkä</input>
+    <input>järve järvi</input>
+    <input>järvi järvi</input>
+    <input>kaira kaira</input>
+    <input>kairo kaira</input>
     <input>kallio kallio</input>
-    <input>kan(ka[ai]|gas) kangas</input>
+    <input>kangas kangas</input>
+    <input>kankaa kangas</input>
+    <input>kankai kangas</input>
     <input>kanjon kanjoni</input>
     <input>kappel kappeli</input>
     <input>kartano kartano</input>
-    <input>ka[td]u katu</input>
-    <input>kent[itä] kenttä</input>
-    <input>kirk[ko] kirkko</input>
-    <input>kiv[ie] kivi</input>
+    <input>kadu katu</input>
+    <input>katu katu</input>
+    <input>kenti kenttä</input>
+    <input>kentt kenttä</input>
+    <input>kentä kenttä</input>
+    <input>kirkko kirkko</input>
+    <input>kirko kirkko</input>
+    <input>kive kivi</input>
+    <input>kivi kivi</input>
     <input>koivik koivikko</input>
-    <input>kor(pi|ve) korpi</input>
-    <input>kosk[ie] koski</input>
+    <input>korpi korpi</input>
+    <input>korve korpi</input>
+    <input>koske koski</input>
+    <input>koski koski</input>
     <input>koulu koulu</input>
     <input>kukkul kukkula</input>
-    <input>kulm[ai] kulma</input>
-    <input>kum[pm]u kumpu</input>
+    <input>kulma kulma</input>
+    <input>kulmi kulma</input>
+    <input>kumpu kumpu</input>
+    <input>kummu kumpu</input>
     <input>kuru kuru</input>
-    <input>kuusik[ko] kuusikko</input>
-    <input>kyl[äi] kylä</input>
-    <input>kön[kg]ä köngäs</input>
+    <input>kuusikk kuusikko</input>
+    <input>kuusiko kuusikko</input>
+    <input>kyli kylä</input>
+    <input>kylä kylä</input>
+    <input>köngä köngäs</input>
+    <input>könkä köngäs</input>
     <input>laakso laakso</input>
-    <input>lah(ti|de) lahti</input>
-    <input>lam(pi|me) lampi</input>
-    <input>lamm[ie] lammi</input>
-    <input>leh[td]o lehto</input>
-    <input>let[to] letto</input>
-    <input>linn[ao] linna</input>
-    <input>luol[ai] luola</input>
-    <input>luo[td]o luoto</input>
-    <input>läh[dt]e lähde</input>
-    <input>metsik[kö] metsikkö</input>
-    <input>mets[äi] metsä</input>
+    <input>lahde lahti</input>
+    <input>lahti lahti</input>
+    <input>lamme lampi</input>
+    <input>lampi lampi</input>
+<!--
+    <input>lamme lammi</input>
+    <input>lammi lammi</input>
+-->
+    <input>lamm lammi</input>
+    <input>lehdo lehto</input>
+    <input>lehto lehto</input>
+    <input>leto letto</input>
+    <input>letto letto</input>
+    <input>linna linna</input>
+    <input>linno linna</input>
+    <input>luola luola</input>
+    <input>luoli luola</input>
+    <input>luodo luoto</input>
+    <input>luoto luoto</input>
+    <input>lähde lähde</input>
+    <input>lähte lähde</input>
+    <input>metsikk metsikkö</input>
+    <input>metsikö metsikkö</input>
+    <input>metsi metsä</input>
+    <input>metsä metsä</input>
     <input>moskeij moskeija</input>
-    <input>mutk[ai] mutka</input>
-    <input>mä(ki|[ei]) mäki</input>
-    <input>nev[ao] neva</input>
-    <input>nie(nt(en|ä)|m[ie]) niemi</input>
-    <input>niit[tu] niittu</input>
-    <input>niit[ty] niitty</input>
-    <input>nok[kai] nokka</input>
+    <input>mutka mutka</input>
+    <input>mutki mutka</input>
+    <input>mäki mäki</input>
+    <input>mäe mäki</input>
+    <input>mäi mäki</input>
+    <input>neva neva</input>
+    <input>nevo neva</input>
+    <input>nienten niemi</input>
+    <input>nientä niemi</input>
+    <input>niemi niemi</input>
+    <input>nieme niemi</input>
+    <input>niittu niittu</input>
+    <input>niitu niittu</input>
+    <input>niitty niitty</input>
+    <input>niity niitty</input>
+    <input>noka nokka</input>
+    <input>noki nokka </input>
+    <input>nokk nokka</input>
     <input>notko notko</input>
-    <input>numm[ie] nummi</input>
-    <input>pel[tl]o pelto</input>
+    <input>numme nummi</input>
+    <input>nummi nummi</input>
+    <input>pello pelto</input>
+    <input>pelto pelto</input>
     <input>perä perä</input>         <!-- Monikossa tulee liikaa vääriä tunnistuksia. -->
-    <input>pih[ao] piha</input>
-    <input>pol[ku] polku</input>
+    <input>piha piha</input>
+    <input>piho piha</input>
+    <input>polk polku</input>
+    <input>polu polku</input>
     <input>puisto puisto</input>
     <input>puro puro</input>
-    <input>putou[sk] putous</input>
-    <input>ran[tn] ranta</input>
-    <input>rim(pi|m[ei]) rimpi</input>
-    <input>rin[nt]e rinne</input>    <!-- Tunnistaa myös perinne-loppuiset sanat. (-: -->
+    <input>putouk putous</input>
+    <input>putous putous</input>
+    <input>rann ranta</input>
+    <input>rant ranta</input>
+    <input>rimpi rimpi</input>
+    <input>rimme rimpi</input>
+    <input>rimmi rimpi</input>
+    <input>rinne rinne</input>    <!-- Tunnistaa myös perinne-loppuiset sanat. (-: -->
+    <input>rinte rinne</input>    <!-- Tunnistaa myös perinne-loppuiset sanat. (-: -->
     <input>rotko rotko</input>
     <input>räme räme</input>
-    <input>saar[iet] saari</input>
-    <input>salm[ie] salmi</input>
+    <input>saare saari</input>
+    <input>saari saari</input>
+    <input>saart saari</input>
+    <input>salme salmi</input>
+    <input>salmi salmi</input>
     <input>salo salo</input>
-    <input>sel[kä] selkä</input>
-    <input>selän[nt] selänne</input>
+    <input>selki selkä</input>
+    <input>selkä selkä</input>
+    <input>selä selkä</input>
+    <input>selänn selänne</input>
+    <input>selänt selänne</input>
     <input>suo suo</input>
     <input>suisto suisto</input>
-    <input>suvan[tn] suvanto</input>
-    <input>särk[kä] särkkä</input>
+    <input>suvann suvanto</input>
+    <input>suvant suvanto</input>
+    <input>särkkä särkkä</input>
+    <input>särkä särkkä</input>
     <input>talo talo</input>
-    <input>tundr[aio] tundra</input>
-    <input>tuntur[ie] tunturi</input>
-    <input>törm[äi] törmä</input>
-    <input>vaar[ao] vaara</input>
+    <input>tundra tundra</input>
+    <input>tundri tundra</input>
+    <input>tundro tundra</input>
+    <input>tunture tunturi</input>
+    <input>tunturi tunturi</input>
+    <input>törmi törmä</input>
+    <input>törmä törmä</input>
+    <input>vaara vaara</input>
+    <input>vaaro vaara</input>
     <input>vainio vainio</input>
-    <input>ve(si|de) vesi</input>
-    <input>vir[tr] virta</input>
-    <input>vuom[ai] vuoma</input>
+    <input>vede vesi</input>
+    <input>vesi vesi</input>
+    <input>virr virta</input>
+    <input>virt virta</input>
+    <input>vuoma vuoma</input>
+    <input>vuomi vuoma</input>
     <input>vuono vuono</input>
-    <input>vuor[iet] vuori</input>
+    <input>vuore vuori</input>
+    <input>vuori vuori</input>
+    <input>vuort vuori</input>
     <input>vuoristo vuoristo</input>
-    <input>väyl[äi] väylä</input>
-    <input>ylän[kg]ö ylänkö</input>
+    <input>väyli väylä</input>
+    <input>väylä väylä</input>
+    <input>ylängö ylänkö</input>
+    <input>ylänkö ylänkö</input>
 
-    <input>lai(s|nen) lainen</input>
+    <input>lainen lainen</input>
+    <input>lais lainen</input>
     <input>laisuu laisuus</input>
-    <input>lähtöi(s|nen) lähtöinen</input>
-    <input>läi(s|nen) läinen</input>
+    <input>lähtöinen lähtöinen</input>
+    <input>lähtöis lähtöinen</input>
+    <input>läinen läinen</input>
+    <input>läis läinen</input>
     <input>läisyy läisyys</input>
-    <input>mai(s|nen) mainen</input>
-    <input>mäi(s|nen) mäinen</input>
-    <input>po(ik[ai]|j[ai]) poika</input>
-    <input>telai[ns] telainen</input>
-    <input>tytt?är tytär</input>
+    <input>mainen mainen</input>
+    <input>mais mainen</input>
+    <input>mäinen mäinen</input>
+    <input>mäis mäinen</input>
+    <input>poika poika</input>
+    <input>poiki poika</input>
+    <input>poja poika</input>
+    <input>poji poika</input>
+    <input>telain telainen</input>
+    <input>telais telainen</input>
+    <input>tytär tytär</input>
+    <input>tyttär tytär</input>
     <addStart>true</addStart>
     <addBaseFormOnly>false</addBaseFormOnly>
     <addEnd>true</addEnd>

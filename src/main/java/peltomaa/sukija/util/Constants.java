@@ -41,7 +41,13 @@ public final class Constants {
     return ((flagsAtt.getFlags() & flag) != 0);
   }
 
-  public static final Pattern HYPHEN_REGEX = Pattern.compile ("-+|\"-+|–+|''-+|'-+|[.]-+");
+
+  public static final void removeFlags (FlagsAttribute flagsAtt, int... flags)
+  {
+    for (int i = 0; i < flags.length; i++) {
+      flagsAtt.setFlags (flagsAtt.getFlags() & ~flags[i]);
+    }
+  }
 
 
   public static final String toString (FlagsAttribute flagsAtt)

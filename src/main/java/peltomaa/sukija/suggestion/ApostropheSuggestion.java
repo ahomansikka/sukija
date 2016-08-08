@@ -51,16 +51,21 @@ public class ApostropheSuggestion extends Suggestion {
 
 
   /**
-  Delete apostrophe. If Voikko recognizes the word, return true,
-  otherwise delete the end of the word starting from the apostrophe an
-  set the start of the word as a base form of the word and return
-  true.<p>
+  Poistetaan heittomerkki. Jos Voikko tunnistaa sanan, palatetaan {@code true},
+  muuten poistetaan sanan loppuosa, joka alkaa heittomerkistä. Jos Voikko
+  tunnistaa sanan alkuosan, palatetaan {@code true}. Jos Voikko ei tunista
+  sanan alkuosaa, asetetaan se sanan perusmuodoksi ja palautetaan {@true}.<p>
 
-  If word has no apostrophe, return false.<p>
+  Esimerkiksi jos sana on {@code centime'in}, yritetään tunnistaa
+  ensin {@code centimein}. Jos Voikko ei tunnista sitä, yritetään
+  tunnistaa {@centime}. Jos Voikko ei tunnista sitä, asetetaan se
+  sanan perusmuodoksi ja palautetaan {@true}.<p>
 
-  For example, if word is {@code Bordeaux'iin} first try {@code
-  Bordeauxiin} and if Voikko does not recognize that, set the base form
-  to {@code Bordeaux} and return true.
+  Huomaa, että sanan alkuosan perusmuoto voi olla erilainen kuin sanan
+  alkuosa. Esimerkiksi merkkijonon {@code huomioksi'xxxx} alkuosa on
+  {@code huomioksi}, jonka perusmuoto on {@code huomio.}<p>
+
+  Jos sanassa ei ole heittomerkkiä, palautetaan {@false}.<p>
   */
   @Override
   public boolean suggest (String word, VoikkoAttribute voikkoAtt)

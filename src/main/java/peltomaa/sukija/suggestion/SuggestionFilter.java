@@ -34,6 +34,7 @@ import org.apache.lucene.analysis.TokenStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.puimula.libvoikko.*;
+import static peltomaa.sukija.util.Constants.*;
 import peltomaa.sukija.util.Constants;
 import peltomaa.sukija.util.SukijaFilter;
 import peltomaa.sukija.voikko.VoikkoUtils;
@@ -127,20 +128,20 @@ public class SuggestionFilter extends SukijaFilter {
   @Override
   protected Iterator<String> filter()
   {
-//System.out.println ("Word 0 " + word + " " + termAtt.toString() + " " + Constants.toString(flagsAtt));
+//System.out.println ("Word 0 " + word + " " + termAtt.toString() + " " + toString(flagsAtt));
 
-    if (Constants.hasFlag (flagsAtt, Constants.HYPHEN)) {
+    if (hasFlag (flagsAtt, HYPHEN)) {
       final Set<String> set1 = suggest (word);
 
 //System.out.println ("Word 1 " + word + set1.toString());
 
-      final String s = Constants.HYPHEN_REGEX.matcher(word).replaceAll ("");
+      final String s = HYPHEN_REGEX.matcher(word).replaceAll ("");
       final Set<String> set2 = suggest (s);
 
 //System.out.println ("Word 2 " + s + " " + set2.toString());
 
 
-      final String[] p = Constants.HYPHEN_REGEX.split (word);
+      final String[] p = HYPHEN_REGEX.split (word);
       final HashSet<String> pset = new HashSet<String>();
 
       for (int i = 0; i < p.length; i++) {
@@ -151,7 +152,17 @@ public class SuggestionFilter extends SukijaFilter {
       }
       if (set1 != null) pset.addAll (set1);
       if (set2 != null) pset.addAll (set2);
-      return (pset.size() == 0 ? null : pset.iterator());
+
+      if (pset.size() > 0) {
+        if (hasFlag (flagsAtt, FOUND)) {
+          removeFlags (flagsAtt, SUGGEST, UNKNOWN);
+        }
+        else if (hasFlag (flagsAtt, SUGGEST)) {
+          removeFlags (flagsAtt, UNKNOWN);
+        }
+//        System.out.println ("pset " + word + " " + Constants.toString(flagsAtt) + " " + pset.toString());
+        return pset.iterator();
+      }
     }
     else {
       Set<String> s = suggest (word);
@@ -175,7 +186,7 @@ public class SuggestionFilter extends SukijaFilter {
 //System.out.println ("Word a " + word);
     List<Analysis> list = voikko.analyze (word);
     if (list.size() > 0) {
-      flagsAtt.setFlags (flagsAtt.getFlags() | Constants.FOUND);
+      flagsAtt.setFlags (flagsAtt.getFlags() | FOUND);
       voikkoAtt.setAnalysis (list);
       baseFormAtt.addBaseForms (VoikkoUtils.getBaseForms (list));
 //System.out.println ("Word b " + word + " " + Constants.toString(flagsAtt) + " " + VoikkoUtils.getBaseForms(list).toString());
@@ -185,14 +196,14 @@ public class SuggestionFilter extends SukijaFilter {
 //System.out.println ("Word c " + word + " " + Constants.toString(flagsAtt));
       boolean suggestionResult = SuggestionUtils.getSuggestions (suggestion, word, voikkoAtt, baseFormAtt);
       if (suggestionResult) {
-        flagsAtt.setFlags (flagsAtt.getFlags() | Constants.SUGGEST);
+        flagsAtt.setFlags (flagsAtt.getFlags() | SUGGEST);
 //System.out.println ("Word d " + word + " " + Constants.toString(flagsAtt) + " " + baseFormAtt.getBaseForms().toString());
         return baseFormAtt.getBaseForms();
       }
     }
 
     if (SuggestionUtils.analyze (voikko, word, voikkoAtt, baseFormAtt, flagsAtt, suggestion, parser.getFrom(), parser.getTo())) {
-      flagsAtt.setFlags (flagsAtt.getFlags() | Constants.SUGGEST);
+      flagsAtt.setFlags (flagsAtt.getFlags() | SUGGEST);
 //System.out.println ("Word 5 " + word + " " + Constants.toString(flagsAtt) + " " + baseFormAtt.getBaseForms().toString());
       return baseFormAtt.getBaseForms();
     }
@@ -201,7 +212,7 @@ public class SuggestionFilter extends SukijaFilter {
     }
     else {
 //System.out.println ("Word 6 " + word + " " + Constants.toString(flagsAtt));
-      flagsAtt.setFlags (flagsAtt.getFlags() | Constants.UNKNOWN);
+      flagsAtt.setFlags (flagsAtt.getFlags() | UNKNOWN);
 //System.out.println ("Word 7 " + word + " " + Constants.toString(flagsAtt));
       baseFormAtt.addBaseForm (word.toLowerCase());
       return baseFormAtt.getBaseForms();
@@ -210,6 +221,7 @@ public class SuggestionFilter extends SukijaFilter {
 
 
   private static final Logger LOG = LoggerFactory.getLogger (SuggestionFilter.class);
+  private static final Pattern HYPHEN_REGEX = Pattern.compile ("-+|\"-+|–+|''-+|'-+|[.]-+");
 
   private Iterator<String> iterator;
   private boolean suggestionResult;

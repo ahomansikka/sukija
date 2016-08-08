@@ -150,10 +150,16 @@ public class SuggestionParser {
         case "peltomaa.sukija.schema.CompoundWordEndInput":
           {
             final CompoundWordEndInput input = (CompoundWordEndInput)s.get(i);
+
+            v[i] = new CompoundWordEndSuggestion (voikko, makeMap (input.getInput()),
+                                                  input.isAddStart(), input.isAddBaseFormOnly(),
+                                                  input.isAddEnd());
+/*
             v[i] = new CompoundWordEndSuggestion (voikko, makePattern (input.getInput()),
                                                   makeReplacement (input.getInput()),
                                                   input.isAddStart(), input.isAddBaseFormOnly(),
                                                   input.isAddEnd());
+*/
           }
           break;
 /*
