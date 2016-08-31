@@ -22,6 +22,8 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.Set;
 import peltomaa.sukija.attributes.VoikkoAttribute;
 import peltomaa.sukija.util.RegexUtil;
@@ -114,7 +116,7 @@ public class CompoundWordEndSuggestion extends Suggestion {
 
   private void addStart (String start, VoikkoAttribute voikkoAtt)
   {
-    final String s = (start.endsWith("-") ? start.substring(0,start.length()-1) : start);
+    final String s = (start.endsWith("-") ? END_DASHES.matcher(start).replaceAll("") : start);
     List<Analysis> analysis = voikko.analyze (s);
     if (analysis.size() > 0) {
       voikkoAtt.addAnalysis (analysis);
@@ -132,7 +134,7 @@ public class CompoundWordEndSuggestion extends Suggestion {
   {
 //System.out.println ("CompoundWordEndSuggestion7 " + s);
     if (s.endsWith ("-")) {
-      extraBaseForms.add (s.substring (0, s.length()-1));
+      extraBaseForms.add (END_DASHES.matcher(s).replaceAll(""));
     }
     else {
       extraBaseForms.add (s);
@@ -151,16 +153,18 @@ public class CompoundWordEndSuggestion extends Suggestion {
   {
 //System.out.println ("De " + start.charAt(start.length()-2) + " " + end.charAt(0)
 //                    + " " + StringUtil.isVowel(end.charAt(0)));
-    if (start.endsWith ("-") &&
-        !(start.charAt(start.length()-2) == end.charAt(0) && StringUtil.isVowel(end.charAt(0)))) {
-     return (start.substring (0, start.length()-1) + end);
+    
+    if (start.endsWith ("-")) {
+      final String s = END_DASHES.matcher(start).replaceAll("");
+      if (!((s.charAt(s.length()-1) == end.charAt(0)) && StringUtil.isVowel(end.charAt(0)))) {
+        return (s + end);
+      }
     }
-    else {
-      return null;
-    }
+    return null;
   }
 
 
+  private static final Pattern END_DASHES = Pattern.compile ("-+$");
   private StringBuilder sb = new StringBuilder (500);
   private Map<String,String> map;
   private Trie trie;
