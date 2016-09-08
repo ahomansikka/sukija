@@ -154,12 +154,6 @@ public class SuggestionParser {
             v[i] = new CompoundWordEndSuggestion (voikko, makeMap (input.getInput()),
                                                   input.isAddStart(), input.isAddBaseFormOnly(),
                                                   input.isAddEnd());
-/*
-            v[i] = new CompoundWordEndSuggestion (voikko, makePattern (input.getInput()),
-                                                  makeReplacement (input.getInput()),
-                                                  input.isAddStart(), input.isAddBaseFormOnly(),
-                                                  input.isAddEnd());
-*/
           }
           break;
 /*

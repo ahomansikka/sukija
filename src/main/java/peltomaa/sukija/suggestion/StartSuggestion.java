@@ -50,8 +50,7 @@ public class StartSuggestion extends Suggestion {
     //
     for (int i = Math.min (maxLength, word.length()-1); i >= minLength; i--) {
       final String startOfWord = word.substring (0, i);
-      List<Analysis> analysis = voikko.analyze (word);
-
+      List<Analysis> analysis = voikko.analyze (startOfWord);
       if (baseFormOnly) {
         for (Analysis a: analysis) {
           if (startOfWord.equals (a.get("BASEFORM").toLowerCase())) {
@@ -71,7 +70,7 @@ public class StartSuggestion extends Suggestion {
             return true;
           }
         }
-      }      
+      }
     }
     voikkoAtt.addAnalysis (analysisList);
     return (analysisList.size() > 0);
