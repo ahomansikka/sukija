@@ -113,6 +113,7 @@
     <xsd:element name = "minLength"    type = "xsd:positiveInteger"/>
     <xsd:element name = "maxLength"    type = "xsd:positiveInteger"/>
     <xsd:element name = "baseFormOnly" type = "xsd:boolean"/>
+    <xsd:element name = "hyphen"       type = "xsd:boolean"/>
     <xsd:element name = "tryAll"       type = "xsd:boolean"/>
   </xsd:sequence>
 </xsd:complexType>

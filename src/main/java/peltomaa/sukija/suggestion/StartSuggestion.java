@@ -31,12 +31,13 @@ public class StartSuggestion extends Suggestion {
    *
    * @param voikko  An instance of voikko.
    */
-  public StartSuggestion (Voikko voikko, int minLength, int maxLength, boolean baseFormOnly, boolean tryAll)
+  public StartSuggestion (Voikko voikko, int minLength, int maxLength, boolean baseFormOnly, boolean hyphen, boolean tryAll)
   {
     super (voikko);
     this.minLength = Math.max (minLength, 0);
     this.maxLength = maxLength;
     this.baseFormOnly = baseFormOnly;
+    this.hyphen = hyphen;
     this.tryAll = tryAll;
   }
 
@@ -44,6 +45,12 @@ public class StartSuggestion extends Suggestion {
   @Override
   public boolean suggest (String word, VoikkoAttribute voikkoAtt)
   {
+    if (!hyphen && (word.indexOf ("-") >= 0)) {
+//System.out.println ("DING   " + word);
+      return false;
+    }
+
+//System.out.println ("HUUHAA " + hyphen + " " + word + " " + word.indexOf ("-"));
     List<Analysis> analysisList = new ArrayList<Analysis>();
 
     // Käydään läpi kaikki sanan alut pisimmästä alkaen.
@@ -80,5 +87,6 @@ public class StartSuggestion extends Suggestion {
   private final int minLength;
   private final int maxLength;
   private final boolean baseFormOnly;
+  private final boolean hyphen;
   private final boolean tryAll;
 }

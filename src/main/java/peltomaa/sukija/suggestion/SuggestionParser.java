@@ -182,6 +182,7 @@ public class SuggestionParser {
             final StartInput input = (StartInput)s.get(i);
             v[i] = new StartSuggestion (voikko, input.getMinLength().intValue(),
                                         input.getMaxLength().intValue(), input.isBaseFormOnly(),
+                                        input.isHyphen(),
                                         input.isTryAll());
           }
           break;
