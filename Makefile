@@ -1,7 +1,7 @@
 # Muuta tämä, jos Solr on jossain muualla. Muuta myös tiedoston
 # sukija.properties alussa oleva muuttuja sukija.solr.
 #
-SOLR=${HOME}/Lataukset/solr/solr-6.0.0
+SOLR=${HOME}/Lataukset/solr/solr-6.2.0
 
 
 SOLR_BIN=${SOLR}/bin

@@ -28,7 +28,7 @@ import java.util.Set;
 import java.util.Vector;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.apache.lucene.analysis.tokenattributes.FlagsAttribute;
-import org.apache.lucene.analysis.util.CharArraySet;
+import org.apache.lucene.analysis.CharArraySet;
 import org.puimula.libvoikko.Analysis;
 import org.puimula.libvoikko.Voikko;
 import org.slf4j.Logger;
