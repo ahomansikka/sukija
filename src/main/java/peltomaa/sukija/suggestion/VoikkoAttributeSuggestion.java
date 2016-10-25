@@ -42,7 +42,7 @@ public class VoikkoAttributeSuggestion extends Suggestion {
     boolean success = false;
     final int N = parameter.item.length;
     for (int i = 0; i < parameter.item.length; i++) {
-//System.out.println ("Ding dong.");
+//System.out.println ("A " + word);
       if (suggest (i, word, voikkoAtt)) {
         if (parameter.tryAll) {
           success = true;
@@ -62,9 +62,12 @@ public class VoikkoAttributeSuggestion extends Suggestion {
     Matcher m = parameter.item[i].pattern.matcher (word);
 
     if (m.find()) {
+//System.out.println ("B "+ word + " " + m.pattern().toString());
       for (int j = 0; j < parameter.item[i].replacement.length; j++) {
         for (int k = 0; k < parameter.item[i].replacement[j].list.length; k++) {
-          final String u = m.replaceAll (parameter.item[i].replacement[j].list[k]);
+//System.out.println ("C " + word + " " + m.pattern().toString() + " " + parameter.item[i].replacement[j].list[k]);
+        final String u = m.replaceAll (parameter.item[i].replacement[j].list[k]);
+//System.out.println ("D " + word + " " + m.pattern().toString() + " " + parameter.item[i].replacement[j].list[k] + " " + u);
           final List<Analysis> analysis = voikko.analyze (u);
           for (Analysis a: analysis) {
             if (ok (i, j, a)) {

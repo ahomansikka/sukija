@@ -46,14 +46,22 @@ class AhoCorasickCorrector {
       final String baseForm = a.get ("BASEFORM");
       set.add (baseForm.toLowerCase());
       if (wb != null) {
-//System.out.println ("Base0 " + wb);
-//System.out.println ("Base1 " + baseForm);
+//System.out.println ("Base0 " + wb + " " + baseForm);
         for (Token token : trie.tokenize (wb)) {
+//System.out.println ("Base2 " + token.getFragment());
           if (token.isMatch()) {
+//System.out.println ("Base3 " + token.getFragment());
             String[] s = MapClass.map.get (token.getFragment());
-            String bf = baseForm.replace (s[0], s[1]);
-//System.out.println ("Base2 " + baseForm + " " + bf + " § " + wb);
-            set.add (bf.toLowerCase());
+//System.out.println ("Base4 " + java.util.Arrays.asList(s).toString());
+            for (int i = 1; i < s.length; i++) {
+//System.out.println ("Base5 " + s[i]);
+              if (baseForm.indexOf(s[i]) >= 0) {
+                String bf = baseForm.replace (s[i], s[0]);
+//System.out.println ("Base8 " + baseForm.indexOf(s[i]));
+//System.out.println ("Base9 " + baseForm + " " + bf + " § " + wb);
+                set.add (bf.toLowerCase());
+              }
+            }
           }
         }
       }
