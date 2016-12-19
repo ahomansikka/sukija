@@ -54,7 +54,13 @@ public final void getText (org.apache.lucene.analysis.tokenattributes.CharTermAt
 // \u0100-\u017F: Latin Extended-A
 // \u0180-\u0245: Latin Extended-B
 
-LETTER_OR_DIGIT = [0-9A-Za-zÀ-ÖØ-öø-ÿ\u0100-\u017F\u0180-\u0245]+
+// Ei käänny Windowsissa!
+//LETTER_OR_DIGIT = [0-9A-Za-zÀ-ÖØ-öø-ÿ\u0100-\u017F\u0180-\u0245]+
+
+LETTER = [:letter:]+
+DIGIT  = [:digit:]+
+LETTER_OR_DIGIT = ({LETTER}|{DIGIT})
+
 DIGIT  = [0-9]+
 WHITESPACE = \r\n | [ \r\n\t\f]
 NUM = {DIGIT}([-.,:_/]+{DIGIT})*(:{LETTER_OR_DIGIT})?
