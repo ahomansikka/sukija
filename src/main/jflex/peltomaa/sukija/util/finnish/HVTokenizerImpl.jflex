@@ -61,7 +61,6 @@ LETTER = [:letter:]+
 DIGIT  = [:digit:]+
 LETTER_OR_DIGIT = ({LETTER}|{DIGIT})
 
-DIGIT  = [0-9]+
 WHITESPACE = \r\n | [ \r\n\t\f]
 NUM = {DIGIT}([-.,:_/]+{DIGIT})*(:{LETTER_OR_DIGIT})?
 HYPHEN = ("\"-"|"''-"|"\\-"|"'-"|"--"|".-"|"-")
