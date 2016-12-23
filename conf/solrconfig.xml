@@ -36,7 +36,7 @@
        affect both how text is indexed and queried.
   <luceneMatchVersion>LUCENE_41</luceneMatchVersion>
   -->
-  <luceneMatchVersion>LUCENE_5_1_0</luceneMatchVersion>
+  <luceneMatchVersion>6.3.0</luceneMatchVersion>
 
   <lib dir="${solr.install.dir:../../../..}/dist/" regex="solr-dataimporthandler-.*\.jar" />
 
@@ -52,10 +52,12 @@
   <lib dir="${solr.install.dir:../../../..}/contrib/velocity/lib" regex=".*\.jar" />
   <lib dir="${solr.install.dir:../../../..}/dist/" regex="solr-velocity-\d.*\.jar" />
 
+  <lib dir="${solr.data.dir:}/lib/" regex=".*\.jar" />
+<!--
   <lib path="${user.home}/.m2/repository/net/java/dev/jna/jna/4.2.1/jna-4.2.1.jar"/>
   <lib path="${user.home}/.m2/repository/org/puimula/voikko/libvoikko/4.0.1/libvoikko-4.0.1.jar"/>
-  <lib path="${user.home}/.m2/repository/peltomaa/sukija/sukija/2.1.3/sukija-2.1.3.jar"/>
-
+  <lib path="${user.home}/.m2/repository/peltomaa/sukija/sukija/2.1.5/sukija-2.1.5.jar"/>
+-->
 
   <!-- Data Directory
 
@@ -1240,8 +1242,9 @@
   <requestHandler name="/dataimport" class="org.apache.solr.handler.dataimport.DataImportHandler">
     <lst name="defaults">
       <str name="config">data-config.xml</str>
-<!--      <str name="config">${user.home}/.sukija/data-config.xml</str> -->
     </lst>
   </requestHandler>
+
+  <schemaFactory class = "ClassicIndexSchemaFactory"/>
 <!-- OMA LISÄYS LOPPUU. -->
 </config>
