@@ -33,6 +33,7 @@ etsiä Solr:n käyttöliittymän kautta.
 Sukija osaa indeksoida kaikkia niitä tiedostomuotoja, joita Apache
 Tika (\verb=http://tika.apache.org/=) osaa lukea.
 
+
 \subsection*{Mitä tarvitaan ja mistä ne saa?}
 
 \begin{itemize}
@@ -53,99 +54,22 @@ Tika (\verb=http://tika.apache.org/=) osaa lukea.
 Lisäksi Sukija tarvitsee erinäisiä jar-tiedostoja, mutta Maven imuroi
 ne verkosta automaagisesti.
 
-Tämä asennusohje olettaa, että corevoikko ja solr ovat hakemistoissa
-\verb=$HOME/Lataukset/corevoikko= ja
+Tämä asennusohje olettaa, että libvoikko on asennettu hakemistoon
+\verb=/usr/local/lib= ja että Solr on hakemistossa
 \verb=$HOME/Lataukset/solr/solr-x.y.z=
 
 Jos ne ovat jossain muualla, tiedoston \verb=Makefile= alussa olevaa
-muuttujaa \verb=SOLR= ja tiedoston \verb=sukija.properties= alussa
-olevia muuttujia pitää muuttaa vastaavasti.
+muuttujaa \verb=SOLR_HOME=, ja tiedostossa \verb=sukija.properties=
+olevia Libvoikon tietoja pitää muuttaa vastaavasti.
 
 
-\subsection*{Solr:n asentaminen (1)}
+\subsection*{Solr:n asentaminen}
 
 Solr:ia ei tarvitse asentaa, vaan sitä voi käyttää suoraan
 hakemistosta \verb=$HOME/Lataukset/solr/solr-x.y.z=.
 
 Tuotantokäyttöä varten Solr on parasta asentaa palveluna (service).
-Palaan siihen myöhemmin, koska Sukija konfiguroidaan samalla tavalla
-riippumatta siitä, miten Solr on asennettu.
-
-
-
-\subsection*{Sukijan kääntäminen ja asentaminen}
-
-Ensin käännetään ja asennetaan Sukija komennolla
-
-\verb=mvn install=
-
-Komento imuroi netistä tarvitsemansa Javan jar-paketit eli ensimmäinen
-kääntäminen saattaa kestää kauan. Erityisen kauan se kestää, jos et
-ole aiemmin käyttänyt mavenia.
-
-Sukijan jar-tiedosto asennetaan maven-hakemistoon \verb|${HOME}/.m2|
-
-Testien aikana tulee virheilmoitus
-
-SLF4J: Class path contains multiple SLF4J bindings.
-
-Siitä ei tarvitse välittää.
-
-
-\subsection*{Sukijan konfigurointi}
-
-
-Sukijan parametrit asetetaan tiedostossa \verb|sukija.properties|,
-jossa on myös tarvittavat ohjeet.
-
-Sen jälkeen asetukset viedään Solr:iin komennolla \verb|make asenna|
-
-Jos asentamisen jälkeen konfiguroi Sukijaa, muutokset voi viedä
-Solr:iin komennolla \verb|make päivitä|, mikäli Solr:ia käyttää sen
-lähdekoodihakemistossa, tai komennolla \verb|make service-update|
-mikäli Solr on asennettu palveluna.
-
-
-\subsection*{Solr:n käynnistäminen}
-
-Jos Sukija on asennettu Solr:n lähdekoodihakemistoon,
-asennuksen jälkeen Solr käynnistetään komennolla
-
-\verb|~/Lataukset/solr/solr-x.y.z/bin/solr start|
-
-Tämän jälkeen Sukijan 'core' tehdään komennolla
-
-\verb|~/Lataukset/solr/solr-x.y.z/bin/solr create -c sukija -d conf|
-
-Sittten voidaan ryhtyä indeksoimaan tiedostoja. Katso sivu
-\zpageref{indexing}.
-
-
-Solr pysäytetään komennolla
-
-\verb|~/Lataukset/solr/solr-x.y.z/bin/solr stop|
-
-Solr käynnistetään uudelleen komennolla
-
-\verb|~/Lataukset/solr/solr-x.y.z/bin/solr restart|
-
-
-Nämä voi antaa myös komennoilla
-
-\begin{tabular}{@{}l}
-\verb|make solr-start| \\
-\verb|make solr-create| \\
-\verb|make solr-stop| \\
-\verb|make solr-restart|
-\end{tabular}
-
-Solr:n käynnistymisen voi varmistaa selaimessa menemällä
-verkko-osoitteeseen
-\verb|http://localhost:8983/solr/|
-
-
-
-\section*{Solr:n asentaminen palveluna}
+Tämä ohje olettaa, että Solr on asennettu palveluna.
 
 Solr asennetaan palveluna skriptillä
 \verb=install_solr_service.sh= 
@@ -159,24 +83,52 @@ Jos et malta katsoa, se tehdään hakemistossa
 \verb=sudo bash solr-x.y.z/bin/install_solr_service.sh solr-x.y.z.tgz -u username=
 }
 
-missä username on oma käyttäjätunnuksesi.
+missä \verb=username= on oma käyttäjätunnuksesi.
+Jos kohdan \verb=-u username= jättää pois, Solr asennetaan tunnuksen
+\verb=solr= alle.
 
 Skripti asentaa Solr:n hakemistoihin \verb=/opt/solr= ja
-\verb=/var/solr=. Jos lipun \verb=-u username= jättää pois,
-hakemistojen omistajaksi tulee \verb=solr=, mutta silloin nämä
-asennusohjeet eivät toimi.
-
-Sitten konfiguroidaan Sukija. Tärkeää on valita tiedoston
-\verb=sukija.properties= alusta rivit
-
-\begin{verbatim}
-sukija.sukija = /var/solr/data/sukija
-sukija.jetty = /opt/solr/server/contexts
-\end{verbatim}
+\verb=/var/solr=.
 
 
-Tämän jälkeen asennetaan Sukija Solr:ään komennolla
-\verb=make asenna=
+\subsection*{Sukijan kääntäminen ja asentaminen}
+
+Sukija käännetään ja asennetaan komennolla
+
+\verb=mvn install=
+
+Komento imuroi netistä tarvitsemansa Javan jar-paketit eli ensimmäinen
+kääntäminen saattaa kestää kauan. Erityisen kauan se kestää, jos et
+ole aiemmin käyttänyt mavenia.
+
+Sukijan jar-tiedosto asennetaan maven-hakemistoon \verb|${HOME}/.m2|
+
+
+\subsection*{Sukijan konfigurointi}
+
+Sukijan parametrit asetetaan tiedostossa \verb|sukija.properties|,
+jossa on myös tarvittavat ohjeet.
+
+Sen jälkeen komennolla \verb|make tiedostot| tehdään Solr:n asetustiedostot
+\verb=conf/data-config.xml= ja
+\verb=conf/schema.xml=. Esimerkit näistä tiedostoista ovat
+hakemistossa
+\verb=src/main/resources/=. 
+
+Seuraavaksi pitää tehdä Solr:iin Sukijan tarvitsemat hakemistot ja
+kopioida niihin Solr:n tarvitsemat tiedostot. Sitä varten on kaksi
+skriptiä
+
+\verb=src/main/resources/install.sh=
+\verb=src/main/resources/install-sudo.sh=
+
+Jälkimmäistä käytetään, jos Solr on asennettu tunnuksella \verb=solr=.
+
+Jos asentamisen jälkeen konfiguroi Sukijaa, muutokset voi viedä
+Solr:iin jommallakummalla komennoista
+
+\verb=cp -r conf/* /var/solr/data/sukija/conf/=
+\verb=sudo -u solr cp -r conf/* /var/solr/data/sukija/conf/=
 
 
 Seuraavaksi mennään selaimella osoitteeseen \verb=http://localhost:8983/solr/=
@@ -191,45 +143,24 @@ Mennään sinne ja kirjotetaan kohtaan \verb=name= ja \verb=instanceDir=
 ''sukija'' (mutta ilman lainausmerkkejä) ja napsautetaan kohtaa
 \verb=Add Core=.
 
-Nyt vasempaan paneeliin alalaitaan pitäisi tulla mahdollisuus valita
-indeksi (Solr käyttää siitä nimeä \verb=core=) sukija. Sen jälkeen
-voimme ruveta indeksoimaan. Katso sivu \zpageref{indexing}.
+Nyt asemmalle paneeliin alalaitaan pitäisi tulla mahdollisuus valita
+indeksi (Solr käyttää siitä nimeä \verb=core=) sukija. Sen jälkeen voi
+ruveta indeksoimaan. Katso sivu \zpageref{indexing}.
 
 
 \subsection*{Solr:n loki}
 
 Solr:n lokitulostus (\verb=http://wiki.apache.org/solr/SolrLogging=)
-konfiguroidaan tiedostossa
-\verb=solr-x.y.z/server/resources/log4j.properties= tai
-\verb=/var/solr/log4j.properties=
-
+konfiguroidaan tiedostossa \verb=/var/solr/log4j.properties=.
 Mahdollisimman suuren lokitulostuksen saa lisäämällä tämän tiedoston
-loppuun rivit
-
-{\footnotesize
-\begin{verbatim}
-log4j.logger.peltomaa.sukija.baseform.BaseFormFilterFactory = ALL
-log4j.logger.peltomaa.sukija.finnish.HVTokenizer = ALL
-log4j.logger.peltomaa.sukija.hyphen.HyphenFilter = ALL
-log4j.logger.peltomaa.sukija.util.JAXBUtil = ALL
-log4j.logger.peltomaa.sukija.suggestion.SuggestionFilter = ALL
-log4j.logger.peltomaa.sukija.suggestion.SuggestionParser = ALL
-log4j.logger.peltomaa.sukija.voikko.VoikkoFilterFactory = ALL
-log4j.logger.peltomaa.sukija.voikko.VoikkoUtils = ALL
-\end{verbatim}
-}
-
-Tuossa ovat kaikki Sukijan luokat, joissa on lokitulostus.
-
+loppuun tiedoston \verb=src/main/resources/log4j.properties.sukija=.
 Tällöin tulostus on paljon suurempi kuin indeksoitavat tiedostot (-:,
 mutta kaikkia ei tietenkään tarvitse lisätä.
 
 Lokitulostuksen eri tasot (\verb=ALL=, jne) voi katsua luokan
 \verb=org.apache.log4j.Level= dokumentoinnista.
 
-Lokitulostus menee tiedostoon
-\verb=$HOME/Lataukset/solr/solr-x.y.z/server/logs/solr.log= tai
-\verb=/var/solr/logs/solr.log=
+Lokitulostus menee kansioon \verb=/var/solr/logs/=
 
 
 \subsection*{Indeksointi}

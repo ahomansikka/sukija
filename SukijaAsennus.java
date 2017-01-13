@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2015-2016 Hannu Väisänen
+Copyright (©) 2015-2017 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -49,21 +49,24 @@ public class SukijaAsennus {
     {
       System.out.println (t.getMessage());
       t.printStackTrace (System.out);
+      if (t.getCause() != null) {
+        System.out.println ("Cause" + t.getCause().getMessage());
+      }
     }
   }
 
 
   private SukijaAsennus (String[] args) throws Throwable
   {
-     final String propertiesFile = (args.length > 0) ? args[0] : SUKIJA_PROPERTIES;
+    final String propertiesFile = (args.length > 0) ? args[0] : SUKIJA_PROPERTIES;
 
-     Properties p = new Properties();
-     p.load (new FileReader (propertiesFile));
+    Properties p = new Properties();
+    p.load (new FileReader (propertiesFile));
 
-     final String SUKIJA = getProperty (p, "sukija.sukija");
-     makeDirectory (SUKIJA + "/conf");
-     makeDirectory (SUKIJA + "/data");
-     makeDirectory (SUKIJA + "/lib");
+    final String SUDO = getProperty (p, "sukija.sudo");
+//    System.out.println ("[" + SUDO + "]"); System.exit(1);
+
+    final String SUKIJA = getProperty (p, "sukija.sukija");
 
 //     Set<String> set = p.stringPropertyNames();
 //     for (String s : set) System.out.println (s + " " + p.getProperty(s) + " " + getProperty(p,s));
@@ -72,56 +75,8 @@ public class SukijaAsennus {
 //     printDataConfigFile (p, new OutputStreamWriter (System.out));
 //     printSchemaFile (p, new OutputStreamWriter (System.out));
 
-     printDataConfigFile (p, new FileWriter ("conf/data-config.xml"));
-     printSchemaFile     (p, new FileWriter ("conf/schema.xml"));
-
-     final String JETTY_PROPERTY = getProperty (p, "sukija.jetty");
-
-     if (JETTY_PROPERTY.startsWith ("/opt/solr")) {
-       final String COMMAND = String.format ("sudo cp conf2/sukija-context.xml %s/sukija-context.xml", JETTY_PROPERTY);
-       Process pr = Runtime.getRuntime().exec (COMMAND);
-       final int n = pr.waitFor();
-       if (n != 0) {
-         throw new RuntimeException ("Komento '" + COMMAND + "' epäonnistui.");
-       }
-     }
-     else {
-       copyFile ("conf2/sukija-context.xml", JETTY_PROPERTY + "/sukija-context.xml");
-     }
-     copyDirectory (new File ("conf"),
-                    new File (SUKIJA + "/conf"));
-  }
-
-
-  private void copyFile (String from, String to) throws IOException
-  {
-//System.out.println ("COPY2 " + from + " " + to);
-    Files.copy (Paths.get(from), Paths.get(to), REPLACE_EXISTING);
-  }
-
-
-  private void copyDirectory (File from, File to) throws IOException
-  {
-    if (from.isDirectory()) {
-//System.out.println ("COPY1 " + from.toString() + " " + to.toString());
-      if (!to.exists()) {
-        to.mkdir();
-      }
-      String[] files = from.list();
-      for (String f : files) {
-        copyDirectory (new File (from, f), new File (to, f));
-      }
-    }
-    else {
-      copyFile (from.getPath(), to.getPath());
-    }
-  }
-
-
-  private boolean makeDirectory (String file)
-  {
-    File f = new File (file);
-    return f.mkdirs();
+    printDataConfigFile (p, new FileWriter ("conf/data-config.xml"));
+    printSchemaFile     (p, new FileWriter ("conf/schema.xml"));
   }
 
 
@@ -136,7 +91,8 @@ public class SukijaAsennus {
 
     for (int i = 0; i < BASE_DIR.length; i++) {
       if (!directoryOK (BASE_DIR[i])) {
-        throw new RuntimeException (BASE_DIR[i] + " ei ole olemassa tai se ei ole hakemisto.");
+//      throw new RuntimeException (BASE_DIR[i] + " ei ole olemassa tai se ei ole hakemisto.");
+        System.out.println (BASE_DIR[i] + " ei ole olemassa tai se ei ole hakemisto.");
       }
       out.write (String.format (dataConfigEntity,
                                 i,
@@ -161,7 +117,7 @@ public class SukijaAsennus {
     out.write (getBaseFormFilter (p));
     out.write (FINNISH_FOLDING_LOWER_CASE_FILTER);
     if (TOKENIZER.indexOf ("VoikkoTokenizerFactory") >= 0) {
-     out.write (VOIKKO_TOKENIZER_TRIM_FILTER);
+      out.write (VOIKKO_TOKENIZER_TRIM_FILTER);
     }
 
     final String SYNONYM_FILTER = getSynonymFilter (p);
@@ -303,6 +259,9 @@ public class SukijaAsennus {
   private String getProperty (Properties p, String key)
   {
     final String s = p.getProperty (key);
+//    if (s == null) {
+//      throw new RuntimeException ("Ominaisuutta " + key + " ei ole.");
+//    }
     return (s == null) ? null : replace (p, s);
   }
 
@@ -324,8 +283,8 @@ public class SukijaAsennus {
   private static final String PATH_SEPARATOR = System.getProperty ("path.separator");
   private static final String SUKIJA_PROPERTIES = "sukija.properties";
 
-  // Jos merkkijono on "${user.home}/.sukija", tämä tunnistaa osan "${user.home}"
-  // ja ulommaiset sulut (group(1)) osan "user.home".
+  // Jos merkkijono on "${user.home}/jotain/muuta", koko lauseke tunnistaa
+  // osan "${user.home}" ja ulommaiset sulut (group(1)) osan "user.home".
   private static final Pattern PATTERN = Pattern.compile ("[$][{]((\\p{L}|[-.0-9])+)[}]");
 
   private static final Properties systemProperties = System.getProperties();
@@ -347,7 +306,8 @@ public class SukijaAsennus {
     "              tikaConfig = \"tika-config.xml\"\n" +
     "              url = \"${f%d.fileAbsolutePath}\"\n" +
     "              format = \"text\"\n" +
-    "              onError = \"skip\">\n" +
+    "              onError = \"abort\">\n" +
+//    "              <field column = \"Content-Type\" name = \"contentType\" meta = \"true\"/>\n" +
     "      </entity>\n" +
     "    </entity>\n";
 
@@ -358,6 +318,7 @@ public class SukijaAsennus {
     "    <field name=\"_version_\" type=\"long\" indexed=\"true\" stored=\"true\" multiValued=\"false\"/>\n" +
     "    <field name=\"id\" type=\"string\" indexed=\"true\" stored=\"true\" required=\"true\" multiValued=\"false\"/>\n" +
     "    <field name=\"text\" type=\"text\" indexed=\"true\" stored=\"true\" termOffsets=\"true\" termPositions=\"true\" termVectors=\"true\" multiValued=\"true\"/>\n" +
+//    "    <field name=\"contentType\" type=\"text\" indexed=\"true\" stored=\"true\"/>\n" +
     "  </fields>\n" +
     "  <defaultSearchField>text</defaultSearchField>\n" +
     "  <uniqueKey>id</uniqueKey>\n" +

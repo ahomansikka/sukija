@@ -9,7 +9,7 @@
   <groupId>peltomaa.sukija</groupId>
   <artifactId>sukija</artifactId>
   <packaging>jar</packaging>
-  <version>2.1.5</version>
+  <version>2.1.6</version>
 
   <name>sukija</name>
   <url>http://maven.apache.org</url>
@@ -78,6 +78,9 @@
       <resource>
         <directory>src/main/xsd</directory>
       </resource>
+      <resource>
+        <directory>src/main/resources</directory>
+      </resource>
     </resources>
 
     <plugins>
@@ -97,7 +100,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.5.1</version>
+        <version>3.6.0</version>
         <configuration>
           <source>1.8</source>
           <target>1.8</target>
