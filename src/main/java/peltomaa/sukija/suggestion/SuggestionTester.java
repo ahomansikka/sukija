@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2013-2014, 2016 Hannu Väisänen
+Copyright (©) 2013-2014, 2016-2017 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -51,10 +51,9 @@ public class SuggestionTester {
 
   public static void analyze (Reader reader, Writer writer, Voikko voikko,
                               String suggestionFile, boolean stopOnSuccess,
-                              boolean useHyphenFilter) throws IOException
+                              boolean useHyphenFilter, TokenStream t) throws IOException
   {
     List<Analysis> analysis = null;
-    TokenStream t = new HVTokenizer();
     ((Tokenizer)t).setReader (reader);
 
 //    t = new VoikkoFilter (t, voikko);
