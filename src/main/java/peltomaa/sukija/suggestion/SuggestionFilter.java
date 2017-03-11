@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2012-2016 Hannu Väisänen
+Copyright (©) 2012-2017 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -128,7 +128,7 @@ public class SuggestionFilter extends SukijaFilter {
   @Override
   protected Iterator<String> filter()
   {
-//System.out.println ("Word 0 " + word + " " + termAtt.toString() + " " + toString(flagsAtt));
+//System.out.println ("Word 0 " + word + " " + termAtt.toString() + " " + Constants.toString (flagsAtt));
 
     if (hasFlag (flagsAtt, HYPHEN)) {
       final Set<String> set1 = suggest (word);
@@ -160,7 +160,7 @@ public class SuggestionFilter extends SukijaFilter {
         else if (hasFlag (flagsAtt, SUGGEST)) {
           removeFlags (flagsAtt, UNKNOWN);
         }
-//        System.out.println ("pset " + word + " " + Constants.toString(flagsAtt) + " " + pset.toString());
+//System.out.println ("pset " + word + " " + Constants.toString(flagsAtt) + " " + pset.toString());
         return pset.iterator();
       }
     }
@@ -183,7 +183,7 @@ public class SuggestionFilter extends SukijaFilter {
 
   private Set<String> suggest (String word)
   {
-//System.out.println ("Word a " + word);
+//System.out.println ("Word a " + word + " " + Constants.toString(flagsAtt));
     List<Analysis> list = voikko.analyze (word);
     if (list.size() > 0) {
       flagsAtt.setFlags (flagsAtt.getFlags() | FOUND);

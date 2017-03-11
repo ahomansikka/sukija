@@ -1,5 +1,5 @@
 /*
-Copyright (@) 2008-2012, 2016 Hannu Väisänen (Firstname.Lastname@uef.fi)
+Copyright (©) 2008-2012, 2016-2017 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -52,13 +52,15 @@ public final void getText (org.apache.lucene.analysis.tokenattributes.CharTermAt
 }
 %}
 
-LETTER = [:letter:]+
-DIGIT  = [:digit:]+
 
+// Ei toimi kuin UTF-8:ssa!
+// ALPHANUM = [0-9A-Za-zÀ-ÖØ-öø-ÿ\u0100-\u017F]+
 
-ALPHANUM = ({LETTER}|{DIGIT})
+// A-Za-Z:        C0 Controls and Basic Latin
+// À-ÖØ-öø-ÿ:     C1 Controls and Latin-1 Supplement (\u00C0-\u00D6\u00D8-\u00FF)
+// \u0100-\u017F: Latin Extended-A
 
-// ALPHANUM = [0-9A-Za-zÀ-ÖØ-öø-ÿ\u0100-\u017F\u0180-\u0245]+
+ALPHANUM = [0-9A-Za-z\u00C0-\u00D6\u00D8-\u00FF\u0100-\u017F]+
 
 // Linja-auto, abc:n, Bordeaux'iin, ev.-lut.
 SEPARATOR = ([-:']|".-")

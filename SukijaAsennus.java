@@ -62,19 +62,6 @@ public class SukijaAsennus {
 
     Properties p = new Properties();
     p.load (new FileReader (propertiesFile));
-
-    final String SUDO = getProperty (p, "sukija.sudo");
-//    System.out.println ("[" + SUDO + "]"); System.exit(1);
-
-    final String SUKIJA = getProperty (p, "sukija.sukija");
-
-//     Set<String> set = p.stringPropertyNames();
-//     for (String s : set) System.out.println (s + " " + p.getProperty(s) + " " + getProperty(p,s));
-//     System.exit (1);
-//     p.list (System.out); System.exit (1);
-//     printDataConfigFile (p, new OutputStreamWriter (System.out));
-//     printSchemaFile (p, new OutputStreamWriter (System.out));
-
     printDataConfigFile (p, new FileWriter ("conf/data-config.xml"));
     printSchemaFile     (p, new FileWriter ("conf/schema.xml"));
   }

@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2015 Hannu Väisänen
+Copyright (©) 2015, 2017 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -26,29 +26,28 @@ import java.util.List;
 
 
 import org.apache.lucene.analysis.Tokenizer;
+import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.apache.lucene.analysis.tokenattributes.FlagsAttribute;
 import org.apache.lucene.analysis.tokenattributes.OffsetAttribute;
 import org.apache.lucene.analysis.tokenattributes.PositionIncrementAttribute;
-import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
-import org.apache.lucene.analysis.tokenattributes.TypeAttribute;
 import org.apache.lucene.util.AttributeFactory;
+import org.puimula.libvoikko.Token;
 import org.puimula.libvoikko.TokenType;
 import org.puimula.libvoikko.Voikko;
+import peltomaa.sukija.util.Constants;
 import peltomaa.sukija.voikko.VoikkoUtils;
 
 
 /** Tokenizer, joka käyttää Voikon tokens-funktiota.<p>
 
-Asetetaan attribuutit CharTermAttribute, OffsetAttribute ja
+Asetetaan attribuutit CharTermAttribute, FlagsAttribute, OffsetAttribute ja
 PositionIncrementAttribute.<p>
 */
 public class VoikkoTokenizer extends Tokenizer {
-  private JFlexReader scanner;
-
-  /** Creates a new VoikkoTokenizer.
+  /** Tehdään uusi VoikkoTokenizer.
    *
    * @param voikko   Voikko.
-   * @param ignoreNL Hylkää sanat, joissa ei ole yhtään kirjainta (esim. "1234" tai "1234-").
+   * @param ignoreNL Hylätään sanat, joissa ei ole yhtään kirjainta (esim. "1234" tai "1234-").
    */
   public VoikkoTokenizer (Voikko voikko, boolean ignoreNL)
   {
@@ -57,12 +56,11 @@ public class VoikkoTokenizer extends Tokenizer {
   }
 
 
-  /** Creates a new VoikkoTokenizer with a given
-   *  org.apache.lucene.util.AttributeSource.AttributeFactory.
+  /** Tehdään uusi VoikkoTokenizer, joka käyttää annettuja attribuutteja.
    *
    * @param factory  Attribure factory.
    * @param voikko   Voikko.
-   * @param ignoreNL Hylkää sanat, joissa ei ole yhtään kirjainta (esim. "1234" tai "1234-").
+   * @param ignoreNL Hylätään sanat, joissa ei ole yhtään kirjainta (esim. "1234" tai "1234-").
    */
   public VoikkoTokenizer (AttributeFactory factory, Voikko voikko, boolean ignoreNL)
   {
@@ -78,29 +76,39 @@ public class VoikkoTokenizer extends Tokenizer {
   @Override
   public boolean incrementToken() throws IOException
   {
+    if (list == null) {
+      // Muutetaan syöte symboleiksi, kun tätä funktiota kutsutaan eka kerran.
+      tokenize (input);
+    }
+
     clearAttributes();
 
-    if (list == null || index >= list.size()) {
-      if (!read()) {
-        return false;
-      }
-    }
-
-    while (list.get(index).getType() != TokenType.WORD) {
-      index++;
-      if (index >= list.size()) {
-        if (!read()) {
-          return false;
+    while (index < list.size()) {
+      t = list.get (index);
+      if (t.getType() == TokenType.WORD) {
+        String word = trim (t.getText());
+        if (word.length() > 0) {
+          termAtt.setEmpty().append (word);
+          posIncrAtt.setPositionIncrement (1);
+          offsetAtt.setOffset (correctOffset(t.getStartOffset()), correctOffset(t.getEndOffset()));
+          if (word.indexOf("-") >= 0) {
+            flagsAtt.setFlags (flagsAtt.getFlags() | Constants.HYPHEN);
+          }
+          else {
+            flagsAtt.setFlags (flagsAtt.getFlags() | Constants.WORD);
+          }
+/*
+          if (t.getText().compareTo(sb.substring(t.getStartOffset(),t.getEndOffset())) != 0) {
+            throw new RuntimeException ("Virhe: " + t.getText() + " != " +  sb.substring(t.getStartOffset(),t.getEndOffset()));
+          }
+*/
+          index++;
+          return true;
         }
       }
+      index++;
     }
-
-    final int start = scanner.yychar();
-    termAtt.setEmpty().append (list.get(index).getText());
-    posIncrAtt.setPositionIncrement (1);
-    offsetAtt.setOffset (correctOffset(start), correctOffset(start+termAtt.length()));
-    index++;
-    return true;
+    return false;
   }
 
 
@@ -109,7 +117,7 @@ public class VoikkoTokenizer extends Tokenizer {
   {
     super.end();
     // Set final offset.
-    final int finalOffset = correctOffset (scanner.yychar() + scanner.yylength());
+    final int finalOffset = correctOffset (t.getStartOffset() + t.getEndOffset());
     offsetAtt.setOffset (finalOffset, finalOffset);
   }
 
@@ -118,7 +126,6 @@ public class VoikkoTokenizer extends Tokenizer {
   public void close() throws IOException
   {
     super.close();
-    scanner.yyreset (input);
   }
 
 
@@ -126,72 +133,104 @@ public class VoikkoTokenizer extends Tokenizer {
   public void reset() throws IOException
   {
     super.reset();
-    scanner.yyreset (input);
     index = 0;
+    list = null;
  }
 
 
   private void init (Voikko voikko, boolean ignoreNL)
   {
-    this.scanner = new JFlexReader (this.input);
     this.voikko = voikko;
     this.ignoreNL = ignoreNL;
   }
 
 
-  private boolean read()
+  // Hylätään sana, jos siinä vain muita merkkejä kun kirjaimia
+  // tai jos siinä on vääriä kirjaimia. Jälkimmäinen testi poistaa
+  // ei-latinalaiset merkit, esimerkiksi kreikkalaiset, kyrilliset,
+  // kiinalaiset, japanilaiset, korealaiset kirjainmerkit.
+  //
+  // Hyväksytään oikeiksi kirjaimiksi nämä Unicode-merkit:
+  // A-Za-Z:        C0 Controls and Basic Latin.
+  // À-ÖØ-öø-ÿ:     C1 Controls and Latin-1 Supplement.
+  // \u0100-\u017F: Latin Extended-A. ("European Latin", m.m. šŠ ja žŽ.)
+  //
+  // Sana hylätään, jos siinä on yksikin väärä kirjain, joten
+  // toinen testi (isLetter()) ei voi palauttaa suoraan arvoa false,
+  // sillä sanassa voi olla oikeita kirjaimia ennen kuin siinä
+  // on väärä kirjain.
+  //
+  private boolean ignoreWord (String word)
   {
-    try {
-      do {
-        final int tokenType = scanner.yylex();
-        if (tokenType == JFlexReader.YYEOF) {
-          return false;
-        }
-        scanner.getText (termAtt);
-//System.out.println ("Huu " + termAtt.toString() + " " + ignoreNL);
-      }
-      while (ignoreNL && ignoreWord (termAtt));
+    boolean ignore = true;
+    for (int i = 0; i < word.length(); i++) {
+      if (word.charAt(i) > '\u017F') return true; // Väärä kirjain => sana hylätään.
+      if (Character.isLetter(word.charAt(i))) ignore = false;
+    }
+    return ignore;
+  }
 
-//System.out.println ("Haa " + termAtt.toString() + "\n");
 
-      if (ignoreNL) {
-        List<org.puimula.libvoikko.Token> tmp = voikko.tokens (termAtt.toString());
-        list = new ArrayList<org.puimula.libvoikko.Token>();
-        for (int i = 0; i < tmp.size(); i++) {
-          if (!ignoreWord (tmp.get(i).getText())) {
-            list.add (tmp.get(i));
-          }
-        }
+  /** Luetaan koko indeksoitava tiedosto ja
+   *  muutetaan se Voikon symboleiksi muuttujaan 'list'.
+   */
+  private void tokenize (Reader input) throws IOException
+  {
+    int len;
+    sb.setLength (0);
+    while ((len = input.read (buffer)) > 0) {
+      sb.append (buffer, 0, len);
+    }
+    list = voikko.tokens (sb.toString());
+  }
+
+
+  /** Poistetaan sanan alusta ja lopusta merkit,
+   *  jotka eivät ole numeroita tai kirjaimia.
+   *  Jos ignoreNL == true, hylätään sanat, joissa
+   *  ei ole yhtään kirjainta.
+   */
+  private String trim (String word)
+  {
+    int len = word.length();
+    int start = 0;
+    int end = len;
+
+    for ( ; start < len && !Character.isLetterOrDigit(word.charAt(start)); start++)
+    {
+    }
+    for ( ; end >= start && !Character.isLetterOrDigit(word.charAt(end-1)); end--)
+    {
+    }
+
+    if (start > 0 || end < len) {
+      if (start < end) {
+        word = word.substring (start, end);
       }
       else {
-        list = voikko.tokens (termAtt.toString());
+        return "";
       }
+    }
 
-      index = 0;
-      return true;
+    if (ignoreNL && ignoreWord (word)) {
+      return "";
     }
-    catch (IOException e)
-    {
-      return false;
-    }
+    return word;
   }
 
 
-  private boolean ignoreWord (CharSequence word)
-  {
-    for (int i = 0; i < word.length(); i++) {
-      if (Character.isLetter(word.charAt(i))) return false;
-    }
-    return true;
-  }
-
+  private final StringBuilder sb = new StringBuilder();
+  private final char[] buffer = new char[8192];
+  private final String data = null;
+  private Token t;
 
   private final CharTermAttribute termAtt = addAttribute (CharTermAttribute.class);
+  private final FlagsAttribute flagsAtt = addAttribute (FlagsAttribute.class);
   private final OffsetAttribute offsetAtt = addAttribute (OffsetAttribute.class);
   private final PositionIncrementAttribute posIncrAtt = addAttribute (PositionIncrementAttribute.class);
 
   private Voikko voikko;
-  private List<org.puimula.libvoikko.Token> list;
+  private List<Token> list = null;
   private int index = 0;
   private boolean ignoreNL;
 }

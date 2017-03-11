@@ -36,7 +36,7 @@
        affect both how text is indexed and queried.
   <luceneMatchVersion>LUCENE_41</luceneMatchVersion>
   -->
-  <luceneMatchVersion>6.3.0</luceneMatchVersion>
+  <luceneMatchVersion>6.4.1</luceneMatchVersion>
 
   <lib dir="${solr.install.dir:../../../..}/dist/" regex="solr-dataimporthandler-.*\.jar" />
 
@@ -53,11 +53,6 @@
   <lib dir="${solr.install.dir:../../../..}/dist/" regex="solr-velocity-\d.*\.jar" />
 
   <lib dir="${solr.data.dir:}/lib/" regex=".*\.jar" />
-<!--
-  <lib path="${user.home}/.m2/repository/net/java/dev/jna/jna/4.2.1/jna-4.2.1.jar"/>
-  <lib path="${user.home}/.m2/repository/org/puimula/voikko/libvoikko/4.0.1/libvoikko-4.0.1.jar"/>
-  <lib path="${user.home}/.m2/repository/peltomaa/sukija/sukija/2.1.5/sukija-2.1.5.jar"/>
--->
 
   <!-- Data Directory
 

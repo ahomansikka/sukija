@@ -1,5 +1,5 @@
 /*
-Copyright (@) 2008-2012, 2015-2017 Hannu Väisänen (Firstname.Lastname@uef.fi)
+Copyright (©) 2008-2012, 2015-2017 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -49,26 +49,24 @@ public final void getText (org.apache.lucene.analysis.tokenattributes.CharTermAt
 %}
 
 
+// Ei toimi kuin UTF-8:ssa!
+// ALPHANUM = [0-9A-Za-zÀ-ÖØ-öø-ÿ\u0100-\u017F]+
+
 // A-Za-Z:        C0 Controls and Basic Latin
-// À-ÖØ-öø-ÿ:     C1 Controls and Latin-1 Supplement
+// À-ÖØ-öø-ÿ:     C1 Controls and Latin-1 Supplement (\u00C0-\u00D6\u00D8-\u00FF)
 // \u0100-\u017F: Latin Extended-A
-// \u0180-\u024F: Latin Extended-B
 
-// Ei käänny Windowsissa!
-//LETTER_OR_DIGIT = [0-9A-Za-zÀ-ÖØ-öø-ÿ\u0100-\u017F\u0180-\u024F]+
-
-LETTER = [:letter:]+
-DIGIT  = [:digit:]+
-LETTER_OR_DIGIT = ({LETTER}|{DIGIT})
+ALPHANUM = [0-9A-Za-z\u00C0-\u00D6\u00D8-\u00FF\u0100-\u017F]+
 
 WHITESPACE = \r\n | [ \r\n\t\f]
-NUM = {DIGIT}([-.,:_/]+{DIGIT})*(:{LETTER_OR_DIGIT})?
+DIGIT = [0-9]+
+NUM = {DIGIT}([-.,:_/]+{DIGIT})*(:{ALPHANUM})?
 HYPHEN = ("\"-"|"''-"|"\\-"|"'-"|"--"|".-"|"-")
 PUNCT = [.:']
 
-W1 = ({LETTER_OR_DIGIT})({PUNCT}({LETTER_OR_DIGIT}))*
+W1 = ({ALPHANUM})({PUNCT}({ALPHANUM}))*
 
-W2 = {W1}(("["{LETTER_OR_DIGIT}"]")({W1})*)+ | (("["{LETTER_OR_DIGIT}"]"){W1})+("["{LETTER_OR_DIGIT}"]")?
+W2 = {W1}(("["{ALPHANUM}"]")({W1})*)+ | (("["{ALPHANUM}"]"){W1})+("["{ALPHANUM}"]")?
 
 
 LPAR = "{"[0-9a-zA-Z]+"}"
