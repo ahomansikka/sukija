@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2012-2016 Hannu Väisänen
+Copyright (©) 2012-2017 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -76,8 +76,8 @@ public class SuggestionParser {
     }
     catch (Throwable t)
     {
-      if (t.getMessage() != null) LOG.error ("c " + t.getMessage());
-      if (t.getCause() != null) LOG.error ("d " + t.getCause().getMessage());
+      if (t.getMessage() != null) LOG.error ("c " + t.getMessage() + "\n");
+      if (t.getCause() != null) LOG.error ("d " + t.getCause().getMessage() + "\n");
       throw new SuggestionParserException (t);
     }
   }
@@ -139,14 +139,12 @@ public class SuggestionParser {
             v[i] = new ApostropheSuggestion (voikko);
           }
           break;
-/*
         case "peltomaa.sukija.schema.CharInput":
           {
             final CharInput input = (CharInput)s.get(i);
             v[i] = new CharSuggestion (voikko, input.getFrom(), input.getTo());
           }
           break;
-*/
         case "peltomaa.sukija.schema.CompoundWordEndInput":
           {
             final CompoundWordEndInput input = (CompoundWordEndInput)s.get(i);
@@ -193,6 +191,7 @@ public class SuggestionParser {
                                                  input.getFileName(),
                                                  input.getDistanceClass().value(),
                                                  input.getParameter(),
+                                                 input.getKeyLength().intValue(),
                                                  input.getThreshold());
           }
           break;
@@ -209,9 +208,16 @@ public class SuggestionParser {
                                                   new VoikkoAttributeParameter (input));
           }
           break;
+       case "peltomaa.sukija.schema.VoikkoSpellingInput":
+          {
+            final VoikkoSpellingInput input = (VoikkoSpellingInput)s.get(i);
+            v[i] = new VoikkoSpellingSuggestion (voikko, input.getN().intValue());
+          }
+          break;
         default:
-          // Tätä ei pitäisi koskaan tapahtua.
-          throw new RuntimeException ("SuggestionParser: tuntematon luokka: s.get(i).getClass().getName()");
+          // Tätä ei pitäisi koskaan tapahtua. Jos tapahtuu,
+          // lienen unohtanut break-lauseen jostakin.
+          throw new RuntimeException ("SuggestionParser: tuntematon luokka: " + s.get(i).getClass().getName());
       }
     }
 //System.exit(1);

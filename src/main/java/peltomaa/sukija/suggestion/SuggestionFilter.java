@@ -61,16 +61,17 @@ public class SuggestionFilter extends SukijaFilter {
     }
     catch (SuggestionParser.SuggestionParserException e)
     {
+      e.printStackTrace (System.out);
       LOG.error ("SuggestionFilter(1): " + e.getMessage());
       if (e.getCause() != null) {
         LOG.error ("SuggestionFilter(2): " + e.getCause().getClass().getName() + " " + e.getCause().getMessage());
       }
-      e.printStackTrace (System.out);
       throw new RuntimeException (e.getMessage());
     }
     catch (Throwable t)
     {
-      throw new RuntimeException (t);
+      throw t;
+//      throw new RuntimeException (t);
     }
   }
 

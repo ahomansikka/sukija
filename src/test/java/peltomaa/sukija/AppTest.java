@@ -87,8 +87,7 @@ public class AppTest  extends TestCase
   }
 
   private Voikko voikko;
-  private static final String HOME = System.getProperty ("user.home");
-  private static final String VOIKKO_PATH = HOME + "/vvfst/voikkodict";
-  private static final String LIBRARY_PATH = HOME + "/vvfst/lib";
-  private static final String LIBVOIKKO = HOME + "/vvfst/lib/libvoikko.so";
+  private static final String VOIKKO_PATH = "/usr/local/lib/voikko";
+  private static final String LIBRARY_PATH = "/usr/local/lib";
+  private static final String LIBVOIKKO = "/usr/local/lib/libvoikko.so";
 }

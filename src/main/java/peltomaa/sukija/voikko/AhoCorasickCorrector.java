@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2016 Hannu Väisänen
+Copyright (©) 2016-2017 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -29,7 +29,7 @@ import org.puimula.libvoikko.Analysis;
 class AhoCorasickCorrector {
   AhoCorasickCorrector()
   {
-    Trie.TrieBuilder builder = Trie.builder().removeOverlaps();
+    Trie.TrieBuilder builder = Trie.builder().ignoreOverlaps();
     for (String s : MapClass.map.keySet()) {
       builder.addKeyword (s);
     }

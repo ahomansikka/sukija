@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2016 Hannu Väisänen
+Copyright (©) 2016-2017 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -34,7 +34,7 @@ public class StringSuggestion extends Suggestion {
     super (voikko);
     this.map = map;
 
-    Trie.TrieBuilder builder = Trie.builder().removeOverlaps();
+    Trie.TrieBuilder builder = Trie.builder().ignoreOverlaps();
 
     for (String s : this.map.keySet()) {
       builder.addKeyword (s);
