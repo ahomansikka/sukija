@@ -18,12 +18,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package peltomaa.sukija.suggestion.distance;
 
 import java.io.BufferedReader;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.Writer;
 import java.util.Arrays;
@@ -32,7 +35,8 @@ import java.util.TreeSet;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import org.apache.lucene.analysis.util.ClasspathResourceLoader;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.GZIPOutputStream;
 import org.apache.lucene.analysis.util.ClasspathResourceLoader;
 
 
@@ -108,48 +112,6 @@ class StringMap extends TreeMap<String,TreeSet<String>> {
   }
 
 
-   /** Luetaan tiedot taulukosta, jonka eka sarakkeena on sanan perusmuoto ja
-    *  toka sarakkeena sen taivutusmuoto, esimerkiksi
-<pre>
-aakkonen aakkonen
-aakkonen aakkoseen
-aakkonen aakkoseksi
-aakkonen aakkosella
-aakkonen aakkoselle
-aakkonen aakkosemme
-aakkonen aakkosen
-aakkonen aakkosena
-aakkonen aakkosensa
-</pre>
-    *
-    * @param r Olio, josta luetaan.
-    */
-   public void makeMapFromColumns (Reader r) throws FileNotFoundException, IOException
-   {
-     BufferedReader b = new BufferedReader (r);
-     String line;
-     while ((line = b.readLine()) != null) {
-        String[] s = SEP.split (line);
-        if (s.length != 2) throw new RuntimeException ("s.length != 2: " + line);
-
-        putValue (s[0], s[1]);
-     }
-   }
-
-
-   /* Luetaan tiedot tiedostosta.<p>
-    *
-    * Tämä on sama kuin {@code makeMapFromColumns (new FileReader (file))}.
-    *
-    * @param file Tiedosto, josta luetaan.
-    */
-   public void makeMapFromColumns (String file) throws FileNotFoundException, IOException
-   {
-     makeMapFromColumns (new FileReader (file));
-   }
-
-
-
   /** Tallennetaan assosiatiivinen taulukko muotoon, josta se
    *  voidaan lukea funktiolla {@code read(Reader)}.<p>
    *
@@ -182,6 +144,24 @@ aakkosellisuus [aakkosellisuudesta, aakkosellisuus]
   public void write (String file) throws IOException
   {
     write (new FileWriter (file));
+  }
+
+
+  public void readGzipFile (String file) throws FileNotFoundException, IOException
+  {
+    GZIPInputStream gis = new GZIPInputStream (new FileInputStream (file));
+    InputStreamReader reader = new InputStreamReader (gis);
+    read (reader);
+    reader.close();
+  }
+
+
+  public void writeGzipFile (String file) throws FileNotFoundException, IOException
+  {
+    GZIPOutputStream gos = new GZIPOutputStream (new FileOutputStream (file));
+    OutputStreamWriter writer = new OutputStreamWriter (gos);
+    write (writer);
+    writer.close();
   }
 
 

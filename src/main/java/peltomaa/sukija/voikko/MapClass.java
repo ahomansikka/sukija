@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2016 Hannu Väisänen
+Copyright (©) 2016-2017 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -845,5 +845,6 @@ class MapClass {
     map.put ("poliisi", new String[]{"polis", "poliis"});
     map.put ("kimnaasi", new String[]{"kymnaas", "kimnaas"});
     map.put ("kymnaasi", new String[]{"kimnaas", "kymnaas"});
+    map.put ("kumppali", new String[]{"kumppan", "kumppal"});
   };
 }
