@@ -46,8 +46,8 @@ public class MapMaker {
       makeMapFromColumns (new FileReader (file));
     }
     stringMap.write ("output.txt");
-    stringMap.write_gzip_file ("output.txt.gz");
-    stringMap.read_gzip_file ("output.txt.gz");
+    stringMap.writeGzipFile ("output.txt.gz");
+    stringMap.readGzipFile ("output.txt.gz");
     stringMap.write ("output2.txt");
   }
 
