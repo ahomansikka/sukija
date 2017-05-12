@@ -55,7 +55,7 @@ public class SuggestionFilter extends SukijaFilter {
     try {
       LOG.info ("SuggestionFilter: aloitetaan (1).");
 //System.out.println ("SuggestionFilter: aloitetaan (1).");
-      parser = new SuggestionParser (voikko, suggestionFile);
+      parser = new SuggestionParser (voikko, suggestionFile); 
       suggestion = parser.getSuggestions();
       this.successOnly = successOnly;
     }

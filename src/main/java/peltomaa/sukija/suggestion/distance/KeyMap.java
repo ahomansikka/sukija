@@ -47,7 +47,7 @@ class KeyMap extends HashMap<String,HashSet<StringMap>> {
   public static final KeyMap newInstance (String file, int keyLength) throws FileNotFoundException, IOException
   {
     StringMap stringMap = new StringMap();
-    stringMap.read (file);
+    stringMap.readGzipFile (file);
 
     KeyMap keyMap = new KeyMap (keyLength);
 

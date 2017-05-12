@@ -71,7 +71,6 @@ public class SuggestionParser {
       si = JAXBUtil.unmarshal (xmlFile, xsdFile, SCHEMA_LOCATION, CONTEXT_PATH, this.getClass().getClassLoader());
 //      JAXBUtil.marshal ((new ObjectFactory()).createSuggestions(si), CONTEXT_PATH, System.out, this.getClass().getClassLoader()); System.exit(1);
       parseSuggestions (voikko, si.getSuggestion());
-
 //      print (System.out);
     }
     catch (Throwable t)
@@ -124,7 +123,7 @@ public class SuggestionParser {
   private void parseSuggestions (Voikko voikko, List<Object> s) throws FileNotFoundException, IOException
   {
     v = new Suggestion[s.size()];
-
+//System.out.println ("parseSuggestions " + s.size());
     for (int i = 0; i < s.size(); i++) {
 //      System.out.println ("SuggestionParser: " + i + " " + s.get(i).getClass().getName());
 

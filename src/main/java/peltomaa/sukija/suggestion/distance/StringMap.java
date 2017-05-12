@@ -79,12 +79,13 @@ class StringMap extends TreeMap<String,TreeSet<String>> {
    *
    * @param r  Olio, josta luetaan.
    */
-  public void read (Reader r) throws IOException
+  private void read (Reader r) throws IOException
   {
     BufferedReader br = new BufferedReader (r);
     String line;
     while ((line = br.readLine()) != null) {
       final int n = line.indexOf(' ');
+//System.out.println ("StringMap.read [" + line + "]");
       String key = line.substring (0, n);
       String[] value = SEP.split (line.substring(n+2));
 //System.out.println ("XXXX " + key + " " + Arrays.asList(value).toString() + " §" + line + "§");
@@ -97,7 +98,7 @@ class StringMap extends TreeMap<String,TreeSet<String>> {
    *
    * @param file  Tiedosto, josta luetaan.
    */
-  public void read (String file) throws FileNotFoundException, IOException
+  private void read (String file) throws FileNotFoundException, IOException
   {
     try {
       read (new FileReader (file));
@@ -127,7 +128,7 @@ aakkosellisuus [aakkosellisuudesta, aakkosellisuus]
    *
    * @param w Olio, johon kirjoitetaan.
    */
-  public void write (Writer w) throws IOException
+  private void write (Writer w) throws IOException
   {
     for (String key : keySet()) {
       w.write (key + " " + get(key).toString() + "\n");
@@ -141,7 +142,7 @@ aakkosellisuus [aakkosellisuudesta, aakkosellisuus]
    *
    * @param file Tiedosto, johon kirjoitetaan.
    */
-  public void write (String file) throws IOException
+  private void write (String file) throws IOException
   {
     write (new FileWriter (file));
   }
