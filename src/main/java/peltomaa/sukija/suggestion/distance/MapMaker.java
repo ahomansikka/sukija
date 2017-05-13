@@ -45,10 +45,7 @@ public class MapMaker {
     for (String file : args) {
       makeMapFromColumns (new FileReader (file));
     }
-    stringMap.write ("output.txt");
     stringMap.writeGzipFile ("output.txt.gz");
-    stringMap.readGzipFile ("output.txt.gz");
-    stringMap.write ("output2.txt");
   }
 
 
@@ -67,7 +64,8 @@ aakkonen aakkosensa
 </pre>
     *
     * @param r Olio, josta luetaan.
-    */   private void makeMapFromColumns (Reader r) throws FileNotFoundException, IOException
+    */
+   private void makeMapFromColumns (Reader r) throws FileNotFoundException, IOException
    {
      BufferedReader b = new BufferedReader (r);
      String line;
