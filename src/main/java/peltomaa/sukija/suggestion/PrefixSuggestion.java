@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2013-2016 Hannu Väisänen
+Copyright (©) 2013-2017 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -22,11 +22,10 @@ import java.util.List;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import org.puimula.libvoikko.Analysis;
 import org.puimula.libvoikko.Voikko;
 import peltomaa.sukija.attributes.VoikkoAttribute;
+import peltomaa.sukija.util.StringUtil;
 import peltomaa.sukija.voikko.VoikkoUtils;
 
 
@@ -85,10 +84,10 @@ public class PrefixSuggestion extends Suggestion {
     // Käydään läpi kaikki etuliitteet pisimmästä alkaen ja
     // lopetetaan, kun löytyy eka tunnistettu sana.
     //
-    for (int i = Math.min (maxLength, word.length()); i >= minLength; i--) {
+    for (int i = Math.min (maxLength, word.length()-1); i >= minLength; i--) {
       final String p = word.substring (0, i);    // Sanan alku.
       if (prefixSet.contains (p)) {              // Onko etuliite?
-        List<Analysis> list = voikko.analyze (word.substring(i));
+        List<Analysis> list = voikko.analyze (StringUtil.trimNotLetterOrDigit (word.substring(i)));
         if (list.size() > 0) {
           //
           // Etuliitteetön sana tunnistettiin.
@@ -97,23 +96,33 @@ public class PrefixSuggestion extends Suggestion {
             analysisList.addAll (list);
           }
           if (savePrefix) {
-            List<Analysis> prefixList = voikko.analyze (p);
+            prefixList = voikko.analyze (p);
             if (prefixList.size() > 0) {
               analysisList.addAll (prefixList);
+//System.out.println ("prefixList " + prefixList);
             }
             else {
+//System.out.println ("q " + p);
               analysisList.add (VoikkoUtils.newBaseForm (p));
             }
           }
 
           for (Analysis a: list) {
-            analysisList.add (VoikkoUtils.newBaseForm (p + a.get("BASEFORM")));
+//System.out.println ("p " + p + " " +  a.get("BASEFORM"));
+            analysisList.add (VoikkoUtils.newBaseForm (StringUtil.joinIfVowel (p, "-", a.get("BASEFORM"))));
+            if (prefixList.size() > 0) {
+              for (Analysis q: prefixList) {
+                analysisList.add (VoikkoUtils.newBaseForm (StringUtil.joinIfVowel (q.get("BASEFORM"), "-", a.get("BASEFORM"))));
+              }
+            }
           }
+//System.out.println ("analysisList " + analysisList);
           voikkoAtt.addAnalysis (analysisList);
           return true;
         }
       }
     }
+
     return false;
   }
 
@@ -123,4 +132,5 @@ public class PrefixSuggestion extends Suggestion {
   private boolean savePrefix;
   private boolean saveWord;
   private List<Analysis> analysisList = new ArrayList<Analysis>();
+  private List<Analysis> prefixList;
 }

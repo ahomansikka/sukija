@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2009-2011 Hannu Väisänen
+Copyright (©) 2009-2011, 2017 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -325,6 +325,54 @@ public class StringUtil {
     }
     return p;
   }
+
+
+  /**
+   * Poista sanan alusta ja lopusta merkit, jotka eivät ole kirjaimia eivätkä numeroita.
+   */
+  public static final String trimNotLetterOrDigit (String s)
+  {
+    int len = s.length();
+
+    if (len == 0) return s;
+
+    int start = 0;
+    int end = len;
+    for (start = 0; start < len && !Character.isLetterOrDigit (s.charAt(start)); start++)
+    {
+    }
+    for (end = len; end >= start && !Character.isLetterOrDigit (s.charAt(end - 1)); end--)
+    {
+    }
+    if (start > 0 || end < len) {
+      if (start < end) {
+        return s.substring (start, (end - start));
+      }
+    }
+    return s;
+  }
+
+
+  /**
+   * Liitä kaksi merkkijonoa yhteen. Laita väliin 'separator' mikäli 'u' loppuu
+   * samaan ääntiöön, jolla 'v' alkaa. Isot ja pienet kirjaimet katsotaan
+   * samaksi, esimerkiksi 'a' == 'A'.
+   */
+  public static final String joinIfVowel (String u, String separator, String v)
+  {
+    final char cu = Character.toLowerCase (u.charAt(u.length()-1));
+    final char cv = Character.toLowerCase (v.charAt(0));
+
+    if (isVowel(cu) && (cu == cv)) {
+//System.out.println ("Ding " + u + " " + v);
+      return (u + separator + v);
+    }
+    else {
+//System.out.println ("Dong " + u + " " + v);
+      return (u + v);
+    }
+  }
+
 
 /*
   public static void main (String[] args)
