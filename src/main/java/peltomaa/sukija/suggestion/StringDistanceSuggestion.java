@@ -64,6 +64,8 @@ public class StringDistanceSuggestion extends Suggestion {
   @Override
   public boolean suggest (String word, VoikkoAttribute voikkoAtt)
   {
+    if (word.indexOf("-") >= 0) return false;
+
     final String value = distance.bestMatch (word);
     if (value != null) {
       List<Analysis> analysis = voikko.analyze (value);

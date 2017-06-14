@@ -132,14 +132,15 @@ public class SuggestionFilter extends SukijaFilter {
 //System.out.println ("Word 0 " + word + " " + termAtt.toString() + " " + Constants.toString (flagsAtt));
 
     if (hasFlag (flagsAtt, HYPHEN)) {
+//System.out.println ("Word 1 " + word);
       final Set<String> set1 = suggest (word);
 
-//System.out.println ("Word 1 " + word + set1.toString());
+//System.out.println ("Word 2 " + word + " " + set1.toString());
 
       final String s = HYPHEN_REGEX.matcher(word).replaceAll ("");
       final Set<String> set2 = suggest (s);
 
-//System.out.println ("Word 2 " + s + " " + set2.toString());
+//System.out.println ("Word 3 " + s + " " + set2.toString());
 
 
       final String[] p = HYPHEN_REGEX.split (word);
@@ -148,6 +149,7 @@ public class SuggestionFilter extends SukijaFilter {
       for (int i = 0; i < p.length; i++) {
         Set<String> result = suggest (p[i]);
         if (result != null) {
+//System.out.println ("Word 4 " + p[i] + " " + result.toString() + " " + Constants.toString (flagsAtt));
           pset.addAll (result);
         }
       }
@@ -155,20 +157,23 @@ public class SuggestionFilter extends SukijaFilter {
       if (set2 != null) pset.addAll (set2);
 
       if (pset.size() > 0) {
+//System.out.println ("pset1 " + word + " " + Constants.toString(flagsAtt) + " " + pset.toString());
         if (hasFlag (flagsAtt, FOUND)) {
           removeFlags (flagsAtt, SUGGEST, UNKNOWN);
         }
         else if (hasFlag (flagsAtt, SUGGEST)) {
           removeFlags (flagsAtt, UNKNOWN);
         }
-//System.out.println ("pset " + word + " " + Constants.toString(flagsAtt) + " " + pset.toString());
+//System.out.println ("pset2 " + word + " " + Constants.toString(flagsAtt) + " " + pset.toString());
         return pset.iterator();
       }
     }
     else {
+//System.out.println ("Word Z " + word + " " + termAtt.toString() + " " + Constants.toString (flagsAtt));
       Set<String> s = suggest (word);
       if (s != null) return s.iterator();
     }
+//System.out.println ("Word Ö " + word + " " + termAtt.toString() + " " + Constants.toString (flagsAtt));
     return null;
   }
 
