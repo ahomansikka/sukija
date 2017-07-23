@@ -34,6 +34,10 @@
 </xsd:complexType>
 
 
+<xsd:complexType name = "SplitInput">
+</xsd:complexType>
+
+
 <xsd:simpleType name = "List">
   <xsd:list itemType = "xsd:string"/>
 </xsd:simpleType>
@@ -180,6 +184,7 @@
     <xsd:element name = "erase"  type = "EraseInput"/>
     <xsd:element name = "prefix" type = "PrefixInput"/>
     <xsd:element name = "regex"  type = "RegexInput"/>
+    <xsd:element name = "split"  type = "SplitInput"/>
     <xsd:element name = "start"  type = "StartInput"/>
     <xsd:element name = "string" type = "StringInput"/>
     <xsd:element name = "stringDistance"  type = "StringDistanceInput"/>

@@ -174,6 +174,12 @@ public class SuggestionParser {
                                         makeReplacement (input.getInput()), input.isTryAll());
           }
           break;
+        case "peltomaa.sukija.schema.SplitInput":
+          {
+            final SplitInput input = (SplitInput)s.get(i);
+            v[i] = new SplitSuggestion (voikko);
+          }
+          break;
         case "peltomaa.sukija.schema.StartInput":
           {
             final StartInput input = (StartInput)s.get(i);

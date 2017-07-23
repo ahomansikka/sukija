@@ -142,7 +142,6 @@ public class SuggestionFilter extends SukijaFilter {
 
 //System.out.println ("Word 3 " + s + " " + set2.toString());
 
-
       final String[] p = HYPHEN_REGEX.split (word);
       final HashSet<String> pset = new HashSet<String>();
 

@@ -1,6 +1,3 @@
-SOLR_HOME=/var/solr/data/sukija
-
-
 tiedostot: SukijaAsennus.class
 	   java SukijaAsennus
 
@@ -14,7 +11,7 @@ clean:
 	rm -f SukijaAsennus.class conf/data-config.xml conf/schema.xml
 
 
-SUKIJA=sukija-2.2.2
+SUKIJA=sukija-2.2.3
 tar:
 	if [ -e $(SUKIJA) ]; then \
 	  rm -f $(SUKIJA).tar.bz2; \

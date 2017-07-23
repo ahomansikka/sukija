@@ -45,7 +45,7 @@ Tika (\verb=http://tika.apache.org/=) osaa lukea.
       \verb=https://github.com/voikko/corevoikko=
       Tarvitaan versiot libvoikko.so.1.14.5 ja libvoikko-4.1.1.jar
 
-\item Solr 6.4.1:
+\item Solr 6.6.0:
       \verb=http://lucene.apache.org/solr/=
       Tässä dokumentissa Solr:sta käytetään nimeä solr-x.y.z,
       missä x.y.z tarkoittaa version numeroa.
@@ -59,8 +59,7 @@ Tämä asennusohje olettaa, että libvoikko on asennettu hakemistoon
 \verb=/usr/local/lib= ja että Solr on hakemistossa
 \verb=$HOME/Lataukset/solr/solr-x.y.z=
 
-Jos ne ovat jossain muualla, tiedoston \verb=Makefile= alussa olevaa
-muuttujaa \verb=SOLR_HOME=, ja tiedostossa \verb=sukija.properties=
+Jos ne ovat jossain muualla, tiedostossa \verb=sukija.properties=
 olevia Libvoikon tietoja pitää muuttaa vastaavasti.
 
 
@@ -231,18 +230,21 @@ Esimerkiksi
 
 \begin{verbatim}
   <compoundWordEnd>
-    <input>jo(k[ie]|e) joki</input>
+    <input>joki joki</input>
+    <input>joke joki</input>
+    <input>joe joki</input>
   </compoundWordEnd>
 \end{verbatim}
 
 tunnistaa esimerkiksi merkkijonon ''aatsajoelle''. Tällä tavalla
 voidaan tunnistaa paikannimiä, jotka eivät ole sanastossa.
 
-Jokaisessa input-lauseessa on kaksi osaa. Ensimmäinen on säännöllinen
-lauseke ja toinen jonkin sanan perusmuoto. Tunnistettaessa merkkijono
-katkaistaan siitä kohdasta, josta säännöllinen lauseke alkaa, ja jos
-merkkijonon loppuosan perusmuoto on argumentin toinen osa,
-perusmuotona palauteaan merkkijonon alkuosa + argumentin toinen osa.
+Jokaisessa input-lauseessa on kaksi osaa. Ensimmäinen on jokin
+merkkijono ja toinen jonkin sanan perusmuoto. Tunnistettaessa
+merkkijono katkaistaan siitä kohdasta, josta ensimmäinen merkkijono
+alkaa, ja jos merkkijonon loppuosan perusmuoto on argumentin toinen
+osa, perusmuotona palauteaan merkkijonon alkuosa + argumentin toinen
+osa.
 
 Esimeriksi ''aatsajoelle'' jaetaan kahtia osiin ''aatsa'' ja
 ''joelle'', ja koska merkkijonon ''joelle'' perusmuoto on ''joki'',
@@ -250,6 +252,15 @@ merkkijonon ''aatsajoelle'' perusmuodoksi tulee ''aatsajoki''.
 
 Input-lauseita voi olla mielivaltainen määrä.
 
+Ensimmäinen merkkijono ei ole säännöllinen lauseke, koska ne ovat
+hitaampia kuin merkkijonot varsinkin, kun merkkijonojen tunnistuksessa
+käytetään Aho-Corasick -algoritmia.\footnote{Katso
+Alfred V. Aho and Margaret J. Corasick:
+\emph{Efficient String Matching: An Aid to Bibliographic Search.}
+Communications of the ACM. June 1975 Volume 18 Number 6.
+Löytyy netistä googlaamalla.} Algoritmissa sanan (ensimmäisen
+merkkijonon) etsimiseen käytetty aika ei riipu etsittävien sanojen
+määrästä, sillä se etsii kaikkia sanoja samanaikaisesti.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -394,11 +405,11 @@ Kun tiedostot on indeksoitu, niitä voidaan tutkia myös komennolla
 }
 
 \bigskip \noindent \noindent
-Copyright © 2011--2015 Hannu Väisänen.
+Copyright © 2011--2017 Hannu Väisänen.
 \end{document}
 
 
 % cp /home/hvaisane/Lataukset/solr/solr-x.y.z/example/example-DIH/solr/db/conf/admin-extra*.html ~/Lataukset/solr/solr-5.0.0/server/solr/sukija/conf/
 
 
-sudo rm -rf /var/solr/ /opt/solr* /etc/init.d/solr /etc/rc*/*solr*
+sudo rm -rf /var/solr/ /opt/solr* /etc/default/solr.in.sh /etc/init.d/solr /etc/rc*/*solr*
