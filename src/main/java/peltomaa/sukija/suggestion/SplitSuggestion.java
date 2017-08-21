@@ -59,32 +59,4 @@ public class SplitSuggestion extends Suggestion {
     }
     return false;
   }
-
-
-//  @Override
-  public boolean xsuggest (String word, VoikkoAttribute voikkoAtt)
-  {
-    if (word.length() < 5) return false;
-
-    List<String> suggestions = voikko.suggest (word);
-    if (suggestions.size() == 0 || (suggestions.get(0).compareTo(word) == 0)) {
-      return false;
-    }
-
-    boolean found = false;
-
-    for (String s : suggestions) {
-      if (s.indexOf(' ') > 0) {
-        for (String p: s.split (" ")) {
-          List<Analysis> list = voikko.analyze (p);
-          if (list.size() > 0) {
-System.out.println ("HUUHAA [" + word + "] s=[" + s + "] p=[" + p + "]");
-            voikkoAtt.addAnalysis (list);
-            found = true;
-          }
-        }
-      }
-    }
-    return found;
-  }
 }

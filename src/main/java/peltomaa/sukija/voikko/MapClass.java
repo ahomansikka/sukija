@@ -934,5 +934,7 @@ class MapClass {
     map.put ("kimnaasi", new String[]{"kymnaas", "kimnaas"});
     map.put ("kymnaasi", new String[]{"kimnaas", "kymnaas"});
     map.put ("kumppali", new String[]{"kumppan", "kumppal"});
+    map.put ("vaivalloinen", new String[]{"vaivaloi", "vaivalloi"});
+    map.put ("vaivalloisuus", new String[]{"vaivaloisu", "vaivalloisu"});
   };
 }
