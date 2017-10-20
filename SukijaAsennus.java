@@ -307,7 +307,6 @@ public class SukijaAsennus {
     "    <field name=\"text\" type=\"text\" indexed=\"true\" stored=\"true\" termOffsets=\"true\" termPositions=\"true\" termVectors=\"true\" multiValued=\"true\"/>\n" +
 //    "    <field name=\"contentType\" type=\"text\" indexed=\"true\" stored=\"true\"/>\n" +
     "  </fields>\n" +
-    "  <defaultSearchField>text</defaultSearchField>\n" +
     "  <uniqueKey>id</uniqueKey>\n" +
     "  <types>\n" +
     "    <fieldType name=\"long\" class=\"solr.TrieLongField\" precisionStep=\"0\" positionIncrementGap=\"0\"/>\n" +
@@ -331,6 +330,5 @@ public class SukijaAsennus {
     "      </analyzer>\n" +
     "    </fieldType>\n" +
     "  </types>\n" +
-    "  <solrQueryParser defaultOperator=\"AND\"/>\n" +
     "</schema>\n";
 }

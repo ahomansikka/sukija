@@ -8,7 +8,6 @@
     <field name="id" type="string" indexed="true" stored="true" required="true" multiValued="false"/>
     <field name="text" type="text" indexed="true" stored="true" termOffsets="true" termPositions="true" termVectors="true" multiValued="true"/>
   </fields>
-  <defaultSearchField>text</defaultSearchField>
   <uniqueKey>id</uniqueKey>
   <types>
     <fieldType name="long" class="solr.TrieLongField" precisionStep="0" positionIncrementGap="0"/>
@@ -30,5 +29,4 @@
       </analyzer>
     </fieldType>
   </types>
-  <solrQueryParser defaultOperator="AND"/>
 </schema>

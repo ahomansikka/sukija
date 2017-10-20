@@ -7,3 +7,11 @@ log4j.logger.peltomaa.sukija.suggestion.SuggestionParser = ALL
 log4j.logger.peltomaa.sukija.voikko.VoikkoTokenizer = ALL
 log4j.logger.peltomaa.sukija.voikko.VoikkoTokenizerFactory = ALL
 log4j.logger.peltomaa.sukija.voikko.VoikkoUtils = ALL
+
+# Jos indeksointi juuttuu kiinni, tästä tulostuksesta näkee, mitä tiedostoa
+# Solr ei osaa indeksoida (lokitiedostossa oleva viimeinen tiedoston nimi).
+# Jos ei halua lukea koko lokitiedstoa (-; voi antaa komennon
+#
+# grep FileDataSource /var/solr/logs/solr.log | tail -1
+#
+log4j.logger.org.apache.solr.handler.dataimport.FileDataSource = DEBUG

@@ -36,7 +36,7 @@
        affect both how text is indexed and queried.
   <luceneMatchVersion>LUCENE_41</luceneMatchVersion>
   -->
-  <luceneMatchVersion>6.4.1</luceneMatchVersion>
+  <luceneMatchVersion>7.1.0</luceneMatchVersion>
 
   <lib dir="${solr.install.dir:../../../..}/dist/" regex="solr-dataimporthandler-.*\.jar" />
 
