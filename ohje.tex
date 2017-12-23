@@ -45,7 +45,7 @@ Tika (\verb=http://tika.apache.org/=) osaa lukea.
       \verb=https://github.com/voikko/corevoikko=
       Tarvitaan versiot libvoikko.so.1.14.5 ja libvoikko-4.1.1.jar
 
-\item Solr 7.1.0:
+\item Solr 7.2.0:
       \verb=http://lucene.apache.org/solr/=
       Tässä dokumentissa Solr:sta käytetään nimeä solr-x.y.z,
       missä x.y.z tarkoittaa version numeroa.
@@ -169,7 +169,8 @@ Lokitulostus menee kansioon \verb=/var/solr/logs/=
 Tiedostot indeksoidaan menemällä osoitteeseen
 \verb|http://localhost:8983/solr/sukija/dataimport?command=full-import|
 
-Indeksoinnin voi aloittaa myös Solr:n käyttöliittymästä.
+Indeksoinnin voi konfiguroida ja aloittaa myös Solr:n käyttöliittymästä
+kohdassa \verb|Dataimport|.
 
 Enemmän tai vähemmän pitkän ajan kuluttua indeksoinnin lopputuloksen
 voi katsoa osoitteesta
@@ -199,7 +200,7 @@ Esimerkiksi sanaa \verb=sana= etsitään näin:
 Tämän tulostuksen ulkonäköä voi muuttaa muuttamalla Sukijan mukana
 tulevaa tiedostoa \verb=conf/xslt/sukija.xsl=.
 
-Tietoja voi etsiä myös Solr:n käyttöliittymällä.
+Tietoja voi etsiä myös Solr:n käyttöliittymällä kohdassa \verb|Query|.
 
 
 \subsection*{Tiedoston suggestions.xml konfigurointi}

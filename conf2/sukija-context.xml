@@ -1,9 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE Configure PUBLIC "-//Mort Bay Consulting//DTD Configure//EN" "http://jetty.mortbay.org/configure.dtd">
 
-<!-- Tämä tiedosto tulee hakemistoon ${JETTY_CONTEXTS_DIR}.
-     Katso Makefile.
--->
+<!-- Tämä tiedosto tulee hakemistoon ${JETTY_CONTEXTS_DIR}. -->
 
 <Configure class="org.eclipse.jetty.webapp.WebAppContext">
   <Set name="contextPath">/</Set>
