@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2016 Hannu Väisänen
+Copyright (©) 2016, 2018 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -35,11 +35,15 @@ public abstract class SukijaFilterFactory extends TokenFilterFactory {
     path          = getValue (args, "path");
     libvoikkoPath = getValue (args, "libvoikkoPath");
     libraryPath   = getValue (args, "libraryPath");
+    successOnly   = getBoolean (args, "successOnly", false);
+
+    voikko = VoikkoUtils.getVoikko (language, path, libraryPath, libvoikkoPath);
 
     LOG.info ("language " + language);
     LOG.info ("path " + path);
     LOG.info ("libvoikkoPath " + libvoikkoPath);
     LOG.info ("libraryPath " + libraryPath);
+    LOG.info ("successOnly " + successOnly);
   }
 
 
@@ -47,13 +51,6 @@ public abstract class SukijaFilterFactory extends TokenFilterFactory {
   {
     return PropertiesUtil.substituteProperty (get(args,name), null);
   }
-
-
-  protected void createVoikko()
-  {
-    voikko = VoikkoUtils.getVoikko (language, path, libraryPath, libvoikkoPath);
-  }
-
 
   protected Voikko getVoikko() {return voikko;}
 
@@ -64,4 +61,5 @@ public abstract class SukijaFilterFactory extends TokenFilterFactory {
   private String libraryPath;
   protected static final Logger LOG = LoggerFactory.getLogger (SukijaFilterFactory.class);
   protected Voikko voikko;
+  protected boolean successOnly;
 }

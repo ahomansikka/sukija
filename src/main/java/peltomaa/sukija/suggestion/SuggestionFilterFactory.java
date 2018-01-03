@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2016 Hannu Väisänen
+Copyright (©) 2016, 2018 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -37,27 +37,27 @@ public class SuggestionFilterFactory extends SukijaFilterFactory implements Reso
   {
     super (args);
     suggestionFile = getValue (args, "suggestionFile");
-    successOnly    = getBoolean (args, "successOnly", false);
+    LOG.info ("SuggestionFilterFactory " + suggestionFile);
   }
 
 
   @Override
   public TokenFilter create (TokenStream input)
   {
-    return new SuggestionFilter (input, voikko, suggestion, successOnly);
+    if (voikko == null) throw new RuntimeException ("SuggestionFilterFactory: voikko == null.");
+    return new SuggestionFilter (input, voikko, parser, successOnly);
   }
 
 
   public void inform (ResourceLoader loader) throws IOException
   {
-    LOG.info ("inform1 " + loader.getClass().getName());
-    createVoikko();
+    LOG.info ("SuggestionFilterFactory inform1 " + loader.getClass().getName());
 
-    if (suggestionFile != null && suggestion == null) {
+    if (suggestionFile != null) {
       InputStream inputStream = loader.openResource (suggestionFile);
       try {
-        SuggestionParser parser = new SuggestionParser (getVoikko(), inputStream);
-        suggestion = parser.getSuggestions();
+        parser = new SuggestionParser (getVoikko(), inputStream);
+        LOG.info ("SuggestionFilterFactory inform2 " + loader.getClass().getName());
       }
       catch (SuggestionParser.SuggestionParserException e)
       {
@@ -65,11 +65,10 @@ public class SuggestionFilterFactory extends SukijaFilterFactory implements Reso
         if (e.getCause() != null) LOG.error (e.getCause().getMessage());
       }
     }
-    LOG.info ("inform2 " + loader.getClass().getName());
+    LOG.info ("SuggestionFilterFactory inform3 " + loader.getClass().getName());
   }
 
 
-  protected String suggestionFile;
-  protected boolean successOnly;
-  protected Suggestion[] suggestion;
+  private String suggestionFile;
+  private SuggestionParser parser;
 }

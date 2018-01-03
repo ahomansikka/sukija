@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2012-2016 Hannu Väisänen
+Copyright (©) 2012-2016, 2018 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -54,7 +54,6 @@ public class VoikkoFilterFactory extends SukijaFilterFactory {
   public VoikkoFilterFactory (Map<String,String> args)
   {
     super (args);
-    createVoikko();
   }
 
 

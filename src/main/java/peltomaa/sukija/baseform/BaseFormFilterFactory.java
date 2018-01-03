@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2015-2016 Hannu Väisänen
+Copyright (©) 2015-2016, 2018 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -34,51 +34,19 @@ import peltomaa.sukija.util.SukijaFilterFactory;
 import peltomaa.sukija.voikko.VoikkoUtils;
 
 
-public class BaseFormFilterFactory extends SukijaFilterFactory implements ResourceLoaderAware {
+public class BaseFormFilterFactory extends SukijaFilterFactory {
   /** Tehdään uusi BaseFormFilterFactory.
    */
   public BaseFormFilterFactory (Map<String,String> args)
   {
     super (args);
-    suggestionFile = getValue (args, "suggestionFile");
-    successOnly    = getBoolean (args, "successOnly", false);
   }
 
 
   @Override
   public TokenFilter create (TokenStream input)
   {
-    if (suggestion == null) {
-      return new BaseFormFilter (input, voikko, successOnly);
-    }
-    else {
-      return new SuggestionFilter (input, voikko, suggestion, successOnly);
-    }
+    if (voikko == null) throw new RuntimeException ("BaseFormFilterFactory: voikko == null.");
+    return new BaseFormFilter (input, voikko, successOnly);
   }
-
-
-  @Override
-  public void inform (ResourceLoader loader) throws IOException
-  {
-    LOG.info ("inform1 " + loader.getClass().getName());
-    createVoikko();
-
-    if (suggestionFile != null && suggestion == null) {
-      InputStream inputStream = loader.openResource (suggestionFile);
-      try {
-        SuggestionParser parser = new SuggestionParser (voikko, inputStream);
-        suggestion = parser.getSuggestions();
-      }
-      catch (SuggestionParser.SuggestionParserException e)
-      {
-        LOG.error (e.getMessage());
-        if (e.getCause() != null) LOG.error (e.getCause().getMessage());
-      }
-    }
-    LOG.info ("inform2 " + loader.getClass().getName());
-  }
-
-  private String suggestionFile;
-  private boolean successOnly;
-  private Suggestion[] suggestion;
 }

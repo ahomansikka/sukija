@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2015-2017 Hannu Väisänen
+Copyright (©) 2015-2018 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -24,18 +24,10 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.io.Writer;
-import java.nio.file.Files;
-import java.nio.file.FileSystem;
-import java.nio.file.FileSystems;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.Set;
-import static java.nio.file.StandardCopyOption.*;
 
 
 public class SukijaAsennus {
@@ -98,14 +90,18 @@ public class SukijaAsennus {
 
   private void printSchemaFile (Properties p, Writer out) throws IOException
   {
-    final String TOKENIZER = getProperty (p, "sukija.Tokenizer", "peltomaa.sukija.finnish.FinnishTokenizerFactory");
-    printTokenizer (p, TOKENIZER, out);
+    printTokenizer (p, out);
 
-    out.write (getBaseFormFilter (p));
-    out.write (FINNISH_FOLDING_LOWER_CASE_FILTER);
-    if (TOKENIZER.indexOf ("VoikkoTokenizerFactory") >= 0) {
-      out.write (VOIKKO_TOKENIZER_TRIM_FILTER);
+    if (getProperty (p, "sukija.suggestionFile") == null) {
+      printBaseFormFilter (p, out);
     }
+    else {
+      printSuggestionFilter (p, out);
+    }
+    out.write (FINNISH_FOLDING_LOWER_CASE_FILTER);
+//    if (TOKENIZER.indexOf ("VoikkoTokenizerFactory") >= 0) {
+//      out.write (VOIKKO_TOKENIZER_TRIM_FILTER);
+//    }
 
     final String SYNONYM_FILTER = getSynonymFilter (p);
     if (SYNONYM_FILTER != null) {
@@ -116,12 +112,14 @@ public class SukijaAsennus {
   }
 
 
-  private void printTokenizer (Properties p, String tokenizer, Writer out) throws IOException
+  private void printTokenizer (Properties p, Writer out) throws IOException
   {
+    final String TOKENIZER = getProperty (p, "sukija.Tokenizer", "peltomaa.sukija.finnish.FinnishTokenizerFactory");
+
     StringBuilder sb = new StringBuilder();
 
-    sb.append (String.format (schemaFileStart, tokenizer));
-    if (tokenizer.indexOf ("VoikkoTokenizerFactory") >= 0) {
+    sb.append (String.format (schemaFileStart, TOKENIZER));
+    if (TOKENIZER.indexOf ("VoikkoTokenizerFactory") >= 0) {
       appendVoikkoProperties (sb, p);
       append (sb, p, "ignoreNL", "sukija.voikko.tokenizer.ignoreNL", "true");
     }
@@ -163,16 +161,34 @@ public class SukijaAsennus {
   };
 
 
-  private String getBaseFormFilter (Properties p)
+  private void printBaseFormFilter (Properties p, Writer out) throws IOException
   {
     final String FACTORY = "peltomaa.sukija.baseform.BaseFormFilterFactory";
 
     StringBuilder sb = new StringBuilder();
 
     sb.append (String.format ("        <filter class=\"%s\"", FACTORY));
+    append_if (sb, p, "successOnly", "sukija.successOnly");
     appendVoikkoProperties (sb, p);
     sb.append ("/>\n");
-    return sb.toString();
+    out.write (sb.toString());
+    out.flush();
+  }
+
+
+  private void printSuggestionFilter (Properties p, Writer out) throws IOException
+  {
+    final String FACTORY = "peltomaa.sukija.suggestion.SuggestionFilterFactory";
+
+    StringBuilder sb = new StringBuilder();
+
+    sb.append (String.format ("        <filter class=\"%s\"", FACTORY));
+    append_if (sb, p, "suggestionFile", "sukija.suggestionFile");
+    append_if (sb, p, "successOnly",    "sukija.successOnly");
+    appendVoikkoProperties (sb, p);
+    sb.append ("/>\n");
+    out.write (sb.toString());
+    out.flush();
   }
 
 
@@ -275,7 +291,6 @@ public class SukijaAsennus {
   private static final Pattern PATTERN = Pattern.compile ("[$][{]((\\p{L}|[-.0-9])+)[}]");
 
   private static final Properties systemProperties = System.getProperties();
-  private static final FileSystem fileSystem = FileSystems.getDefault();
 
   private static final String dataConfigEntity =
     "    <entity name = \"f%d\"\n" +

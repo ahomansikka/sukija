@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2012-2017 Hannu Väisänen
+Copyright (©) 2012-2018 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -107,16 +107,17 @@ public class SuggestionFilter extends SukijaFilter {
   /*
    * @param input          Virta, jota suodatetaan.
    * @param voikko         Voikko.
-   * @param suggestion     Korjaushedotukset.
+   * @param parser         Objekti, joka jäsentää korjausehdotukset.
    * @param successOnly    Jos 'true', suodatin päästää läpi vain ne sanat, jotka tunnistetaan,
    *                       jos false, myös tunnistamattomat sanat päästetään läpi.
    */
-  public SuggestionFilter (TokenStream input, Voikko voikko, Suggestion[] suggestion, boolean successOnly)
+  public SuggestionFilter (TokenStream input, Voikko voikko, SuggestionParser parser, boolean successOnly)
   {
     super (input, voikko);
     try {
-      this.suggestion = suggestion;
+      this.parser = parser;
       this.successOnly = successOnly;
+      this.suggestion = parser.getSuggestions();
       if (LOG.isDebugEnabled()) LOG.debug ("SuggestionFilter: creating class " + getClass().getName() + ".");
     }
     catch (Throwable t)
@@ -177,15 +178,6 @@ public class SuggestionFilter extends SukijaFilter {
   }
 
 
-  protected Suggestion[] getSuggestions()
-  {
-//System.out.println ("SuggestionFilter.getSuggestions");
-    return suggestion;
-  }
-
-  protected boolean getSuccessOnly() {return successOnly;}
-
-
   private Set<String> suggest (String word)
   {
 //System.out.println ("Word a " + word + " " + Constants.toString(flagsAtt));
@@ -207,12 +199,16 @@ public class SuggestionFilter extends SukijaFilter {
       }
     }
 
+    if (parser == null) {
+      throw new RuntimeException ("SuggestionFilter: parser == null");
+    }
+
     if (SuggestionUtils.analyze (voikko, word, voikkoAtt, baseFormAtt, flagsAtt, suggestion, parser.getFrom(), parser.getTo())) {
       flagsAtt.setFlags (flagsAtt.getFlags() | SUGGEST);
 //System.out.println ("Word 5 " + word + " " + Constants.toString(flagsAtt) + " " + baseFormAtt.getBaseForms().toString());
       return baseFormAtt.getBaseForms();
     }
-    else if (getSuccessOnly()) {
+    else if (successOnly) {
       return null;
     }
     else {
