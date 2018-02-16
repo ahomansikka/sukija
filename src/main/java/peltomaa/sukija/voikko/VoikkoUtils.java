@@ -193,6 +193,13 @@ public final class VoikkoUtils {
     }
 
     return aho.getCorrections (analysis);
+/*
+    Set<String> set = new HashSet<String>();
+    for (Analysis a : analysis) {
+      set.add (a.get("BASEFORM").toLowerCase());
+    }
+    return set;
+*/
   }
 
 

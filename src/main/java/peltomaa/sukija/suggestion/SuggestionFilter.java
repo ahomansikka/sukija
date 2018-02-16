@@ -26,6 +26,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.Set;
 import java.util.Vector;
@@ -36,6 +37,7 @@ import org.slf4j.LoggerFactory;
 import org.puimula.libvoikko.*;
 import static peltomaa.sukija.util.Constants.*;
 import peltomaa.sukija.util.Constants;
+import peltomaa.sukija.util.StringUtil;
 import peltomaa.sukija.util.SukijaFilter;
 import peltomaa.sukija.voikko.VoikkoUtils;
 
@@ -134,14 +136,12 @@ public class SuggestionFilter extends SukijaFilter {
 
     if (hasFlag (flagsAtt, HYPHEN)) {
 //System.out.println ("Word 1 " + word);
-      final Set<String> set1 = suggest (word);
+//      final Set<String> set1 = suggest (word);
+      final Set<String> set1 = suggest (HYPHEN_REGEX.matcher(word).replaceAll("-"));
 
 //System.out.println ("Word 2 " + word + " " + set1.toString());
 
-      final String s = HYPHEN_REGEX.matcher(word).replaceAll ("");
-      final Set<String> set2 = suggest (s);
-
-//System.out.println ("Word 3 " + s + " " + set2.toString());
+      final Set<String> set2 = try_word_without_hyphen (word);
 
       final String[] p = HYPHEN_REGEX.split (word);
       final HashSet<String> pset = new HashSet<String>();
@@ -217,6 +217,33 @@ public class SuggestionFilter extends SukijaFilter {
 //System.out.println ("Word 7 " + word + " " + Constants.toString(flagsAtt));
       baseFormAtt.addBaseForm (word.toLowerCase());
       return baseFormAtt.getBaseForms();
+    }
+  }
+
+
+  private Set<String> try_word_without_hyphen (String word)
+  {
+    final Matcher m = HYPHEN_REGEX.matcher (word);
+    final StringBuffer sb = new StringBuffer();
+
+    while (m.find()) {
+//      System.out.println (m.start() + " " + m.end() + " " + m.group());
+      m.appendReplacement (sb, separator (word, m.start(), m.end()));
+    }
+    m.appendTail (sb);
+//    System.out.println ("xxx " + sb.toString());
+    return suggest (sb.toString());
+  }
+
+
+  private String separator (String word, int start, int end)
+  {
+    if (word.charAt(start-1) == word.charAt(end) &&
+        StringUtil.isVowel(word.charAt(start-1))) {
+      return "-";
+    }
+    else {
+      return "";
     }
   }
 
