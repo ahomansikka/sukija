@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2017 Hannu Väisänen
+Copyright (©) 2017-2018 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -131,8 +131,11 @@ aakkosellisuus [aakkosellisuudesta, aakkosellisuus]
   private void write (Writer w) throws IOException
   {
     for (String key : keySet()) {
-      w.write (key + " " + get(key).toString() + "\n");
-      w.flush();
+      final Set<String> set = get(key);
+      if (set.size() > 1) {
+        w.write (key + " " + set.toString() + "\n");
+        w.flush();
+      }
     }
   }
 

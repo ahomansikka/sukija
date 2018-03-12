@@ -251,6 +251,8 @@
     <input>aniooni anioni</input>
     <input>anisokooria anisokoria</input>
     <input>anisokoorio anisokorio</input>
+    <input>ann-soofe ann-sofe</input>
+    <input>ann-soofi ann-sofi</input>
     <input>annale annaale</input>
     <input>annali annaali</input>
     <input>annihilatio annihilaatio</input>
@@ -1179,6 +1181,8 @@
     <input>eufoorio euforio</input>
     <input>eufooris euforis</input>
     <input>evolutio evoluutio</input>
+    <input>evolutivinen evolutiivinen</input>
+    <input>evolutivis evolutiivis</input>
     <input>fagosoome fagosome</input>
     <input>fagosoomi fagosomi</input>
     <input>faktoore faktore</input>
@@ -1288,6 +1292,8 @@
     <input>filtratio filtraatio</input>
     <input>finale finaale</input>
     <input>finali finaali</input>
+    <input>findikaattoore findikaattore</input>
+    <input>findikaattoori findikaattori</input>
     <input>fingolimoode fingolimode</input>
     <input>fingolimoodi fingolimodi</input>
     <input>fiskale fiskaale</input>
@@ -2224,6 +2230,8 @@
     <input>kodoone kodone</input>
     <input>kodooni kodoni</input>
     <input>koevolutio koevoluutio</input>
+    <input>koevolutivinen koevolutiivinen</input>
+    <input>koevolutivis koevolutiivis</input>
     <input>kofaktoore kofaktore</input>
     <input>kofaktoori kofaktori</input>
     <input>kognitivinen kognitiivinen</input>
@@ -4162,8 +4170,8 @@
     <input>sagittalis sagittaalis</input>
     <input>sakale sakaale</input>
     <input>šakale šakaale</input>
-    <input>sakali sakaali</input>
     <input>šakali šakaali</input>
+    <input>sakali sakaali</input>
     <input>sakrale sakraale</input>
     <input>sakrali sakraali</input>
     <input>saksofoone saksofone</input>
@@ -5059,13 +5067,16 @@
     <input>aakost aakkost</input>
     <input>aaltoloi aalloi</input>
     <input>aaltoloita aaltoja</input>
+    <input>aarasti aresti</input>
     <input>aartehisto aarteisto</input>
     <input>aatteeli aatteelli</input>
     <input>abessiini abessini</input>
     <input>abyssiini abessini</input>
     <input>abyssini abessini</input>
     <input>advokat advokaat</input>
+    <input>aethiopia etiopia</input>
     <input>affäär afäär</input>
+    <input>afgani afgaani</input>
     <input>afghanistan afganistan</input>
     <input>afrikalai afrikkalai</input>
     <input>agave agaave</input>
@@ -5076,6 +5087,7 @@
     <input>agressivi aggressiivi</input>
     <input>ahist ahdist</input>
     <input>ahväär afäär</input>
+    <input>aiemin aiemmin</input>
     <input>aije aie</input>
     <input>aijo aio</input>
     <input>aikuhi aikui</input>
@@ -5112,6 +5124,8 @@
     <input>amfiiteaatter amfiteatter</input>
     <input>ammatilai ammattilai</input>
     <input>ammattilli ammatilli</input>
+    <input>amphiteater amfiteatter</input>
+    <input>amphiteatter amfiteatter</input>
     <input>analytti analyytti</input>
     <input>apash apass</input>
     <input>apoteekar apteekkar</input>
@@ -5121,13 +5135,26 @@
     <input>aptekar apteekkar</input>
     <input>aprikooss aprikoos</input>
     <input>aprikos aprikoos</input>
+    <input>araabia arabia</input>
+    <input>araapia arabia</input>
+    <input>arapia arabia</input>
+    <input>arapilai arabialai</input>
     <input>aristoteli aristoteeli</input>
     <input>armahi armai</input>
     <input>armeenia armenia</input>
     <input>arseniik arsenik</input>
     <input>asistent assistent</input>
     <input>assessor asessor</input>
+    <input>assyyria assyria</input>
+    <input>astrolabio astrolabi</input>
+    <input>astrolabioo astrolabii</input>
+    <input>astrolabium astrolabi</input>
+    <input>astrolabiumi astrolabi</input>
     <input>atribuut attribuut</input>
+    <input>atenalai ateenalai</input>
+    <input>atheenalai ateenalai</input>
+    <input>atheenilai ateenalai</input>
+    <input>athenalai ateenalai</input>
     <input>augur auguur</input>
     <input>augustiino augustino</input>
     <input>austraali australi</input>
@@ -5135,15 +5162,25 @@
     <input>banaalisuu banaaliu</input>
     <input>banalisuu banaaliu</input>
     <input>barbar barbaar</input>
+    <input>barbarilai barbaarilai</input>
     <input>beduin beduiin</input>
     <input>biljaard biljard</input>
     <input>bloga blogga</input>
+    <input>boiootialai boiotialai</input>
+    <input>boiootilai boiotialai</input>
+    <input>boiotilai boiotialai</input>
     <input>bolseviik bolsevik</input>
     <input>borsh borss</input>
     <input>botaanilli botaani</input>
     <input>budha buddha</input>
     <input>bushmani busmanni</input>
     <input>bushmann busmann</input>
+    <input>byzantiinilai bysanttilai</input>
+    <input>byzantilai bysanttilai</input>
+    <input>byzantinilai bysanttilai</input>
+    <input>byzantiolai bysanttilai</input>
+    <input>byzantionilai bysanttilai</input>
+    <input>byzantionlai bysanttilai</input>
     <input>christilli kristilli</input>
     <input>censore sensore</input>
     <input>censori sensori</input>
@@ -5173,6 +5210,7 @@
     <input>ekumeni ekumeeni</input>
     <input>elastilli elasti</input>
     <input>elehvant elefant</input>
+    <input>eleegi elegi</input>
     <input>elegilli elegi</input>
     <input>eliksir eliksiir</input>
     <input>emalje emale</input>
@@ -5182,15 +5220,20 @@
     <input>emir emiir</input>
     <input>endeemilli endeemi</input>
     <input>energilli energi</input>
+    <input>englannilai englantilai</input>
     <input>ensimmai ensimmäi</input>
     <input>ensimäi ensimmäi</input>
     <input>ensinmäi ensimmäi</input>
+    <input>epikuurolai epikurolai</input>
     <input>epilli eeppi</input>
     <input>epäelyks epäilyks</input>
     <input>erillai erilai</input>
     <input>erinlai erilai</input>
     <input>erinnäi erinäi</input>
+    <input>erinoimai erinomai</input>
     <input>erinommai erinomai</input>
+    <input>eriseuralai eriseurai</input>
+    <input>eriskuinmai eriskummai</input>
     <input>esiintyyn esiintyn</input>
     <input>esinty esiinty</input>
     <input>eskadron eskadroon</input>
@@ -5201,19 +5244,39 @@
     <input>etehe etee</input>
     <input>etehi etei</input>
     <input>ethilli eetti</input>
+    <input>ethiopialai etiopialai</input>
+    <input>ethiopilai etiopialai</input>
+    <input>etiooppialai etiopialai</input>
+    <input>etiopilai etiopialai</input>
     <input>etnilli etni</input>
     <input>etuimmai etummai</input>
     <input>etähä etää</input>
+    <input>euroopalai eurooppalai</input>
+    <input>euroopplai eurooppalai</input>
+    <input>europpalai eurooppalai</input>
     <input>evankeeli evankeli</input>
     <input>fakir fakiir</input>
     <input>faneer vaner</input>
     <input>faner vaner</input>
+    <input>fascis fasis</input>
     <input>feodali feodaali</input>
     <input>faktilli fakti</input>
+    <input>foiniikilai foinikialai</input>
+    <input>foiniikkialai foinikialai</input>
+    <input>foinikilai foinikialai</input>
     <input>foinikkia foinikia</input>
+    <input>frankilai frankkilai</input>
+    <input>fransiskan fransiskaan</input>
+    <input>franska ranska</input>
+    <input>frygia fryygiai</input>
+<!--
+    <input>frygialai fryygialai</input>
+    <input>frygilai fryygialai</input>
+-->
     <input>fysikalli fysikaali</input>
     <input>fysilli fyysi</input>
     <input>fyysilli fyysi</input>
+    <input>fänrik vänrik</input>
     <input>fäärsaarelai färsaarelai</input>
     <input>galvani galvaani</input>
     <input>garderoob garderob</input>
@@ -5226,6 +5289,7 @@
     <input>graekalai kreikkalai</input>
     <input>greekalai kreikkalai</input>
     <input>greekkalai kreikkalai</input>
+    <input>greikala kreikkalai</input>
     <input>gregoriani gregoriaani</input>
     <input>grusia gruusia</input>
     <input>grusialai gruusialai</input>
@@ -5238,6 +5302,7 @@
     <input>haubits haupits</input>
     <input>havanno havainno</input>
     <input>havanto havainto</input>
+    <input>hebrealai heprealai</input>
     <input>heilahut heilaut</input>
     <input>helevet helvet</input>
     <input>helluntalai helluntailai</input>
@@ -5250,7 +5315,9 @@
     <input>hikoel hikoil</input>
     <input>hiljahi hiljai</input>
     <input>hirmuhi hirmui</input>
+    <input>hispanjalai espanjalai</input>
     <input>historilli historialli</input>
+    <input>hjalmar jalmar</input>
     <input>holhoj holhooj</input>
     <input>holograafe holografe</input>
     <input>holograafi holografi</input>
@@ -5279,6 +5346,8 @@
     <input>hytkähyt hytkäyt</input>
     <input>hysteerilli hysteeri</input>
     <input>hysterilli hysteeri</input>
+    <input>hysterin hysteerin</input>
+    <input>hysteris hysteeris</input>
     <input>hättäil hätäil</input>
     <input>hätähi hätäi</input>
     <input>ideal ideaal</input>
@@ -5314,6 +5383,7 @@
     <input>jainne janne</input>
     <input>jakaeli jakeli</input>
     <input>jakaell jaell</input>
+    <input>jalmar jalmari</input>
     <input>janitsar janitsaar</input>
     <input>janitschaar janitsaar</input>
     <input>janitschar janitsaar</input>
@@ -5331,6 +5401,8 @@
     <input>jesuitto jesuiitto</input>
     <input>jesuviit jesuiit</input>
     <input>jonpi jompi</input>
+    <input>julais julkais</input>
+    <input>julas julkais</input>
     <input>juliani juliaani</input>
     <input>jumalilli jumali</input>
     <input>juonilli juonelli</input>
@@ -5374,8 +5446,15 @@
     <input>kansallisos kansallissos</input>
     <input>kanun kanuun</input>
     <input>kaotti kaootti</input>
+    <input>kapsek kapsäk</input>
     <input>kaptein kapteen</input>
+    <input>kapten kapteen</input>
+    <input>karabinier karabinieer</input>
     <input>karaff karahv</input>
+    <input>karahut karaut</input>
+    <input>karavan karavaan</input>
+    <input>karmeliitti karmeliitta</input>
+    <input>karmosini karmosiini</input>
     <input>kateder kateeder</input>
     <input>katooli katoli</input>
     <input>kaukaasi kaukasi</input>
@@ -5405,6 +5484,7 @@
     <input>koffeii kofeii</input>
     <input>kohoel kohoil</input>
     <input>koilis koillis</input>
+    <input>kokaini kokaiini</input>
     <input>kokoele kokoile</input>
     <input>kokoeli kokoili</input>
     <input>kokoell kokoill</input>
@@ -5435,9 +5515,17 @@
     <input>komissaario komisario</input>
     <input>komissario komisario</input>
     <input>komissar komissaar</input>
+    <input>kommissio komissio</input>
     <input>komsarju komisariu</input>
     <input>konduktör konduktöör</input>
     <input>konehisto koneisto</input>
+    <input>konfeh konveh</input>
+    <input>konfek konveh</input>
+    <input>konferense konferensse</input>
+    <input>konferensi konferenssi</input>
+    <input>konfetti konvehti</input>
+    <input>konfeti konvehti</input>
+    <input>konfrenss konferenss</input>
     <input>konnossement konossement</input>
     <input>konstapel konstaapel</input>
     <input>kontoor konttor</input>
@@ -5471,8 +5559,10 @@
     <input>kulet kuljet</input>
     <input>kulkeis kulkies</input>
     <input>kullttur kulttuur</input>
+    <input>kullttuur kulttuur</input>
     <input>kultahi kultai</input>
     <input>kulttur kulttuur</input>
+    <input>kultturelli kulttuuri</input>
     <input>kulttuurelli kulttuuri</input>
     <input>kulttuurilli kulttuuri</input>
     <input>kultuur kulttuur</input>
@@ -5482,11 +5572,11 @@
     <input>kummali kummalli</input>
     <input>kummankinpuoli kummanpuoli</input>
     <input>kumpase kumpaise</input>
-    <input>kumppale kummppane</input>
-    <input>kumppali kummppani</input>
     <input>kuniga kuninga</input>
     <input>kunika kuninka</input>
     <input>kuningalli kuninkaalli</input>
+    <input>kuninkaatar kuningatar</input>
+    <input>kuninkaattar kuningattar</input>
     <input>kuninkalli kuninkaalli</input>
     <input>kunnalis kunnallis</input>
     <input>kunnoit kunnioit</input>
@@ -5498,6 +5588,9 @@
     <input>kuustoista kuusitoista</input>
     <input>kuvaainnolli kuvaannolli</input>
     <input>kuvannolli kuvaannolli</input>
+    <input>kuvernment kuvernement</input>
+    <input>kuverment kuvernement</input>
+    <input>kuvernyör kuvernöör</input>
     <input>kuvernör kuvernöör</input>
     <input>kuvittelli kuvitteelli</input>
     <input>kyläi kyläläi</input>       <!-- Yhdyssanan jälkiosana: kyläläinen. -->
@@ -5508,11 +5601,16 @@
     <input>kyynilli kyyni</input>
     <input>köpenhamin kööpenhamin</input>
     <input>laajud laajuud</input>
+    <input>laaser laser</input>
+    <input>laestaadiolai lestadiolai</input>
+    <input>laestadilai lestadiolai</input>
+    <input>laestadilais- lestadiolais-</input>
     <input>laestadiolai lestadiolai</input>
     <input>laidimai laitimmai</input>
     <input>laidimmai laitimmai</input>
     <input>laitimai laitimmai</input>
     <input>lakonilli lakoni</input>
+    <input>lakoonilli lakoni</input>
     <input>lanpi lampi</input>
     <input>lauvanta lauanta</input>
     <input>lauve laue</input>            <!-- Lau(v)eta. -->
@@ -5529,6 +5627,7 @@
     <input>loord lord</input>
     <input>looshi loosi</input>
     <input>looshe loose</input>
+    <input>luettolo luettelo</input>
     <input>luteerilai luterilai</input>
     <input>lutheerilai luterilai</input>
     <input>lutherilai luterilai</input>
@@ -5537,6 +5636,7 @@
     <input>lämpymäis lämpimäis</input>
     <input>läähöt läähät</input>
     <input>maaoottelu maaottelu</input>
+    <input>madagascar madagaskar</input>
     <input>mahomettilai muhamettilai</input>
     <input>maineek maineik</input>
     <input>mainek maineik</input>
@@ -5547,11 +5647,13 @@
     <input>majonnees majonees</input>
     <input>majuur majur</input>
     <input>manshet manset</input>
+    <input>marathon maraton</input>
     <input>markisi markiisi</input>
     <input>marssilai marsilai</input>
     <input>marttyr marttyyr</input>
     <input>martyr marttyyr</input>
     <input>martyyr marttyyr</input>
+    <input>marzipan marsipaan</input>
     <input>matemaatilli matemaatti</input>
     <input>matrikel matrikkel</input>
     <input>mekaanilli mekaani</input>
@@ -5567,6 +5669,8 @@
     <input>miljonei miljooni</input>
     <input>miljoonei miljooni</input>
     <input>miljoonej miljooni</input>
+    <input>miljö miljöö</input>
+    <input>miljönäär miljonäär</input>
     <input>minaret minareet</input>
     <input>modem modeem</input>
     <input>modul moduul</input>
@@ -5590,12 +5694,15 @@
     <input>mustilai mustalai</input>
     <input>naiv naiiv</input>
     <input>natsiona nationa</input>
+    <input>noterau noteerau</input>
     <input>nugget nuget</input>
     <input>nuubi nubi</input>
     <input>oitsia oitsija</input>
     <input>oitsio oitsijo</input>
     <input>oittau ottau</input>
-    <input>ooppium oopium</input>
+    <input>oopium oopiumi</input>
+    <input>ooppium oopiumi</input>
+    <input>oottain odottaen</input>
     <input>optilli opti</input>
     <input>oraakel oraakkel</input>
     <input>orakel oraakkel</input>
@@ -5604,6 +5711,7 @@
     <input>paitse paitsi</input>
     <input>pakkais pakkas</input>
     <input>palkoilli palkolli</input>
+    <input>pankir pankkiir</input>
     <input>pankkir pankkiir</input>
     <input>panteistilli panteisti</input>
     <input>pantomim pantomiim</input>
@@ -5733,6 +5841,7 @@
     <input>romantilli romantti</input>
     <input>romanti romantti</input>
     <input>rtelle rrelle</input> <!-- Vaikertellen => vaikerrellen. -->
+    <input>rumania romania</input>
     <input>ruohtalai ruotsalai</input>
     <input>ruomalai roomalai</input>
     <input>ruottalai ruotsalai</input>
@@ -5749,8 +5858,6 @@
     <input>sairalloi sairaalloi</input>
     <input>sairaloi sairaalloi</input>
     <input>salamander salamanter</input>
-    <input>samallainen samanlainen</input> <!-- Nämä pitää olla erikseen tai -->
-    <input>samallais samanlais</input>     <!-- tulee samallailla -> samanlaki. -->
     <input>samojeed samojed</input>
     <input>samppanj sampanj</input>
     <input>sankariu sankaruu</input>
@@ -5822,6 +5929,39 @@
     <input>takimai taimmai</input>
     <input>talisman talismaan</input>
     <input>tantiem tantieem</input>
+    <input>tarte tarvitse</input>
+    <input>tartekkaan tarvitsekaan</input>
+    <input>tartettaisiin tarvittaisiin</input>
+    <input>tartte tarvitse</input>
+    <input>tartteeko tarvitseeko</input>
+    <input>tartteekos tarvitseekos</input>
+    <input>tartteeks tarvitseekos</input>
+    <input>tartteen tarvitsen</input>
+    <input>tarttekaan tarvitsekaan</input>
+    <input>tartten tarvitsen</input>
+    <input>tarttet tarvitset</input>
+    <input>tarttetko tarvitsetko</input>
+    <input>tarttettais tarvittaisi</input>
+    <input>tarttee tarvitsee</input>
+    <input>tartteko tarvitseeko</input>
+    <input>tartteis tarvitsisi</input>
+    <input>tarvi tarvitse</input>
+    <input>tarvia tarvita</input>
+    <input>tarviaa tarvitsee</input>
+    <input>tarvihe tarvitse</input>
+    <input>tarviht tarvits</input>
+    <input>tarvihtoo tarvitsee</input>
+    <input>tarvihtoovat tarvitsevat</input>
+    <input>tarvii tarvitsee</input>
+    <input>tarviiks tarvitseekos</input>
+    <input>tarviin tarvitsen</input>
+    <input>tarviis tarvitsisi</input>
+    <input>tarviit tarvitset</input>
+    <input>tarvis tarve</input>
+    <input>tarvise tarvitse</input>
+    <input>tarvitte tarvitse</input>
+    <input>tarvitteki tarvitsettekin</input>
+    <input>tarvitteko tarvitsetteko</input>
     <input>teaater teatter</input>
     <input>teaatter teatter</input>
     <input>teater teatter</input>
@@ -5835,6 +5975,8 @@
     <input>tiedoisto tiedosto</input>
     <input>tietelij tieteilij</input>
     <input>tog toog</input>
+    <input>tollaisenaan tuollaisena</input>
+    <input>tollaisenaankin tuollaisenakin</input>
     <input>topase topaase</input>
     <input>topasi topaasi</input>
     <input>torpeedo torpedo</input>
@@ -5851,6 +5993,7 @@
     <input>tulimai tulimmai</input>
     <input>tulpaan tulppaan</input>
     <input>tuorsta torsta</input>
+    <input>turmellu turmelu</input>
     <input>tuskaloi tuskalli</input>
     <input>tuskalloi tuskalli</input>
     <input>tydyt tyydyt</input>
@@ -5873,7 +6016,6 @@
     <input>vaattehisto vaatteisto</input>
     <input>vaijen vaien</input>
     <input>vaillinnai vaillinai</input>
-    <input>vaivaloi vaivalloi</input>
     <input>valastu valaistu</input>
     <input>vampyrism vampirism</input>
     <input>vampyr vampyyr</input>
@@ -5903,6 +6045,7 @@
     <input>värähyt väräyt</input>
     <input>yheksä yhdeksä</input>
     <input>yhtehi yhtei</input>
+    <input>ykstuumai yksituumai</input>
     <input>ylimäi ylimmäi</input>
     <input>ylähi yläi</input>
     <input>ylähä ylhää</input>
@@ -6111,8 +6254,10 @@
     <input>läisyy läisyys</input>
     <input>mainen mainen</input>
     <input>mais mainen</input>
+    <input>maisuu maisuus</input>
     <input>mäinen mäinen</input>
     <input>mäis mäinen</input>
+    <input>mäisyy mäisyys</input>
     <input>poika poika</input>
     <input>poiki poika</input>
     <input>poja poika</input>
@@ -6131,6 +6276,7 @@
     <prefix>helo</prefix>
     <prefix>ibero</prefix>
     <prefix>inertiaali</prefix>
+    <prefix>karibian</prefix>
     <prefix>lais</prefix>
     <prefix>molekulaari</prefix>
 <!--
@@ -6486,6 +6632,14 @@
       </replacement>
     </item>
     <item>
+      <pattern>satee?ll?ii?tt?</pattern>
+      <replacement>
+        <list>satelliit satelliitt</list>
+        <attribute>WORDBASES</attribute>
+        <regex>[+(]satelliitti</regex>
+      </replacement>
+    </item>
+    <item>
       <pattern>satraa?pp?</pattern>
       <replacement>
         <list>satraap satraapp</list>
@@ -6547,6 +6701,22 @@
         <list>ij$2</list>
         <attribute>FSTOUTPUT</attribute>
         <regex>\[Xj\]j[aä]\[X\]</regex>
+      </replacement>
+    </item>
+    <item>
+      <pattern>(kkaan)$</pattern>
+      <replacement>
+        <list>kaan</list>
+        <attribute>FSTOUTPUT</attribute>
+        <regex>\[Fkaan\]</regex>
+      </replacement>
+    </item>
+    <item>
+      <pattern>(kkään)$</pattern>
+      <replacement>
+        <list>kään</list>
+        <attribute>FSTOUTPUT</attribute>
+        <regex>\[Fkaan\]</regex>
       </replacement>
     </item>
     <item>
