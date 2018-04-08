@@ -30,8 +30,9 @@ taivutusmuodot löytyvät vain perusmuotoa etsimällä.
 Sukija tallentaa perusmuodot Solr:n tietokantaan, josta niitä voi
 etsiä Solr:n käyttöliittymän kautta.
 
-Sukija osaa indeksoida kaikkia niitä tiedostomuotoja, joita Apache
-Tika (\verb=http://tika.apache.org/=) osaa lukea.
+Sukija osaa indeksoida kaikkia niitä tiedostomuotoja ja
+tekstitiedostojen merkistökoodauksia, joita Apache Tika
+(\verb=http://tika.apache.org/=) osaa lukea.
 
 
 \subsection*{Mitä tarvitaan ja mistä ne saa?}
@@ -45,7 +46,7 @@ Tika (\verb=http://tika.apache.org/=) osaa lukea.
       \verb=https://github.com/voikko/corevoikko=
       Tarvitaan versiot libvoikko.so.1.14.5 ja libvoikko-4.1.1.jar
 
-\item Solr 7.2.0:
+\item Solr 7.3.0:
       \verb=http://lucene.apache.org/solr/=
       Tässä dokumentissa Solr:sta käytetään nimeä solr-x.y.z,
       missä x.y.z tarkoittaa version numeroa.
@@ -109,11 +110,13 @@ Sukijan jar-tiedosto asennetaan maven-hakemistoon \verb|${HOME}/.m2|
 Sukijan parametrit asetetaan tiedostossa \verb|sukija.properties|,
 jossa on myös tarvittavat ohjeet.
 
-Sen jälkeen komennolla \verb|make tiedostot| tehdään Solr:n asetustiedostot
-\verb=conf/data-config.xml= ja
-\verb=conf/schema.xml=. Esimerkit näistä tiedostoista ovat
-hakemistossa
-\verb=src/main/resources/=. 
+Sen jälkeen komennolla
+
+\verb|make tiedostot|
+
+tehdään Solr:n asetustiedostot \verb=conf/data-config.xml= ja
+\verb=conf/schema.xml=. Esimerkit näistä tiedostoista
+saa aikaan yllä mainitulla komennolla. (-:
 
 Seuraavaksi pitää tehdä Solr:iin Sukijan tarvitsemat hakemistot ja
 kopioida niihin Solr:n tarvitsemat tiedostot. Sitä varten on kaksi
@@ -394,7 +397,12 @@ tunnistaminen ei onnistu, palauttaa merkkijonon \verb=centime=.
 \end{verbatim}
 
 Tällä komennolla ei ole parametreja.
+
+
+\bigskip \noindent \noindent
+Copyright © 2011--2018 Hannu Väisänen.
 \end{document}
+
 
 
 \subsection*{Javalla kirjoitettu käyttöliittymä}
@@ -406,7 +414,7 @@ Kun tiedostot on indeksoitu, niitä voidaan tutkia myös komennolla
 }
 
 \bigskip \noindent \noindent
-Copyright © 2011--2017 Hannu Väisänen.
+Copyright © 2011--2018 Hannu Väisänen.
 \end{document}
 
 

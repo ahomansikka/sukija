@@ -5190,7 +5190,9 @@
     <input>dervisch derviss</input>
     <input>dervish derviss</input>
     <input>dervissh derviss</input>
+    <input>diabooli diaboli</input>
     <input>diadem diadeem</input>
+    <input>diamant timant</input>
     <input>disco disko</input>
     <input>didaktilli didakti</input>
     <input>divan divaan</input>
@@ -5255,6 +5257,8 @@
     <input>euroopplai eurooppalai</input>
     <input>europpalai eurooppalai</input>
     <input>evankeeli evankeli</input>
+    <input>extra ekstra</input>
+    <input>extro ekstro</input>
     <input>fakir fakiir</input>
     <input>faneer vaner</input>
     <input>faner vaner</input>
@@ -5268,11 +5272,8 @@
     <input>frankilai frankkilai</input>
     <input>fransiskan fransiskaan</input>
     <input>franska ranska</input>
-    <input>frygia fryygiai</input>
-<!--
-    <input>frygialai fryygialai</input>
+    <input>frygia fryygia</input>
     <input>frygilai fryygialai</input>
--->
     <input>fysikalli fysikaali</input>
     <input>fysilli fyysi</input>
     <input>fyysilli fyysi</input>
@@ -5283,7 +5284,10 @@
     <input>gentleman getlemann</input>
     <input>german germaan</input>
     <input>giraff kirahv</input>
-    <input>gootilais goottilais</input>
+    <input>gladiaator gladiaattor</input>
+    <input>gladiator gladiaattor</input>
+    <input>gladiatoor gladiaattor</input>
+    <input>gootilai goottilai</input>
     <input>gotilai goottilai</input>
     <input>gramatilli grammatill</input>
     <input>graekalai kreikkalai</input>
@@ -5796,6 +5800,8 @@
     <input>psyykis psyykkis</input>
     <input>punan punain</input>
     <input>punas punais</input>
+    <input>punilais puunilais</input>
+    <input>punsi punssi</input>
     <input>puolentoista puolitoista</input>
     <input>puolimai puolimmai</input>
     <input>puolitseen puolitse</input>
@@ -5922,6 +5928,7 @@
     <input>sydämmysty sydämisty</input>
     <input>sydämysty sydämisty</input>
     <input>synagoog synagog</input>
+    <input>syria syyria</input>
     <input>säikehistö säikeistö</input>
     <input>taaemmai taimmai</input>
     <input>taemmai taimmai</input>
@@ -5972,6 +5979,7 @@
     <input>tempperament temperament</input>
     <input>thraaki traaki</input>
     <input>thraki traaki</input>
+    <input>tiamant timant</input>
     <input>tiedoisto tiedosto</input>
     <input>tietelij tieteilij</input>
     <input>tog toog</input>
@@ -6036,6 +6044,7 @@
     <input>vihkijäi vihkiäi</input>
     <input>vihoilli viholli</input>
     <input>viimmei viimei</input>
+    <input>vikipedi wikipedi</input>
     <input>viksu fiksu</input>
     <input>vilahut vilaut</input>
     <input>vinoittai vinottai</input>
@@ -6669,6 +6678,14 @@
         <list>$1en</list>
         <attribute>FSTOUTPUT</attribute>
         <regex>\[Tn2\]en</regex>
+      </replacement>
+    </item>
+    <item>
+      <pattern>(.)ihiin$</pattern>
+      <replacement>
+        <list>$1ihin</list>
+        <attribute>FSTOUTPUT</attribute>
+        <regex>\[Sill\]\[Nm\]$1ihin</regex>
       </replacement>
     </item>
     <item>
