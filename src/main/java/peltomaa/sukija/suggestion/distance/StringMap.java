@@ -105,7 +105,8 @@ class StringMap extends TreeMap<String,TreeSet<String>> {
     }
     catch (FileNotFoundException e)
     {
-      ClasspathResourceLoader loader = new ClasspathResourceLoader();
+//      ClasspathResourceLoader loader = new ClasspathResourceLoader();
+      ClasspathResourceLoader loader = new ClasspathResourceLoader (this.getClass());
       InputStreamReader isr = new InputStreamReader (loader.openResource (file));
       read (isr);
 //      throw e;

@@ -23,7 +23,7 @@ import java.io.IOException;
 import java.io.Reader;
 import java.util.List;
 import org.apache.lucene.search.spell.JaroWinklerDistance;
-import org.apache.lucene.search.spell.LevensteinDistance;
+import org.apache.lucene.search.spell.LevenshteinDistance;
 import org.apache.lucene.search.spell.LuceneLevenshteinDistance;
 import org.apache.lucene.search.spell.NGramDistance;
 import org.apache.lucene.search.spell.StringDistance;
@@ -41,7 +41,7 @@ public class StringDistanceSuggestion extends Suggestion {
    * @param voikko            Voikko.
    * @param fileName          Tiedosto, josta merkkijonokartta luetaan.
    * @param distanceClassName Luokka, joka laskee kahden merkkijonon samanlaisuuden. Sallitut arvot ovat
-                              {@code JaroWinklerDistance}, {@code LevensteinDistance},
+                              {@code JaroWinklerDistance}, {@code LevenshteinDistance},
                               {@code LuceneLevenshteinDistance} ja {@code NGramDistance}.
    * @param parameter         Joko NGramDistance-luokan muodostimen argumentti (int, oletus 2),
    *                          tai JaroWinklerDistance-luokan bonus (float, oletus 0.7).
@@ -88,7 +88,7 @@ public class StringDistanceSuggestion extends Suggestion {
         }
         return jwd;
       }
-      case "LevensteinDistance": return new LevensteinDistance();
+      case "LevenshteinDistance": return new LevenshteinDistance();
       case "LuceneLevenshteinDistance": return new LuceneLevenshteinDistance();
       case "NGramDistance": {
          if (parameter == null) {

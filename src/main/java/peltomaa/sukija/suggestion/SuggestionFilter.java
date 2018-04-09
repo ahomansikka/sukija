@@ -143,6 +143,8 @@ public class SuggestionFilter extends SukijaFilter {
 
       final Set<String> set2 = try_word_without_hyphen (word);
 
+//System.out.println ("Word 3 " + word + " " + set2.toString());
+
       final String[] p = HYPHEN_REGEX.split (word);
       final HashSet<String> pset = new HashSet<String>();
 
@@ -190,11 +192,12 @@ public class SuggestionFilter extends SukijaFilter {
       return baseFormAtt.getBaseForms();
     }
     else {
-//System.out.println ("Word c " + word + " " + Constants.toString(flagsAtt));
-      boolean suggestionResult = SuggestionUtils.getSuggestions (suggestion, word, voikkoAtt, baseFormAtt);
+//System.out.println ("Word c " + word + " " + Constants.toString(flagsAtt) + " " + baseFormAtt.getBaseForms().toString());
+      Set<String> set = new HashSet<String>();
+      boolean suggestionResult = SuggestionUtils.getSuggestions (suggestion, word, voikkoAtt, set);
       if (suggestionResult) {
         flagsAtt.setFlags (flagsAtt.getFlags() | SUGGEST);
-//System.out.println ("Word d " + word + " " + Constants.toString(flagsAtt) + " " + baseFormAtt.getBaseForms().toString());
+        baseFormAtt.addBaseForms (set);
         return baseFormAtt.getBaseForms();
       }
     }
@@ -227,11 +230,11 @@ public class SuggestionFilter extends SukijaFilter {
     final StringBuffer sb = new StringBuffer();
 
     while (m.find()) {
-//      System.out.println (m.start() + " " + m.end() + " " + m.group());
+//    System.out.println (m.start() + " " + m.end() + " " + m.group());
       m.appendReplacement (sb, separator (word, m.start(), m.end()));
     }
     m.appendTail (sb);
-//    System.out.println ("xxx " + sb.toString());
+//  System.out.println ("xxx " + sb.toString());
     return suggest (sb.toString());
   }
 

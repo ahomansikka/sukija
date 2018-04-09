@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2015-2016 Hannu Väisänen
+Copyright (©) 2015-2016, 2018 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -55,6 +55,29 @@ public final class SuggestionUtils {
           }                                
         }                                
         baseFormAtt.addBaseForms (VoikkoUtils.getBaseForms (voikkoAtt.getAnalysis()));
+        return true;
+      }
+    }
+    return false;
+  }
+
+
+  public static final boolean getSuggestions (Suggestion[] suggestion, String word, VoikkoAttribute voikkoAtt,
+                                              Set<String> baseForms)
+  {
+    if (suggestion == null) throw new RuntimeException ("suggestion == null");
+    for (int i = 0; i < suggestion.length; i++) {
+//System.out.println ("Analyze5 " + word + " " + suggestion[i].getClass().getName());
+      if (suggestion[i].suggest (word, voikkoAtt)) {
+//System.out.println ("Analyze6 " + word);
+        baseForms.clear();
+        Set<String> BF = suggestion[i].getExtraBaseForms();
+        if (BF != null) {
+          for (String s : BF) {
+            baseForms.add (s.toLowerCase());
+          }                                
+        }                                
+        baseForms.addAll (VoikkoUtils.getBaseForms (voikkoAtt.getAnalysis()));
         return true;
       }
     }

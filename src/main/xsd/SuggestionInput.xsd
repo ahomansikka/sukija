@@ -67,7 +67,7 @@
 <xsd:simpleType name = "DistanceClassType">
   <xsd:restriction base = "xsd:string">
     <xsd:enumeration value = "JaroWinklerDistance"/>
-    <xsd:enumeration value = "LevensteinDistance"/>
+    <xsd:enumeration value = "LevenshteinDistance"/>
     <xsd:enumeration value = "LuceneLevenshteinDistance"/>
     <xsd:enumeration value = "NGramDistance"/>
   </xsd:restriction>
