@@ -136,7 +136,6 @@ public class SuggestionFilter extends SukijaFilter {
 
     if (hasFlag (flagsAtt, HYPHEN)) {
 //System.out.println ("Word 1 " + word);
-//      final Set<String> set1 = suggest (word);
       final Set<String> set1 = suggest (HYPHEN_REGEX.matcher(word).replaceAll("-"));
 
 //System.out.println ("Word 2 " + word + " " + set1.toString());
@@ -198,6 +197,7 @@ public class SuggestionFilter extends SukijaFilter {
       if (suggestionResult) {
         flagsAtt.setFlags (flagsAtt.getFlags() | SUGGEST);
         baseFormAtt.addBaseForms (set);
+//System.out.println ("Word d " + word + " " + Constants.toString(flagsAtt) + " " + baseFormAtt.getBaseForms().toString());
         return baseFormAtt.getBaseForms();
       }
     }

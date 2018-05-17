@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2016 Hannu Väisänen
+Copyright (©) 2016, 2018 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -58,7 +58,21 @@ public class BaseFormAttributeImpl extends AttributeImpl implements BaseFormAttr
   @Override
   public void copyTo (AttributeImpl target)
   {
-    ((BaseFormAttributeImpl)target).baseForms = baseForms;
+    HashSet<String> cloned = null;
+    if (baseForms != null) {
+      cloned = new HashSet<String>();
+      cloned.addAll (baseForms);
+    }
+    ((BaseFormAttributeImpl)target).baseForms = cloned;
+  }
+
+
+  @Override
+  public BaseFormAttributeImpl clone()
+  {
+    BaseFormAttributeImpl cloned = new BaseFormAttributeImpl();
+    this.copyTo (cloned);
+    return cloned;
   }
 
 
