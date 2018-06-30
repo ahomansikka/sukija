@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2009-2016 Hannu Väisänen
+Copyright (©) 2009-2016, 2018 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -124,7 +124,7 @@ public final class HVTokenizer extends Tokenizer {
   /** A private instance of the JFlex-constructed scanner */
   private HVTokenizerImpl scanner;
 
-  private static final Logger LOG = LoggerFactory.getLogger (HVTokenizer.class);
+//  private static final Logger LOG = LoggerFactory.getLogger (HVTokenizer.class);
   private final CharTermAttribute termAtt = addAttribute (CharTermAttribute.class);
   private final FlagsAttribute flagsAtt = addAttribute (FlagsAttribute.class);
   private final OffsetAttribute offsetAtt = addAttribute (OffsetAttribute.class);

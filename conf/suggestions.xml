@@ -349,6 +349,8 @@
     <input>aripipratsooli aripipratsoli</input>
     <input>arkaade arkade</input>
     <input>arkaadi arkadi</input>
+    <input>arkaadia arkadia</input>
+    <input>arkaadio arkadio</input>
     <input>arkeoastronoome arkeoastronome</input>
     <input>arkeoastronoomi arkeoastronomi</input>
     <input>arkeoastronoomia arkeoastronomia</input>
@@ -2456,6 +2458,8 @@
     <input>korrelatio korrelaatio</input>
     <input>korrepetiittoore korrepetiittore</input>
     <input>korrepetiittoori korrepetiittori</input>
+    <input>korsoraattoore korsoraattore</input>
+    <input>korsoraattoori korsoraattori</input>
     <input>kortikalinen kortikaalinen</input>
     <input>kortikalis kortikaalis</input>
     <input>kortisoole kortisole</input>
@@ -4170,8 +4174,8 @@
     <input>sagittalis sagittaalis</input>
     <input>sakale sakaale</input>
     <input>šakale šakaale</input>
-    <input>šakali šakaali</input>
     <input>sakali sakaali</input>
+    <input>šakali šakaali</input>
     <input>sakrale sakraale</input>
     <input>sakrali sakraali</input>
     <input>saksofoone saksofone</input>
@@ -4880,6 +4884,8 @@
     <input>tyristoori tyristori</input>
     <input>tyyrpure tyyrpuure</input>
     <input>tyyrpuri tyyrpuuri</input>
+    <input>täysiverioore täysiveriore</input>
+    <input>täysiverioori täysiveriori</input>
     <input>ubikinoone ubikinone</input>
     <input>ubikinooni ubikinoni</input>
     <input>ufolooge ufologe</input>
@@ -5483,6 +5489,7 @@
     <input>kiemail keimail</input>
     <input>kimnasist kymnasist</input>
     <input>kirjotelm kirjoitelm</input>
+    <input>klaver klaveer</input>
     <input>kliinilli kliini</input>
     <input>kliniik klinik</input>
     <input>koffeii kofeii</input>
@@ -5717,6 +5724,8 @@
     <input>palkoilli palkolli</input>
     <input>pankir pankkiir</input>
     <input>pankkir pankkiir</input>
+    <input>panorama panoraama</input>
+    <input>pansari panssari</input>
     <input>panteistilli panteisti</input>
     <input>pantomim pantomiim</input>
     <input>paradiis paratiis</input>
@@ -5725,7 +5734,8 @@
     <input>paraim parhaim</input>
     <input>parain parhain</input>
     <input>paratis paratiis</input>
-    <input>paroonit paronit</input>  <!-- Paro(o)nitar. -->
+    <input>paroonitar paronitar</input>
+    <input>paroonittar paronittar</input>
     <input>pasaad pasaat</input>
     <input>passaat pasaat</input>
     <input>pastoral pastoraal</input>
@@ -5798,8 +5808,10 @@
     <input>psyykilli psyykki</input>
     <input>psyykin psyykkin</input>
     <input>psyykis psyykkis</input>
+<!--
     <input>punan punain</input>
     <input>punas punais</input>
+-->
     <input>punilais puunilais</input>
     <input>punsi punssi</input>
     <input>puolentoista puolitoista</input>
@@ -5809,6 +5821,7 @@
     <input>puolli puoli</input>
     <input>puollus puolus</input>
     <input>puoluetto puolueetto</input>
+    <input>purpura purppura</input>
     <input>putoel putoil</input>
     <input>puutte puuttee</input>
     <input>pylvähistö pylväistö</input>
@@ -6080,6 +6093,7 @@
     <input>^([0-9]+)</input>               <!-- Poista numerot sanan alusta. -->
     <input>(\p{L})\1{2,} $1$1</input>      <!-- Korvaa 3 tai useampi sama kirjain 2:lla (kauttta => kautta). -->
     <input>(l%Ai)s$ $1nen</input>          <!-- Suomalais => suomalainen. -->
+    <input>(llis)$ llinen</input>          <!-- Äärellis => äärellinen. -->
     <input>(a)$ ä</input>
     <input>(ä)$ a</input>
     <input>(o)$ ö</input>
@@ -6285,7 +6299,6 @@
     <prefix>helo</prefix>
     <prefix>ibero</prefix>
     <prefix>inertiaali</prefix>
-    <prefix>karibian</prefix>
     <prefix>lais</prefix>
     <prefix>molekulaari</prefix>
 <!--

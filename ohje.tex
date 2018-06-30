@@ -46,7 +46,7 @@ tekstitiedostojen merkistökoodauksia, joita Apache Tika
       \verb=https://github.com/voikko/corevoikko=
       Tarvitaan versiot libvoikko.so.1.14.5 ja libvoikko-4.1.1.jar
 
-\item Solr 7.3.1:
+\item Solr 7.4.0:
       \verb=http://lucene.apache.org/solr/=
       Tässä dokumentissa Solr:sta käytetään nimeä solr-x.y.z,
       missä x.y.z tarkoittaa version numeroa.
@@ -142,26 +142,26 @@ No cores available
 Go and create one
 \end{verbatim}
 
-Mennään sinne ja kirjotetaan kohtaan \verb=name= ja \verb=instanceDir=
+Mennään sinne ja kirjoitetaan kohtaan \verb=name= ja \verb=instanceDir=
 ''sukija'' (mutta ilman lainausmerkkejä) ja napsautetaan kohtaa
 \verb=Add Core=.
 
-Nyt asemmalle paneeliin alalaitaan pitäisi tulla mahdollisuus valita
+Nyt vasemmalle paneeliin alalaitaan pitäisi tulla mahdollisuus valita
 indeksi (Solr käyttää siitä nimeä \verb=core=) sukija. Sen jälkeen voi
 ruveta indeksoimaan. Katso sivu \zpageref{indexing}.
 
 
-\subsection*{Solr:n loki}
+\subsection*{Sukijan loki}
 
-Solr:n lokitulostus (\verb=http://wiki.apache.org/solr/SolrLogging=)
-konfiguroidaan tiedostossa \verb=/var/solr/log4j.properties=.
-Mahdollisimman suuren lokitulostuksen saa lisäämällä tämän tiedoston
-loppuun tiedoston \verb=src/main/resources/log4j.properties.sukija=.
-Tällöin tulostus on paljon suurempi kuin indeksoitavat tiedostot (-:,
-mutta kaikkia ei tietenkään tarvitse lisätä.
+Sukijan lokitulostus konfiguroidaan Solr:n lokitulostuksen kautta
+tiedostossa \verb=/var/solr/log4j2.xml=. Sukijan käyttämät lisäykset
+ovat on hakemistossa \verb=src/main/resources/log4j2.xml=. Ne on
+kommentoitu pois, mutta niitä voi siirtää halutun määrän kommenttien
+ulkopuolelle. Jotta Solr näkisi muutokset, ne pitää laittaa tiedostoon
+\verb=/var/solr/log4j2.xml=.
 
-Lokitulostuksen eri tasot (\verb=ALL=, jne) voi katsua luokan
-\verb=org.apache.log4j.Level= dokumentoinnista.
+Lokitulostuksen eri tasot (\verb=ALL=, jne.) voi katsoa Solr:n
+dokumenteista.
 
 Lokitulostus menee kansioon \verb=/var/solr/logs/=
 
@@ -214,7 +214,7 @@ muutettu pieniksi kirjaimiksi eli tiedostossa
 \verb|suggestions.xml| olevat erisnimetkin pitää kirjoittaa
 pienellä alkukirjaimella.
 
-Konfiguroititiedoston formaatti on määritelty tiedostossa
+Konfigurointitiedoston formaatti on määritelty tiedostossa
 \verb=/src/main/xsd/SuggestionInput.xsd=.
 
 Konfigurointitiedostossa olevien säännöllisten lausekkeiden syntaksi on
@@ -247,7 +247,7 @@ Jokaisessa input-lauseessa on kaksi osaa. Ensimmäinen on jokin
 merkkijono ja toinen jonkin sanan perusmuoto. Tunnistettaessa
 merkkijono katkaistaan siitä kohdasta, josta ensimmäinen merkkijono
 alkaa, ja jos merkkijonon loppuosan perusmuoto on argumentin toinen
-osa, perusmuotona palauteaan merkkijonon alkuosa + argumentin toinen
+osa, perusmuotona palautetaan merkkijonon alkuosa + argumentin toinen
 osa.
 
 Esimeriksi ''aatsajoelle'' jaetaan kahtia osiin ''aatsa'' ja
@@ -281,7 +281,7 @@ mikä tahansa merkkijono). Esimerkiksi
   </prefix>
 \end{verbatim}
 
-poistaa sanan alusta merkkijohon ''abcdefg'' ja yrittää tunnistaa
+poistaa sanan alusta merkkijonon ''abcdefg'' ja yrittää tunnistaa
 jäljelle jääneen sanan (''abcdefgsuomalaiselle'' => ''suomalaiselle'')
 ja tallentaa sen perusmuodon (''suomalainen''). Jos \verb|savePrefix|
 on true, tallentaa myös etuliitteen (''abcdefg'') ja jos

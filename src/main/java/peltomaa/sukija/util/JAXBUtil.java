@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2014-2016 Hannu Väisänen
+Copyright (©) 2014-2016, 2018 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -30,8 +30,6 @@ import javax.xml.bind.Unmarshaller;
 import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.XMLConstants;
-//import org.slf4j.Logger;
-//import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 import peltomaa.sukija.schema.*;
 
@@ -45,12 +43,10 @@ public class JAXBUtil {
   public static final <T> T unmarshal (String xmlFile, String schemaFile, String schemaLocation, String contextPath, ClassLoader classLoader)
     throws JAXBException, SAXException
   {
-//    LOG.debug ("JAXBUtil.unmarshal (1).");
     Unmarshaller u = getUnmarshaller (schemaFile, schemaLocation, contextPath, classLoader);
 
     @SuppressWarnings("unchecked")
     JAXBElement<T> v = (JAXBElement<T>)u.unmarshal (new File (xmlFile));
-//    LOG.debug ("JAXBUtil.unmarshal (2).");
     return v.getValue();
   }
 
@@ -62,7 +58,6 @@ public class JAXBUtil {
 
     @SuppressWarnings("unchecked")
     JAXBElement<T> v = (JAXBElement<T>)u.unmarshal (is);
-//    LOG.debug ("JAXBUtil.unmarshal (2).");
     return v.getValue();
   }
 
@@ -98,8 +93,6 @@ public class JAXBUtil {
     m.setProperty (Marshaller.JAXB_FORMATTED_OUTPUT, true);
     m.marshal (value, out);
   }
-
-//  private static final Logger LOG = LoggerFactory.getLogger (JAXBUtil.class);
 
 
   private static final Unmarshaller getUnmarshaller (String schemaFile, String schemaLocation, String contextPath, ClassLoader classLoader)
