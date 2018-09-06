@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
 <bindings xmlns="http://java.sun.com/xml/ns/jaxb" version="2.1">
   <globalBindings choiceContentProperty="true"/>
 </bindings>
@@ -6,15 +7,15 @@
 <!-- http://stackoverflow.com/questions/18619463/xjc-and-xsd-choice -->
 
 <!--
-<jxb:bindings jxb:version="2.1" xmlns:jxb="http://java.sun.com/xml/ns/jaxb">
+<jxb:bindings 
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  xmlns:jxb="http://java.sun.com/xml/ns/jaxb"
+  version="2.1">
 
-  <jxb:bindings schemaLocation = "SuggestionInput.xsd">
-    <jxb:bindings node = "//xs:element[@name='Widgets']//xs:complexType//xs:choice">
-      <jxb:property name="Shapes"/>
-    </jxb:bindings>
+  <jxb:bindings node="//xsd:element[@anme='suggestions]/xsd:sequence/xsd:choice"
+                schemaLocation = "../xsd/SuggestionInput.xsd">
+    <jxb:property name="getSuggestion"/>
   </jxb:bindings>
-
-<globalBindings choiceContentProperty="true"/>
-
+  <globalBindings choiceContentProperty="true"/>
 </jxb:bindings>
 -->

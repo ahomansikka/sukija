@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsd:schema xmlns:xsd = "http://www.w3.org/2001/XMLSchema"
             xmlns:jxb = "http://java.sun.com/xml/ns/jaxb"
-            jxb:version="1.0"
+            jxb:version="2.1"
 >
 
 
@@ -173,11 +173,6 @@
   <xsd:sequence>
   <xsd:element name = "char"  type = "CharInput" minOccurs="0" maxOccurs="1"/>
   <xsd:choice minOccurs = "1" maxOccurs = "unbounded">
-    <xsd:annotation>
-      <xsd:appinfo>
-        <jxb:property name = "Suggestion"/>
-      </xsd:appinfo>
-    </xsd:annotation>
     <xsd:element name = "apostrophe" type = "ApostropheInput"/>
     <xsd:element name = "ichar"  type = "CharInput"/>
     <xsd:element name = "compoundWordEnd" type = "CompoundWordEndInput"/>

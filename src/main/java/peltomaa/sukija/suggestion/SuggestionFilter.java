@@ -134,6 +134,11 @@ public class SuggestionFilter extends SukijaFilter {
   {
 //System.out.println ("Word 0 " + word + " " + termAtt.toString() + " " + Constants.toString (flagsAtt));
 
+    if (hasFlag (flagsAtt, DASH)) {
+      word = word.replace ("\\-", "");
+    }
+//System.out.println ("Word a " + word);
+
     if (hasFlag (flagsAtt, HYPHEN)) {
 //System.out.println ("Word 1 " + word);
       final Set<String> set1 = suggest (HYPHEN_REGEX.matcher(word).replaceAll("-"));

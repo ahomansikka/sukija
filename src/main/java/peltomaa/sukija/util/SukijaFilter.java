@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2014-2016 Hannu Väisänen
+Copyright (©) 2014-2016, 2018 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -75,7 +75,7 @@ public abstract class SukijaFilter extends TokenFilter {
     //
     if (iterator.hasNext()) {
       termAtt.setEmpty().append (iterator.next());
-//System.out.println ("SukijaFilter3 " + word + " " + termAtt.toString() + " [" + originalWordAtt.getOriginalWord());
+//System.out.println ("SukijaFilter3 " + word + " " + termAtt.toString() + " [" + originalWordAtt.getOriginalWord() + "]");
       posIncrAtt.setPositionIncrement (positionIncrement);
       positionIncrement = 0;
 //System.out.println ("SukijaFilter4 " + word + " " + baseFormAtt.getBaseForms().toString());

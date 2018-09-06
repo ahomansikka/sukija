@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2015-2016 Hannu Väisänen
+Copyright (©) 2015-2016, 2018 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -28,13 +28,13 @@ public final class Constants {
 
   // Arvojen täytyy olla kakkosen potensseja: 2, 4, 8, 16, 32, ...
   //
-  public static final int WORD    =  2; // Tiedostosta luettu tavallinen sana.
-  public static final int HYPHEN  =  4; // Sana, jossa on väliviiva (esim. linja-auto).
-  public static final int BRACKET =  8; // Sana, jossa on hakasulut (esim. sitte[n]).
-  public static final int FOUND   = 16; // Sana, jonka Voikko tunnisti muutoksitta.
-  public static final int SUGGEST = 32; // Sana, jonka joku Suggestion-luokist tunnisti.
-  public static final int UNKNOWN = 64; // Sana, jota morfologia tai filtteri ei ole tunnistanut.
-
+  public static final int WORD    =   2; // Tiedostosta luettu tavallinen sana.
+  public static final int HYPHEN  =   4; // Sana, jossa on väliviiva (esim. linja-auto).
+  public static final int BRACKET =   8; // Sana, jossa on hakasulut (esim. sitte[n]).
+  public static final int FOUND   =  16; // Sana, jonka Voikko tunnisti muutoksitta.
+  public static final int SUGGEST =  32; // Sana, jonka joku Suggestion-luokista tunnisti.
+  public static final int UNKNOWN =  64; // Sana, jota morfologia tai filtteri ei ole tunnistanut.
+  public static final int DASH    = 128; // Sana, jossa on LaTeXin taivutuskomento "\-", esim. vuok\-ra.
 
   public static final boolean hasFlag (FlagsAttribute flagsAtt, int flag)
   {
@@ -60,6 +60,7 @@ public final class Constants {
     sb.append (toString (flagsAtt, FOUND)).append (" ");
     sb.append (toString (flagsAtt, SUGGEST)).append (" ");
     sb.append (toString (flagsAtt, UNKNOWN)).append (" ");
+    sb.append (toString (flagsAtt, DASH)).append (" ");
     final String s = sb.toString();
     return s.substring (0, s.length()-1);
   }
@@ -91,5 +92,6 @@ public final class Constants {
     flagMap.put (FOUND,   "FOUND");
     flagMap.put (SUGGEST, "SUGGEST");
     flagMap.put (UNKNOWN, "UNKNOWN");
+    flagMap.put (DASH,    "DASH");
   }
 }

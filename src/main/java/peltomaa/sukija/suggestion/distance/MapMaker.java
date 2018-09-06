@@ -76,10 +76,18 @@ public class MapMaker {
       t.reset();
       while (t.incrementToken()) {
         final String word = termAtt.toString();
+        System.out.println (word);
         if (wordOK (word.toLowerCase())) {
           set.add (word);
         }
       }
+    }
+    catch (IllegalArgumentException e)
+    {
+      System.out.println (e.getMessage());
+      System.out.println (termAtt.toString());
+      System.err.println (e.getMessage());
+      System.err.println (termAtt.toString());
     }
     finally {
       t.close();
