@@ -78,6 +78,7 @@ public final class SuggestionUtils {
           }                                
         }                                
         baseForms.addAll (VoikkoUtils.getBaseForms (voikkoAtt.getAnalysis()));
+//System.out.println ("Analyze7 " + word + " " + suggestion[i].getClass().getName() + "\n" + voikkoAtt.getAnalysis());
         return true;
       }
     }
@@ -89,17 +90,17 @@ public final class SuggestionUtils {
                                        BaseFormAttribute baseFormAtt, FlagsAttribute flagsAtt,
                                        Suggestion[] suggestion, String from, String to)
   {
-//System.out.println ("Analyze1 " + from + " " + to + " " + word);
+////System.out.println ("Analyze1 " + from + " " + to + " " + word);
     boolean suggestionResult = getSuggestions (suggestion, word, voikkoAtt, baseFormAtt);
 
     if (!suggestionResult) {
       if (from.length() > 0) {
-//System.out.println ("Analyze2 " + from + " " + to + " " + word);
+////System.out.println ("Analyze2 " + from + " " + to + " " + word);
         suggestionResult = getSuggestions (voikko, word, voikkoAtt, baseFormAtt, flagsAtt, suggestion, from, to); 
       }
     }
 
-//System.out.println ("AnalyzeÖ " + from + " " + to + " " + word + " " + suggestionResult);
+////System.out.println ("AnalyzeÖ " + from + " " + to + " " + word + " " + suggestionResult);
 
     return suggestionResult;
   }
@@ -110,7 +111,7 @@ public final class SuggestionUtils {
      BaseFormAttribute baseFormAtt, FlagsAttribute flagsAtt,
      Suggestion[] suggestion, String from, String to)
   {
-//System.out.println ("Analyze3 " + from + " " + to + " " + word);
+////System.out.println ("Analyze3 " + from + " " + to + " " + word);
 
     CharCombinator charCombinator = new CharCombinator (word, from, to);
     Iterator<String> iterator = charCombinator.iterator();
@@ -119,11 +120,11 @@ public final class SuggestionUtils {
       final String s = iterator.next();
 
       if (AnalysisUtils.analyze (voikko, s, voikkoAtt, baseFormAtt, flagsAtt)) {
-//System.out.println ("Analyze4 " + from + " " + to + " " + word + " " + s);
+////System.out.println ("Analyze4 " + from + " " + to + " " + word + " " + s);
         return true;
       }
       if (getSuggestions (suggestion, s, voikkoAtt, baseFormAtt)) {
-//System.out.println ("Analyze9 " + from + " " + to + " " + word + " " + s);
+////System.out.println ("Analyze9 " + from + " " + to + " " + word + " " + s);
         return true;
       }
     }

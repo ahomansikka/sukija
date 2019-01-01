@@ -172,7 +172,7 @@
 <xsd:complexType name = "SuggestionInput">
   <xsd:sequence>
   <xsd:element name = "char"  type = "CharInput" minOccurs="0" maxOccurs="1"/>
-  <xsd:choice minOccurs = "1" maxOccurs = "unbounded">
+  <xsd:choice minOccurs = "0" maxOccurs = "unbounded">
     <xsd:element name = "apostrophe" type = "ApostropheInput"/>
     <xsd:element name = "ichar"  type = "CharInput"/>
     <xsd:element name = "compoundWordEnd" type = "CompoundWordEndInput"/>

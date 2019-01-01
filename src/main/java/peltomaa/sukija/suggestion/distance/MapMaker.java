@@ -76,7 +76,7 @@ public class MapMaker {
       t.reset();
       while (t.incrementToken()) {
         final String word = termAtt.toString();
-        System.out.println (word);
+//        System.out.println (word);
         if (wordOK (word.toLowerCase())) {
           set.add (word);
         }

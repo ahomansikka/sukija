@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2015-2016 Hannu Väisänen
+Copyright (©) 2015-2016, 2018 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -57,48 +57,12 @@ public class BaseFormTester {
     FlagsAttribute flagsAtt = t.addAttribute (FlagsAttribute.class);
     OriginalWordAttribute originalWordAtt = t.addAttribute (OriginalWordAttribute.class);
 
-String orig = "";
-TreeSet<String> tset = new TreeSet<String>();
-FlagsAttribute flagsA = new FlagsAttributeImpl();
-
     try {
       t.reset();
       while (t.incrementToken()) {
-        if (!orig.equals("") && !orig.equals(originalWordAtt.getOriginalWord())) {
-          writer.write ("Sana: " + orig);
-          if (Constants.hasFlag (flagsA, Constants.FOUND)) {
-            writer.write (" M " + toString(tset));
-          }
-          writer.write ("\n");
-          writer.flush();
-          tset.clear();
-        }
-        orig = originalWordAtt.getOriginalWord();
-        tset.addAll (baseFormAtt.getBaseForms());
-        flagsA.setFlags (flagsAtt.getFlags());
-      }
-      
-      writer.write ("Sana: " + orig);
-      if (Constants.hasFlag (flagsA, Constants.FOUND)) {
-        writer.write (" M " + toString(tset));
-      }
-      writer.write ("\n");
-      writer.flush();
-      t.end();
-    }
-    finally {
-      t.close();
-    }
-
-/*
-    try {
-      t.reset();
-      while (t.incrementToken()) {
-        writer.write ("Sana: " + originalWordAtt.getOriginalWord()
-                      + " " + termAtt.toString()
-                      + " " + Constants.toString (flagsAtt)
-                      + " " + baseFormAtt.getBaseForms().toString()
-                      + "\n");
+        writer.write ("Sana: " + originalWordAtt.getOriginalWord() + " | " + termAtt.toString() + " | ");
+        writer.write (Constants.toString(flagsAtt));
+        writer.write ("\n");
         writer.flush();
       }
       t.end();
@@ -106,7 +70,6 @@ FlagsAttribute flagsA = new FlagsAttributeImpl();
     finally {
       t.close();
     }
-*/
   }
 
 
