@@ -46,7 +46,7 @@ tekstitiedostojen merkistökoodauksia, joita Apache Tika
       \verb=https://github.com/voikko/corevoikko=
       Tarvitaan versiot libvoikko.so.1.14.5 ja libvoikko-4.1.1.jar
 
-\item Solr 8.4.0:
+\item Solr 8.4.1:
       \verb=http://lucene.apache.org/solr/=
       Tässä dokumentissa Solr:sta käytetään nimeä solr-x.y.z,
       missä x.y.z tarkoittaa version numeroa.
@@ -75,10 +75,14 @@ hakemistosta \verb=$HOME/Lataukset/solr/solr-x.y.z=.
 Tuotantokäyttöä varten Solr on parasta asentaa palveluna (service).
 Tämä ohje olettaa, että Solr on asennettu palveluna.
 
-Solr asennetaan palveluna skriptillä
-\verb=install_solr_service.sh= 
-(katso Apache Solr Reference Guide
-kohta Service Installation Script).
+Katso Taking Solr to Production
+
+{\footnotesize
+\verb=https://lucene.apache.org/solr/guide/8_4/taking-solr-to-production.html=
+\verb=#taking-solr-to-production=
+}
+
+Kaiken pitää olla yhdellä rivillä.
 
 Jos et malta katsoa, se tehdään hakemistossa
 \verb=$HOME/Lataukset/solr/= tällä tavalla
@@ -93,6 +97,10 @@ Jos kohdan \verb=-u username= jättää pois, Solr asennetaan tunnuksen
 
 Skripti asentaa Solr:n hakemistoihin \verb=/opt/solr= ja
 \verb=/var/solr=.
+
+Jos kone on kiinni verkossa, kannattaa katsoa myös ohjeet turvallisuudesta
+
+\verb=https://lucene.apache.org/solr/guide/8_4/securing-solr.html=
 
 
 \subsection*{Sukijan kääntäminen ja asentaminen}

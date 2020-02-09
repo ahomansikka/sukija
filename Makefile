@@ -11,7 +11,7 @@ clean:
 	rm -f SukijaAsennus.class conf/data-config.xml conf/schema.xml
 
 
-SUKIJA=sukija-2.2.19
+SUKIJA=sukija-2.2.20
 tar:
 	if [ -e $(SUKIJA) ]; then \
 	  rm -f $(SUKIJA).tar.bz2; \
