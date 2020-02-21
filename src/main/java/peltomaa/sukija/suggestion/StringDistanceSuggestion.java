@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2015-2017 Hannu Väisänen
+Copyright (©) 2015-2017, 2020 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -48,7 +48,7 @@ public class StringDistanceSuggestion extends Suggestion {
                               jos tämä on {@code null}, käytetään oletusarvoja.
    * @param keyLength      Merkkijonokartan avainkentän maksimipituus.
    * @param threshold      Kaksi merkkijonoa ovat samanlaiset, jos luokan distanceClass
-   *                       palauttama arvo on >= kuin tämä arvo.
+   *                       palauttama arvo on &gt;= kuin tämä arvo.
    */
    public StringDistanceSuggestion (Voikko voikko, String fileName, String distanceClassName,
                                     String parameter, int keyLength, float threshold)

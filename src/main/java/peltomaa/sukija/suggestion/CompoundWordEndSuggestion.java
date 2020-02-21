@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2014-2016 Hannu Väisänen
+Copyright (©) 2014-2016, 2020 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -42,8 +42,7 @@ public class CompoundWordEndSuggestion extends Suggestion {
    * Muodostin.
    *
    * @param voikko Voikko.
-   * @param pattern
-   * @param end
+   * @param map
    * @param addStart
    * @param addBaseFormOnly
    * @param addEnd
