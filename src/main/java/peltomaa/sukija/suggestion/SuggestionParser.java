@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2012-2018 Hannu Väisänen
+Copyright (©) 2012-2018, 2020 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -42,7 +42,7 @@ public class SuggestionParser {
   public SuggestionParser (Voikko voikko, InputStream is) throws SuggestionParserException
   {
     try {
-      LOG.info ("SuggestionParser 1: Aloitetaan.");
+//      LOG.info ("SuggestionParser 1: Aloitetaan.");
       si = JAXBUtil.unmarshal (is, XSD_FILE, SCHEMA_LOCATION, CONTEXT_PATH, this.getClass().getClassLoader());
       parseSuggestions (voikko, si.getApostropheOrIcharOrCompoundWordEnd());
 
@@ -66,7 +66,7 @@ public class SuggestionParser {
   public SuggestionParser (Voikko voikko, String xmlFile, String xsdFile) throws SuggestionParserException
   {
     try {
-      LOG.info ("SuggestionParser 2: " + xmlFile + " " + xsdFile + " " + SCHEMA_LOCATION);
+//      LOG.info ("SuggestionParser 2: " + xmlFile + " " + xsdFile + " " + SCHEMA_LOCATION);
 
       si = JAXBUtil.unmarshal (xmlFile, xsdFile, SCHEMA_LOCATION, CONTEXT_PATH, this.getClass().getClassLoader());
       parseSuggestions (voikko, si.getApostropheOrIcharOrCompoundWordEnd());

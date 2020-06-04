@@ -39,7 +39,7 @@ class AhoCorasickCorrector {
 
   public Set<String> getCorrections (List<Analysis> analysis)
   {
-    Set<String> set = new HashSet<String>();
+    final Set<String> set = new HashSet<String>();
 
     for (Analysis a : analysis) {
       final String wb = a.get ("WORDBASES");
@@ -51,12 +51,12 @@ class AhoCorasickCorrector {
 //System.out.println ("Base2 " + token.getFragment());
           if (token.isMatch()) {
 //System.out.println ("Base3 " + token.getFragment());
-            String[] s = MapClass.map.get (token.getFragment());
+            final String[] s = MapClass.map.get (token.getFragment());
 //System.out.println ("Base4 " + java.util.Arrays.asList(s).toString());
             for (int i = 1; i < s.length; i++) {
 //System.out.println ("Base5 " + s[i]);
               if (baseForm.indexOf(s[i]) >= 0) {
-                String bf = baseForm.replace (s[i], s[0]);
+                final String bf = baseForm.replace (s[i], s[0]);
 //System.out.println ("Base8 " + baseForm.indexOf(s[i]));
 //System.out.println ("Base9 " + baseForm + " " + bf + " § " + wb);
                 set.add (bf.toLowerCase());
@@ -66,6 +66,7 @@ class AhoCorasickCorrector {
         }
       }
     }
+//System.out.println ("BaseA " + set.toString());
     return set;
   }
 

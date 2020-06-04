@@ -55,7 +55,7 @@ public class SuggestionFilter extends SukijaFilter {
   {
     super (input, voikko);
     try {
-      LOG.info ("SuggestionFilter: aloitetaan (1).");
+//      LOG.info ("SuggestionFilter: aloitetaan (1).");
 //System.out.println ("SuggestionFilter: aloitetaan (1).");
       parser = new SuggestionParser (voikko, suggestionFile); 
       suggestion = parser.getSuggestions();
@@ -89,7 +89,7 @@ public class SuggestionFilter extends SukijaFilter {
   {
     super (input, voikko);
     try {
-      LOG.info ("SuggestionFilter: aloitetaan (3).");
+//      LOG.info ("SuggestionFilter: aloitetaan (3).");
       if (parser == null) parser = new SuggestionParser (voikko, is);
       suggestion = parser.getSuggestions();
       this.successOnly = successOnly;
@@ -189,6 +189,7 @@ public class SuggestionFilter extends SukijaFilter {
 //System.out.println ("Word a " + word + " " + Constants.toString(flagsAtt));
     List<Analysis> list = voikko.analyze (word);
     if (list.size() > 0) {
+//System.out.println ("       " + list.toString());
       flagsAtt.setFlags (flagsAtt.getFlags() | FOUND);
       voikkoAtt.setAnalysis (list);
       baseFormAtt.addBaseForms (VoikkoUtils.getBaseForms (list));
@@ -235,12 +236,15 @@ public class SuggestionFilter extends SukijaFilter {
     final StringBuffer sb = new StringBuffer();
 
     while (m.find()) {
-//    System.out.println (m.start() + " " + m.end() + " " + m.group());
+//System.out.println ("A " + m.start() + " " + m.end() + " " + m.group());
       m.appendReplacement (sb, separator (word, m.start(), m.end()));
     }
     m.appendTail (sb);
-//  System.out.println ("xxx " + sb.toString());
-    return suggest (sb.toString());
+//System.out.println ("B " + sb.toString());
+//    return suggest (sb.toString());
+    final Set<String> s = suggest (sb.toString());
+//System.out.println ("C " + s.toString());
+    return s;
   }
 
 

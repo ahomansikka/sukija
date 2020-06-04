@@ -192,6 +192,11 @@ public final class VoikkoUtils {
       throw new RuntimeException ("analysis == null.");
     }
 
+/*
+for (Analysis a : analysis) {
+  System.out.println ("Voikko " + a.get("BASEFORM").toLowerCase());
+}
+*/
     return aho.getCorrections (analysis);
 /*
     Set<String> set = new HashSet<String>();

@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2015-2018 Hannu Väisänen
+Copyright (©) 2015-2018, 2020 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -103,11 +103,15 @@ public class SukijaAsennus {
 //      out.write (VOIKKO_TOKENIZER_TRIM_FILTER);
 //    }
 
-    final String SYNONYM_FILTER = getSynonymFilter (p);
-    if (SYNONYM_FILTER != null) {
-      out.write (SYNONYM_FILTER);
+    final String WHEN = getSynonymTime (p);
+
+    if ((WHEN != null) && (WHEN.compareTo ("indexing") == 0)) {
+      final String FILTER = getSynonymFilter (p, true);
+      if (FILTER != null) {
+        out.write (FILTER);
+      }
     }
-    out.write (schemaFileEnd);
+    printSchemaFileEnd (WHEN, p, out);
     out.flush();
   }
 
@@ -192,16 +196,46 @@ public class SukijaAsennus {
   }
 
 
-  private String getSynonymFilter (Properties p)
+  private void printSchemaFileEnd (String when, Properties p, Writer out) throws IOException
   {
-    final String synonymFile = getProperty (p, "sukija.synonyms");
+    out.write (schemaFileEnd1);
+
+    if ((when != null) && (when.compareTo ("query") == 0)) {
+      final String FILTER = getSynonymFilter (p, false);
+      if (FILTER != null) {
+        out.write (FILTER);
+      }
+    }
+    out.write (schemaFileEnd2);
+  }
+
+
+  private String getSynonymTime (Properties p)
+  {
+    final String when = getProperty (p, "sukija.synonyms.when");
+    if (when != null) {
+      if ((when.compareTo ("indexing") != 0) && (when.compareTo ("query") != 0)) {
+        throw new RuntimeException ("sukija.synonyms.when pitää olla joko indexing tai query (on " + when + ").");
+      }
+    }
+    return when;
+  }
+
+
+  private String getSynonymFilter (Properties p, boolean analysisTime)
+  {
+    final String synonymFile = getProperty (p, "sukija.synonyms.file");
     if (synonymFile == null) return null;
 
-    StringBuilder sb = new StringBuilder ("        <filter class=\"solr.SynonymFilterFactory\"");
+
+    StringBuilder sb = new StringBuilder ("        <filter class=\"solr.SynonymGraphFilterFactory\"");
     append (sb, "synonyms", synonymFile);
-    append (sb, p, "ignoreCase", "sukija.ignoreCase", "true");
-    append (sb, p, "expand", "sukija.expand", "false");
+    append (sb, p, "ignoreCase", "sukija.synonyms.ignoreCase", "true");
+    append (sb, p, "expand", "sukija.synonyms.expand", "false");
     sb.append ("/>\n");
+    if (analysisTime) {
+      sb.append ("        <filter class=\"solr.FlattenGraphFilterFactory\"/>\n");
+    }
     return sb.toString();
   }
 
@@ -337,11 +371,13 @@ public class SukijaAsennus {
   private static final String VOIKKO_TOKENIZER_TRIM_FILTER =
     "        <filter class=\"peltomaa.sukija.voikko.tokenizer.VoikkoTokenizerTrimFilterFactory\"/>\n";
 
-  private static final String schemaFileEnd =
+  private static final String schemaFileEnd1 =
     "      </analyzer>\n" +
     "      <analyzer type=\"query\">\n" +
     "        <tokenizer class=\"solr.WhitespaceTokenizerFactory\"/>\n" +
-    "        <filter class=\"peltomaa.sukija.finnish.FinnishFoldingLowerCaseFilterFactory\"/>\n" +
+    "        <filter class=\"peltomaa.sukija.finnish.FinnishFoldingLowerCaseFilterFactory\"/>\n";
+
+  private static final String schemaFileEnd2 =
     "      </analyzer>\n" +
     "    </fieldType>\n" +
     "  </types>\n" +
