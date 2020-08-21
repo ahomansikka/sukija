@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2008-2012, 2015-2018 Hannu Väisänen
+Copyright (©) 2008-2012, 2015-2018, 2020 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -35,7 +35,7 @@ private static final Logger LOG = LoggerFactory.getLogger (HVTokenizerImpl.class
 
 public final int yychar()
 {
-  return yychar;
+  return (int)yychar;
 }
 
 

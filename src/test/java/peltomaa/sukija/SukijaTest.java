@@ -1,8 +1,33 @@
+/*
+Copyright (©) 2020 Hannu Väisänen
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+
 package peltomaa.sukija;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-import junit.framework.TestSuite;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.fail;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
 
 import java.io.IOException;
 import java.io.Reader;
@@ -17,39 +42,24 @@ import org.apache.lucene.analysis.Tokenizer;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 
 
-/**
- * Unit test for simple App.
- */
-public class AppTest  extends TestCase
+public class SukijaTest
 {
-  /**
-   * Create the test case.
-   *
-   * @param testName name of the test case
-   */
-  public AppTest (String testName)
+  @BeforeEach
+  public void setUp()
   {
-    super (testName);
+// Tätä ei näköjään suoriteta ollenkaan??
+    System.out.println ("setUp");
     voikko = VoikkoUtils.getVoikko ("fi", VOIKKO_PATH, LIBRARY_PATH, LIBVOIKKO);
+    assertTrue (voikko != null);
   }
 
 
-  /**
-   * @return the suite of tests being tested.
-   */
-  public static Test suite()
-  {
-    return new TestSuite (AppTest.class);
-  }
-
-
-  /**
-   * Rigourous Test :-)
-   */
-  public void testApp()
+  @Test
+  public void testSukija()
   {
     try {
-      assertTrue (true);
+      voikko = VoikkoUtils.getVoikko ("fi", VOIKKO_PATH, LIBRARY_PATH, LIBVOIKKO);
+      assertTrue (voikko != null);
       assertTrue (test ("alusta", ""));
       assertTrue (test ("huuhaahoo", ""));
       assertTrue (test ("dioksidiin", ""));
@@ -75,7 +85,7 @@ public class AppTest  extends TestCase
     CharTermAttribute termAtt = t.addAttribute (CharTermAttribute.class);
 
     while (t.incrementToken()) {
-      System.out.println ("AppTest " + termAtt.toString());
+      System.out.println ("sukijaTest " + termAtt.toString());
       for (int i = 0; i < sukijaAtt.getAnalysis().size(); i++) {
         System.out.println (sukijaAtt.getAnalysis(i).get("BASEFORM"));
 //        VoikkoUtils.printAnalysisResult (sukijaAtt.getAnalysis(i), System.out);

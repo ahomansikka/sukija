@@ -47,6 +47,9 @@ public final class VoikkoFilter extends TokenFilter {
   public VoikkoFilter (TokenStream in, Voikko voikko)
   {
     super (in);
+    if (voikko == null) {
+      throw new RuntimeException ("voikko == null");
+    }
     this.voikko = voikko;
   }
 
