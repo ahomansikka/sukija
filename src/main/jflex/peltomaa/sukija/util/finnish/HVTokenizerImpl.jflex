@@ -77,7 +77,7 @@ V2 = {W2}({HYPHEN}{W2})+
 %%
 
 {NUM} {
-  if (LOG.isDebugEnabled()) LOG.debug ("NUM [" + yytext() + "]");
+  if (LOG.isDebugEnabled()) LOG.debug ("NR [" + yytext() + "]");
 } /* Ignore numbers. */
 
 
@@ -85,32 +85,32 @@ V2 = {W2}({HYPHEN}{W2})+
 /* Ignore LaTeX commands. */
 
 "\\"(documentclass|usepackage)("["[0-9a-zA-Z,]+"]")?{LPAR} {
-  if (LOG.isDebugEnabled()) LOG.debug ("a [" + yytext() + "]");
+  if (LOG.isDebugEnabled()) LOG.debug ("L1 [" + yytext() + "]");
 }
 
 "\\"(begin|end){LPAR} {
-  if (LOG.isDebugEnabled()) LOG.debug ("b [" + yytext() + "]");
+  if (LOG.isDebugEnabled()) LOG.debug ("L2 [" + yytext() + "]");
 }
 
 [\\][a-zA-Z@]+[*]? {
-  if (LOG.isDebugEnabled()) LOG.debug ("c [" + yytext() + "]");
+  if (LOG.isDebugEnabled()) LOG.debug ("L3 [" + yytext() + "]");
 }
 
 
 {W1} {
-//  System.out.println ("W1 {" + yytext() + "}");
+  if (LOG.isDebugEnabled()) LOG.debug ("W1 [" + yytext() + "]");
   return Constants.WORD;
 }
 
 
 {W2} {
-//  System.out.println ("W2 {" + yytext() + "}");
+  if (LOG.isDebugEnabled()) LOG.debug ("W2 [" + yytext() + "]");
   return Constants.BRACKET;
 }
 
 
 {V1} {
-//  System.out.println ("V1 {" + yytext() + "}");
+  if (LOG.isDebugEnabled()) LOG.debug ("V1 [" + yytext() + "]");
   if (yytext().indexOf ("\\-") > 0)
     return (Constants.HYPHEN + Constants.DASH);
   else
@@ -118,7 +118,7 @@ V2 = {W2}({HYPHEN}{W2})+
 }
 
 {V2} {
-//  System.out.println ("V2 {" + yytext() + "}");
+  if (LOG.isDebugEnabled()) LOG.debug ("V2 [" + yytext() + "]");
    if (yytext().indexOf ("\\-") > 0)
      return (Constants.HYPHEN + Constants.BRACKET +  Constants.DASH);
    else

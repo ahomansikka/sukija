@@ -51,32 +51,35 @@ public class ApostropheSuggestion extends Suggestion {
 
 
   /**
-  Poistetaan heittomerkki. Jos Voikko tunnistaa sanan, palatetaan {@code true},
-  muuten poistetaan sanan loppuosa, joka alkaa heittomerkistä. Jos Voikko
-  tunnistaa sanan alkuosan, palatetaan {@code true}. Jos Voikko ei tunista
-  sanan alkuosaa, asetetaan se sanan perusmuodoksi ja palautetaan {@true}.<p>
+  Jos sanassa ei ole heittomerkkiä, palautetaan {@code false}.
+  Jos sanassa on heittomerkki, palautetaan {@code true}
+  ja asetetaan perusmuoto tai perusmuodot seuraavasti:<p>
 
-  Esimerkiksi jos sana on {@code centime'in}, yritetään tunnistaa
-  ensin {@code centimein}. Jos Voikko ei tunnista sitä, yritetään
-  tunnistaa {@centime}. Jos Voikko ei tunnista sitä, asetetaan se
-  sanan perusmuodoksi ja palautetaan {@true}.<p>
+  (1) Sanan perusmuodoksi laitetaan aina sanan alkuosa viimeiseen heittomerkkiin asti.
+      Sanassa voi olla useampi kuin yksi heittomerkki, esimerkiksi O'Mallory'lle, vaikka se ei olisi
+      oikeinkirjoitussääntöjen mukaista.<p>
 
-  Huomaa, että sanan alkuosan perusmuoto voi olla erilainen kuin sanan
-  alkuosa. Esimerkiksi merkkijonon {@code huomioksi'xxxx} alkuosa on
-  {@code huomioksi}, jonka perusmuoto on {@code huomio.}<p>
+  (2) Poistetaan viimeinen heittomerkki. Jos Voikko osaa muuttaa sanan perusmuotoon, laitetaan
+      myös se perusmuodoksi.<p>
 
-  Jos sanassa ei ole heittomerkkiä, palautetaan {@false}.<p>
+  (3) Poistetaan viimeinen heittomerkki ja sanan loppuosa siitä alkaen. Jos Voikko
+      osaa muuttaa sanan alkuosan perusmuotoon, laitetaan myös se perusmuodoksi.<p>
+
+  Sanalla voi siis olla kolmekin perusmuotoa.
   */
   @Override
   public boolean suggest (String word, VoikkoAttribute voikkoAtt)
   {
-    final int n = word.indexOf (ch);
+    final int n = word.lastIndexOf (ch);
     if (n == -1) return false;
 
-    final String START = word.substring(0,n);
+    final String START = word.substring(0,n); // Sanan alku viimeiseen heittomerkkiin asti.
 
     sb.delete (0, sb.length());
-    sb.append (START).append (word.substring (n+1, word.length()));
+    sb.append (START).append (word.substring (n+1, word.length())); // Sana ilman viimeistä heittomerkkiä.
+
+    extraBaseForms.clear();
+    extraBaseForms.add (START);
 
     if (analyze (sb.toString(), voikkoAtt)) {
       return true;
@@ -84,11 +87,7 @@ public class ApostropheSuggestion extends Suggestion {
     else if (analyze (START, voikkoAtt)) {
       return true;
     }
-    else {
-      extraBaseForms.clear();
-      extraBaseForms.add (START);
-      return true;
-    }
+    return true;
   }
 
 
