@@ -92,6 +92,10 @@ V2 = {W2}({HYPHEN}{W2})+
   if (LOG.isDebugEnabled()) LOG.debug ("L2 [" + yytext() + "]");
 }
 
+// Jos rivinvaihtoa seuraa sana: "\\Esim".
+// Ilman tätä jäsennetään LaTeX-komento "\Esim".
+[\\][\\] {}
+
 [\\][a-zA-Z@]+[*]? {
   if (LOG.isDebugEnabled()) LOG.debug ("L3 [" + yytext() + "]");
 }
