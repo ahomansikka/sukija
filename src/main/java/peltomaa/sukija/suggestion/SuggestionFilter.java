@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2012-2018 Hannu Väisänen
+Copyright (©) 2012-2018, 2020 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -17,25 +17,19 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 package peltomaa.sukija.suggestion;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.InputStream;
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.Set;
-import java.util.Vector;
-import org.apache.lucene.analysis.TokenFilter;
 import org.apache.lucene.analysis.TokenStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.puimula.libvoikko.*;
 import static peltomaa.sukija.util.Constants.*;
+import peltomaa.sukija.util.AnalysisUtils;
 import peltomaa.sukija.util.Constants;
 import peltomaa.sukija.util.StringUtil;
 import peltomaa.sukija.util.SukijaFilter;
@@ -132,78 +126,78 @@ public class SuggestionFilter extends SukijaFilter {
   @Override
   protected Iterator<String> filter()
   {
-//System.out.println ("Word 0 " + word + " " + termAtt.toString() + " " + Constants.toString (flagsAtt));
+//System.out.println ("Word-f A " + word + " " + termAtt.toString() + " " + Constants.toString (flagsAtt));
 
-    if (hasFlag (flagsAtt, DASH)) {
+    if (hasFlag (flagsAtt, LATEX_HYPHEN)) {
       word = word.replace ("\\-", "");
     }
-//System.out.println ("Word a " + word);
 
-    if (hasFlag (flagsAtt, HYPHEN)) {
-//System.out.println ("Word 1 " + word);
-      final Set<String> set1 = suggest (HYPHEN_REGEX.matcher(word).replaceAll("-"));
+    final int n = word.lastIndexOf ('-');
+    if (n > 0) {
+      Constants.addFlags (flagsAtt, Constants.COMPOUND_WORD);
+    }
+    else {
+      Constants.removeFlags (flagsAtt, Constants.COMPOUND_WORD);
+    }
+   
+//System.out.println ("Word-f B " + word + " " + termAtt.toString() + " " + Constants.toString (flagsAtt));
 
-//System.out.println ("Word 2 " + word + " " + set1.toString());
-
-      final Set<String> set2 = try_word_without_hyphen (word);
-
-//System.out.println ("Word 3 " + word + " " + set2.toString());
-
-      final String[] p = HYPHEN_REGEX.split (word);
-      final HashSet<String> pset = new HashSet<String>();
-
-      for (int i = 0; i < p.length; i++) {
-        Set<String> result = suggest (p[i]);
-        if (result != null) {
-//System.out.println ("Word 4 " + p[i] + " " + result.toString() + " " + Constants.toString (flagsAtt));
-          pset.addAll (result);
-        }
+    if (hasFlag (flagsAtt, Constants.COMPOUND_WORD)) {
+      if (AnalysisUtils.analyze (voikko, word, voikkoAtt, baseFormAtt, flagsAtt)) {
+        return baseFormAtt.getBaseForms().iterator();
       }
-      if (set1 != null) pset.addAll (set1);
-      if (set2 != null) pset.addAll (set2);
-
-      if (pset.size() > 0) {
-//System.out.println ("pset1 " + word + " " + Constants.toString(flagsAtt) + " " + pset.toString());
-        if (hasFlag (flagsAtt, FOUND)) {
-          removeFlags (flagsAtt, SUGGEST, UNKNOWN);
+      else {
+        // Väärin käytetty yhdys-viiva.
+        // Jos yhdys-sanaa ei tunnisteta, muutetaan sen viimeisen yhdysviivan jälkeinen osa
+        // perusmuotoon ja liitetään alkuosa siihen yhdysviivan kanssa ja ilman.
+        //
+//System.out.println ("Word-f C " + word + " " + termAtt.toString() + " " + Constants.toString (flagsAtt));
+        final String START = word.substring (0, n);
+        final String END   = word.substring (n+1);
+//System.out.println ("Word-f D " + word + " " + termAtt.toString() + " " + Constants.toString (flagsAtt) + " [" + START + "] " + END);
+        Set<String> baseForms = new HashSet<String>();
+        Set<String> result = suggest (END);
+//System.out.println ("Word-f E " + END + " " + result.toString());
+        if (result != null) {
+          for (String u : result) {
+            baseForms.add (START + "-" + u);
+            baseForms.add (START + u);
+          }
+          return baseForms.iterator();
         }
-        else if (hasFlag (flagsAtt, SUGGEST)) {
-          removeFlags (flagsAtt, UNKNOWN);
-        }
-//System.out.println ("pset2 " + word + " " + Constants.toString(flagsAtt) + " " + pset.toString());
-        return pset.iterator();
       }
     }
     else {
-//System.out.println ("Word Z " + word + " " + termAtt.toString() + " " + Constants.toString (flagsAtt));
       Set<String> s = suggest (word);
-      if (s != null) return s.iterator();
+      if (s != null) {
+        return s.iterator();
+      }
     }
-//System.out.println ("Word Ö " + word + " " + termAtt.toString() + " " + Constants.toString (flagsAtt));
     return null;
   }
 
 
   private Set<String> suggest (String word)
   {
-//System.out.println ("Word a " + word + " " + Constants.toString(flagsAtt));
+//System.out.println ("  Word-s a " + word + " " + Constants.toString(flagsAtt));
     List<Analysis> list = voikko.analyze (word);
     if (list.size() > 0) {
 //System.out.println ("       " + list.toString());
       flagsAtt.setFlags (flagsAtt.getFlags() | FOUND);
       voikkoAtt.setAnalysis (list);
       baseFormAtt.addBaseForms (VoikkoUtils.getBaseForms (list));
-//System.out.println ("Word b " + word + " " + Constants.toString(flagsAtt) + " " + VoikkoUtils.getBaseForms(list).toString());
+//System.out.println ("  Word-s b " + word + " " + Constants.toString(flagsAtt) + " bf= " + VoikkoUtils.getBaseForms(list).toString());
       return baseFormAtt.getBaseForms();
+//      return VoikkoUtils.getBaseForms (list);
     }
     else {
-//System.out.println ("Word c " + word + " " + Constants.toString(flagsAtt) + " " + baseFormAtt.getBaseForms().toString());
+//System.out.println ("  Word-s c " + word + " " + Constants.toString(flagsAtt) + " bf= " + baseFormAtt.getBaseForms().toString());
       Set<String> set = new HashSet<String>();
       boolean suggestionResult = SuggestionUtils.getSuggestions (suggestion, word, voikkoAtt, set);
       if (suggestionResult) {
         flagsAtt.setFlags (flagsAtt.getFlags() | SUGGEST);
         baseFormAtt.addBaseForms (set);
-//System.out.println ("Word d " + word + " " + Constants.toString(flagsAtt) + " " + baseFormAtt.getBaseForms().toString());
+//System.out.println ("  Word-s d " + word + " " + Constants.toString(flagsAtt) + " bf= " + baseFormAtt.getBaseForms().toString());
         return baseFormAtt.getBaseForms();
       }
     }
@@ -212,39 +206,21 @@ public class SuggestionFilter extends SukijaFilter {
       throw new RuntimeException ("SuggestionFilter: parser == null");
     }
 
-    if (SuggestionUtils.analyze (voikko, word, voikkoAtt, baseFormAtt, flagsAtt, suggestion, parser.getFrom(), parser.getTo())) {
+    if (AnalysisUtils.analyze (voikko, word, voikkoAtt, baseFormAtt, flagsAtt, suggestion, parser.getFrom(), parser.getTo())) {
       flagsAtt.setFlags (flagsAtt.getFlags() | SUGGEST);
-//System.out.println ("Word 5 " + word + " " + Constants.toString(flagsAtt) + " " + baseFormAtt.getBaseForms().toString());
+//System.out.println ("  Word-s e " + word + " " + Constants.toString(flagsAtt) + " bf= " + baseFormAtt.getBaseForms().toString());
       return baseFormAtt.getBaseForms();
     }
     else if (successOnly) {
       return null;
     }
     else {
-//System.out.println ("Word 6 " + word + " " + Constants.toString(flagsAtt));
+//System.out.println ("  Word-s f " + word + " " + Constants.toString(flagsAtt));
       flagsAtt.setFlags (flagsAtt.getFlags() | UNKNOWN);
-//System.out.println ("Word 7 " + word + " " + Constants.toString(flagsAtt));
       baseFormAtt.addBaseForm (word.toLowerCase());
+//System.out.println ("  Word-s g " + word + " " + Constants.toString(flagsAtt) + " bf= " + baseFormAtt.getBaseForms().toString());
       return baseFormAtt.getBaseForms();
     }
-  }
-
-
-  private Set<String> try_word_without_hyphen (String word)
-  {
-    final Matcher m = HYPHEN_REGEX.matcher (word);
-    final StringBuffer sb = new StringBuffer();
-
-    while (m.find()) {
-//System.out.println ("A " + m.start() + " " + m.end() + " " + m.group());
-      m.appendReplacement (sb, separator (word, m.start(), m.end()));
-    }
-    m.appendTail (sb);
-//System.out.println ("B " + sb.toString());
-//    return suggest (sb.toString());
-    final Set<String> s = suggest (sb.toString());
-//System.out.println ("C " + s.toString());
-    return s;
   }
 
 
@@ -257,6 +233,17 @@ public class SuggestionFilter extends SukijaFilter {
     else {
       return "";
     }
+  }
+
+
+  /** Ovatko kaikki merkkijonon 's' kirjaimet isoja kirjaimia?
+   */
+  private boolean allUpperCase (String s)
+  {
+    for (int i = 0; i < s.length(); i++) {
+      if (!Character.isUpperCase (s.charAt(i))) return false;
+    }
+    return true;
   }
 
 

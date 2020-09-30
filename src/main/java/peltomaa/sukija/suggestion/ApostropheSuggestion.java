@@ -24,6 +24,8 @@ import org.puimula.libvoikko.Voikko;
 import peltomaa.sukija.attributes.VoikkoAttribute;
 
 
+/** Tunnistetaan sanat tyyppiä Mallory'lle tai ABC:n.
+ */
 public class ApostropheSuggestion extends Suggestion {
   /**
    * Muodostin
@@ -33,25 +35,26 @@ public class ApostropheSuggestion extends Suggestion {
   public ApostropheSuggestion (Voikko voikko)
   {
     super (voikko);
-    ch = '\'';
+    separators = new char[1];
+    separators[0] = '\'';
   }
 
 
   /**
    * Muodostin
    *
-   * @param voikko  Voikko.
-   * @param ch      Merkki, jota käytetään erottimena heittomerkin asemesta.
+   * @param voikko     Voikko.
+   * @param separators Merkit, joita käytetään erottimena heittomerkin asemesta.
    */
-  public ApostropheSuggestion (Voikko voikko, char ch)
+  public ApostropheSuggestion (Voikko voikko, String separators)
   {
     super (voikko);
-    this.ch = ch;
+    this.separators = separators.toCharArray();
   }
 
 
   /**
-  Jos sanassa ei ole heittomerkkiä, palautetaan {@code false}.
+  Jos sanassa ei ole heittomerkkiä tai muu erotin, palautetaan {@code false}.
   Jos sanassa on heittomerkki, palautetaan {@code true}
   ja asetetaan perusmuoto tai perusmuodot seuraavasti:<p>
 
@@ -70,7 +73,7 @@ public class ApostropheSuggestion extends Suggestion {
   @Override
   public boolean suggest (String word, VoikkoAttribute voikkoAtt)
   {
-    final int n = word.lastIndexOf (ch);
+    final int n = lastIndexOf (word);
     if (n == -1) return false;
 
     final String START = word.substring(0,n); // Sanan alku viimeiseen heittomerkkiin asti.
@@ -87,6 +90,7 @@ public class ApostropheSuggestion extends Suggestion {
     else if (analyze (START, voikkoAtt)) {
       return true;
     }
+
     return true;
   }
 
@@ -98,7 +102,18 @@ public class ApostropheSuggestion extends Suggestion {
   }
 
 
-  private final char ch;
+  private int lastIndexOf (String word)
+  {
+    int n = -1;
+    for (int i = 0; i < separators.length; i++) {
+      final int m = word.lastIndexOf (separators[i]);
+      if (m > n) n = m;
+    }
+    return n;
+  }
+
+
+  private final char[] separators;
   private StringBuilder sb = new StringBuilder (500);
   private HashSet<String> extraBaseForms = new HashSet<String>();
 }

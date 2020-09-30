@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2015-2016 Hannu Väisänen
+Copyright (©) 2015-2016, 2020 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -35,6 +35,7 @@ import org.puimula.libvoikko.*;
 import peltomaa.sukija.suggestion.Suggestion;
 import peltomaa.sukija.suggestion.SuggestionUtils;
 import peltomaa.sukija.attributes.VoikkoAttribute;
+import peltomaa.sukija.util.AnalysisUtils;
 import peltomaa.sukija.util.SukijaFilter;
 import peltomaa.sukija.voikko.VoikkoUtils;
 
@@ -85,7 +86,7 @@ public final class KeepFilter extends SukijaFilter {
 //System.out.println ("KeepFilterB " + word);
       }
 //System.out.println ("KeepFilter5 " + word);
-      if (SuggestionUtils.analyze (suggestion, word, voikkoAtt, baseFormAtt, from, to)) {
+      if (AnalyzeUtils.analyze (suggestion, word, voikkoAtt, baseFormAtt, from, to)) {
 //for (String s : tmp) System.out.println ("KeepFilter6 " + word + " " + s);
         baseForms.addAll (tmp);
         return baseForms.iterator();

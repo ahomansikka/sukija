@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2009-2011, 2017 Hannu Väisänen
+Copyright (©) 2009-2011, 2017, 2020 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -16,6 +16,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 package peltomaa.sukija.util;
+
+import java.util.ArrayList;
+import java.util.function.BiFunction;
+import java.util.HashSet;
+import java.util.List;
+import java.util.regex.Pattern;
+import java.util.Set;
 
 
 /** String utilities.<p>
@@ -209,6 +216,27 @@ public class StringUtil {
     s.delete (n, s.length());
   }
 
+  public static final String erase (CharSequence s, char from, char to)
+  {
+    StringBuilder sb = new StringBuilder();
+
+    int i = 0;
+
+    while (i < s.length()) {
+      if (s.charAt(i) == from) {
+        while ((i < s.length()) && (s.charAt(i) != to)) {
+          i++;
+        }
+      }
+      else if (s.charAt(i) != to) {
+        sb.append (s.charAt(i));
+      }
+      i++;
+    }
+    return sb.toString();
+  }
+
+
 
   /**
    * Return the first occurence of {@code c} in {@code s.subSequence(start,end)}
@@ -372,6 +400,108 @@ public class StringUtil {
       return (u + v);
     }
   }
+
+
+// https://stackoverflow.com/questions/3656762/n-gram-generation-from-a-sentence
+
+  /** Palautetaan kaikki mahdolliset ngrammit.<p>
+
+      Esimerkiksi neljästä alkioista {@code yksi kaksi kolme neljä } tulee
+      {@code yksi
+kaksi
+kolme
+neljä
+yksikaksi
+kaksikolme
+kolmeneljä
+yksikaksikolme
+kaksikolmeneljä
+yksikaksikolmeneljä}
+
+   */
+  public static List<String> ngram (String[] s)
+  {
+    List<String> list = ngram (s, 1);
+    for (int i = 2; i <= s.length; i++) {
+      list.addAll (ngram (s, i));
+    }
+    return list;
+  }
+
+
+  /** Palautetaan kaikki ngrammit, joitten pituus on n.
+   */
+  public static List<String> ngram (String[] s, int n)
+  {
+    List<String> list = new ArrayList<String>();
+
+    for (int i = 0; i < s.length-n+1; i++) {
+      StringBuilder sb = new StringBuilder();
+      for (int k = 0; k < n; k++) {
+        sb.append (s[i+k]);
+      }
+      list.add (sb.toString());
+    }
+    return list;
+  }
+
+
+  public static List<String> ngram (String[] s, String separator, BiFunction<CharSequence,CharSequence,String> f)
+  {
+    List<String> list = ngram (s, 1);
+    for (int i = 2; i <= s.length; i++) {
+      list.addAll (ngram (s, i, separator, f));
+    }
+    return list;
+  }
+
+  public static List<String> ngram (String[] s, int n, String separator, BiFunction<CharSequence,CharSequence,String> f)
+  {
+    List<String> list = new ArrayList<String>();
+
+    for (int i = 0; i < s.length-n+1; i++) {
+      StringBuilder sb = new StringBuilder();
+      for (int k = 0; k < n; k++) {
+        if (k > 0) {
+          sb.append (f.apply (sb, s[i+k]));
+        }
+        sb.append (s[i+k]);
+      }
+      list.add (sb.toString());
+    }
+    return list;
+  }
+
+
+  public static Set<String> unique_ngram (String s, Pattern separator, BiFunction<CharSequence,CharSequence,String> f)
+  {
+    String[] u = separator.split (s);
+    Set<String> set = unique_ngram (u, 1, f);
+
+    for (int i = 2; i <= u.length; i++) {
+      set.addAll (unique_ngram (u, i, f));
+    }
+    return set;
+  }
+
+
+  public static Set<String> unique_ngram (String[] s, int n, BiFunction<CharSequence,CharSequence,String> f)
+  {
+    Set<String> set = new HashSet<String>();
+
+    for (int i = 0; i < s.length-n+1; i++) {
+      StringBuilder sb = new StringBuilder();
+      for (int k = 0; k < n; k++) {
+        if (k > 0) {
+          sb.append (f.apply (sb,s[i+k]));
+        }
+        sb.append (s[i+k]);
+      }
+      set.add (sb.toString());
+    }
+    return set;
+  }
+
 
 
 /*

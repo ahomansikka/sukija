@@ -6,6 +6,9 @@
 
 
 <xsd:complexType name = "ApostropheInput">
+  <xsd:sequence>
+    <xsd:element name = "charList" type = "xsd:string"/>
+  </xsd:sequence>
 </xsd:complexType>
 
 

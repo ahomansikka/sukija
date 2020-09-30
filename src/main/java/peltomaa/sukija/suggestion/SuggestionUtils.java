@@ -86,47 +86,27 @@ public final class SuggestionUtils {
   }
 
 
-  public static final boolean analyze (Voikko voikko, String word, VoikkoAttribute voikkoAtt,
-                                       BaseFormAttribute baseFormAtt, FlagsAttribute flagsAtt,
-                                       Suggestion[] suggestion, String from, String to)
-  {
-////System.out.println ("Analyze1 " + from + " " + to + " " + word);
-    boolean suggestionResult = getSuggestions (suggestion, word, voikkoAtt, baseFormAtt);
-
-    if (!suggestionResult) {
-      if (from.length() > 0) {
-////System.out.println ("Analyze2 " + from + " " + to + " " + word);
-        suggestionResult = getSuggestions (voikko, word, voikkoAtt, baseFormAtt, flagsAtt, suggestion, from, to); 
-      }
-    }
-
-////System.out.println ("AnalyzeÖ " + from + " " + to + " " + word + " " + suggestionResult);
-
-    return suggestionResult;
-  }
-
-
-  private static final boolean getSuggestions
+  public static final boolean getSuggestions
     (Voikko voikko, String word, VoikkoAttribute voikkoAtt,
      BaseFormAttribute baseFormAtt, FlagsAttribute flagsAtt,
      Suggestion[] suggestion, String from, String to)
   {
-////System.out.println ("Analyze3 " + from + " " + to + " " + word);
+//System.out.println ("Analyze3 " + from + " " + to + " " + word);
 
     CharCombinator charCombinator = new CharCombinator (word, from, to);
     Iterator<String> iterator = charCombinator.iterator();
 
     while (iterator.hasNext()) {
       final String s = iterator.next();
-
       if (AnalysisUtils.analyze (voikko, s, voikkoAtt, baseFormAtt, flagsAtt)) {
-////System.out.println ("Analyze4 " + from + " " + to + " " + word + " " + s);
+//System.out.println ("Analyze4 " + from + " " + to + " " + word + " " + s);
         return true;
       }
       if (getSuggestions (suggestion, s, voikkoAtt, baseFormAtt)) {
-////System.out.println ("Analyze9 " + from + " " + to + " " + word + " " + s);
+//System.out.println ("Analyze9 " + from + " " + to + " " + word + " " + s);
         return true;
       }
+//System.out.println ("AnalyzeA " + from + " " + to + " " + word + " " + s);
     }
     return false;
   }

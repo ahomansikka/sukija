@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2016 Hannu Väisänen
+Copyright (©) 2016, 2020 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -45,5 +45,25 @@ public final class AnalysisUtils {
       return true;
     }
     return false;
+  }
+
+
+  public static final boolean analyze (Voikko voikko, String word, VoikkoAttribute voikkoAtt,
+                                       BaseFormAttribute baseFormAtt, FlagsAttribute flagsAtt,
+                                       Suggestion[] suggestion, String from, String to)
+  {
+////System.out.println ("Analyze1 " + from + " " + to + " " + word);
+    boolean suggestionResult = SuggestionUtils.getSuggestions (suggestion, word, voikkoAtt, baseFormAtt);
+
+    if (!suggestionResult) {
+      if (from.length() > 0) {
+////System.out.println ("Analyze2 " + from + " " + to + " " + word);
+        suggestionResult = SuggestionUtils.getSuggestions (voikko, word, voikkoAtt, baseFormAtt, flagsAtt, suggestion, from, to); 
+      }
+    }
+
+////System.out.println ("AnalyzeÖ " + from + " " + to + " " + word + " " + suggestionResult);
+
+    return suggestionResult;
   }
 }

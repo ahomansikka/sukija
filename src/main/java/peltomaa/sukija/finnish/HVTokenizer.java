@@ -29,6 +29,7 @@ import org.apache.lucene.analysis.tokenattributes.FlagsAttribute;
 import org.apache.lucene.analysis.tokenattributes.OffsetAttribute;
 import org.apache.lucene.analysis.tokenattributes.PositionIncrementAttribute;
 import org.apache.lucene.util.AttributeFactory;
+import peltomaa.sukija.attributes.OriginalWordAttribute;
 
 
 /**
@@ -84,6 +85,8 @@ public final class HVTokenizer extends Tokenizer {
     final int start = scanner.yychar();
     offsetAtt.setOffset (correctOffset(start), correctOffset(start+termAtt.length()));
 
+    originalWordAtt.setOriginalWord (termAtt.toString());
+
     if (LOG.isDebugEnabled()) {
       LOG.debug ("HVTokenizer: " + termAtt.toString() + " " + offsetAtt.startOffset() + " " + offsetAtt.endOffset());
     }
@@ -125,4 +128,5 @@ public final class HVTokenizer extends Tokenizer {
   private final FlagsAttribute flagsAtt = addAttribute (FlagsAttribute.class);
   private final OffsetAttribute offsetAtt = addAttribute (OffsetAttribute.class);
   private final PositionIncrementAttribute posIncrAtt = addAttribute (PositionIncrementAttribute.class);
+  private final OriginalWordAttribute originalWordAtt = addAttribute (OriginalWordAttribute.class);
 }

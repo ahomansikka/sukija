@@ -68,8 +68,13 @@ public abstract class Suggestion {
 
   protected boolean analyze (String word, VoikkoAttribute voikkoAtt)
   {
-    List<Analysis> analysis = voikko.analyze (word);
+//    List<Analysis> analysis = voikko.analyze (word);
+    analysis = voikko.analyze (word);
     voikkoAtt.addAnalysis (analysis);
     return (analysis.size() > 0);
   }
+
+  private List<Analysis> analysis;
+
+  public List<Analysis> getAnalysis() {return analysis;}
 }

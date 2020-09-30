@@ -117,8 +117,8 @@ public class CharCombinator implements Iterator<String> {
   }
 
 
-  public static final String FROM = "bdgkptvwoöaaååää";
-  public static final String TO   = "ptkgbdwvöoåäaäaå";
+//  public static final String FROM = "bdgkptvwoöaaååää";
+//  public static final String TO   = "ptkgbdwvöoåäaäaå";
 
 
   private void setMap (String from, String to)

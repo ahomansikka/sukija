@@ -134,7 +134,8 @@ public class SuggestionParser {
       switch (s.get(i).getClass().getName()) {
         case "peltomaa.sukija.schema.ApostropheInput":
           {
-            v[i] = new ApostropheSuggestion (voikko);
+            final ApostropheInput input = (ApostropheInput)s.get(i);
+            v[i] = new ApostropheSuggestion (voikko, input.getCharList());
           }
           break;
         case "peltomaa.sukija.schema.CharInput":

@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2015, 2017 Hannu Väisänen
+Copyright (©) 2015, 2017, 2020 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -92,7 +92,7 @@ public class VoikkoTokenizer extends Tokenizer {
           posIncrAtt.setPositionIncrement (1);
           offsetAtt.setOffset (correctOffset(t.getStartOffset()), correctOffset(t.getEndOffset()));
           if (word.indexOf("-") >= 0) {
-            flagsAtt.setFlags (flagsAtt.getFlags() | Constants.HYPHEN);
+            flagsAtt.setFlags (flagsAtt.getFlags() | Constants.COMPOUND_WORD);
           }
           else {
             flagsAtt.setFlags (flagsAtt.getFlags() | Constants.WORD);

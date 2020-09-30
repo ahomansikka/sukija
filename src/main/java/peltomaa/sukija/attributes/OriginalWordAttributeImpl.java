@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2015 Hannu Väisänen
+Copyright (©) 2015, 2020 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -41,6 +41,11 @@ public class OriginalWordAttributeImpl extends AttributeImpl implements Original
     originalWord = termAtt.toString(); //new String (termAtt.buffer(), 0, termAtt.length());
   }
 
+  @Override
+  public void setOriginalWord (String originalWord)
+  {
+    this.originalWord = originalWord;
+  }
 
   @Override
   public void clear()

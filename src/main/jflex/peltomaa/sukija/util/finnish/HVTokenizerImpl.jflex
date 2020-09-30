@@ -17,9 +17,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 package peltomaa.sukija.finnish;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import peltomaa.sukija.util.Constants;
+
 %%
 %class HVTokenizerImpl
 %unicode
@@ -56,23 +59,29 @@ public final void getText (org.apache.lucene.analysis.tokenattributes.CharTermAt
 // À-ÖØ-öø-ÿ:     C1 Controls and Latin-1 Supplement (\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u00FF)
 // \u0100-\u017F: Latin Extended-A
 
-ALPHANUM = [0-9A-Za-z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u00FF)]+
+ALPHANUM = [0-9A-Za-z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u00FF]+
+
+// Abc:n, Bordeaux'iin, ev.-lut.
+SEPARATOR = ([:']|".-")
+
+WORD = {ALPHANUM}({SEPARATOR}{ALPHANUM})*
+
+// Linja-auto.
+COMPOUND_WORD = {WORD}("-"{WORD})+
 
 WHITESPACE = \r\n | [ \r\n\t\f]
 DIGIT = [0-9]+
 NUM = {DIGIT}([-.,:_/]+{DIGIT})*(:{ALPHANUM})?
-HYPHEN = ("\"-"|"''-"|"\\-"|"'-"|"--"|".-"|"-")
-PUNCT = [.:']
 
-W1 = ({ALPHANUM})({PUNCT}({ALPHANUM}))*
+LATEX_COMPOUND_WORD = ("\"-"|"''-"|"'-"|"--")  // Eri tapoja kirjoittaa yhdysviiva LaTeXissa.
+LATEX_HYPHEN = "\\-"   // Ta\-vu\-tus.
 
-W2 = {W1}(("["{ALPHANUM}"]")({W1})*)+ | (("["{ALPHANUM}"]"){W1})+("["{ALPHANUM}"]")?
-
+X0 = "["{ALPHANUM}"]"
+X1 = ({LATEX_COMPOUND_WORD}|{SEPARATOR}|{LATEX_HYPHEN}|"-")
+XX = ({X0}|{WORD})(({X0}|{WORD}|{X1})*({X0}|{WORD}))?
 
 LPAR = "{"[0-9a-zA-Z]+"}"
 
-V1 = {W1}({HYPHEN}{W1})+
-V2 = {W2}({HYPHEN}{W2})+
 
 %%
 
@@ -101,32 +110,35 @@ V2 = {W2}({HYPHEN}{W2})+
 }
 
 
-{W1} {
+// Tavallinen sana, jolle ei tarvitse tehdä mitään jälkeenpäin.
+{WORD} {
   if (LOG.isDebugEnabled()) LOG.debug ("W1 [" + yytext() + "]");
+//  System.out.println ("W1 " +  yytext());
   return Constants.WORD;
 }
 
-
-{W2} {
+{COMPOUND_WORD} {
   if (LOG.isDebugEnabled()) LOG.debug ("W2 [" + yytext() + "]");
-  return Constants.BRACKET;
+//  System.out.println ("W2 " +  yytext());
+  return Constants.COMPOUND_WORD;
 }
 
 
-{V1} {
-  if (LOG.isDebugEnabled()) LOG.debug ("V1 [" + yytext() + "]");
-  if (yytext().indexOf ("\\-") > 0)
-    return (Constants.HYPHEN + Constants.DASH);
-  else
-    return Constants.HYPHEN;
-}
+// Sana, jota pitää käsitellä jälkeenpäin.
+{XX} {
+  if (LOG.isDebugEnabled()) LOG.debug ("XX [" + yytext() + "]");
+  int what = 0;
+  if (yytext().indexOf ('[') > -1) what += Constants.BRACKET;
+  if (Constants.RE_LATEX_HYPHEN.matcher(yytext()).find()) what += Constants.LATEX_HYPHEN;
+  if (Constants.RE_LATEX_COMPOUND_WORD.matcher(yytext()).find()) what += Constants.LATEX_COMPOUND_WORD;
+/*
+  System.out.println ("XX " + yytext() + " " + what + " " + (yytext().indexOf('[') > -1)
+                      + " " + Constants.RE_LATEX_HYPHEN.matcher(yytext()).find()
+                      + " " + Constants.RE_LATEX_COMPOUND_WORD.matcher(yytext()).find()
+  );
+*/
 
-{V2} {
-  if (LOG.isDebugEnabled()) LOG.debug ("V2 [" + yytext() + "]");
-   if (yytext().indexOf ("\\-") > 0)
-     return (Constants.HYPHEN + Constants.BRACKET +  Constants.DASH);
-   else
-     return (Constants.HYPHEN + Constants.BRACKET);
+  return what;
 }
 
 

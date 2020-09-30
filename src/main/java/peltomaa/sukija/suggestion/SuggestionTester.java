@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2013-2014, 2016-2018 Hannu Väisänen
+Copyright (©) 2013-2014, 2016-2018, 2020 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -26,6 +26,11 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.Vector;
 
+import org.apache.lucene.analysis.core.FlattenGraphFilter;
+import org.apache.lucene.analysis.miscellaneous.RemoveDuplicatesTokenFilter;
+import org.apache.lucene.analysis.miscellaneous.WordDelimiterFilter;
+import org.apache.lucene.analysis.miscellaneous.WordDelimiterGraphFilter;
+import org.apache.lucene.analysis.miscellaneous.WordDelimiterIterator;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.apache.lucene.analysis.tokenattributes.FlagsAttribute;
 import org.apache.lucene.analysis.tokenattributes.FlagsAttributeImpl;
@@ -38,6 +43,7 @@ import peltomaa.sukija.attributes.OriginalWordAttribute;
 import peltomaa.sukija.attributes.VoikkoAttribute;
 import peltomaa.sukija.finnish.HVTokenizer;
 import peltomaa.sukija.util.Constants;
+import peltomaa.sukija.filters.*;
 import peltomaa.sukija.voikko.*;
 import org.puimula.libvoikko.Analysis;
 import org.puimula.libvoikko.Voikko;
@@ -58,18 +64,45 @@ public class SuggestionTester {
 
 //    t = new VoikkoFilter (t, voikko);
 
+    t = new HVTokenFilter (t);
+    t = new HVCompoundWordFilter (t);
+
+/*
+    if (useHyphenFilter) {
+      t = new HyphenFilter (t);
+    }
+
+    int configurationFlags = WordDelimiterGraphFilter.CATENATE_ALL +
+                             WordDelimiterGraphFilter.CATENATE_WORDS +
+                             WordDelimiterGraphFilter.GENERATE_WORD_PARTS +
+                             WordDelimiterGraphFilter.PRESERVE_ORIGINAL;
+*/
+//    t = new WordDelimiterFilter (t, configurationFlags, null);
+
+//    t = new WordDelimiterGraphFilter (t, configurationFlags, null);
+//    t = new FlattenGraphFilter (t);
+
+//    Antavat saman tuloksen kuin edellinen
+//    t = new WordDelimiterGraphFilter (t, true, WordDelimiterIterator.DEFAULT_WORD_DELIM_TABLE, configurationFlags, null);
+//    t = new RemoveDuplicatesTokenFilter (t);
+
     t = new SuggestionFilter (t, voikko, suggestionFile, false);
 
     CharTermAttribute termAtt = t.addAttribute (CharTermAttribute.class);
     BaseFormAttribute baseFormAtt = t.addAttribute (BaseFormAttribute.class);
     FlagsAttribute flagsAtt = t.addAttribute (FlagsAttribute.class);
     OriginalWordAttribute originalWordAtt = t.addAttribute (OriginalWordAttribute.class);
+    OffsetAttribute offsetAtt = t.addAttribute (OffsetAttribute.class);
+    PositionIncrementAttribute positionIncrAtt = t.addAttribute (PositionIncrementAttribute.class);
 
     try {
       t.reset();
       while (t.incrementToken()) {
         writer.write ("Sana: " + originalWordAtt.getOriginalWord() + " | " + termAtt.toString() + " | ");
         writer.write (Constants.toString(flagsAtt));
+//        writer.write (" " + offsetAtt.startOffset() + " " + offsetAtt.endOffset());
+//        writer.write (" " + positionIncrAtt.getPositionIncrement());
+//        writer.write (" " + baseFormAtt.getBaseForms());
         writer.write ("\n");
         writer.flush();
       }

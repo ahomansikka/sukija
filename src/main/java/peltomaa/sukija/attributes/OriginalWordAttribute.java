@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2015 Hannu Väisänen
+Copyright (©) 2015, 2020 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -33,4 +33,7 @@ public interface OriginalWordAttribute extends Attribute {
 
   /** Tallennetaan tiedostosta luettu sana. */
   public void setOriginalWord (CharTermAttribute termAtt);
+
+  /** Tallennetaan tiedostosta luettu sana. */
+  public void setOriginalWord (String originalWord);
 }
