@@ -60,7 +60,7 @@ public final void getText (org.apache.lucene.analysis.tokenattributes.CharTermAt
 // À-ÖØ-öø-ÿ:     C1 Controls and Latin-1 Supplement (\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u00FF)
 // \u0100-\u017F: Latin Extended-A
 
-ALPHANUM = [0-9A-Za-z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u00FF]+
+ALPHANUM = [0-9A-Za-z\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u00FF\u0100-\u017F]+
 
 // Linja-auto, abc:n, Bordeaux'iin, ev.-lut.
 SEPARATOR = ([-:']|".-")
