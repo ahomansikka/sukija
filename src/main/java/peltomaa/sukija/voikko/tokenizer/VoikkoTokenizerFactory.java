@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2015-2016 Hannu Väisänen
+Copyright (©) 2015-2016, 2021 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -27,7 +27,7 @@ import org.apache.lucene.analysis.util.ResourceLoader;
 import org.apache.lucene.analysis.util.ResourceLoaderAware;
 import org.apache.lucene.analysis.util.TokenizerFactory;
 import org.apache.lucene.util.AttributeFactory;
-import org.apache.solr.util.PropertiesUtil;
+import org.apache.solr.common. util.PropertiesUtil;
 import org.puimula.libvoikko.*;
 import peltomaa.sukija.voikko.VoikkoUtils;
 
