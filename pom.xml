@@ -69,22 +69,23 @@
       <artifactId>slf4j-api</artifactId>
       <version>1.7.24</version>
     </dependency>
+
     <dependency>
       <groupId>org.apache.solr</groupId>
       <artifactId>solr-core</artifactId>
-      <version>8.8.1</version>
+      <version>8.8.2</version>
     </dependency>
 
    <dependency>
       <groupId>org.apache.solr</groupId>
       <artifactId>solr-solrj</artifactId>
-      <version>8.8.1</version>
+      <version>8.8.2</version>
     </dependency>
 
    <dependency>
       <groupId>org.apache.lucene</groupId>
       <artifactId>lucene-core</artifactId>
-      <version>8.8.1</version>
+      <version>8.8.2</version>
     </dependency>
 
     <dependency>
