@@ -1,0 +1,25 @@
+<schema name="sukija" version="1.0">
+  <fields>
+    <field name="_version_" type="long" indexed="true" stored="true" multiValued="false"/>
+    <field name="id" type="string" indexed="true" stored="true" required="true" multiValued="false"/>
+    <field name="text" type="text" indexed="true" stored="true" termOffsets="true" termPositions="true" termVectors="true" multiValued="true"/>
+  </fields>
+  <uniqueKey>id</uniqueKey>
+  <types>
+    <fieldType name="long" class="solr.TrieLongField" precisionStep="0" positionIncrementGap="0"/>
+    <fieldType name="string" class="solr.StrField" sortMissingLast="true"/>
+    <fieldType name="text" class="solr.TextField" positionIncrementGap="1">
+      <analyzer type="index">
+        <tokenizer class="peltomaa.sukija.finnish.HVTokenizerFactory"/>
+        <filter class="peltomaa.sukija.suggestion.SuggestionFilterFactory" suggestionFile = "suggestions.xml" successOnly = "false" language = "fi-x-sukija" path = "/usr/local/lib/voikko" libvoikkoPath = "/usr/local/lib/libvoikko.so" libraryPath = "/usr/local/lib"/>
+        <!-- Tämä luokka tietää, että å, ä ja ö eivät ole aksentillisia merkkejä. -->
+        <filter class="peltomaa.sukija.finnish.FinnishFoldingLowerCaseFilterFactory"/>
+      </analyzer>
+      <analyzer type="query">
+        <tokenizer class="solr.WhitespaceTokenizerFactory"/>
+        <filter class="peltomaa.sukija.finnish.FinnishFoldingLowerCaseFilterFactory"/>
+        <filter class="solr.SynonymGraphFilterFactory" synonyms = "synonyms.txt" ignoreCase = "true" expand = "true"/>
+      </analyzer>
+    </fieldType>
+  </types>
+</schema>
