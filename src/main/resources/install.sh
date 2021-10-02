@@ -18,7 +18,7 @@ cp -r conf/* /var/solr/data/sukija/conf/
 cp $HOME/.m2/repository/net/java/dev/jna/jna/4.2.2/jna-4.2.2.jar /var/solr/data/sukija/lib/
 cp $HOME/.m2/repository/org/puimula/voikko/libvoikko/4.1.1/libvoikko-4.1.1.jar /var/solr/data/sukija/lib/
 cp $HOME/.m2/repository/peltomaa/sukija/sukija/2.2.26/sukija-2.2.26.jar /var/solr/data/sukija/lib/
-cp $HOME/.m2/repository/org/ahocorasick/ahocorasick/0.4.0/ahocorasick-0.4.0.jar /var/solr/data/sukija/lib/
+cp $HOME/.m2/repository/org/ahocorasick/ahocorasick/0.6.3/ahocorasick-0.6.3.jar /var/solr/data/sukija/lib/
 
 # Nämä tarvitaan vain, jos käyttää oikeinkirjoituksen korjausehdotuksia.
 cp $HOME/.m2/repository/javax/xml/bind/jaxb-api/2.4.0-b180725.0427/jaxb-api-2.4.0-b180725.0427.jar /var/solr/data/sukija/lib/

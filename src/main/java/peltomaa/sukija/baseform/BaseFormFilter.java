@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2015-2016 Hannu Väisänen
+Copyright (©) 2015-2016, 2021 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -31,8 +31,7 @@ import org.puimula.libvoikko.*;
 import peltomaa.sukija.attributes.BaseFormAttribute;
 import peltomaa.sukija.util.Constants;
 import peltomaa.sukija.util.SukijaFilter;
-import peltomaa.sukija.voikko.VoikkoUtils;
-
+import peltomaa.sukija.suggestion.ahocorasick.AhoCorasickCorrector;
 
 /**
  * Erotetaan perusmuodot. Kaikki muut Voikon attribuutit häviävät.
@@ -61,7 +60,7 @@ public final class BaseFormFilter extends SukijaFilter {
       flagsAtt.setFlags (flagsAtt.getFlags() | Constants.UNKNOWN);
     }
     else {
-      baseFormAtt.addBaseForms (VoikkoUtils.getBaseForms(analysis));
+      baseFormAtt.addBaseForms (AhoCorasickCorrector.getCorrections (analysis));
       flagsAtt.setFlags (flagsAtt.getFlags() | Constants.FOUND);
 //System.out.println (analysis.toString());
     }

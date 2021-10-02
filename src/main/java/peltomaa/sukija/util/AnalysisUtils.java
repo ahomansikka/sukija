@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2016, 2020 Hannu Väisänen
+Copyright (©) 2016, 2020-2021 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -27,7 +27,7 @@ import peltomaa.sukija.util.CharCombinator;
 import peltomaa.sukija.util.Constants;
 import peltomaa.sukija.suggestion.Suggestion;
 import peltomaa.sukija.suggestion.SuggestionUtils;
-import peltomaa.sukija.voikko.VoikkoUtils;
+import peltomaa.sukija.suggestion.ahocorasick.AhoCorasickCorrector;
 
 
 public final class AnalysisUtils {
@@ -41,7 +41,7 @@ public final class AnalysisUtils {
     if (list.size() > 0) {
 //      flagsAtt.setFlags (flagsAtt.getFlags() | Constants.FOUND);
       voikkoAtt.setAnalysis (list);
-      baseFormAtt.addBaseForms (VoikkoUtils.getBaseForms (list));
+      baseFormAtt.addBaseForms (AhoCorasickCorrector.getCorrections (list));
       return true;
     }
     return false;
@@ -58,7 +58,7 @@ public final class AnalysisUtils {
     if (!suggestionResult) {
       if (from.length() > 0) {
 ////System.out.println ("Analyze2 " + from + " " + to + " " + word);
-        suggestionResult = SuggestionUtils.getSuggestions (voikko, word, voikkoAtt, baseFormAtt, flagsAtt, suggestion, from, to); 
+        suggestionResult = SuggestionUtils.getSuggestions (voikko, word, voikkoAtt, baseFormAtt, flagsAtt, suggestion, from, to);
       }
     }
 

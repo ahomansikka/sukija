@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2015-2016, 2020 Hannu Väisänen
+Copyright (©) 2015-2016, 2020-2021 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -37,7 +37,7 @@ import peltomaa.sukija.suggestion.SuggestionUtils;
 import peltomaa.sukija.attributes.VoikkoAttribute;
 import peltomaa.sukija.util.AnalysisUtils;
 import peltomaa.sukija.util.SukijaFilter;
-import peltomaa.sukija.voikko.VoikkoUtils;
+import peltomaa.sukija.suggestion.ahocorasick.AhoCorasickCorrector;
 
 
 public final class KeepFilter extends SukijaFilter {
@@ -60,40 +60,11 @@ public final class KeepFilter extends SukijaFilter {
 
     List<Analysis> list = voikko.analyze (word);
     if (list.size() > 0) {
-      if (copyIf (VoikkoUtils.getBaseForms(list), baseForms)) {
+      if (copyIf (AhoCorasickCorrector.getCorrections (list), baseForms)) {
         return baseForms.iterator();
       }
     }
 
-/*
-//System.out.println ("KeepFilter0 " + word);
-
-    Set<String> set = VoikkoUtils.AconvertToBaseForms (voikko, word);
-    if (set != null) {
-      if (copyIf (set, baseForms)) {
-//System.out.println ("KeepFilter1 " + word);
-        return baseForms.iterator();
-      }
-    }
-    else {
-//System.out.println ("KeepFilterA " + word);
-      if (VoikkoUtils.panalyze (voikko, word, tmp, from, to)) {
-//System.out.println ("KeepFilter3 " + word + " " + tmp.toString());
-        if (copyIf (tmp, baseForms)) {
-//System.out.println ("KeepFilter4 " + word + " " + baseForms.toString());
-          return baseForms.iterator();
-        }
-//System.out.println ("KeepFilterB " + word);
-      }
-//System.out.println ("KeepFilter5 " + word);
-      if (AnalyzeUtils.analyze (suggestion, word, voikkoAtt, baseFormAtt, from, to)) {
-//for (String s : tmp) System.out.println ("KeepFilter6 " + word + " " + s);
-        baseForms.addAll (tmp);
-        return baseForms.iterator();
-      }
-    }
-//System.out.println ("KeepFilter7 " + word);
-*/
     return null;
   }
 
@@ -109,7 +80,6 @@ public final class KeepFilter extends SukijaFilter {
         boolean p = SuggestionUtils.getSuggestions (suggestion, s, voikkoAtt, baseFormAtt);
         if (p) {
           to.addAll (baseFormAtt.getBaseForms());
-//System.out.println ("VoikkoUtils " + s + " " + p.toString());
         }
       }
     }

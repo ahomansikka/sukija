@@ -103,7 +103,7 @@ public class CompoundWordEndSuggestion extends Suggestion {
           if (found) {
             voikkoAtt.addAnalysis (list);
 //System.out.println ("CompoundWordEndSuggestion5 " + word + " " + token.getFragment()
-//                    + " " + VoikkoUtils.getBaseForms(voikkoAtt.getAnalysis()) + " " + extraBaseForms.toString());
+//                    + " " + extraBaseForms.toString());
             return true;
           }
         }

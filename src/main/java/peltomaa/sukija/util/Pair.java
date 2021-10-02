@@ -37,7 +37,13 @@ public class Pair<T, U> {
     this.second = second;
   }
 
-
+/*
+  public Pair()
+  {
+    this.first = null;
+    this.second = null;
+  }
+*/
   /**
    * Convert an array of objects to a vector of pairs.<p>
    *

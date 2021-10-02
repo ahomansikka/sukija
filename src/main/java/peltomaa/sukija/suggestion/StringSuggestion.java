@@ -20,6 +20,8 @@ package peltomaa.sukija.suggestion;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.ahocorasick.interval.*;
 import org.ahocorasick.trie.*;
 import org.ahocorasick.trie.handler.*;
@@ -46,7 +48,7 @@ public class StringSuggestion extends Suggestion {
   @Override
   public boolean suggest (String word, VoikkoAttribute voikkoAtt)
   {
-//System.out.println ("Bing Bong " + word);
+if (LOG.isDebugEnabled()) LOG.debug ("String1 " + word);
     newWords.clear();
     sb.delete (0, sb.length());
     boolean hasToken = false;
@@ -55,7 +57,7 @@ public class StringSuggestion extends Suggestion {
       if (token.isMatch()) {
         final String replacement = map.get (token.getFragment());
 //        sb.append ("{" + replacement + "}");
-//System.out.println (token.getFragment() + " " + word.replace(token.getFragment(), replacement) + " " + sb.toString() + " X");
+if (LOG.isDebugEnabled()) LOG.debug ("String2 " + token.getFragment() + " " + word.replace(token.getFragment(), replacement) + " " + sb.toString() + " X");
         sb.append (replacement);
         newWords.add (word.replace(token.getFragment(), replacement));
         hasToken = true;
@@ -64,12 +66,12 @@ public class StringSuggestion extends Suggestion {
 //        sb.append ("[" + token.getFragment() + "]");
         sb.append (token.getFragment());
       }
-//      System.out.println (word + " " + sb.toString());
+if (LOG.isDebugEnabled()) LOG.debug ("String3 " + word + " " + sb.toString());
     }
     newWords.add (sb.toString());
 
     if (hasToken) {
-//      System.out.println (newWords.toString());
+if (LOG.isDebugEnabled()) LOG.debug ("String4 "  + newWords.toString());
       boolean found = false;
       for (String s : newWords) {
         if (analyze (s, voikkoAtt)) {
@@ -77,8 +79,7 @@ public class StringSuggestion extends Suggestion {
         }
       }
       if (found) {
-//        System.out.println ("SUG " + word + " " + sb.toString() + " "
-//                            + VoikkoUtils.getBaseForms(voikkoAtt.getAnalysis()));
+if (LOG.isDebugEnabled()) LOG.debug ("String5 " + word + " " + sb.toString());
         return true;
       }
     }
@@ -90,4 +91,5 @@ public class StringSuggestion extends Suggestion {
   private Map<String,String> map;
   private Trie trie;
   private Set<String> newWords = new HashSet<String>();
+  private static final Logger LOG = LoggerFactory.getLogger (SuggestionUtils.class);
 }

@@ -65,7 +65,7 @@ public abstract class HVTokenFilterBase extends TokenFilter {
         current = captureState();
       }
       // Return original token.
-//System.out.println ("Token2   " + termAtt.toString() + " " + Constants.toString(flagsAtt) + " " + originalWordAtt.getOriginalWord() + " " + tokens.size());
+//System.out.println ("TokenB   " + termAtt.toString() + " " + Constants.toString(flagsAtt) + " " + originalWordAtt.getOriginalWord() + " " + tokens.size());
       return true;
     }
     else {
@@ -86,9 +86,9 @@ public abstract class HVTokenFilterBase extends TokenFilter {
 
 
   protected class NewToken {
-    public final String text;
+    public final String text;  // Tämä on CharSequence CompoundWordTokenFilterBase'ssa.
     public final int startOffset, endOffset;  // Alkuperäisen, muuttamattoman sanan alku- ja loppukohta.
-    public final int flagsAttributeValues;
+    public final int flagsAttributeValues;  // Tätä ei ole CompoundWordTokenFilterBase'ssa.
 
     public NewToken (String text, int flagsAttributeValues)
     {

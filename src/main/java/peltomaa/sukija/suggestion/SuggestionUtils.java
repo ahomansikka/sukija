@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2015-2016, 2018 Hannu Väisänen
+Copyright (©) 2015-2016, 2018, 2021 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -26,13 +26,15 @@ import java.util.Set;
 import java.util.Vector;
 import org.apache.lucene.analysis.tokenattributes.FlagsAttribute;
 import org.apache.lucene.analysis.CharArraySet;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.puimula.libvoikko.*;
 import peltomaa.sukija.attributes.BaseFormAttribute;
 import peltomaa.sukija.attributes.VoikkoAttribute;
 import peltomaa.sukija.util.AnalysisUtils;
 import peltomaa.sukija.util.CharCombinator;
 import peltomaa.sukija.util.Constants;
-import peltomaa.sukija.voikko.VoikkoUtils;
+import peltomaa.sukija.suggestion.ahocorasick.AhoCorasickCorrector;
 
 
 public final class SuggestionUtils {
@@ -44,9 +46,9 @@ public final class SuggestionUtils {
   {
     if (suggestion == null) throw new RuntimeException ("suggestion == null");
     for (int i = 0; i < suggestion.length; i++) {
-//System.out.println ("Analyze5 " + word + " " + suggestion[i].getClass().getName());
+if (LOG.isDebugEnabled()) LOG.debug ("Analyze1 " + word + " " + suggestion[i].getClass().getName());
       if (suggestion[i].suggest (word, voikkoAtt)) {
-//System.out.println ("Analyze6 " + word);
+if (LOG.isDebugEnabled()) LOG.debug ("Analyze2 " + word);
         baseFormAtt.clear();
         Set<String> BF = suggestion[i].getExtraBaseForms();
         if (BF != null) {
@@ -54,7 +56,7 @@ public final class SuggestionUtils {
             baseFormAtt.addBaseForm (s.toLowerCase());
           }                                
         }                                
-        baseFormAtt.addBaseForms (VoikkoUtils.getBaseForms (voikkoAtt.getAnalysis()));
+        baseFormAtt.addBaseForms (AhoCorasickCorrector.getCorrections (voikkoAtt.getAnalysis()));
         return true;
       }
     }
@@ -67,9 +69,9 @@ public final class SuggestionUtils {
   {
     if (suggestion == null) throw new RuntimeException ("suggestion == null");
     for (int i = 0; i < suggestion.length; i++) {
-//System.out.println ("Analyze5 " + word + " " + suggestion[i].getClass().getName());
+if (LOG.isDebugEnabled()) LOG.debug ("Analyze3 " + word + " " + suggestion[i].getClass().getName());
       if (suggestion[i].suggest (word, voikkoAtt)) {
-//System.out.println ("Analyze6 " + word);
+if (LOG.isDebugEnabled()) LOG.debug ("Analyze4 " + word);
         baseForms.clear();
         Set<String> BF = suggestion[i].getExtraBaseForms();
         if (BF != null) {
@@ -77,8 +79,9 @@ public final class SuggestionUtils {
             baseForms.add (s.toLowerCase());
           }                                
         }                                
-        baseForms.addAll (VoikkoUtils.getBaseForms (voikkoAtt.getAnalysis()));
-//System.out.println ("Analyze7 " + word + " " + suggestion[i].getClass().getName() + "\n" + voikkoAtt.getAnalysis());
+        baseForms.addAll (AhoCorasickCorrector.getCorrections (voikkoAtt.getAnalysis()));
+
+if (LOG.isDebugEnabled()) LOG.debug ("Analyze5 " + word + " " + suggestion[i].getClass().getName() + "\n" + voikkoAtt.getAnalysis());
         return true;
       }
     }
@@ -91,7 +94,7 @@ public final class SuggestionUtils {
      BaseFormAttribute baseFormAtt, FlagsAttribute flagsAtt,
      Suggestion[] suggestion, String from, String to)
   {
-//System.out.println ("Analyze3 " + from + " " + to + " " + word);
+if (LOG.isDebugEnabled()) LOG.debug ("Analyze6 " + from + " " + to + " " + word);
 
     CharCombinator charCombinator = new CharCombinator (word, from, to);
     Iterator<String> iterator = charCombinator.iterator();
@@ -99,15 +102,17 @@ public final class SuggestionUtils {
     while (iterator.hasNext()) {
       final String s = iterator.next();
       if (AnalysisUtils.analyze (voikko, s, voikkoAtt, baseFormAtt, flagsAtt)) {
-//System.out.println ("Analyze4 " + from + " " + to + " " + word + " " + s);
+if (LOG.isDebugEnabled()) LOG.debug ("Analyze7 " + from + " " + to + " " + word + " " + s);
         return true;
       }
       if (getSuggestions (suggestion, s, voikkoAtt, baseFormAtt)) {
-//System.out.println ("Analyze9 " + from + " " + to + " " + word + " " + s);
+if (LOG.isDebugEnabled()) LOG.debug ("Analyze8 " + from + " " + to + " " + word + " " + s);
         return true;
       }
-//System.out.println ("AnalyzeA " + from + " " + to + " " + word + " " + s);
+if (LOG.isDebugEnabled()) LOG.debug ("Analyze9 " + from + " " + to + " " + word + " " + s);
     }
     return false;
   }
+
+  private static final Logger LOG = LoggerFactory.getLogger (SuggestionUtils.class);
 }

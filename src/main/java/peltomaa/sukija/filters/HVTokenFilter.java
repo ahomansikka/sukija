@@ -17,15 +17,22 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 package peltomaa.sukija.filters;
 
-import org.apache.lucene.analysis.TokenStream;
 import peltomaa.sukija.util.Constants;
+import peltomaa.sukija.attributes.OriginalWordAttribute;
+import org.apache.lucene.analysis.CharArraySet;
+import org.apache.lucene.analysis.compound.CompoundWordTokenFilterBase;
+import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
+import org.apache.lucene.analysis.tokenattributes.FlagsAttribute;
+import org.apache.lucene.analysis.tokenattributes.OffsetAttribute;
+import org.apache.lucene.analysis.tokenattributes.PositionIncrementAttribute;
+import org.apache.lucene.analysis.TokenStream;
 
 
-public class HVTokenFilter extends HVTokenFilterBase {
+public class HVTokenFilter extends CompoundWordTokenFilterBase {
 
   public HVTokenFilter (TokenStream input)
   {
-    super (input);
+    super (input, CharArraySet.EMPTY_SET, 2, 2, 999, false);
   }
 
 
@@ -34,12 +41,7 @@ public class HVTokenFilter extends HVTokenFilterBase {
   {
     if (Constants.hasFlag (flagsAtt, Constants.EXTRA)) {
       final String s = replace (termAtt.toString());
-      if (s.toString().indexOf('-') > -1) {
-        tokens.add (new NewToken (s, Constants.COMPOUND_WORD));
-      }
-      else {
-        tokens.add (new NewToken (s, Constants.WORD));
-      }
+      tokens.add (new CompoundToken (0, termAtt.toString().length()));
     }
   }
 
@@ -57,4 +59,10 @@ public class HVTokenFilter extends HVTokenFilterBase {
     } 
     return s;
   }
+
+  private final CharTermAttribute termAtt = addAttribute (CharTermAttribute.class);
+  private final FlagsAttribute flagsAtt = addAttribute (FlagsAttribute.class);
+  private final OffsetAttribute offsetAtt = addAttribute (OffsetAttribute.class);
+  private final OriginalWordAttribute originalWordAtt = addAttribute (OriginalWordAttribute.class);
+  private final PositionIncrementAttribute posIncAtt = addAttribute (PositionIncrementAttribute.class);
 }

@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2015-2016 Hannu Väisänen
+Copyright (©) 2015-2016, 2021 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -197,14 +197,12 @@ for (Analysis a : analysis) {
   System.out.println ("Voikko " + a.get("BASEFORM").toLowerCase());
 }
 */
-    return aho.getCorrections (analysis);
-/*
+
     Set<String> set = new HashSet<String>();
     for (Analysis a : analysis) {
       set.add (a.get("BASEFORM").toLowerCase());
     }
     return set;
-*/
   }
 
 
@@ -214,8 +212,6 @@ for (Analysis a : analysis) {
     analysis.put ("BASEFORM", baseForm);
     return analysis;
   }
-
-  private static final AhoCorasickCorrector aho = new AhoCorasickCorrector();
 
   private static final Map<String,String> caseMap = new HashMap<String,String>();
 

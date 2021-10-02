@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2013-2014, 2016-2018, 2020 Hannu Väisänen
+Copyright (©) 2013-2014, 2016-2018, 2020-2021 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -44,6 +44,7 @@ import peltomaa.sukija.attributes.VoikkoAttribute;
 import peltomaa.sukija.finnish.HVTokenizer;
 import peltomaa.sukija.util.Constants;
 import peltomaa.sukija.filters.*;
+import peltomaa.sukija.filters.ahocorasick.*;
 import peltomaa.sukija.voikko.*;
 import org.puimula.libvoikko.Analysis;
 import org.puimula.libvoikko.Voikko;
@@ -57,15 +58,16 @@ public class SuggestionTester {
 
   public static void analyze (Reader reader, Writer writer, Voikko voikko,
                               String suggestionFile, boolean stopOnSuccess,
-                              boolean useHyphenFilter, TokenStream t) throws IOException
+                              boolean printFlags, TokenStream t) throws IOException
   {
     List<Analysis> analysis = null;
     ((Tokenizer)t).setReader (reader);
 
-//    t = new VoikkoFilter (t, voikko);
+    t = new VoikkoFilter (t, voikko);
 
     t = new HVTokenFilter (t);
     t = new HVCompoundWordFilter (t);
+//    t = new FinnishCompoundWordTokenFilter (t);
 
 /*
     if (useHyphenFilter) {
@@ -98,11 +100,10 @@ public class SuggestionTester {
     try {
       t.reset();
       while (t.incrementToken()) {
-        writer.write ("Sana: " + originalWordAtt.getOriginalWord() + " | " + termAtt.toString() + " | ");
-        writer.write (Constants.toString(flagsAtt));
-//        writer.write (" " + offsetAtt.startOffset() + " " + offsetAtt.endOffset());
-//        writer.write (" " + positionIncrAtt.getPositionIncrement());
-//        writer.write (" " + baseFormAtt.getBaseForms());
+        writer.write ("Sana: " + originalWordAtt.getOriginalWord() + " | " + termAtt.toString());
+        if (printFlags) {
+          writer.write (" | " + Constants.toString(flagsAtt));
+        }
         writer.write ("\n");
         writer.flush();
       }

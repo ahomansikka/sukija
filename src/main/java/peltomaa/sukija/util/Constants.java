@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2015-2016, 2018, 2020 Hannu Väisänen
+Copyright (©) 2015-2016, 2018, 2020-2021 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -53,7 +53,11 @@ public final class Constants {
   /** Sana, jote ei ole tunnistettu. */
   public static final int UNKNOWN = 256;
 
-public static final int EXTRA = LATEX_COMPOUND_WORD + LATEX_HYPHEN + BRACKET;
+  /** Sana, josta yhdysviiva on otettu pois. */
+  public static final int XHYPHEN = 512;
+
+  /** EXTRA == LATEX_COMPOUND_WORD + LATEX_HYPHEN + BRACKET */
+  public static final int EXTRA = LATEX_COMPOUND_WORD + LATEX_HYPHEN + BRACKET;
 
 
   /** Sama kuin HVTokenizer.jflex-tiedostossa oleva LATEX_HYPHEN, vaikka näyttää erilaiselta.
@@ -109,6 +113,7 @@ public static final int EXTRA = LATEX_COMPOUND_WORD + LATEX_HYPHEN + BRACKET;
     sb.append (toString (flagsAtt, FOUND)).append (" ");
     sb.append (toString (flagsAtt, SUGGEST)).append (" ");
     sb.append (toString (flagsAtt, UNKNOWN)).append (" ");
+    sb.append (toString (flagsAtt, XHYPHEN)).append (" ");
     final String s = sb.toString();
     return s.substring (0, s.length()-1);
   }
@@ -142,5 +147,6 @@ public static final int EXTRA = LATEX_COMPOUND_WORD + LATEX_HYPHEN + BRACKET;
     flagMap.put (FOUND,   "FOUND");
     flagMap.put (SUGGEST, "SUGGEST");
     flagMap.put (UNKNOWN, "UNKNOWN");
+    flagMap.put (XHYPHEN, "XHYPHEN");
   }
 }

@@ -22,7 +22,16 @@ import java.util.regex.Pattern;
 import java.util.Set;
 import org.apache.lucene.analysis.TokenStream;
 import peltomaa.sukija.util.Constants;
+import peltomaa.sukija.util.NgramUtils;
 import peltomaa.sukija.util.StringUtil;
+import peltomaa.sukija.attributes.OriginalWordAttribute;
+import org.apache.lucene.analysis.CharArraySet;
+import org.apache.lucene.analysis.compound.CompoundWordTokenFilterBase;
+import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
+import org.apache.lucene.analysis.tokenattributes.FlagsAttribute;
+import org.apache.lucene.analysis.tokenattributes.OffsetAttribute;
+import org.apache.lucene.analysis.tokenattributes.PositionIncrementAttribute;
+
 
 
 /** Hajotetaan yhdysviivalliset yhdyssanat osiinsa ja yhdistetään
@@ -32,11 +41,14 @@ oikeinkirjoitussääntöjen mukaisesti ngrammeiksi. Esimerkiksi
 
 <p>{@code kuu-kausi => kuukausi, kuu, kausi}
 */
+//public class HVCompoundWordFilter extends CompoundWordTokenFilterBase {
+
 public class HVCompoundWordFilter extends HVTokenFilterBase {
 
   public HVCompoundWordFilter (TokenStream input)
   {
     super (input);
+//    super (input, CharArraySet.EMPTY_SET, 2, 2, 999, false);
   }
 
 
@@ -46,38 +58,31 @@ public class HVCompoundWordFilter extends HVTokenFilterBase {
    if (Constants.hasFlag (flagsAtt, Constants.COMPOUND_WORD)) {
       assert termAtt.toString().indexOf('-') > -1;
       assert termAtt.toString().indexOf(".-") == -1; // Ev.-lut. ei ole yhdyssana.
-      Set<String> ngrams = StringUtil.unique_ngram (termAtt.toString(), IS_COMPOUND_WORD, f);
+      Set<String> ngrams = NgramUtils.unique_ngram (termAtt.toString());
+//      for (String u : ngrams) {
+//System.out.println ("NewToken  " + termAtt.toString() + " " + u);
+//      }
       for (String u : ngrams) {
-        if (u.indexOf('-') > -1) {   // Jos ngrammi on yhdyssana...
+//System.out.println ("NewToken0 " + termAtt.toString() + " " + u);
+        if (u.indexOf('-') > -1) {   // Jos ngrammi on yhdyssana, esim. linja-auto-opisto => linja-auto, auto-opisto, linja, auto, opisto.
           if (termAtt.toString().compareTo(u) != 0) {  // Jos ei ole alkuperäinen sana...
+//System.out.println ("NewToken1 " +  u);
+//            tokens.add (new NewToken (u, Constants.COMPOUND_WORD | Constants.NGRAM));  // Lisätään se.
             tokens.add (new NewToken (u, Constants.COMPOUND_WORD));  // Lisätään se.
           }
         }
         else {
+//System.out.println ("NewToken2 " +  u);
+//          tokens.add (new NewToken (u, Constants.WORD | Constants.NGRAM));
           tokens.add (new NewToken (u, Constants.WORD));
         }
       }
     }
   }
 
-
-  /** Asetetaan tarvittaessa yhdysviiva ngrammien väliin: 'linja', 'auto' => 'linja-auto',
-   *  mutta: 'kuu', 'kausi' => 'kuukausi'.
-   */
-  private static class F implements BiFunction<CharSequence,CharSequence,String> {
-    @Override
-    public String apply (CharSequence u, CharSequence v)
-    {
-      if ((u.charAt(u.length()-1) == v.charAt(0)) && StringUtil.isVowel(v.charAt(0))) {
-        return "-";
-      }
-      else {
-        return "";
-      }
-    }
-  }
-
-
-  private static final F f = new F();
-  private static final Pattern IS_COMPOUND_WORD = Pattern.compile ("-");
+  private final CharTermAttribute termAtt = addAttribute (CharTermAttribute.class);
+  private final FlagsAttribute flagsAtt = addAttribute (FlagsAttribute.class);
+  private final OffsetAttribute offsetAtt = addAttribute (OffsetAttribute.class);
+  private final OriginalWordAttribute originalWordAtt = addAttribute (OriginalWordAttribute.class);
+  private final PositionIncrementAttribute posIncAtt = addAttribute (PositionIncrementAttribute.class);
 }
