@@ -46,7 +46,7 @@ tekstitiedostojen merkistökoodauksia, joita Apache Tika
       \verb=https://github.com/voikko/corevoikko=
       Uusimmat versiot.
 
-\item Solr 8.9.0:
+\item Solr 8.10.0:
       \verb=http://lucene.apache.org/solr/=
       Tässä dokumentissa Solr:sta käytetään nimeä solr-x.y.z,
       missä x.y.z tarkoittaa version numeroa.
@@ -411,11 +411,11 @@ Tällä komennolla ei ole parametreja.
 
 
 \bigskip \noindent \noindent
-Copyright © 2011--2018 Hannu Väisänen.
+Copyright © 2011--2021 Hannu Väisänen.
 \end{document}
 
 
-
+\begin{comment}
 \subsection*{Javalla kirjoitettu käyttöliittymä}
 
 Kun tiedostot on indeksoitu, niitä voidaan tutkia myös komennolla
@@ -423,13 +423,14 @@ Kun tiedostot on indeksoitu, niitä voidaan tutkia myös komennolla
 {\footnotesize
 \verb|java -jar $HOME/.m2/repository/peltomaa/sukija/sukija-ui/1.1/sukija-ui-1.1.jar|
 }
+\end{comment}
 
 \bigskip \noindent \noindent
-Copyright © 2011--2018 Hannu Väisänen.
+Copyright © 2011--2021 Hannu Väisänen.
 \end{document}
 
 
 % cp /home/hvaisane/Lataukset/solr/solr-x.y.z/example/example-DIH/solr/db/conf/admin-extra*.html ~/Lataukset/solr/solr-5.0.0/server/solr/sukija/conf/
 
 
-sudo rm -rf /var/solr/ /opt/solr* /etc/default/solr.in.sh /etc/init.d/solr /etc/rc*/*solr*
+% sudo rm -rf /var/solr/ /opt/solr* /etc/default/solr.in.sh /etc/init.d/solr /etc/rc*/*solr*
