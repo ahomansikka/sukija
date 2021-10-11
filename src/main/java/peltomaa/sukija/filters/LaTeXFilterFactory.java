@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2020 Hannu Väisänen
+Copyright (©) 2021 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -19,22 +19,29 @@ package peltomaa.sukija.filters;
 
 
 import java.util.Map;
+import org.apache.lucene.analysis.TokenFilter;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.util.TokenFilterFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
-public class HVTokenFilterFactory extends TokenFilterFactory {
+public class LaTeXFilterFactory extends TokenFilterFactory {
 
-  /** Tehdään uusi HVTokenFilterFactory.
+  /** Tehdään uusi LaTeXFilterFactory.
    */
-  public HVTokenFilterFactory (Map<String,String> args)
+  public LaTeXFilterFactory (Map<String,String> args)
   {
     super (args);
+    LOG.info ("LaTeXFilterFactory");
   }
 
   @Override
-  public HVTokenFilter create (TokenStream input)
+  public TokenFilter create (TokenStream input)
   {
-    return new HVTokenFilter (input);
+    return new LaTeXFilter (input);
   }
+
+  private static final Logger LOG = LoggerFactory.getLogger (LaTeXFilterFactory.class);
+  private static final long serialVersionUID = 1L;
 }

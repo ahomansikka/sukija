@@ -41,7 +41,6 @@ oikeinkirjoitussääntöjen mukaisesti ngrammeiksi. Esimerkiksi
 
 <p>{@code kuu-kausi => kuukausi, kuu, kausi}
 */
-//public class HVCompoundWordFilter extends CompoundWordTokenFilterBase {
 
 public class HVCompoundWordFilter extends HVTokenFilterBase {
 
@@ -55,18 +54,17 @@ public class HVCompoundWordFilter extends HVTokenFilterBase {
   @Override
   protected void decompose()
   {
-   if (Constants.hasFlag (flagsAtt, Constants.COMPOUND_WORD)) {
+//System.out.println ("NewToken0 " + termAtt.toString() + " " + Constants.toString(flagsAtt));
+   if (Constants.hasAnyFlag (flagsAtt, Constants.COMPOUND_WORD, Constants.LATEX_COMPOUND_WORD)) {
       assert termAtt.toString().indexOf('-') > -1;
       assert termAtt.toString().indexOf(".-") == -1; // Ev.-lut. ei ole yhdyssana.
       Set<String> ngrams = NgramUtils.unique_ngram (termAtt.toString());
-//      for (String u : ngrams) {
-//System.out.println ("NewToken  " + termAtt.toString() + " " + u);
-//      }
+//for (String u : ngrams) System.out.println ("NewToken1  " + termAtt.toString() + " " + u);
       for (String u : ngrams) {
-//System.out.println ("NewToken0 " + termAtt.toString() + " " + u);
+//System.out.println ("NewToken2 " + termAtt.toString() + " " + u);
         if (u.indexOf('-') > -1) {   // Jos ngrammi on yhdyssana, esim. linja-auto-opisto => linja-auto, auto-opisto, linja, auto, opisto.
           if (termAtt.toString().compareTo(u) != 0) {  // Jos ei ole alkuperäinen sana...
-//System.out.println ("NewToken1 " +  u);
+//System.out.println ("NewToken3 " +  u);
 //            tokens.add (new NewToken (u, Constants.COMPOUND_WORD | Constants.NGRAM));  // Lisätään se.
             tokens.add (new NewToken (u, Constants.COMPOUND_WORD));  // Lisätään se.
           }

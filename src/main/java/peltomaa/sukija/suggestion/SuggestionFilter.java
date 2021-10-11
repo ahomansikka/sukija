@@ -38,7 +38,7 @@ import peltomaa.sukija.voikko.VoikkoUtils;
 import peltomaa.sukija.suggestion.ahocorasick.AhoCorasickCorrector;
 
 
-public class SuggestionFilter extends SukijaFilter {
+public final class SuggestionFilter extends SukijaFilter {
 
   /**
    * @param input          Virta, jota suodatetaan.

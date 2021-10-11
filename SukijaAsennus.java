@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2015-2018, 2020 Hannu Väisänen
+Copyright (©) 2015-2018, 2020-2021 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -128,6 +128,9 @@ public class SukijaAsennus {
       append (sb, p, "ignoreNL", "sukija.voikko.tokenizer.ignoreNL", "true");
     }
     out.write (sb.toString());
+    if (TOKENIZER.compareTo ("peltomaa.sukija.finnish.HVTokenizerFactory") == 0) {
+      out.write ("        <filter class=\"peltomaa.sukija.filters.LaTeXFilterFactory\"/>\n");
+    }
     out.flush();
   }
 
@@ -363,6 +366,11 @@ public class SukijaAsennus {
     "    <fieldType name=\"text\" class=\"solr.TextField\" positionIncrementGap=\"1\">\n" +
     "      <analyzer type=\"index\">\n" +
     "        <tokenizer class=\"%s\"/>\n";
+
+
+  private static final String LATEX_FILTER =
+    "        <filter class=\"peltomaa.sukija.filters.LaTeXFilterFactory\"/>\n";
+
 
   private static final String FINNISH_FOLDING_LOWER_CASE_FILTER =
     "        <!-- Tämä luokka tietää, että å, ä ja ö eivät ole aksentillisia merkkejä. -->\n" +

@@ -34,7 +34,7 @@ public final class NgramUtils {
 
   public static Collection<String> ngram (Collection<String> result, String s)
   {
-    final String[] u = DASH.split (s);
+    final String[] u = SPLIT.split (s);
     for (int i = 1; i <= u.length; i++) {
       result.addAll (ngram (u, i));
     }
@@ -48,12 +48,11 @@ public final class NgramUtils {
       StringBuilder sb = new StringBuilder();
       for (int k = 0; k < n; k++) {
         if (k > 0) {
-        sb.append (f(sb,s[i+k]));
-//          sb.append ("-");
+          sb.append (f(sb,s[i+k]));
         }
         sb.append (s[i+k]);
       }
-//System.out.println ("unique_ngram " + n + " " + sb.toString());
+//System.out.println ("ngram " + n + " " + sb.toString());
       result.add (sb.toString());
     }
     return result;
@@ -62,7 +61,7 @@ public final class NgramUtils {
 
   public static List<String> ngram (String s)
   {
-    final String[] u = DASH.split (s);
+    final String[] u = SPLIT.split (s);
     final List<String> list = ngram (u, 1);
     for (int i = 2; i <= u.length; i++) {
       list.addAll (ngram (u, i));
@@ -79,12 +78,11 @@ public final class NgramUtils {
       StringBuilder sb = new StringBuilder();
       for (int k = 0; k < n; k++) {
         if (k > 0) {
-        sb.append (f(sb,s[i+k]));
-//          sb.append ("-");
+          sb.append (f(sb,s[i+k]));
         }
         sb.append (s[i+k]);
       }
-//System.out.println ("unique_ngram " + n + " " + sb.toString());
+//System.out.println ("ngram " + n + " " + sb.toString());
       list.add (sb.toString());
     }
     return list;
@@ -98,7 +96,7 @@ public final class NgramUtils {
   */
   public static Set<String> unique_ngram (String s)
   {
-    final String[] u = DASH.split (s);
+    final String[] u = SPLIT.split (s);
     final Set<String> set = unique_ngram (u, 1);
 
 //  for (int i = 2; i <= u.length-1; i++) {
@@ -145,7 +143,7 @@ public final class NgramUtils {
   }
 
 
-  private static final Pattern DASH = Pattern.compile ("-");
+  private static final Pattern SPLIT = Pattern.compile ("\"--?|''-|'-|--|-");
 
 
   public static void main (String[] args)

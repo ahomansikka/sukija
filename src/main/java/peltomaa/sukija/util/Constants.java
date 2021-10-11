@@ -67,7 +67,7 @@ public final class Constants {
 
   /** Sama kuin HVTokenizer.jflex-tiedostossa oleva LATEX_COMPOUND_WORD, vaikka näyttää erilaiselta.
    */
-  public static final Pattern RE_LATEX_COMPOUND_WORD = Pattern.compile ("\"-|''-|'-|--");
+  public static final Pattern RE_LATEX_COMPOUND_WORD = Pattern.compile ("\"--?|''-|'-|--");
 
 
   public static final boolean hasFlag (FlagsAttribute flagsAtt, int flag)

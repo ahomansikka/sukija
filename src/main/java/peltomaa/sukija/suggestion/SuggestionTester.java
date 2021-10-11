@@ -45,6 +45,7 @@ import peltomaa.sukija.finnish.HVTokenizer;
 import peltomaa.sukija.util.Constants;
 import peltomaa.sukija.filters.*;
 import peltomaa.sukija.filters.ahocorasick.*;
+import peltomaa.sukija.finnish.FinnishFoldingLowerCaseFilter;
 import peltomaa.sukija.voikko.*;
 import org.puimula.libvoikko.Analysis;
 import org.puimula.libvoikko.Voikko;
@@ -65,7 +66,11 @@ public class SuggestionTester {
 
     t = new VoikkoFilter (t, voikko);
 
-    t = new HVTokenFilter (t);
+//    t = new HVTokenFilter (t);
+
+//    t = new FinnishFoldingLowerCaseFilter (t);
+    t = new LaTeXFilter (t);
+
     t = new HVCompoundWordFilter (t);
 //    t = new FinnishCompoundWordTokenFilter (t);
 
