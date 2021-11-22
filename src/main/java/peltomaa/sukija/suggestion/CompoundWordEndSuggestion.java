@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2014-2016, 2020 Hannu Väisänen
+Copyright (©) 2014-2016, 2020-2021 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -17,12 +17,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 package peltomaa.sukija.suggestion;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.Set;
 import peltomaa.sukija.attributes.VoikkoAttribute;
@@ -42,25 +38,16 @@ public class CompoundWordEndSuggestion extends Suggestion {
    * Muodostin.
    *
    * @param voikko Voikko.
-   * @param map
+   * @param payloadTrie
    * @param addStart
    * @param addBaseFormOnly
    * @param addEnd
    */
-  public CompoundWordEndSuggestion (Voikko voikko, Map<String,String> map,
+  public CompoundWordEndSuggestion (Voikko voikko, PayloadTrie<String> payloadTrie,
                                     boolean addStart, boolean addBaseFormOnly, boolean addEnd)
   {
     super (voikko);
-    this.map = map;
-//System.out.println (map.toString());
-    Trie.TrieBuilder builder = Trie.builder();
-
-    for (String s : this.map.keySet()) {
-      builder.addKeyword (s);
-    }
-    trie = builder.build();
-
-
+    this.payloadTrie = payloadTrie;
     this.addStart = addStart;
     this.addBaseFormOnly = addBaseFormOnly;
     this.addEnd = addEnd;
@@ -69,14 +56,14 @@ public class CompoundWordEndSuggestion extends Suggestion {
 
   public boolean suggest (String word, VoikkoAttribute voikkoAtt)
   {
-//System.out.println ("CompoundWordEndSuggestion1 " + word);
+//System.out.println ("CompoundWordEndSuggestion0 " + word);
     extraBaseForms.clear();
     boolean found = false;
 
     sb.delete (0, sb.length());
     boolean hasToken = false;
 
-    for (Token token : trie.tokenize (word)) {
+    for (PayloadToken<String> token : payloadTrie.tokenize (word)) {
 //System.out.println ("CompoundWordEndSuggestion1 " + word + " " + token.getFragment());
       if (token.isMatch()) {
 //System.out.println ("CompoundWordEndSuggestion2 " + word + " " + token.getFragment() + " " + word.substring (token.getEmit().getStart()));
@@ -87,7 +74,7 @@ public class CompoundWordEndSuggestion extends Suggestion {
             final String BASEFORM = a.get("BASEFORM").toLowerCase();
 //System.out.println ("CompoundWordEndSuggestion3 " + word + " " + token.getFragment() + " " + BASEFORM);
 
-            final String END = map.get (token.getFragment());
+            final String END = token.getEmit().getPayload();
 
             if (BASEFORM.endsWith (END)) {
               if (addStart) addStart (start, voikkoAtt);
@@ -102,8 +89,7 @@ public class CompoundWordEndSuggestion extends Suggestion {
           }
           if (found) {
             voikkoAtt.addAnalysis (list);
-//System.out.println ("CompoundWordEndSuggestion5 " + word + " " + token.getFragment()
-//                    + " " + extraBaseForms.toString());
+//System.out.println ("CompoundWordEndSuggestion5 " + word + " " + token.getFragment() + " " + extraBaseForms.toString());
             return true;
           }
         }
@@ -164,12 +150,11 @@ public class CompoundWordEndSuggestion extends Suggestion {
 
 
   private static final Pattern END_DASHES = Pattern.compile ("-+$");
-  private StringBuilder sb = new StringBuilder (500);
-  private Map<String,String> map;
-  private Trie trie;
+  private final StringBuilder sb = new StringBuilder (500);
+  private final PayloadTrie<String> payloadTrie;
 
   private final boolean addStart;
   private final boolean addBaseFormOnly;
   private final boolean addEnd;
-  private HashSet<String> extraBaseForms = new HashSet<String>();
+  private final HashSet<String> extraBaseForms = new HashSet<String>();
 }

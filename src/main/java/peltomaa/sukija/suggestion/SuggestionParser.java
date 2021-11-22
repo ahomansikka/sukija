@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2012-2018, 2020 Hannu Väisänen
+Copyright (©) 2012-2018, 2020-2021 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -23,13 +23,13 @@ import java.io.InputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.Writer;
-import java.util.Arrays;
-import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.regex.Pattern;
-import java.util.Vector;
+import java.util.Set;
 import javax.xml.bind.JAXBElement;
+import org.ahocorasick.trie.*;
+import org.ahocorasick.trie.handler.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import peltomaa.sukija.util.JAXBUtil;
@@ -148,19 +148,11 @@ public class SuggestionParser {
           {
             final CompoundWordEndInput input = (CompoundWordEndInput)s.get(i);
 
-            v[i] = new CompoundWordEndSuggestion (voikko, makeMap (input.getInput()),
+            v[i] = new CompoundWordEndSuggestion (voikko, makePayloadTrie (input.getInput(), false),
                                                   input.isAddStart(), input.isAddBaseFormOnly(),
                                                   input.isAddEnd());
           }
           break;
-/*
-        case "peltomaa.sukija.schema.EraseInput":
-          {
-            final EraseInput input = (EraseInput)s.get(i);
-            v[i] = new EraseSuggestion (voikko, input.getFrom().charAt(0), input.getTo().charAt(0));
-          }
-          break;
-*/
         case "peltomaa.sukija.schema.PrefixInput":
           {
             final PrefixInput input = (PrefixInput)s.get(i);
@@ -203,7 +195,7 @@ public class SuggestionParser {
         case "peltomaa.sukija.schema.StringInput":
           {
             final StringInput input = (StringInput)s.get(i);
-            v[i] = new StringSuggestion (voikko, makeMap (input.getInput()));
+            v[i] = new StringSuggestion (voikko, makePayloadTrie (input.getInput(), true));
           }
           break;
         case "peltomaa.sukija.schema.VoikkoAttributeInput":
@@ -229,18 +221,22 @@ public class SuggestionParser {
   }
 
 
-  private static final Map<String,String> makeMap (List<JAXBElement<List<String>>> input)
+  private static final PayloadTrie<String> makePayloadTrie (List<JAXBElement<List<String>>> input, boolean ignoreOverlaps)
   {
-    Map<String,String> map = new HashMap<String,String>();
+    final Set<String> set = new HashSet<String>();
+    final PayloadTrie.PayloadTrieBuilder<String> payloadTrieBuilder = PayloadTrie.<String>builder();
+    if (ignoreOverlaps) {
+      payloadTrieBuilder.ignoreOverlaps();
+    }
 
     for (int i = 0; i < input.size(); i++) {
       if (input.get(i).getValue().size() == 2) {
         final String KEY = input.get(i).getValue().get(0);
-        if (map.containsKey (KEY)) {
+        if (set.contains (KEY)) {
           throw new RuntimeException ("Kaksi samaa avainkentän arvoa " + KEY + ".");
         }
-        else {        
-          map.put (KEY, input.get(i).getValue().get(1));
+        else {
+          payloadTrieBuilder.addKeyword (KEY, input.get(i).getValue().get(1));
         }
       }
       else {
@@ -248,7 +244,7 @@ public class SuggestionParser {
                                     + input.get(i).getValue().size() + ".");
       }
     }
-    return map;
+    return payloadTrieBuilder.build();
   }
 
 

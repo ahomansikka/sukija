@@ -20,14 +20,6 @@
 </xsd:complexType>
 
 
-<xsd:complexType name = "EraseInput">
-  <xsd:sequence>
-    <xsd:element name = "from" type = "xsd:string"/>
-    <xsd:element name = "to"   type = "xsd:string"/>
-  </xsd:sequence>
-</xsd:complexType>
-
-
 <xsd:complexType name = "PrefixInput">
   <xsd:sequence>
     <xsd:element name = "prefix"     type = "xsd:string"  minOccurs = "0" maxOccurs = "unbounded"/>
@@ -179,7 +171,6 @@
     <xsd:element name = "apostrophe" type = "ApostropheInput"/>
     <xsd:element name = "ichar"  type = "CharInput"/>
     <xsd:element name = "compoundWordEnd" type = "CompoundWordEndInput"/>
-    <xsd:element name = "erase"  type = "EraseInput"/>
     <xsd:element name = "prefix" type = "PrefixInput"/>
     <xsd:element name = "regex"  type = "RegexInput"/>
     <xsd:element name = "split"  type = "SplitInput"/>

@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2016-2017 Hannu Väisänen
+Copyright (©) 2016-2017, 2021 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -31,17 +31,10 @@ import peltomaa.sukija.voikko.VoikkoUtils;
 
 
 public class StringSuggestion extends Suggestion {
-  public StringSuggestion (Voikko voikko, Map<String,String> map)
+  public StringSuggestion (Voikko voikko, PayloadTrie<String> payloadTrie)
   {
     super (voikko);
-    this.map = map;
-
-    Trie.TrieBuilder builder = Trie.builder().ignoreOverlaps();
-
-    for (String s : this.map.keySet()) {
-      builder.addKeyword (s);
-    }
-    trie = builder.build();
+    this.payloadTrie = payloadTrie;
   }
 
 
@@ -53,9 +46,9 @@ if (LOG.isDebugEnabled()) LOG.debug ("String1 " + word);
     sb.delete (0, sb.length());
     boolean hasToken = false;
 
-    for (Token token : trie.tokenize (word)) {
+    for (PayloadToken<String> token : payloadTrie.tokenize (word)) {
       if (token.isMatch()) {
-        final String replacement = map.get (token.getFragment());
+        final String replacement = token.getEmit().getPayload();
 //        sb.append ("{" + replacement + "}");
 if (LOG.isDebugEnabled()) LOG.debug ("String2 " + token.getFragment() + " " + word.replace(token.getFragment(), replacement) + " " + sb.toString() + " X");
         sb.append (replacement);
@@ -87,9 +80,8 @@ if (LOG.isDebugEnabled()) LOG.debug ("String5 " + word + " " + sb.toString());
   }
 
 
-  private StringBuilder sb = new StringBuilder (500);
-  private Map<String,String> map;
-  private Trie trie;
-  private Set<String> newWords = new HashSet<String>();
+  private final StringBuilder sb = new StringBuilder (500);
+  private final PayloadTrie<String> payloadTrie;
+  private final Set<String> newWords = new HashSet<String>();
   private static final Logger LOG = LoggerFactory.getLogger (SuggestionUtils.class);
 }
