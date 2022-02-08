@@ -51,8 +51,11 @@ tekstitiedostojen merkistökoodauksia, joita Apache Tika
       Tässä dokumentissa Solr:sta käytetään nimeä solr-x.y.z,
       missä x.y.z tarkoittaa version numeroa.
 
-\item Javan versio 11 tai uudempi. Sukijan tämä versio ei luultavasti
-      käänny Javan aiemmilla versiolla.
+\item Javan versio 17. Sukijan pitäisi kääntyä myös versiolla 11.
+
+\item Apache mavenin versio 3.8.4. Sen voi imuroida täältä
+      \verb=https://maven.apache.org/download.cgi=
+      Aiemmat mavenin versiot eivät tue Java 17:ää.
 \end{itemize}
 
 
@@ -65,6 +68,34 @@ Tämä asennusohje olettaa, että libvoikko on asennettu hakemistoon
 
 Jos ne ovat jossain muualla, tiedostossa \verb=sukija.properties=
 olevia Libvoikon tietoja pitää muuttaa vastaavasti.
+
+
+\subsection*{Mavenin asentaminen}
+
+Asennetaan maven esimerkiksi hakemistoon \verb=/usr/local/apache-maven=
+
+\begin{verbatim}
+sudo mkdir /usr/local/apache-maven
+cd /usr/local/apache-maven
+*Kopioi apache-maven-3.8.4-bin.tar.gz hakemistoon*
+tar xzvf apache-maven-3.8.4-bin.tar.gz
+\end{verbatim}
+
+Tämän jälkeen lisätään seuraavat rivit tiedostoon \verb=~/.bashrc= tai
+vastaavan
+
+\begin{verbatim}
+export M2_HOME=/usr/local/apache-maven/apache-maven-3.8.4
+export M2=$M2_HOME/bin
+export MAVEN_OPTS="-Xms256m -Xmx512m"
+export PATH=$M2:$PATH
+\end{verbatim}
+
+Lopuksi pitäänee tehdä \verb=source ~/.bashrc=
+
+minkä jälkeen voi tarkistaa, että mavenin versio on 3.8.4
+
+\verb=mvn --version=
 
 
 \subsection*{Solr:n asentaminen}
@@ -100,7 +131,7 @@ Skripti asentaa Solr:n hakemistoihin \verb=/opt/solr= ja
 
 Jos kone on kiinni verkossa, kannattaa katsoa myös ohjeet turvallisuudesta
 
-\verb=https://lucene.apache.org/solr/guide/8_4/securing-solr.html=
+\verb=https://solr.apache.org/guide/8_11_1/securing-solr.html=
 
 
 \subsection*{Sukijan kääntäminen ja asentaminen}
@@ -138,13 +169,22 @@ skriptiä
 
 Jälkimmäistä käytetään, jos Solr on asennettu tunnuksella \verb=solr=.
 
+
+\bigskip
 Jos asentamisen jälkeen konfiguroi Sukijaa, muutokset voi viedä
 Solr:iin jommallakummalla komennoista
 
 \verb=cp -r conf/* /var/solr/data/sukija/conf/=
 \verb=sudo -u solr cp -r conf/* /var/solr/data/sukija/conf/=
 
+Sukijan jar-paketin voi päivittää näin
 
+\verb=cp $HOME/.m2/repository/peltomaa/sukija/sukija/2.2.26/sukija-2.2.26.jar /var/solr/data/sukija/lib/=
+
+Kaikki pitää laittaa yhdelle riville ja mahdollisesti lisätä
+\verb=sudo= komennon alkuun.
+
+\bigskip
 Seuraavaksi mennään selaimella osoitteeseen \verb=http://localhost:8983/solr/=
 Vasemmalla paneelin alalaidassa lukee 
 
