@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2016 Hannu Väisänen
+Copyright (©) 2016, 2022 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -26,8 +26,14 @@ public interface BaseFormAttribute extends Attribute {
   /** Palautetaan sanan perusmuodot. */
   public Set<String> getBaseForms();
 
+  /** Asetetaan perusmuodot. */
+  public void setBaseForms (Set<String> baseForms);
+
   /** Lisätään perusmuotoja. */
   public void addBaseForms (Set<String> baseForms);
+
+  /** Lisätään perusmuotoja ja muutetaan ne pieniksi kirjaimiksi. */
+  public void addBaseFormsLowerCase (Set<String> baseForms);
 
   /** Lisätään perusmuoto. */
   public void addBaseForm (String baseForm);

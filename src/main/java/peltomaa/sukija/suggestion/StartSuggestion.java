@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2014-2016 Hannu Väisänen
+Copyright (©) 2014-2016, 2022 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import java.util.List;
 import org.puimula.libvoikko.Analysis;
 import org.puimula.libvoikko.Voikko;
-import peltomaa.sukija.attributes.VoikkoAttribute;
 import peltomaa.sukija.voikko.VoikkoUtils;
 
 
@@ -43,8 +42,10 @@ public class StartSuggestion extends Suggestion {
 
 
   @Override
-  public boolean suggest (String word, VoikkoAttribute voikkoAtt)
+  public boolean suggest (String word)
   {
+    clearAnalysis();
+
     if (!hyphen && (word.indexOf ("-") >= 0)) {
 //System.out.println ("DING   " + word);
       return false;
@@ -65,7 +66,7 @@ public class StartSuggestion extends Suggestion {
           }
         }
         if (!tryAll && analysisList.size() > 0) {
-          voikkoAtt.addAnalysis (analysisList);
+          addToAnalysis (analysisList);
           return true;
         }
       }
@@ -73,13 +74,12 @@ public class StartSuggestion extends Suggestion {
         if (analysis.size() > 0) {
           analysisList.addAll (analysis);
           if (!tryAll) {
-            voikkoAtt.addAnalysis (analysisList);
             return true;
           }
         }
       }
     }
-    voikkoAtt.addAnalysis (analysisList);
+    addToAnalysis (analysisList);
     return (analysisList.size() > 0);
   }
 

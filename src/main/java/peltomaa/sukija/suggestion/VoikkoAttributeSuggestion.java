@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2016 Hannu Väisänen
+Copyright (©) 2016, 2022 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -23,13 +23,11 @@ import java.util.List;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 import org.puimula.libvoikko.*;
-import peltomaa.sukija.attributes.VoikkoAttribute;
 
 
 public class VoikkoAttributeSuggestion extends Suggestion {
 
-  public VoikkoAttributeSuggestion (Voikko voikko,
-                                    VoikkoAttributeParameter parameter)
+  public VoikkoAttributeSuggestion (Voikko voikko, VoikkoAttributeParameter parameter)
   {
     super (voikko);
     this.parameter = parameter;
@@ -37,13 +35,14 @@ public class VoikkoAttributeSuggestion extends Suggestion {
 
 
   @Override
-  public boolean suggest (String word, VoikkoAttribute voikkoAtt)
+  public boolean suggest (String word)
   {
+    clearAnalysis();
     boolean success = false;
     final int N = parameter.item.length;
     for (int i = 0; i < parameter.item.length; i++) {
 //System.out.println ("A " + word);
-      if (suggest (i, word, voikkoAtt)) {
+      if (suggest (i, word)) {
         if (parameter.tryAll) {
           success = true;
         }
@@ -56,7 +55,7 @@ public class VoikkoAttributeSuggestion extends Suggestion {
   }
 
 
-  private boolean suggest (int i, String word, VoikkoAttribute voikkoAtt)
+  private boolean suggest (int i, String word)
   {
     boolean success = false;
     Matcher m = parameter.item[i].pattern.matcher (word);
@@ -71,7 +70,7 @@ public class VoikkoAttributeSuggestion extends Suggestion {
           final List<Analysis> analysis = voikko.analyze (u);
           for (Analysis a: analysis) {
             if (ok (i, j, a)) {
-              voikkoAtt.addAnalysis (a);
+              addToAnalysis (a);
               success = true;
             }
           }

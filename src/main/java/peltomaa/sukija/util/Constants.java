@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2015-2016, 2018, 2020-2021 Hannu Väisänen
+Copyright (©) 2015-2016, 2018, 2020-2022 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -21,10 +21,14 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
 import org.apache.lucene.analysis.tokenattributes.FlagsAttribute;
+import org.apache.lucene.analysis.tokenattributes.FlagsAttributeImpl;
 
 
 public final class Constants {
   private Constants() {}
+
+  /** Sanaa ei tunnistettu eikä tuntemattomia sanoja indeksoida. */
+  public static final int NOT_INDEXED = 0;
 
   // Arvojen täytyy olla kakkosen potensseja: 2, 4, 8, 16, 32, ...
 
@@ -53,13 +57,6 @@ public final class Constants {
   /** Sana, jote ei ole tunnistettu. */
   public static final int UNKNOWN = 256;
 
-  /** Sana, josta yhdysviiva on otettu pois. */
-  public static final int XHYPHEN = 512;
-
-  /** EXTRA == LATEX_COMPOUND_WORD + LATEX_HYPHEN + BRACKET */
-  public static final int EXTRA = LATEX_COMPOUND_WORD + LATEX_HYPHEN + BRACKET;
-
-
   /** Sama kuin HVTokenizer.jflex-tiedostossa oleva LATEX_HYPHEN, vaikka näyttää erilaiselta.
    */
   public static final Pattern RE_LATEX_HYPHEN = Pattern.compile ("\\\\-");
@@ -74,6 +71,14 @@ public final class Constants {
   {
 //System.out.println ("hasFlag " + flag + " " + flagsAtt.getFlags() + " " + (flagsAtt.getFlags() & flag));
     return ((flagsAtt.getFlags() & flag) != 0);
+  }
+
+  public static final boolean hasAllFlags (FlagsAttribute flagsAtt, int... flags)
+  {
+    for (int i = 0; i < flags.length; i++) {
+      if (hasFlag (flagsAtt, flags[i])) return false;
+    }
+    return true;
   }
 
   public static final boolean hasAnyFlag (FlagsAttribute flagsAtt, int... flags)
@@ -101,6 +106,20 @@ public final class Constants {
   }
 
 
+  public static final void clearFlags (FlagsAttribute flagsAtt)
+  {
+    flagsAtt.setFlags (flagsAtt.getFlags() & 0);
+  }
+
+
+  public static final String toString (int n)
+  {
+    final FlagsAttribute flagsAtt = new FlagsAttributeImpl();
+    addFlags (flagsAtt, n);
+    return toString (flagsAtt);
+  }
+
+
   public static final String toString (FlagsAttribute flagsAtt)
   {
 //System.out.println ("Constants.toString " + flagsAtt.getFlags());
@@ -113,8 +132,7 @@ public final class Constants {
     sb.append (toString (flagsAtt, FOUND)).append (" ");
     sb.append (toString (flagsAtt, SUGGEST)).append (" ");
     sb.append (toString (flagsAtt, UNKNOWN)).append (" ");
-    sb.append (toString (flagsAtt, XHYPHEN)).append (" ");
-    final String s = sb.toString();
+    final String s = SPACES.matcher(sb.toString()).replaceAll (" ");
     return s.substring (0, s.length()-1);
   }
 
@@ -147,6 +165,8 @@ public final class Constants {
     flagMap.put (FOUND,   "FOUND");
     flagMap.put (SUGGEST, "SUGGEST");
     flagMap.put (UNKNOWN, "UNKNOWN");
-    flagMap.put (XHYPHEN, "XHYPHEN");
   }
+
+
+  private static final Pattern SPACES = Pattern.compile ("\\s+");
 }

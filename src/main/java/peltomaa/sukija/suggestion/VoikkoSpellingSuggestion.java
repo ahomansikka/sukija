@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2017-2018 Hannu Väisänen
+Copyright (©) 2017-2018, 2022 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -21,7 +21,6 @@ import java.util.List;
 import java.util.regex.Pattern;
 import org.puimula.libvoikko.Analysis;
 import org.puimula.libvoikko.Voikko;
-import peltomaa.sukija.attributes.VoikkoAttribute;
 
 
 public class VoikkoSpellingSuggestion extends Suggestion {
@@ -33,22 +32,27 @@ public class VoikkoSpellingSuggestion extends Suggestion {
 
 
   @Override
-  public boolean suggest (String word, VoikkoAttribute voikkoAtt)
+  public boolean suggest (String word)
   {
+    clearAnalysis();
     boolean found = false;
-    List<String> list = voikko.suggest (word);
+    final List<String> list = voikko.suggest (word);
 
     for (int i = 0; i < Math.min (n, list.size()); i++) {
       final String s = list.get(i);
       if (s.indexOf(' ') >= 0) {
         for (String w : SPACES.split (list.get(i))) {
-          if (analyze (w, voikkoAtt)) {
+          final List<Analysis> result = voikko.analyze (w);
+          if (result.size() > 0) {
+            addToAnalysis (result);
             found = true;
           }
         }
       }
       else {
-        if (analyze (s, voikkoAtt)) {
+        final List<Analysis> result = voikko.analyze (s);
+        if (result.size() > 0) {
+          addToAnalysis (result);
           found = true;
         }
       }

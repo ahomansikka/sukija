@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2009-2011, 2013-2016, 2020 Hannu Väisänen
+Copyright (©) 2009-2011, 2013-2016, 2020, 2022 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -21,7 +21,6 @@ import java.util.HashSet;
 import java.util.Set;
 import org.puimula.libvoikko.Analysis;
 import org.puimula.libvoikko.Voikko;
-import peltomaa.sukija.attributes.VoikkoAttribute;
 
 
 /** Tunnistetaan sanat tyyppiä Mallory'lle tai ABC:n.
@@ -71,8 +70,10 @@ public class ApostropheSuggestion extends Suggestion {
   Sanalla voi siis olla kolmekin perusmuotoa.
   */
   @Override
-  public boolean suggest (String word, VoikkoAttribute voikkoAtt)
+  public boolean suggest (String word)
   {
+    clearAnalysis();
+
     final int n = lastIndexOf (word);
     if (n == -1) return false;
 
@@ -84,10 +85,10 @@ public class ApostropheSuggestion extends Suggestion {
     extraBaseForms.clear();
     extraBaseForms.add (START);
 
-    if (analyze (sb.toString(), voikkoAtt)) {
+    if (analyze (sb.toString())) {
       return true;
     }
-    else if (analyze (START, voikkoAtt)) {
+    else if (analyze (START)) {
       return true;
     }
 

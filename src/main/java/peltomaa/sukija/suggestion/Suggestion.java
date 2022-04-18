@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2009-2016 Hannu Väisänen
+Copyright (©) 2009-2016, 2022 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -17,6 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 package peltomaa.sukija.suggestion;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 //import org.slf4j.Logger;
@@ -40,9 +41,6 @@ If those functions return {@code true} {@link #suggest(String,VoikkoAttribute)}
 should return {@code true}, otherwise it should return {@code false}.
 */
 public abstract class Suggestion {
-  protected Voikko voikko;
-
-
   public Suggestion (Voikko voikko)
   {
     this.voikko = voikko;
@@ -55,8 +53,7 @@ public abstract class Suggestion {
    *
    * @param word  Sana, jonka oikeinkirjoitus yritetään korjata.
    */
-  public abstract boolean suggest (String word, VoikkoAttribute voikkoAtt);
-
+  public abstract boolean suggest (String word);
 
   /**
    * Jos funktio {@code success} tekee perusmuotoja muuten kuin Voikon
@@ -66,14 +63,39 @@ public abstract class Suggestion {
   public Set<String> getExtraBaseForms() {return null;}
 
 
-  protected boolean analyze (String word, VoikkoAttribute voikkoAtt)
+  protected boolean analyze (String word)
   {
-//    List<Analysis> analysis = voikko.analyze (word);
     analysis = voikko.analyze (word);
-    voikkoAtt.addAnalysis (analysis);
     return (analysis.size() > 0);
   }
 
+
+  protected void addToAnalysis (List<Analysis> a)
+  {
+    if (analysis == null) analysis = new ArrayList<Analysis>();
+    analysis.addAll (a);
+  }
+
+
+  protected void addToAnalysis (Analysis a)
+  {
+    if (analysis == null) analysis = new ArrayList<Analysis>();
+    analysis.add (a);
+  }
+
+  protected void setAnalysis (List<Analysis> a)
+  {
+    analysis = a;
+  }
+
+
+  protected void clearAnalysis()
+  {
+    if (analysis != null) analysis.clear();
+  }
+
+
+  protected Voikko voikko;
   private List<Analysis> analysis;
 
   public List<Analysis> getAnalysis() {return analysis;}

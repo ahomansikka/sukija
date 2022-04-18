@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2015-2016, 2020-2021 Hannu Väisänen
+Copyright (©) 2015-2016, 2020-2022 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 package peltomaa.sukija.keepfilter;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -35,7 +36,6 @@ import org.puimula.libvoikko.*;
 import peltomaa.sukija.suggestion.Suggestion;
 import peltomaa.sukija.suggestion.SuggestionUtils;
 import peltomaa.sukija.attributes.VoikkoAttribute;
-import peltomaa.sukija.util.AnalysisUtils;
 import peltomaa.sukija.util.SukijaFilter;
 import peltomaa.sukija.suggestion.ahocorasick.AhoCorasickCorrector;
 
@@ -77,7 +77,8 @@ public final class KeepFilter extends SukijaFilter {
         to.add (s);
       }
       else {
-        boolean p = SuggestionUtils.getSuggestions (suggestion, s, voikkoAtt, baseFormAtt);
+        final List<Analysis> list = new ArrayList<Analysis>();
+        boolean p = SuggestionUtils.getSuggestions (suggestion, s,  list, baseFormAtt, voikkoAtt);
         if (p) {
           to.addAll (baseFormAtt.getBaseForms());
         }

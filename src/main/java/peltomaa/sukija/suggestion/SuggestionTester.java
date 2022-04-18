@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2013-2014, 2016-2018, 2020-2021 Hannu Väisänen
+Copyright (©) 2013-2014, 2016-2018, 2020-2022 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -71,7 +71,7 @@ public class SuggestionTester {
 //    t = new FinnishFoldingLowerCaseFilter (t);
     t = new LaTeXFilter (t);
 
-    t = new HVCompoundWordFilter (t);
+//    t = new HVCompoundWordFilter (t);
 //    t = new FinnishCompoundWordTokenFilter (t);
 
 /*

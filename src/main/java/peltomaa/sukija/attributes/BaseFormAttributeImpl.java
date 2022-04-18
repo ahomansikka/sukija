@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2016, 2018 Hannu Väisänen
+Copyright (©) 2016, 2018, 2022 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -35,9 +35,26 @@ public class BaseFormAttributeImpl extends AttributeImpl implements BaseFormAttr
 
 
   @Override
+  public void setBaseForms (Set<String> baseForms)
+  {
+    this.baseForms = baseForms;
+  }
+
+
+  @Override
   public void addBaseForms (Set<String> baseForms)
   {
     this.baseForms.addAll (baseForms);
+  }
+
+  @Override
+  public void addBaseFormsLowerCase (Set<String> baseForms)
+  {
+    if (baseForms != null) {
+      for (String s : baseForms) {
+        this.addBaseForm (s.toLowerCase());
+      }
+    }
   }
 
 

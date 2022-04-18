@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2020 Hannu Väisänen
+Copyright (©) 2020, 2022 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -31,7 +31,8 @@ import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.apache.lucene.analysis.tokenattributes.FlagsAttribute;
 import org.apache.lucene.analysis.tokenattributes.OffsetAttribute;
 import org.apache.lucene.analysis.tokenattributes.PositionIncrementAttribute;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /** Hajotetaan yhdysviivalliset yhdyssanat osiinsa ja yhdistetään
@@ -54,23 +55,23 @@ public class HVCompoundWordFilter extends HVTokenFilterBase {
   @Override
   protected void decompose()
   {
-//System.out.println ("NewToken0 " + termAtt.toString() + " " + Constants.toString(flagsAtt));
+if (LOG.isDebugEnabled()) System.out.println ("HVCompoundWordFilter NewToken0 " + termAtt.toString() + " " + Constants.toString(flagsAtt));
    if (Constants.hasAnyFlag (flagsAtt, Constants.COMPOUND_WORD, Constants.LATEX_COMPOUND_WORD)) {
       assert termAtt.toString().indexOf('-') > -1;
       assert termAtt.toString().indexOf(".-") == -1; // Ev.-lut. ei ole yhdyssana.
       Set<String> ngrams = NgramUtils.unique_ngram (termAtt.toString());
-//for (String u : ngrams) System.out.println ("NewToken1  " + termAtt.toString() + " " + u);
+//for (String u : ngrams) System.out.println ("HVCompoundWordFilter NewToken1  " + termAtt.toString() + " " + u);
       for (String u : ngrams) {
-//System.out.println ("NewToken2 " + termAtt.toString() + " " + u);
+if (LOG.isDebugEnabled()) System.out.println ("HVCompoundWordFilter NewToken2 " + termAtt.toString() + " " + u);
         if (u.indexOf('-') > -1) {   // Jos ngrammi on yhdyssana, esim. linja-auto-opisto => linja-auto, auto-opisto, linja, auto, opisto.
           if (termAtt.toString().compareTo(u) != 0) {  // Jos ei ole alkuperäinen sana...
-//System.out.println ("NewToken3 " +  u);
+if (LOG.isDebugEnabled()) System.out.println ("HVCompoundWordFilter NewToken3 " +  u + " " + termAtt.toString());
 //            tokens.add (new NewToken (u, Constants.COMPOUND_WORD | Constants.NGRAM));  // Lisätään se.
             tokens.add (new NewToken (u, Constants.COMPOUND_WORD));  // Lisätään se.
           }
         }
         else {
-//System.out.println ("NewToken2 " +  u);
+if (LOG.isDebugEnabled()) System.out.println ("HVCompoundWordFilter NewToken4 " +  u + " " + termAtt.toString());
 //          tokens.add (new NewToken (u, Constants.WORD | Constants.NGRAM));
           tokens.add (new NewToken (u, Constants.WORD));
         }
@@ -83,4 +84,7 @@ public class HVCompoundWordFilter extends HVTokenFilterBase {
   private final OffsetAttribute offsetAtt = addAttribute (OffsetAttribute.class);
   private final OriginalWordAttribute originalWordAtt = addAttribute (OriginalWordAttribute.class);
   private final PositionIncrementAttribute posIncAtt = addAttribute (PositionIncrementAttribute.class);
+
+  private static final Logger LOG = LoggerFactory.getLogger (HVCompoundWordFilter.class);
+  private static final long serialVersionUID = 1L;
 }

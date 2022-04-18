@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2015-2017, 2020 Hannu Väisänen
+Copyright (©) 2015-2017, 2020, 2022 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -30,7 +30,6 @@ import org.apache.lucene.search.spell.StringDistance;
 
 import org.puimula.libvoikko.Analysis;
 import org.puimula.libvoikko.Voikko;
-import peltomaa.sukija.attributes.VoikkoAttribute;
 import peltomaa.sukija.suggestion.distance.Distance;
 
 
@@ -62,17 +61,14 @@ public class StringDistanceSuggestion extends Suggestion {
 
 
   @Override
-  public boolean suggest (String word, VoikkoAttribute voikkoAtt)
+  public boolean suggest (String word)
   {
+    clearAnalysis();
     if (word.indexOf("-") >= 0) return false;
 
     final String value = distance.bestMatch (word);
     if (value != null) {
-      List<Analysis> analysis = voikko.analyze (value);
-      if (analysis.size() > 0) {
-        voikkoAtt.addAnalysis (analysis);
-        return true;
-      }
+      return analyze (value);
     }
     return false;
   }

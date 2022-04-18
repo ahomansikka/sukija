@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2014-2016, 2020-2021 Hannu Väisänen
+Copyright (©) 2014-2016, 2020-2022 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -17,18 +17,19 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 package peltomaa.sukija.suggestion;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.regex.Pattern;
 import java.util.Set;
-import peltomaa.sukija.attributes.VoikkoAttribute;
 import peltomaa.sukija.util.RegexUtil;
 import peltomaa.sukija.util.StringUtil;
 import peltomaa.sukija.voikko.VoikkoUtils;
 import org.ahocorasick.interval.*;
 import org.ahocorasick.trie.*;
 import org.ahocorasick.trie.handler.*;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.puimula.libvoikko.Analysis;
 import org.puimula.libvoikko.Voikko;
 
@@ -54,9 +55,10 @@ public class CompoundWordEndSuggestion extends Suggestion {
   }
 
 
-  public boolean suggest (String word, VoikkoAttribute voikkoAtt)
+  public boolean suggest (String word)
   {
-//System.out.println ("CompoundWordEndSuggestion0 " + word);
+if (LOG.isDebugEnabled()) LOG.debug ("CompoundWordEndSuggestion0 " + word);
+    clearAnalysis();
     extraBaseForms.clear();
     boolean found = false;
 
@@ -64,23 +66,24 @@ public class CompoundWordEndSuggestion extends Suggestion {
     boolean hasToken = false;
 
     for (PayloadToken<String> token : payloadTrie.tokenize (word)) {
-//System.out.println ("CompoundWordEndSuggestion1 " + word + " " + token.getFragment());
+if (LOG.isDebugEnabled()) LOG.debug ("CompoundWordEndSuggestion1 " + word + " " + token.getFragment());
       if (token.isMatch()) {
-//System.out.println ("CompoundWordEndSuggestion2 " + word + " " + token.getFragment() + " " + word.substring (token.getEmit().getStart()));
-        List<Analysis> list = voikko.analyze (word.substring (token.getEmit().getStart()));
+if (LOG.isDebugEnabled()) LOG.debug ("CompoundWordEndSuggestion2 " + word + " " + token.getFragment() + " " + word.substring (token.getEmit().getStart()));
+        final List<Analysis> list = voikko.analyze (word.substring (token.getEmit().getStart()));
         if (list.size() > 0) {
-          String start = word.substring (0, token.getEmit().getStart());
+          addToAnalysis (list);
+          final String start = word.substring (0, token.getEmit().getStart());
           for (Analysis a : list) {
             final String BASEFORM = a.get("BASEFORM").toLowerCase();
-//System.out.println ("CompoundWordEndSuggestion3 " + word + " " + token.getFragment() + " " + BASEFORM);
+if (LOG.isDebugEnabled()) LOG.debug ("CompoundWordEndSuggestion3 " + word + " " + token.getFragment() + " " + BASEFORM);
 
             final String END = token.getEmit().getPayload();
 
             if (BASEFORM.endsWith (END)) {
-              if (addStart) addStart (start, voikkoAtt);
+              if (addStart) addStart (start);
               if (addEnd) extraBaseForms.add (END);
 
-//System.out.println ("CompoundWordEndSuggestion4 " + word + " " + (start + BASEFORM));
+if (LOG.isDebugEnabled()) LOG.debug ("CompoundWordEndSuggestion4 " + word + " " + (start + BASEFORM));
               extraBaseForms.add (start + BASEFORM);
               final String DH = dehyphen (start, BASEFORM);
               if (DH != null) extraBaseForms.add (DH);
@@ -88,8 +91,7 @@ public class CompoundWordEndSuggestion extends Suggestion {
             }
           }
           if (found) {
-            voikkoAtt.addAnalysis (list);
-//System.out.println ("CompoundWordEndSuggestion5 " + word + " " + token.getFragment() + " " + extraBaseForms.toString());
+if (LOG.isDebugEnabled()) LOG.debug ("CompoundWordEndSuggestion5 " + word + " " + token.getFragment() + " " + extraBaseForms.toString());
             return true;
           }
         }
@@ -99,12 +101,11 @@ public class CompoundWordEndSuggestion extends Suggestion {
   }
 
 
-  private void addStart (String start, VoikkoAttribute voikkoAtt)
+  private void addStart (String start)
   {
     final String s = (start.endsWith("-") ? END_DASHES.matcher(start).replaceAll("") : start);
     List<Analysis> analysis = voikko.analyze (s);
     if (analysis.size() > 0) {
-      voikkoAtt.addAnalysis (analysis);
       for (int i = 0; i < analysis.size(); i++) {
         addWithoutDash (analysis.get(i).get("BASEFORM"));
       }
@@ -117,7 +118,7 @@ public class CompoundWordEndSuggestion extends Suggestion {
 
   private void addWithoutDash (String s)
   {
-//System.out.println ("CompoundWordEndSuggestion7 " + s);
+if (LOG.isDebugEnabled()) LOG.debug ("CompoundWordEndSuggestion7 " + s);
     if (s.endsWith ("-")) {
       extraBaseForms.add (END_DASHES.matcher(s).replaceAll(""));
     }
@@ -136,8 +137,9 @@ public class CompoundWordEndSuggestion extends Suggestion {
 
   private String dehyphen (String start, String end)
   {
-//System.out.println ("De " + start.charAt(start.length()-2) + " " + end.charAt(0)
-//                    + " " + StringUtil.isVowel(end.charAt(0)));
+//if (LOG.isDebugEnabled()) LOG.debug ("CompoundWordEndSuggestion8 " + start.charAt(start.length()-2) + " " + end.charAt(0) + " " + StringUtil.isVowel(end.charAt(0)));
+
+if (LOG.isDebugEnabled()) LOG.debug ("CompoundWordEndSuggestion8 " + start + " " + end + " " + StringUtil.isVowel(end.charAt(0)));
     
     if (start.endsWith ("-")) {
       final String s = END_DASHES.matcher(start).replaceAll("");
@@ -157,4 +159,6 @@ public class CompoundWordEndSuggestion extends Suggestion {
   private final boolean addBaseFormOnly;
   private final boolean addEnd;
   private final HashSet<String> extraBaseForms = new HashSet<String>();
+
+  private static final Logger LOG = LoggerFactory.getLogger (CompoundWordEndSuggestion.class);
 }

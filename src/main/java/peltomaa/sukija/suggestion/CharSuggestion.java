@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2009-2011, 2013-2016 Hannu Väisänen
+Copyright (©) 2009-2011, 2013-2016, 2022 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -20,7 +20,6 @@ package peltomaa.sukija.suggestion;
 import java.util.Iterator;
 import org.puimula.libvoikko.Voikko;
 import peltomaa.sukija.util.CharCombinator;
-import peltomaa.sukija.attributes.VoikkoAttribute;
 
 
 /**
@@ -40,8 +39,10 @@ public class CharSuggestion extends Suggestion {
 
 
   @Override
-  public boolean suggest (String word, VoikkoAttribute voikkoAtt)
+  public boolean suggest (String word)
   {
+    clearAnalysis();
+
     charCombinator = new CharCombinator (word, from, to);
 //System.out.println ("\nCharSuggestion " + word + " " + from + " " + to);
 
@@ -50,7 +51,7 @@ public class CharSuggestion extends Suggestion {
     while (i.hasNext()) {
       final String s = i.next();
 //System.out.println ("\nCharSuggestion " + word + " " + s);
-      if (analyze (s, voikkoAtt)) {
+      if (analyze (s)) {
         return true;  // Muutettu sana tunnistettiin.
       }
     }

@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2021 Hannu Väisänen
+Copyright (©) 2021-2022 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -120,8 +120,18 @@ public final class NgramUtils {
       StringBuilder sb = new StringBuilder();
       for (int k = 0; k < n; k++) {
         if (k > 0) {
-        sb.append (f(sb,s[i+k]));
-//          sb.append ("-");
+          sb.append (f(sb,s[i+k]));
+        }
+        sb.append (s[i+k]);
+      }
+//System.out.println ("unique_ngram " + n + " " + sb.toString());
+      set.add (sb.toString());
+    }
+    for (int i = 0; i < s.length-n+1; i++) {
+      StringBuilder sb = new StringBuilder();
+      for (int k = 0; k < n; k++) {
+        if (k > 0) {
+          sb.append ("-");
         }
         sb.append (s[i+k]);
       }
@@ -132,7 +142,7 @@ public final class NgramUtils {
   }
 
 
-  private static final String f (CharSequence u, CharSequence v)
+  public static final String f (CharSequence u, CharSequence v)
   {
     if ((u.charAt(u.length()-1) == v.charAt(0)) && StringUtil.isVowel(v.charAt(0))) {
       return "-";

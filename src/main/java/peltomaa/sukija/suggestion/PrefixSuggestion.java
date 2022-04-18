@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2013-2017 Hannu Väisänen
+Copyright (©) 2013-2017, 2022 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -24,7 +24,6 @@ import java.util.Set;
 import java.util.TreeSet;
 import org.puimula.libvoikko.Analysis;
 import org.puimula.libvoikko.Voikko;
-import peltomaa.sukija.attributes.VoikkoAttribute;
 import peltomaa.sukija.util.StringUtil;
 import peltomaa.sukija.voikko.VoikkoUtils;
 
@@ -77,8 +76,9 @@ public class PrefixSuggestion extends Suggestion {
 
 
   @Override
-  public boolean suggest (String word, VoikkoAttribute voikkoAtt)
+  public boolean suggest (String word)
   {
+    clearAnalysis();
     analysisList.clear();
 
     // Käydään läpi kaikki etuliitteet pisimmästä alkaen ja
@@ -117,7 +117,7 @@ public class PrefixSuggestion extends Suggestion {
             }
           }
 //System.out.println ("analysisList " + analysisList);
-          voikkoAtt.addAnalysis (analysisList);
+          addToAnalysis (analysisList);
           return true;
         }
       }

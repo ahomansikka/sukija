@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2017 Hannu Väisänen
+Copyright (©) 2017, 2022 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -21,7 +21,6 @@ package peltomaa.sukija.suggestion;
 import java.util.List;
 import org.puimula.libvoikko.Analysis;
 import org.puimula.libvoikko.Voikko;
-import peltomaa.sukija.attributes.VoikkoAttribute;
 
 
 /**
@@ -35,13 +34,14 @@ public class SplitSuggestion extends Suggestion {
 
 
   @Override
-  public boolean suggest (String word, VoikkoAttribute voikkoAtt)
+  public boolean suggest (String word)
   {
+    clearAnalysis();
     if (word.indexOf('-') >= 0) return false;
 
     for (int i = word.length()-2; i >= 2; i--) {
-      if (spellOK (word.substring(0,i), voikkoAtt) &&
-          spellOK (word.substring(i),   voikkoAtt)) {
+      if (spellOK (word.substring(0,i)) &&
+          spellOK (word.substring(i))) {
 //System.out.println ("HUUHAA " + word + " [" + word.substring(0,i) + "] [" + word.substring(i) + "]");
         return true;
       }
@@ -50,11 +50,11 @@ public class SplitSuggestion extends Suggestion {
   }
 
 
-  private boolean spellOK (String word, VoikkoAttribute voikkoAtt)
+  private boolean spellOK (String word)
   {
-    List<Analysis> list = voikko.analyze (word);
+    final List<Analysis> list = voikko.analyze (word);
     if (list.size() > 0) {
-      voikkoAtt.addAnalysis (list);
+      addToAnalysis (list);
       return true;
     }
     return false;
