@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2017-2018 Hannu Väisänen
+Copyright (©) 2017-2018, 2022 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -37,7 +37,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
-import org.apache.lucene.analysis.util.ClasspathResourceLoader;
+import org.apache.lucene.util.ClasspathResourceLoader;
 
 
 class StringMap extends TreeMap<String,TreeSet<String>> {

@@ -422,6 +422,7 @@ if (LOG.isDebugEnabled()) LOG.debug ("combineAllÖ " + out);
   }
 
 
+  @SafeVarargs
   private Set<String> addAll (Set<String>... list)
   {
     final Set<String> out = new HashSet<String>();

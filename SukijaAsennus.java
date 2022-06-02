@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2015-2018, 2020-2021 Hannu Väisänen
+Copyright (©) 2015-2018, 2020-2022 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -54,8 +54,8 @@ public class SukijaAsennus {
 
     Properties p = new Properties();
     p.load (new FileReader (propertiesFile));
-    printDataConfigFile (p, new FileWriter ("conf/data-config.xml"));
-    printSchemaFile     (p, new FileWriter ("conf/schema.xml"));
+    printIndexerConfigFile (p, new FileWriter ("conf/indexer-config.xml"));
+    printSchemaFile        (p, new FileWriter ("conf/schema.xml"));
   }
 
 
@@ -84,6 +84,35 @@ public class SukijaAsennus {
     out.write ("  </document>\n" +
                "</dataConfig>\n");
 
+    out.flush();
+  }
+
+
+  private void printIndexerConfigFile (Properties p, Writer out) throws IOException
+  {
+    final String BASE_DIR = getProperty(p,"sukija.baseDir");
+    if (BASE_DIR == null) return;
+
+    out.write ("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n\n" +
+               "<configuration>\n" +
+               "  <core>" + getProperty (p, "sukija.core") + "</core>\n" +
+               "  <file>" + getProperty (p, "sukija.file", ".*") + "</file>\n" +
+               "  <excludes>" + getProperty (p, "sukija.excludes", "(?u)(?i).*[.]jpg$") + "</excludes>\n" +
+               "  <tika>" + getProperty (p, "sukija.tika", "tika-config.xml") + "</tika>\n" +
+               "  <writeLimit>" + getProperty (p, "sukija.writeLimit", "-1") + "</writeLimit>\n" +
+               "  <commitWithinMs>" + getProperty (p, "sukija.commitWithinMs", "300000") + "</commitWithinMs>\n" +
+               "  <onError>" + getProperty (p, "sukija.onError", "abort") + "</onError>\n" +
+               "  <recursive>" + getProperty (p, "sukija.recursive", "true") + "</recursive>\n");
+
+    for (String dir : BASE_DIR.split(PATH_SEPARATOR)) {
+      if (!directoryOK (dir)) {
+//      throw new RuntimeException (dir + " ei ole olemassa tai se ei ole hakemisto.");
+        System.out.println (dir + " ei ole olemassa tai se ei ole hakemisto.");
+      }
+      out.write ("  <baseDir>" + dir + "</baseDir>\n");
+    }
+
+    out.write ("</configuration>\n");
     out.flush();
   }
 
@@ -361,6 +390,11 @@ public class SukijaAsennus {
     "  </fields>\n" +
     "  <uniqueKey>id</uniqueKey>\n" +
     "  <types>\n" +
+    "    <fieldType name=\"booleans\" class=\"solr.BoolField\" sortMissingLast=\"true\"/>\n" +
+    "    <fieldType name=\"pdates\" class=\"solr.DateRangeField\" docValues=\"true\" multiValued=\"true\"/>\n" +
+    "    <fieldType name=\"plongs\" class=\"solr.LongPointField\" docValues=\"true\" multiValued=\"true\"/>\n" +
+    "    <fieldType name=\"pdoubles\" class=\"solr.DoublePointField\" docValues=\"true\" multiValued=\"true\"/>\n" +
+    "    <fieldType name=\"text_general\" class=\"solr.TextField\" positionIncrementGap=\"1\"/>\n" +
     "    <fieldType name=\"long\" class=\"solr.TrieLongField\" precisionStep=\"0\" positionIncrementGap=\"0\"/>\n" +
     "    <fieldType name=\"string\" class=\"solr.StrField\" sortMissingLast=\"true\"/>\n" +
     "    <fieldType name=\"text\" class=\"solr.TextField\" positionIncrementGap=\"1\">\n" +

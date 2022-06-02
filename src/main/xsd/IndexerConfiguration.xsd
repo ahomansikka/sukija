@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd = "http://www.w3.org/2001/XMLSchema"
+            xmlns:jxb = "http://java.sun.com/xml/ns/jaxb"
+            jxb:version="2.1"
+>
+
+<xsd:simpleType name = "OnErrorType">
+  <xsd:restriction base = "xsd:string">
+    <xsd:enumeration value = "abort"/>
+    <xsd:enumeration value = "skip"/>
+  </xsd:restriction>
+</xsd:simpleType>
+
+
+<xsd:complexType name = "IndexerConfigurationType">
+  <xsd:sequence>
+    <xsd:element name = "core"           type = "xsd:string"/>
+    <xsd:element name = "file"           type = "xsd:string"/>
+    <xsd:element name = "excludes"       type = "xsd:string"/>
+    <xsd:element name = "tika"           type = "xsd:string"/>
+    <xsd:element name = "writeLimit"     type = "xsd:integer"/>
+    <xsd:element name = "commitWithinMs" type = "xsd:integer"/>
+    <xsd:element name = "onError"        type = "OnErrorType"/>
+    <xsd:element name = "recursive"      type = "xsd:boolean"/>
+    <xsd:element name = "baseDir"        type = "xsd:string" minOccurs = "1" maxOccurs = "unbounded"/>
+  </xsd:sequence>
+</xsd:complexType>
+
+
+<xsd:element name = "configuration" type = "IndexerConfigurationType"/>
+</xsd:schema>

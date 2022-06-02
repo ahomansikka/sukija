@@ -8,7 +8,7 @@
 
   <groupId>peltomaa.sukija</groupId>
   <artifactId>sukija</artifactId>
-  <version>2.2.26</version>
+  <version>3.0.0</version>
   <packaging>jar</packaging>
   <name>sukija</name>
   <description>Solr plugins for indexing files written in Finnish.</description>
@@ -25,7 +25,7 @@
   <developers>
     <developer>
       <name>Hannu Väisänen</name>
-      <email>hannu.vaisanen@uef.fi</email>
+      <email>hannuv@meiliboxi.fi</email>
       <roles>
         <role>maintainer</role>
         <role>developer</role>
@@ -64,14 +64,14 @@
       <type>jar</type>
       <scope>test</scope>
     </dependency>
-
+<!--
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-simple</artifactId>
       <version>1.7.24</version>
       <scope>test</scope>
     </dependency>
-
+-->
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
@@ -79,22 +79,34 @@
     </dependency>
 
     <dependency>
+      <groupId>org.apache.logging.log4j</groupId>
+      <artifactId>log4j-core</artifactId>
+      <version>2.17.1</version>
+    </dependency>
+
+    <dependency>
       <groupId>org.apache.solr</groupId>
       <artifactId>solr-core</artifactId>
-      <version>8.11.1</version>
+      <version>9.0.0</version>
     </dependency>
 
    <dependency>
       <groupId>org.apache.solr</groupId>
       <artifactId>solr-solrj</artifactId>
-      <version>8.11.1</version>
+      <version>9.0.0</version>
     </dependency>
 
    <dependency>
       <groupId>org.apache.lucene</groupId>
       <artifactId>lucene-core</artifactId>
-      <version>8.11.1</version>
-    </dependency>
+      <version>9.0.0</version>
+   </dependency>
+
+   <dependency>
+      <groupId>org.apache.lucene</groupId>
+      <artifactId>lucene-suggest</artifactId>
+      <version>9.0.0</version>
+   </dependency>
 
     <dependency>
       <groupId>org.puimula.voikko</groupId>
@@ -107,7 +119,27 @@
         <artifactId>ahocorasick</artifactId>
         <version>0.6.3</version>
     </dependency>
+
+<!-- Indexer.java -->
+    <dependency>
+      <groupId>org.apache.tika</groupId>
+      <artifactId>tika-core</artifactId>
+      <version>1.28.1</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.tika</groupId>
+      <artifactId>tika-parsers</artifactId>
+      <version>1.28.1</version>
+    </dependency>
+
+    <dependency>
+      <groupId>org.apache.httpcomponents</groupId>
+      <artifactId>httpclient</artifactId>
+      <version>4.5.13</version>
+    </dependency>
   </dependencies>
+
 
   <build>
     <resources>
@@ -172,6 +204,13 @@
           <showDeprecation>true</showDeprecation>
           <showWarnings>true</showWarnings>
           <verbose>false</verbose>
+          <compilerArgs>
+<!--
+            <arg>-Xlint:all</arg>
+            <arg>-Xlint:unchecked</arg>
+-->
+            <arg>-Xlint:deprecation</arg>
+          </compilerArgs>
         </configuration>
       </plugin>
 

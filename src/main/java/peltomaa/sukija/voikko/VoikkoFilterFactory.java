@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2012-2016, 2018 Hannu Väisänen
+Copyright (©) 2012-2016, 2018, 2022 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -22,10 +22,10 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.Vector;
 import org.apache.lucene.analysis.TokenFilter;
-import org.apache.lucene.analysis.TokenStream;;
-import org.apache.lucene.analysis.util.ResourceLoader;
-import org.apache.lucene.analysis.util.ResourceLoaderAware;
-import org.apache.lucene.analysis.util.TokenFilterFactory;
+import org.apache.lucene.analysis.TokenStream;
+import org.apache.lucene.analysis.TokenFilterFactory;
+import org.apache.lucene.util.ResourceLoader;
+import org.apache.lucene.util.ResourceLoaderAware;
 import peltomaa.sukija.suggestion.Suggestion;
 import peltomaa.sukija.suggestion.SuggestionFilter;
 import peltomaa.sukija.suggestion.SuggestionParser;

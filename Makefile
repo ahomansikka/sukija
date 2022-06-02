@@ -8,10 +8,10 @@ SukijaAsennus.class: SukijaAsennus.java
 
 clean:
 	mvn clean
-	rm -f SukijaAsennus.class conf/data-config.xml conf/schema.xml
+	rm -f SukijaAsennus.class conf/indexer-config.xml conf/schema.xml
 
 
-SUKIJA=sukija-2.2.26
+SUKIJA=sukija-3.0.0
 tar:
 	if [ -e $(SUKIJA) ]; then \
 	  rm -f $(SUKIJA).tar.bz2; \

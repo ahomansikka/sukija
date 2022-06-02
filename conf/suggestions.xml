@@ -5069,8 +5069,10 @@
     <input>faneer vaner</input>
     <input>faner vaner</input>
     <input>fascis fasis</input>
+    <input>fantaasia fantasia</input>
     <input>feodali feodaali</input>
     <input>faktilli fakti</input>
+    <input>flygel flyygel</input>
     <input>foiniikia foinikia</input>
     <input>foiniikilai foinikialai</input>
     <input>foiniikkialai foinikialai</input>
@@ -5083,9 +5085,12 @@
     <input>fransiskan fransiskaan</input>
     <input>franska ranska</input>
     <input>funktsionaal funktionaal</input>
+    <input>fusilier fusilieer</input>
     <input>frygia fryygia</input>
     <input>frygilai fryygialai</input>
     <input>fysikalli fysikaali</input>
+    <input>fysilieer fusilieer</input>
+    <input>fysilier fusilieer</input>
     <input>fysilli fyysi</input>
     <input>fyysilli fyysi</input>
     <input>fänrik vänrik</input>
@@ -5415,6 +5420,7 @@
     <input>kolahdut kolaut</input>
     <input>koleera kolera</input>
     <input>koliibr kolibr</input>
+    <input>kollee kolea</input>
     <input>kolleeg kolleg</input>
     <input>kolleh koleh</input>
     <input>kollehta kolehti</input>
@@ -5674,6 +5680,7 @@
     <input>madagascar madagaskar</input>
     <input>mahdoilli mahdolli</input>
     <input>mahomettilai muhamettilai</input>
+    <input>maijon maidon</input>
     <input>maineek maineik</input>
     <input>mainek maineik</input>
     <input>majesteeti majesteetti</input>
@@ -6035,6 +6042,7 @@
     <input>sirahv kirhav</input>
     <input>siren sireen</input>
     <input>sisällöilli sisällölli</input>
+    <input>sit sitten</input>
     <input>sitron sitruun</input>
     <input>sitroon sitruun</input>
     <input>sitrun sitruun</input>
@@ -6228,6 +6236,7 @@
     <input>vaaetehtailija vaatetehtailija</input>
     <input>vaijen vaien</input>
     <input>vaillinnai vaillinai</input>
+    <input>vainaaja vainaja</input>
     <input>vajaavai vajavai</input>
     <input>valastu valaistu</input>
     <input>waleslai walesilai</input>

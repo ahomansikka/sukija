@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2012-2018, 2020-2021 Hannu Väisänen
+Copyright (©) 2012-2018, 2020-2022 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -33,6 +33,7 @@ import org.ahocorasick.trie.handler.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import peltomaa.sukija.util.JAXBUtil;
+import peltomaa.sukija.util.XjcIO;
 import peltomaa.sukija.util.RegexUtil;
 import peltomaa.sukija.schema.*;
 import org.puimula.libvoikko.Voikko;
@@ -43,15 +44,18 @@ public class SuggestionParser {
   {
     try {
 //      LOG.info ("SuggestionParser 1: Aloitetaan.");
-      si = JAXBUtil.unmarshal (is, XSD_FILE, SCHEMA_LOCATION, CONTEXT_PATH, this.getClass().getClassLoader());
+//      si = JAXBUtil.unmarshal (is, XSD_FILE, SCHEMA_LOCATION, CONTEXT_PATH, this.getClass().getClassLoader());
+      io = new XjcIO<SuggestionInput> ("/SuggestionInput.xsd", SuggestionInput.class, ObjectFactory.class);
+      si = io.read (is);
       parseSuggestions (voikko, si.getApostropheOrIcharOrCompoundWordEnd());
 
 //      print (System.out);
     }
     catch (Throwable t)
     {
-      LOG.error ("a " + t.getCause().getClass().getName() + " " + t.getCause().getMessage());
+//      LOG.error ("a " + t.getCause().getClass().getName() + " " + t.getCause().getMessage());
       if (t.getCause() != null) LOG.error ("b " + t.getCause().getClass().getName() + " " + t.getCause().getMessage());
+      t.printStackTrace (System.out);
       throw new SuggestionParserException (t);
     }
   }
@@ -68,7 +72,9 @@ public class SuggestionParser {
     try {
 //      LOG.info ("SuggestionParser 2: " + xmlFile + " " + xsdFile + " " + SCHEMA_LOCATION);
 
-      si = JAXBUtil.unmarshal (xmlFile, xsdFile, SCHEMA_LOCATION, CONTEXT_PATH, this.getClass().getClassLoader());
+//      si = JAXBUtil.unmarshal (xmlFile, xsdFile, SCHEMA_LOCATION, CONTEXT_PATH, this.getClass().getClassLoader());
+      io = new XjcIO<SuggestionInput> ("/SuggestionInput.xsd", SuggestionInput.class, ObjectFactory.class);
+      si = io.read (xmlFile);
       parseSuggestions (voikko, si.getApostropheOrIcharOrCompoundWordEnd());
 //      print (System.out);
     }
@@ -76,6 +82,7 @@ public class SuggestionParser {
     {
       if (t.getMessage() != null) LOG.error ("c " + t.getMessage() + "\n");
       if (t.getCause() != null) LOG.error ("d " + t.getCause().getMessage() + "\n");
+      t.printStackTrace (System.out);
       throw new SuggestionParserException (t);
     }
   }
@@ -86,7 +93,8 @@ public class SuggestionParser {
   public void print (OutputStream out) throws SuggestionParserException
   {
     try {
-      JAXBUtil.marshal ((new ObjectFactory()).createSuggestions(si), CONTEXT_PATH, out, this.getClass().getClassLoader());
+//      JAXBUtil.marshal ((new ObjectFactory()).createSuggestions(si), CONTEXT_PATH, out, this.getClass().getClassLoader());
+      io.write (si, out);
     }
     catch (Throwable t)
     {
@@ -102,7 +110,8 @@ public class SuggestionParser {
   public void print (Writer out) throws SuggestionParserException
   {
     try {
-      JAXBUtil.marshal ((new ObjectFactory()).createSuggestions(si), CONTEXT_PATH, out, this.getClass().getClassLoader());
+//      JAXBUtil.marshal ((new ObjectFactory()).createSuggestions(si), CONTEXT_PATH, out, this.getClass().getClassLoader());
+      io.write (si, out);
     }
     catch (Throwable t)
     {
@@ -302,4 +311,5 @@ public class SuggestionParser {
 //  private static final String XSD_FILE = "peltomaa/sukija/schema/SuggestionInput.xsd";
   private static final String SCHEMA_LOCATION = "peltomaa/sukija/schema";
   private SuggestionInput si;
+  private final XjcIO<SuggestionInput> io;
 }

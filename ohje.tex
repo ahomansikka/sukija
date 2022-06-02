@@ -6,6 +6,7 @@
 \usepackage[lastpage,user]{zref}
 \usepackage{fancyhdr}
 \usepackage{setspace}
+\usepackage{tabularx}
 \frenchspacing
 \headheight 15pt
 \raggedright
@@ -44,23 +45,27 @@ tekstitiedostojen merkistökoodauksia, joita Apache Tika
 
 \item Corevoikko:
       \verb=https://github.com/voikko/corevoikko=
-      Uusimmat versiot.
+      Uusin versio. C-koodin pitää olla käännetty niin,
+      että sanojen perusmuodot tulevat mukaan.
 
-\item Solr 8.11.1:
+\item Solr 9.0.0:
       \verb=http://lucene.apache.org/solr/=
       Tässä dokumentissa Solr:sta käytetään nimeä solr-x.y.z,
       missä x.y.z tarkoittaa version numeroa.
 
-\item Javan versio 17. Sukijan pitäisi kääntyä myös versiolla 11.
+\item Javan versio 17. Sukija ei ehkä käänny Javan aiemmilla versiolla.
 
-\item Apache mavenin versio 3.8.4. Sen voi imuroida täältä
+\item Apache mavenin versio 3.8.4 tai uudempi. Sen voi imuroida täältä
       \verb=https://maven.apache.org/download.cgi=
       Aiemmat mavenin versiot eivät tue Java 17:ää.
+
+\item Apache Tika. Sen pitää olla sama versio, jota solr-x.y.z
+      käyttää. Tarkista asia tiedostossa pom.xml.
 \end{itemize}
 
 
 Lisäksi Sukija tarvitsee erinäisiä jar-tiedostoja, mutta Maven imuroi
-ne verkosta automaagisesti.
+kaikki Sukijan tarvitsemat jar'it automaagisesti.
 
 Tämä asennusohje olettaa, että libvoikko on asennettu hakemistoon
 \verb=/usr/local/lib= ja että Solr on hakemistossa
@@ -68,6 +73,11 @@ Tämä asennusohje olettaa, että libvoikko on asennettu hakemistoon
 
 Jos ne ovat jossain muualla, tiedostossa \verb=sukija.properties=
 olevia Libvoikon tietoja pitää muuttaa vastaavasti.
+
+Versiossa 9.0.0 Solr:n API on muuttunut, ja minun piti muuttaa
+asetustiedostoja \verb=schema.xml= ja \verb=solrconfig.xml= sekä
+Sukijan koodia. Lisäksi \verb=DataImportHandler= on poistettu, mikä
+vaikuttaa tiedostojen indeksointiin. Katso sivu \zpageref{indexing}.
 
 
 \subsection*{Mavenin asentaminen}
@@ -82,7 +92,7 @@ tar xzvf apache-maven-3.8.4-bin.tar.gz
 \end{verbatim}
 
 Tämän jälkeen lisätään seuraavat rivit tiedostoon \verb=~/.bashrc= tai
-vastaavan
+vastaavaan
 
 \begin{verbatim}
 export M2_HOME=/usr/local/apache-maven/apache-maven-3.8.4
@@ -98,6 +108,7 @@ minkä jälkeen voi tarkistaa, että mavenin versio on 3.8.4
 \verb=mvn --version=
 
 
+\newpage
 \subsection*{Solr:n asentaminen}
 
 Solr:ia ei tarvitse asentaa, vaan sitä voi käyttää suoraan
@@ -106,34 +117,45 @@ hakemistosta \verb=$HOME/Lataukset/solr/solr-x.y.z=.
 Tuotantokäyttöä varten Solr on parasta asentaa palveluna (service).
 Tämä ohje olettaa, että Solr on asennettu palveluna.
 
-Katso Taking Solr to Production
+Katso
 
-{\footnotesize
-\verb=https://lucene.apache.org/solr/guide/8_4/taking-solr-to-production.html=
-\verb=#taking-solr-to-production=
-}
+\verb=https://solr.apache.org/guide/solr/latest/=
+\verb=Deployment Guide -> Installation & Deployment=
+\verb= -> Taking Solr to Production=
 
-Kaiken pitää olla yhdellä rivillä.
-
-Jos et malta katsoa, se tehdään hakemistossa
-\verb=$HOME/Lataukset/solr/= tällä tavalla
-
-{\footnotesize
-\verb=sudo bash solr-x.y.z/bin/install_solr_service.sh solr-x.y.z.tgz -u username=
-}
-
-missä \verb=username= on oma käyttäjätunnuksesi.
-Jos kohdan \verb=-u username= jättää pois, Solr asennetaan tunnuksen
-\verb=solr= alle.
-
-Skripti asentaa Solr:n hakemistoihin \verb=/opt/solr= ja
-\verb=/var/solr=.
 
 Jos kone on kiinni verkossa, kannattaa katsoa myös ohjeet turvallisuudesta
 
-\verb=https://solr.apache.org/guide/8_11_1/securing-solr.html=
+\verb=https://solr.apache.org/guide/solr/latest/=
+\verb=Deployment Guide -> Securing Solr=
+
+Mitä turvallisuuteen tulee,
+tiedostossa \verb|/etc/default/solr.in.sh| oleva rivi
+
+\verb|#SOLR_SECURITY_MANAGER_ENABLED=true|
+
+pitää muuttaa muotoon
+
+\verb|SOLR_SECURITY_MANAGER_ENABLED=false|
+
+tai muuten Solr ei osaa ladata Voikon binaaritiedostoa libvoikko.so.
 
 
+\bigskip\noindent
+Älkää säikähtäkö: Java 17:ssä SecurityManager on merkitty
+vanhentuneeksi (ulkomaankielellä ''deprecated''), ja se poistetaan
+jossain Javan tulevassa versiossa.
+
+Mielestäni latauksen pitäisi toimia, jos Solr:n tiedostoon
+\verb=server/etc/security.policy= lisää rivin
+
+\verb|permission java.lang.RuntimePermission "loadLibrary.jnidispatch";|
+
+mutta se ei toimi. Jos saatte homman toimimaan muuttamatta tiedostoa
+\verb|/etc/default/solr.in.sh| kertokaa minulle.
+
+
+\newpage
 \subsection*{Sukijan kääntäminen ja asentaminen}
 
 Sukija käännetään ja asennetaan komennolla
@@ -148,6 +170,7 @@ Sukijan jar-tiedosto asennetaan maven-hakemistoon \verb|${HOME}/.m2|
 
 
 \subsection*{Sukijan konfigurointi}
+\zlabel{Sukija:konf}
 
 Sukijan parametrit asetetaan tiedostossa \verb|sukija.properties|,
 jossa on myös tarvittavat ohjeet.
@@ -156,9 +179,9 @@ Sen jälkeen komennolla
 
 \verb|make tiedostot|
 
-tehdään Solr:n asetustiedostot \verb=conf/data-config.xml= ja
-\verb=conf/schema.xml=. Esimerkit näistä tiedostoista
-saa aikaan yllä mainitulla komennolla. (-:
+tehdään Solr:n asetustiedostot \verb=conf/indexer-config.xml= (katso
+sivu \zpageref{indexing}) ja \verb=conf/schema.xml=. Esimerkit näistä
+tiedostoista saa aikaan yllä mainitulla komennolla. (-:
 
 Seuraavaksi pitää tehdä Solr:iin Sukijan tarvitsemat hakemistot ja
 kopioida niihin Solr:n tarvitsemat tiedostot. Sitä varten on kaksi
@@ -179,10 +202,11 @@ Solr:iin jommallakummalla komennoista
 
 Sukijan jar-paketin voi päivittää näin
 
-\verb=cp $HOME/.m2/repository/peltomaa/sukija/sukija/2.2.26/sukija-2.2.26.jar /var/solr/data/sukija/lib/=
+\verb=cp $HOME/.m2/repository/peltomaa/sukija/sukija/3.0.0/sukija-3.0.0.jar /var/solr/data/sukija/lib/=
 
 Kaikki pitää laittaa yhdelle riville ja mahdollisesti lisätä
 \verb=sudo= komennon alkuun.
+
 
 \bigskip
 Seuraavaksi mennään selaimella osoitteeseen \verb=http://localhost:8983/solr/=
@@ -211,25 +235,51 @@ kommentoitu pois, mutta niitä voi siirtää halutun määrän kommenttien
 ulkopuolelle. Jotta Solr näkisi muutokset, ne pitää laittaa tiedostoon
 \verb=/var/solr/log4j2.xml=.
 
-Lokitulostuksen eri tasot (\verb=ALL=, jne.) voi katsoa Solr:n
+Lokitulostuksen eri tasot (\verb=all=, jne.) voi katsoa Solr:n
 dokumenteista.
 
 Lokitulostus menee kansioon \verb=/var/solr/logs/=
 
 
+\newpage
 \subsection*{Indeksointi}
 \zlabel{indexing}
 
-Tiedostot indeksoidaan menemällä osoitteeseen
-\verb|http://localhost:8983/solr/sukija/dataimport?command=full-import|
+Solr:n versiosta 9.0.0 on poistettu \verb=DataImportHandler=, jota
+käytin kovalevyni indeksointiin, ja Sen korvaajaksi tein ohjelman
+\verb=src/main/resources/indexer.sh=
 
-Indeksoinnin voi konfiguroida ja aloittaa myös Solr:n käyttöliittymästä
-kohdassa \verb|Dataimport|.
+Se toimii minulla, mutta en väitä, että se toimii sinulla.
 
-Enemmän tai vähemmän pitkän ajan kuluttua indeksoinnin lopputuloksen
-voi katsoa osoitteesta
-\verb|http://localhost:8983/solr/sukija/dataimport|
-tai Solr:n käyttöliittymästä.
+\verb=src/main/resources/iindexer.sh= konfiguroidaan tiedostossa
+\verb|sukija.properties|. Katso sivu \zpageref{Sukija:konf}.
+Tiedoston \verb=conf/indexer-config.xml= kentät ovat
+
+
+\begin{tabularx}{\textwidth}{@{}lX}
+core           & Sukijan indeksin URL-osoite. \\
+file           & Säännöllinen lauseke, joka kuvaa indeksoitavien tiedostojen nimet. \\
+excludes       & Säännöllinen lauseke, joka kuvaa niitten tiedostojen nimet, joita ei indeksoida. \\
+tika           & Apache Tikan asetustiedosto, jota Sukija käyttää. \\
+writeLimit     & Indeksoitavan tiedoston maksimikoko. -1 tarkoittaa, että ylärajaa ei ole.
+                 Jos writeLimit > 0 indeksoidaan tiedoston alusta enintään niin monta tavua ja lopetetaan. \\
+commitWithinMs & Enimmäisaika millisekunteina ennen kuin indeksoitavat tiedostot tallenetaan Solr:ään. \\
+onError        & Mitä tehdään virheilmoituksen jälkeen? \\
+               & \texttt{abort} lopettaan. \\
+               & \texttt{skip} siirrytän indeksoimaan seuraavaa tiedostoa. \\
+recursive      & Indeksoidaanko baseDir-hakemistojen alihakemistot \\
+               & (\texttt{true}, \texttt{false})? \\
+baseDir        & Indeksoitavat hakemistot, erottimena \\
+               & \texttt{\$\{path.separator\}}, esimerkiksi \\
+               & \texttt{\$\{user.home\}/Asiakirjat:/usr/local/data} \\
+               & Linuxissa erottimena on kaksoispiste : \\
+               & Windowsissa erottimena taitaa olla puolipiste ;
+\end{tabularx}
+
+Kenttien oletusarvot ovat tiedostossa \verb=sukija.properties=
+
+Myös \verb=Apache Nutch=in voi konfiguroida indeksoimaan kovalevyn
+eli paikallisen tiedostojärjestelmän.
 
 
 \subsection*{Tietojen etsiminen}
@@ -451,23 +501,9 @@ Tällä komennolla ei ole parametreja.
 
 
 \bigskip \noindent \noindent
-Copyright © 2011--2021 Hannu Väisänen.
+Copyright © 2011--2022 Hannu Väisänen.
 \end{document}
 
-
-\begin{comment}
-\subsection*{Javalla kirjoitettu käyttöliittymä}
-
-Kun tiedostot on indeksoitu, niitä voidaan tutkia myös komennolla
-
-{\footnotesize
-\verb|java -jar $HOME/.m2/repository/peltomaa/sukija/sukija-ui/1.1/sukija-ui-1.1.jar|
-}
-\end{comment}
-
-\bigskip \noindent \noindent
-Copyright © 2011--2021 Hannu Väisänen.
-\end{document}
 
 
 % cp /home/hvaisane/Lataukset/solr/solr-x.y.z/example/example-DIH/solr/db/conf/admin-extra*.html ~/Lataukset/solr/solr-5.0.0/server/solr/sukija/conf/
