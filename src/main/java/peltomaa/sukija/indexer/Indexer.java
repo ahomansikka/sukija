@@ -23,6 +23,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.regex.Pattern;
@@ -123,6 +125,7 @@ public class Indexer {
 
       if (!fileName.matcher(FILE_NAME).matches()) continue;
       if (excludes.matcher(FILE_NAME).matches()) continue;
+      if (Files.size (Path.of(FILE_NAME)) == 0) continue;
 
       final ContentHandler textHandler = new BodyContentHandler (writeLimit);
       final Metadata metadata = new Metadata();
@@ -151,7 +154,7 @@ public class Indexer {
       doc.addField ("id", FILE_NAME);
       doc.addField ("text", textHandler.toString());
       ++totalDoc;
-/*
+
       docList.add (doc);
 
       if (docList.size() >= 1000) {
@@ -164,7 +167,6 @@ public class Indexer {
         }
         docList.clear();
       }
-*/
     }
   }
 
@@ -220,6 +222,7 @@ public class Indexer {
     return (configuration.getOnError().value().compareTo(OnErrorType.ABORT.value()) == 0);
   }
 
+
   private final IndexerConfigurationType configuration;
   private final SolrClient client;
   private final AutoDetectParser parser;
@@ -236,4 +239,5 @@ public class Indexer {
   private int totalDoc = 0;
 
   private static final Logger logger = LogManager.getLogger (Indexer.class);
-  private static final long serialVersionUID = 1L;}
+  private static final long serialVersionUID = 1L;
+}
