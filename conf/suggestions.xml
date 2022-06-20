@@ -4912,6 +4912,7 @@
     <input>banalisuu banaaliu</input>
     <input>barbar barbaar</input>
     <input>barbarilai barbaarilai</input>
+    <input>beetlehem betlehem</input>
     <input>beduin beduiin</input>
     <input>benediktin benediktiin</input>
     <input>berlini berliini</input>
@@ -5579,9 +5580,14 @@
     <input>kultuur kulttuur</input>
     <input>kultur kulttuur</input>
     <input>kuluttuur kulttuur</input>
+    <input>kumahut kumaut</input>
     <input>kummaksu kummeksu</input>
     <input>kummali kummalli</input>
     <input>kummankinpuoli kummanpuoli</input>
+    <input>kumoontui kumoutui</input>
+    <input>kumpali kumppali</input>
+    <input>kumpane kumppane</input>
+    <input>kumpani kumppani</input>
     <input>kumpase kumpaise</input>
     <input>kuniga kuninga</input>
     <input>kunika kuninka</input>
@@ -5963,6 +5969,7 @@
     <input>registrator reistraattor</input>
     <input>reikkalai kreikkalai</input>
     <input>reistrator reistraattor</input>
+    <input>reisu reissu</input>
     <input>relaationaal relationaal</input>
     <input>renesanss renessanss</input>
     <input>renessansi renessanssi</input>
@@ -6042,7 +6049,6 @@
     <input>sirahv kirhav</input>
     <input>siren sireen</input>
     <input>sisällöilli sisällölli</input>
-    <input>sit sitten</input>
     <input>sitron sitruun</input>
     <input>sitroon sitruun</input>
     <input>sitrun sitruun</input>
@@ -6152,6 +6158,8 @@
     <input>telefuuni telefoni</input>
     <input>temmais tempais</input>
     <input>temmas tempais</input>
+    <input>temple temppele</input>
+    <input>templi temppeli</input>
     <input>tempperament temperament</input>
     <input>terehtyör tirehtöör</input>
     <input>terehtöör tirehtöör</input>
@@ -6342,26 +6350,23 @@
     <input>vuokrali vuokralai</input>
   </string>
   <regex>
-    <input>(%V)(h)(%V)  $1hd$3</input>
-<!--    <input>(%V)(h)(%V)    $1$3</input> -->
+    <input>(%V)(h)(%V)  $1hd$3</input>   <!-- Kahen => kahden. -->
     <input>(%V)hin$ $1ihin</input>
     <input>(%V%V)(v)(%V) $1d$3</input>   <!-- Pöyvän => pöydän, uuven => uuden. -->
-    <input>(mp)(%A(?:s|h%An)?)$    np$2</input>
-<!--    <input>([^l])(li)(nen|s(?:[eitu])) $1lli$3</input> -->  <!-- Alueelinen => alueellinen. -->
+    <input>(mp)(%A(?:s|h%An)?)$ np$2</input> <!-- Niimpä => niinpä. -->
     <input>(%Oi)(ts[ie]) $1</input>        <!-- Hallinnoitsija => hallinnoija, hallinnoi(tse)n. -->
     <input>(%U)(v)(%A) $1$3</input>        <!-- Lauvantai => lauantai, kauvan => kauvan. -->
     <input>(\p{L})\1{2,} $1$1</input>      <!-- Korvaa 3 tai useampi sama kirjain 2:lla (kauttta => kautta). -->
     <input>(l%Ai)s$ $1nen</input>          <!-- Suomalais => suomalainen. -->
     <input>(llis)$ llinen</input>          <!-- Äärellis => äärellinen. -->
     <input>(mis)$ minen</input>            <!-- Puhumis => puhuminen. -->
+    <input>(lline)$ llinen</input>         <!-- Illalline => illallnen. -->
+    <input>(llise)$ llisen</input>         <!-- Illallise => illallisen. -->
+    <input>(xi)$ ksi</input>               <!-- Juoxi => juoksi. -->
     <input>(a)$ ä</input>
     <input>(ä)$ a</input>
     <input>(o)$ ö</input>
     <input>(ö)$ o</input>
-<!--
-    <input>(oo)$ oa</input>
-    <input>(öö)$ öä</input>
--->
     <input>(ppas?)$ pa</input>
     <input>(ppäs?)$ pä</input>
     <tryAll>true</tryAll>

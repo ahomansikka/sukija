@@ -207,6 +207,14 @@ Sukijan jar-paketin voi päivittää näin
 Kaikki pitää laittaa yhdelle riville ja mahdollisesti lisätä
 \verb=sudo= komennon alkuun.
 
+Päivityksen jälkeen Solr pitää käynnistää uudellen. Linuxissa se käy
+näin
+
+\verb=sudo service solr restart=
+
+Jos Solr:ia käyttää selaimen kautta, sekin on syytä käynnistää
+uudelleen.
+
 
 \bigskip
 Seuraavaksi mennään selaimella osoitteeseen \verb=http://localhost:8983/solr/=
