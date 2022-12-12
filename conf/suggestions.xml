@@ -1889,6 +1889,12 @@
     <input>instruktivi instruktiivi</input>
     <input>instrumentale instrumentaale</input>
     <input>instrumentali instrumentaali</input>
+    <input>instrumentatio instrumentaatio</input>
+    <input>instrumentatsio instrumentaatio</input>
+    <input>instrumentatsione instrumentaatio</input>
+    <input>instrumentatsioni instrumentaatio</input>
+    <input>instrumentatsioone instrumentaatio</input>
+    <input>instrumentatsiooni instrumentaatio</input>
     <input>integrale integraale</input>
     <input>integrali integraali</input>
     <input>integratio integraatio</input>
@@ -4023,10 +4029,10 @@
     <input>sabotöri sabotööri</input>
     <input>sagittalinen sagittaalinen</input>
     <input>sagittalis sagittaalis</input>
-    <input>šakale šakaale</input>
     <input>sakale sakaale</input>
-    <input>šakali šakaali</input>
+    <input>šakale šakaale</input>
     <input>sakali sakaali</input>
+    <input>šakali šakaali</input>
     <input>sakrale sakraale</input>
     <input>sakrali sakraali</input>
     <input>salivatio salivaatio</input>
@@ -4692,6 +4698,8 @@
     <input>vietnamisatsiooni vietnamisaatio</input>
     <input>viikottainen viikoittainen</input>
     <input>viikottais viikoittais</input>
+    <input>vinottainen vinoittainen</input>
+    <input>vinottais vinoittais</input>
     <input>virginale virginaale</input>
     <input>virginali virginaali</input>
     <input>virilisatio virilisaatio</input>
@@ -4756,6 +4764,7 @@
     <input>abessiini abessini</input>
     <input>abyssiini abessini</input>
     <input>abyssini abessini</input>
+    <input>aehe aihe</input>
     <input>aethiopia etiopia</input>
     <input>aethiopialai etiopialai</input> 
     <input>affäär afäär</input>
@@ -4779,6 +4788,7 @@
     <input>aije aie</input>
     <input>aijo aio</input>
     <input>aikailai aikalai</input>
+    <input>aikoinsoa aikaansaa</input>
     <input>aikuhi aikui</input>
     <input>ainahi ainai</input>
     <input>aineeli aineelli</input>
@@ -5212,6 +5222,9 @@
     <input>idiot idioot</input>
     <input>igloo iglu</input>
     <input>ihimilli inhimilli</input>
+    <input>ihte itse</input>
+    <input>ihtejä itseä</input>
+    <input>ihtesäkkiin itse</input>
     <input>iislantilai islantilai</input>
     <input>ijäisyy iäisyy</input>
     <input>ijäti iäti</input>
@@ -5240,6 +5253,7 @@
     <input>iraanilais iranilais</input>
     <input>ironilli ironi</input>
     <input>irrali irralli</input>
+    <input>israil israel</input>
     <input>itaalialai italialai</input>
     <input>italilai italialai</input>
     <input>itallialai italialai</input>
@@ -5407,6 +5421,7 @@
     <input>klaver klaveer</input>
     <input>kliinilli kliini</input>
     <input>kliniik klinik</input>
+    <input>kniht niht</input>
     <input>koffeii kofeii</input>
     <input>kohoel kohoil</input>
     <input>kohtuuli kohtuullinen</input>
@@ -5659,6 +5674,9 @@
     <input>likviid likvid</input>
     <input>lineari lineaari</input>
     <input>liveriasu livreeasu</input>
+    <input>llsessa llisessa</input>    <!-- Esim. Onnell(i)ses(sa|sta|st). -->
+    <input>llsesta llisesta</input>
+    <input>llsesti llisti</input>
     <input>longobard langobard</input>
     <input>loord lord</input>
     <input>looshi loosi</input>
@@ -5925,7 +5943,9 @@
     <input>psyykilli psyykki</input>
     <input>psyykin psyykkin</input>
     <input>psyykis psyykkis</input>
-    <input>puhistaissa puhdistaessa</input>
+    <input>puhistaissa puhdistaessa</input> 
+    <input>punakellerv punakellertäv</input>
+    <input>punasinerv punasinertäv</input>
     <input>punilais puunilais</input>
     <input>punsi punssi</input>
     <input>puolentoista puolitoista</input>
@@ -6066,6 +6086,18 @@
     <input>skyyttiläi skyyttalai</input>
     <input>slave slaave</input>
     <input>slavi slaavi</input>
+    <input>soais sokais</input>
+    <input>soakeli saakeli</input>
+    <input>soalihis saaliis</input>
+    <input>soalis saalis</input>
+    <input>soama saama</input>
+    <input>soami saami</input>
+    <input>soappa saapa</input>
+    <input>soappaan saappan</input>
+    <input>soarna saarna</input>
+    <input>soatava saatava</input>
+    <input>soatta saatta</input>
+    <input>soavu saavu</input>
     <input>sokur soker</input>
     <input>sokuroitt sokeroit</input>
     <input>soobel soopel</input>
@@ -6212,6 +6244,8 @@
     <input>tunneitu tunnetu</input>
     <input>tunnettui tunnetui</input>
     <input>tuorsta torsta</input>
+    <input>turanne tyranne</input>
+    <input>turanni tyranni</input>
     <input>turmellu turmelu</input>
     <input>turvali turvalli</input>
     <input>tuskaloi tuskalli</input>
@@ -6237,7 +6271,7 @@
     <input>urhooli urhoolli</input>
     <input>uskonnoilli uskonnolli</input>
     <input>uskonnoli uskonnolli</input>
-    <input>uue uude</input>     <!-- Uuen => uuden. -->
+    <input>uue uude</input>               <!-- Uuen => uuden. -->
     <input>w v</input>
     <input>vaarali vaaralli</input>
     <input>vaattehisto vaatteisto</input>
@@ -6264,6 +6298,7 @@
     <input>vasemisto vasemmisto</input>
     <input>vastuuli vastuulli</input>
     <input>veen veden</input>
+    <input>vehnäis vehnäs</input>
     <input>velkahi velkai</input>
     <input>velvoli velvolli</input>
     <input>vempelehe vempele</input>
@@ -6280,6 +6315,7 @@
     <input>vihoilli viholli</input>
     <input>viholi viholli</input>
     <input>viien viiden</input>
+    <input>viijä viedä</input>
     <input>viimmei viimei</input>
     <input>vikipedi wikipedi</input>
     <input>viksu fiksu</input>
@@ -7133,6 +7169,22 @@
         <list>rr$2</list>
         <attribute>FSTOUTPUT</attribute>
         <regex>\Q[Tn2]en\E</regex>
+      </replacement>
+    </item>
+    <item>
+      <pattern>(uksesa)</pattern>
+      <replacement>
+        <list>uksessa</list>
+        <attribute>FSTOUTPUT</attribute>
+        <regex>\Qukse[Sine][Ny]ssa\E</regex>
+      </replacement>
+    </item>
+    <item>
+      <pattern>(yksesä)</pattern>
+      <replacement>
+        <list>yksessä</list>
+        <attribute>FSTOUTPUT</attribute>
+        <regex>\Qykse[Sine][Ny]ssä\E</regex>
       </replacement>
     </item>
     <item>

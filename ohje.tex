@@ -48,12 +48,12 @@ tekstitiedostojen merkistökoodauksia, joita Apache Tika
       Uusin versio. C-koodin pitää olla käännetty niin,
       että sanojen perusmuodot tulevat mukaan.
 
-\item Solr 9.0.0:
+\item Solr 9.1.0:
       \verb=http://lucene.apache.org/solr/=
       Tässä dokumentissa Solr:sta käytetään nimeä solr-x.y.z,
       missä x.y.z tarkoittaa version numeroa.
 
-\item Javan versio 17. Sukija ei ehkä käänny Javan aiemmilla versiolla.
+\item Javan versio 17 tai uudempi. Sukija ei ehkä käänny Javan aiemmilla versiolla.
 
 \item Apache mavenin versio 3.8.4 tai uudempi. Sen voi imuroida täältä
       \verb=https://maven.apache.org/download.cgi=
@@ -253,8 +253,8 @@ Lokitulostus menee kansioon \verb=/var/solr/logs/=
 \subsection*{Indeksointi}
 \zlabel{indexing}
 
-Solr:n versiosta 9.0.0 on poistettu \verb=DataImportHandler=, jota
-käytin kovalevyni indeksointiin, ja Sen korvaajaksi tein ohjelman
+Alkaen Solr:n versiosta 9.0.0 on poistettu \verb=DataImportHandler=,
+jota käytin kovalevyni indeksointiin, ja Sen korvaajaksi tein ohjelman
 \verb=src/main/resources/indexer.sh=
 
 Se toimii minulla, mutta en väitä, että se toimii sinulla.
