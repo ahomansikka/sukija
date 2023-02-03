@@ -48,7 +48,7 @@ tekstitiedostojen merkistökoodauksia, joita Apache Tika
       Uusin versio. C-koodin pitää olla käännetty niin,
       että sanojen perusmuodot tulevat mukaan.
 
-\item Solr 9.1.0:
+\item Solr 9.1.1:
       \verb=http://lucene.apache.org/solr/=
       Tässä dokumentissa Solr:sta käytetään nimeä solr-x.y.z,
       missä x.y.z tarkoittaa version numeroa.
@@ -253,13 +253,13 @@ Lokitulostus menee kansioon \verb=/var/solr/logs/=
 \subsection*{Indeksointi}
 \zlabel{indexing}
 
-Alkaen Solr:n versiosta 9.0.0 on poistettu \verb=DataImportHandler=,
+Versiosta 9.0.0 alkaen Solr:sta on poistettu \verb=DataImportHandler=,
 jota käytin kovalevyni indeksointiin, ja Sen korvaajaksi tein ohjelman
 \verb=src/main/resources/indexer.sh=
 
 Se toimii minulla, mutta en väitä, että se toimii sinulla.
 
-\verb=src/main/resources/iindexer.sh= konfiguroidaan tiedostossa
+\verb=src/main/resources/indexer.sh= konfiguroidaan tiedostossa
 \verb|sukija.properties|. Katso sivu \zpageref{Sukija:konf}.
 Tiedoston \verb=conf/indexer-config.xml= kentät ovat
 
