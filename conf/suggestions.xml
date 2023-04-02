@@ -5310,6 +5310,9 @@
     <input>juridilli juridi</input>
     <input>juriidi juridi</input>
     <input>juriidilli juridi</input>
+    <input>juvel juveel</input>
+    <input>juveleillä juveeleilla</input>
+    <input>juvelejä juveeleja</input>
     <input>jäimme jämme</input>  <!-- Esim. käskijäimme => käskijämme. -->
     <input>jäinne jänne</input>
     <input>jäl' jälj</input>
@@ -5322,9 +5325,14 @@
     <input>kaaotti kaootti</input>
     <input>kaartti kaarti</input>
     <input>kabalist kabbalist</input>
+    <input>kafeii kofeii</input>
+    <input>kaffe kahvi</input>
+    <input>kaffee kahvi</input>
+    <input>kaffeeta kahvia</input>
     <input>kaffeii kofeii</input>
     <input>kaffi kahvi</input>
     <input>kahto katso</input>
+    <input>kahvee kahvi</input>
     <input>kahveeta kahvia</input>
     <input>kaiju kaiu</input>
     <input>kaikellaatui kaikenlaatui</input>
@@ -5664,6 +5672,7 @@
     <input>lauve laue</input>            <!-- Lau(v)eta. -->
     <input>legiona legioona</input>
     <input>legioni legiooni</input>
+    <input>leipee leipää</input>
     <input>lestaadiolai lestadiolai</input>
     <input>leuva leua</input>
     <input>levinnäi levinnei</input>
@@ -5705,6 +5714,8 @@
     <input>mahdoilli mahdolli</input>
     <input>mahomettilai muhamettilai</input>
     <input>maijon maidon</input>
+    <input>mailma maailma</input>
+    <input>mailmo maailmo</input>
     <input>maineek maineik</input>
     <input>mainek maineik</input>
     <input>majesteeti majesteetti</input>
