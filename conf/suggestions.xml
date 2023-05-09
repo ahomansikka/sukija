@@ -7135,6 +7135,22 @@
       </replacement>
     </item>
     <item>
+      <pattern>(ookin)$</pattern>
+      <replacement>
+        <list>oakin</list>
+        <attribute>FSTOUTPUT</attribute>
+        <regex>\Qo[Sp][Ny]a[Fkin][Ef]kin\E</regex>
+      </replacement>
+    </item>
+    <item>
+      <pattern>(öökin)$</pattern>
+      <replacement>
+        <list>öäkin</list>
+        <attribute>FSTOUTPUT</attribute>
+        <regex>\Qö[Sp][Ny]ä[Fkin][Ef]kin\E</regex>
+      </replacement>
+    </item>
+    <item>
       <pattern>(va)$</pattern>
       <replacement>
         <list>a</list>
