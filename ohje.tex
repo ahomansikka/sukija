@@ -48,7 +48,7 @@ tekstitiedostojen merkistökoodauksia, joita Apache Tika
       Uusin versio. C-koodin pitää olla käännetty niin,
       että sanojen perusmuodot tulevat mukaan.
 
-\item Solr 9.2.1:
+\item Solr 9.3.0:
       \verb=http://lucene.apache.org/solr/=
       Tässä dokumentissa Solr:sta käytetään nimeä solr-x.y.z,
       missä x.y.z tarkoittaa version numeroa.
@@ -59,8 +59,8 @@ tekstitiedostojen merkistökoodauksia, joita Apache Tika
       \verb=https://maven.apache.org/download.cgi=
       Aiemmat mavenin versiot eivät tue Java 17:ää.
 
-\item Apache Tika. Sen pitää olla sama versio, jota solr-x.y.z
-      käyttää. Tarkista asia tiedostossa pom.xml.
+\item Apache Lucene ja Apace Tika. Niiden pitää olla samoja versioita,
+      joita solr-x.y.z käyttää. Tarkista asia tiedostossa pom.xml.
 \end{itemize}
 
 
@@ -295,12 +295,16 @@ eli paikallisen tiedostojärjestelmän.
 Sanoja etsitään menemällä osoitteeseen
 \verb=http://localhost:8983/solr/sukija/browse=
 
-Etsittävien sanojen tulee olla perusmuodossa. Etsittäessä sanoja ei
+Etsittävien sanojen tulee olla perusmuodossa (yksikön nominatiivissa)
+ja pienellä kirjoitettuna (myös erisnimet). Etsittäessä sanoja ei
 muuteta perusmuotoon siksi, että yhden sanan perusmuoto voi olla
 toisen sanan taivutusmuoto. Paras esimerkki tästä on ''alusta'', joka
 on sanojen ''alusta'', ''alustaa'', ''alku'', ''alunen'' ja ''alus''
 taivutusmuoto. Tällöin herää kysymys, mitä sanaa pitää etsiä, vai
 etsitäänkö kaikkia?
+
+Myös monikolliset sanat on tallennettu yksikössä. Esimerkiksi
+Yhdysvaltojen perusmuoto on Yhdysvalta.
 
 
 Eri tavalla muotoillun tulostuksen saa osoitteesta
@@ -313,6 +317,13 @@ Tämän tulostuksen ulkonäköä voi muuttaa muuttamalla Sukijan mukana
 tulevaa tiedostoa \verb=conf/xslt/sukija.xsl=.
 
 Tietoja voi etsiä myös Solr:n käyttöliittymällä kohdassa \verb|Query|.
+
+
+Koska sanat on tallennettu perusmuodossa, fraasihaussakin sanojen
+täytyy olla perusmuodossa. Esimerkiksi Helsingin yliopistoa pitää
+etsiä fraasihaulla
+
+\verb="helsinki yliopisto"=
 
 
 \subsection*{Tiedoston suggestions.xml konfigurointi}
