@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2022 Hannu Väisänen
+Copyright (©) 2022-2023 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -78,12 +78,9 @@ public class Indexer {
       configuration = io.read (Indexer.class.getResourceAsStream ("/indexer-configuration.xml"));
     }
     io.write (configuration, System.out);
-
     writeLimit = configuration.getWriteLimit().intValueExact();
     commitWithinMs = configuration.getCommitWithinMs().intValueExact();
     abortOnError = getAbortOnError();
-
-//    System.exit(1);
 
     if (configuration.getTika().length() > 0) {
       tikaConfig = new TikaConfig (configuration.getTika());
@@ -93,12 +90,11 @@ public class Indexer {
     }
     System.out.println (tikaConfig);
 
-    client = new Http2SolrClient.Builder (configuration.getCore()).build();
+    client = new Http2SolrClient.Builder(configuration.getCore()).withResponseParser(new XMLResponseParser()).build();
     parser = new AutoDetectParser (tikaConfig);
     fileName = Pattern.compile (configuration.getFile());
     excludes = Pattern.compile (configuration.getExcludes());
     recursive = configuration.isRecursive();
-    ((Http2SolrClient)client).setParser (new XMLResponseParser());
   }
 
 

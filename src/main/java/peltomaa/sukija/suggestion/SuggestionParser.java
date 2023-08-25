@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2012-2018, 2020-2022 Hannu Väisänen
+Copyright (©) 2012-2018, 2020-2023 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -27,12 +27,11 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.regex.Pattern;
 import java.util.Set;
-import javax.xml.bind.JAXBElement;
+import jakarta.xml.bind.JAXBElement;
 import org.ahocorasick.trie.*;
 import org.ahocorasick.trie.handler.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import peltomaa.sukija.util.JAXBUtil;
 import peltomaa.sukija.util.XjcIO;
 import peltomaa.sukija.util.RegexUtil;
 import peltomaa.sukija.schema.*;
@@ -43,8 +42,7 @@ public class SuggestionParser {
   public SuggestionParser (Voikko voikko, InputStream is) throws SuggestionParserException
   {
     try {
-//      LOG.info ("SuggestionParser 1: Aloitetaan.");
-//      si = JAXBUtil.unmarshal (is, XSD_FILE, SCHEMA_LOCATION, CONTEXT_PATH, this.getClass().getClassLoader());
+      LOG.info ("SuggestionParser 1: Aloitetaan.");
       io = new XjcIO<SuggestionInput> ("/SuggestionInput.xsd", SuggestionInput.class, ObjectFactory.class);
       si = io.read (is);
       parseSuggestions (voikko, si.getApostropheOrIcharOrCompoundWordEnd());
@@ -70,10 +68,10 @@ public class SuggestionParser {
   public SuggestionParser (Voikko voikko, String xmlFile, String xsdFile) throws SuggestionParserException
   {
     try {
-//      LOG.info ("SuggestionParser 2: " + xmlFile + " " + xsdFile + " " + SCHEMA_LOCATION);
+      LOG.info ("SuggestionParser 2: " + xmlFile + " " + xsdFile + " " + SCHEMA_LOCATION);
 
-//      si = JAXBUtil.unmarshal (xmlFile, xsdFile, SCHEMA_LOCATION, CONTEXT_PATH, this.getClass().getClassLoader());
       io = new XjcIO<SuggestionInput> ("/SuggestionInput.xsd", SuggestionInput.class, ObjectFactory.class);
+      LOG.info ("SuggestionParser 2b.");
       si = io.read (xmlFile);
       parseSuggestions (voikko, si.getApostropheOrIcharOrCompoundWordEnd());
 //      print (System.out);
@@ -93,7 +91,6 @@ public class SuggestionParser {
   public void print (OutputStream out) throws SuggestionParserException
   {
     try {
-//      JAXBUtil.marshal ((new ObjectFactory()).createSuggestions(si), CONTEXT_PATH, out, this.getClass().getClassLoader());
       io.write (si, out);
     }
     catch (Throwable t)
@@ -110,7 +107,6 @@ public class SuggestionParser {
   public void print (Writer out) throws SuggestionParserException
   {
     try {
-//      JAXBUtil.marshal ((new ObjectFactory()).createSuggestions(si), CONTEXT_PATH, out, this.getClass().getClassLoader());
       io.write (si, out);
     }
     catch (Throwable t)

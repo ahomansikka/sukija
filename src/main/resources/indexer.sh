@@ -17,4 +17,5 @@ CP=${CP}:${SOLR}/server/lib/ext/*
 CP=${CP}:${SOLR}/server/solr-webapp/webapp/WEB-INF/lib/*
 CP=${CP}:/var/solr/data/sukija/lib/*
 
+
 java -cp ${CP} ${D} peltomaa.sukija.indexer.Indexer ${F}

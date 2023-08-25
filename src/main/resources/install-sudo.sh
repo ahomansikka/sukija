@@ -19,7 +19,8 @@ sudo -u solr cp $HOME/.m2/repository/peltomaa/sukija/sukija/3.0.0/sukija-3.0.0.j
 sudo -u solr cp $HOME/.m2/repository/org/ahocorasick/ahocorasick/0.6.3/ahocorasick-0.6.3.jar /var/solr/data/sukija/lib/
 
 # Nämä tarvitaan vain, jos käyttää oikeinkirjoituksen korjausehdotuksia tai indeksointiohjelmaa indexer.sh.
-sudo -u solr cp $HOME/.m2/repository/com/sun/istack/istack-commons-runtime/4.0.1/istack-commons-runtime-4.0.1.jar /var/solr/data/sukija/lib/
-sudo -u solr cp $HOME/.m2/repository/javax/activation/javax.activation-api/1.2.0/javax.activation-api-1.2.0.jar /var/solr/data/sukija/lib/
-sudo -u solr cp $HOME/.m2/repository/javax/xml/bind/jaxb-api/2.4.0-b180830.0359/jaxb-api-2.4.0-b180830.0359.jar /var/solr/data/sukija/lib/
-sudo -u solr cp $HOME/.m2/repository/org/glassfish/jaxb/jaxb-runtime/3.0.2/jaxb-runtime-3.0.2.jar /var/solr/data/sukija/lib/
+sudo -u solr cp ${HOME}/.m2/repository/org/glassfish/jaxb/jaxb-runtime/4.0.3/jaxb-runtime-4.0.3.jar /var/solr/data/sukija/lib/
+sudo -u solr cp ${HOME}/.m2/repository/org/glassfish/jaxb/jaxb-core/4.0.3/jaxb-core-4.0.3.jar /var/solr/data/sukija/lib/
+sudo -u solr cp ${HOME}/.m2/repository/jakarta/xml/bind/jakarta.xml.bind-api/4.0.0/jakarta.xml.bind-api-4.0.0.jar /var/solr/data/sukija/lib/
+sudo -u solr cp ${HOME}/.m2/repository/jakarta/annotation/jakarta.annotation-api/2.1.1/jakarta.annotation-api-2.1.1.jar /var/solr/data/sukija/lib/
+sudo -u solr cp ${HOME}/.m2/repository/jakarta/activation/jakarta.activation-api/2.1.2/jakarta.activation-api-2.1.2.jar /var/solr/data/sukija/lib/

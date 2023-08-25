@@ -56,6 +56,7 @@ public final class SuggestionFilter extends SukijaFilter {
     try {
       LOG.info ("SuggestionFilter: aloitetaan (1).");
       parser = new SuggestionParser (voikko, suggestionFile); 
+      LOG.info ("SuggestionFilter: aloitetaan (1) parser.");
       suggestion = parser.getSuggestions();
       this.successOnly = successOnly;
     }
@@ -64,8 +65,10 @@ public final class SuggestionFilter extends SukijaFilter {
       e.printStackTrace (System.out);
       LOG.error ("SuggestionFilter(1): " + e.getMessage());
       if (e.getCause() != null) {
+e.getCause().printStackTrace (System.out);
         LOG.error ("SuggestionFilter(2): " + e.getCause().getClass().getName() + " " + e.getCause().getMessage());
       }
+e.printStackTrace (System.out);
       throw new RuntimeException (e.getMessage());
     }
     catch (Throwable t)

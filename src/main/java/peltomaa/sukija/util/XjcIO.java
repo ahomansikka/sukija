@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2022 Hannu Väisänen
+Copyright (©) 2022-2023 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -29,12 +29,12 @@ import java.io.Writer;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.net.URL;
-import javax.xml.bind.annotation.XmlElementDecl;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBElement;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-import javax.xml.bind.Unmarshaller;
+import jakarta.xml.bind.annotation.XmlElementDecl;
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.JAXBElement;
+import jakarta.xml.bind.JAXBException;
+import jakarta.xml.bind.Marshaller;
+import jakarta.xml.bind.Unmarshaller;
 import javax.xml.namespace.QName;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.validation.Schema;
@@ -88,16 +88,6 @@ public final class XjcIO<T> {
     final URL url = objectFactoryClass.getResource (xsdFile);
 
     this.schema = makeSchema (url);
-/*
-System.out.println ("packageName " + objectFactoryClass.getPackageName());
-System.out.println ("objectFactoryClass " + objectFactoryClass.getName());
-System.out.println ("xsdFile " + xsdFile);
-System.out.println ("context " + this.jaxbContext.toString());
-System.out.println ("klass " + klass.getName());
-System.out.println ("qname " + qname.toString());
-System.out.println ("URL " + url.toString());
-//System.exit (1);
-*/
   }
 
 
@@ -116,7 +106,6 @@ System.out.println ("URL " + url.toString());
     this.qname = makeQName (objectFactoryClass);
     this.jaxbContext = JAXBContext.newInstance (objectFactoryClass.getPackageName(), objectFactoryClass.getClassLoader());
     this.schema = makeSchema (xsdURL);
-
 /*
 System.out.println ("packageName " + objectFactoryClass.getPackageName());
 System.out.println ("objectFactoryClass " + objectFactoryClass.getName());
