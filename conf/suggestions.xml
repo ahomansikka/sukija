@@ -4029,10 +4029,10 @@
     <input>sabotöri sabotööri</input>
     <input>sagittalinen sagittaalinen</input>
     <input>sagittalis sagittaalis</input>
-    <input>sakale sakaale</input>
     <input>šakale šakaale</input>
-    <input>sakali sakaali</input>
+    <input>sakale sakaale</input>
     <input>šakali šakaali</input>
+    <input>sakali sakaali</input>
     <input>sakrale sakraale</input>
     <input>sakrali sakraali</input>
     <input>salivatio salivaatio</input>
@@ -5111,6 +5111,7 @@
     <input>gentleman getlemann</input>
     <input>genua genova</input>
     <input>german germaan</input>
+    <input>geofysi geofyysi</input>
     <input>giraff kirahv</input>
     <input>gladiaator gladiaattor</input>
     <input>gladiator gladiaattor</input>
@@ -5216,6 +5217,7 @@
     <input>hysterilli hysteeri</input>
     <input>hysterin hysteerin</input>
     <input>hysteris hysteeris</input>
+    <input>hyvvii hyviä</input>
     <input>hättäil hätäil</input>
     <input>hätähi hätäi</input>
     <input>ideal ideaal</input>
@@ -5534,7 +5536,7 @@
     <input>kontantinopoli konstantinopoli</input>
     <input>konttuori konttori</input>
     <input>kontturi konttori</input>
-    <input>konttuuri konttori</input>
+    <input>konttuur konttor</input>
     <input>konstapel konstaapel</input>
     <input>kontoor konttor</input>
     <input>koomilli koomi</input>
@@ -5736,6 +5738,8 @@
     <input>martyyr marttyyr</input>
     <input>marzipan marsipaan</input>
     <input>matemaatilli matemaatti</input>
+    <input>matemaatin matemaattin</input>
+    <input>matemaatis matemaattis</input>
     <input>matrikel matrikkel</input>
     <input>mekaanilli mekaani</input>
     <input>mekani mekaani</input>
@@ -5803,6 +5807,7 @@
     <input>niimpä niinpä</input>
     <input>noterau noteerau</input>
     <input>nugget nuget</input>
+    <input>nuorher nuoriher</input>
     <input>nuubi nubi</input>
     <input>näytöilli näytölli</input>
     <input>oikesto oikeisto</input>
