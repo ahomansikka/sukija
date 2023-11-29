@@ -81,7 +81,6 @@ public final class HVTokenizer extends Tokenizer {
     scanner.getText (termAtt);
     flagsAtt.setFlags (tokenType);
     posIncrAtt.setPositionIncrement (1);
-
     final int start = scanner.yychar();
     offsetAtt.setOffset (correctOffset(start), correctOffset(start+termAtt.length()));
 

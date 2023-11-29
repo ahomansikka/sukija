@@ -5425,6 +5425,8 @@
     <input>kirjaillisuu kirjallisuu</input>
     <input>kirjali kirjalli</input>
     <input>kirjotelm kirjoitelm</input>
+    <input>kirkonisi kirkkoisi</input>
+    <input>kirkonisä kirkkoisä</input>
     <input>kiuvas kiuas</input>
     <input>kivär kiväär</input>
     <input>kivväär kiväär</input>
@@ -5727,6 +5729,7 @@
     <input>majonnees majonees</input>
     <input>majuur majur</input>
     <input>makedonilai makedonialai</input>
+    <input>makso maksu</input>
     <input>maltili maltilli</input>
     <input>manioki maniokki</input>
     <input>manshet manset</input>
@@ -6216,6 +6219,8 @@
     <input>thraaki traaki</input>
     <input>thraki traaki</input>
     <input>tiamant timant</input>
+    <input>tiater teatter</input>
+    <input>tiatter teatter</input>
     <input>tiedoisto tiedosto</input>
     <input>tieteeli tieteelli</input>
     <input>tietelij tieteilij</input>
@@ -6470,6 +6475,7 @@
     <input>kuusiko kuusikko</input>
     <input>kyli kylä</input>
     <input>kylä kylä</input>
+    <input>kyläntie kyläntie</input>
     <input>köngä köngäs</input>
     <input>könkä köngäs</input>
     <input>laakso laakso</input>
@@ -6622,6 +6628,7 @@
     <prefix>helo</prefix>
     <prefix>ibero</prefix>
     <prefix>inertiaali</prefix>
+    <prefix>kirkossa</prefix>
     <prefix>lais</prefix>
     <prefix>molekulaari</prefix>
 <!--
