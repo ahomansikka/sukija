@@ -4029,10 +4029,10 @@
     <input>sabotöri sabotööri</input>
     <input>sagittalinen sagittaalinen</input>
     <input>sagittalis sagittaalis</input>
-    <input>šakale šakaale</input>
     <input>sakale sakaale</input>
-    <input>šakali šakaali</input>
+    <input>šakale šakaale</input>
     <input>sakali sakaali</input>
+    <input>šakali šakaali</input>
     <input>sakrale sakraale</input>
     <input>sakrali sakraali</input>
     <input>salivatio salivaatio</input>
@@ -5418,6 +5418,7 @@
     <input>kiireeli kiireelli</input>
     <input>kiiväri kivääri</input>
     <input>kiivääri kivääri</input>
+    <input>kircko kirkko</input>
     <input>kiemail keimail</input>
     <input>kimnasist kymnasist</input>
     <input>kippee kipeä</input>
@@ -7027,6 +7028,14 @@
         <list>e$1</list>
         <attribute>FSTOUTPUT</attribute>
         <regex>\[Tn2\]ess[aä]</regex>
+      </replacement>
+    </item>
+    <item>
+      <pattern>i(ss[aä])in</pattern>
+      <replacement>
+        <list>e$1ni</list>
+        <attribute>FSTOUTPUT</attribute>
+        <regex>\[Tn2\]ess[aä]\[O1y\]ni</regex>
       </replacement>
     </item>
     <item>
