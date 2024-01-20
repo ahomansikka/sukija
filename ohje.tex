@@ -48,7 +48,7 @@ tekstitiedostojen merkistökoodauksia, joita Apache Tika
       Uusin versio. C-koodin pitää olla käännetty niin,
       että sanojen perusmuodot tulevat mukaan.
 
-\item Solr 9.4.0:
+\item Solr 9.4.1:
       \verb=http://lucene.apache.org/solr/=
       Tässä dokumentissa Solr:sta käytetään nimeä solr-x.y.z,
       missä x.y.z tarkoittaa version numeroa.
@@ -228,6 +228,18 @@ Go and create one
 Mennään sinne ja kirjoitetaan kohtaan \verb=name= ja \verb=instanceDir=
 ''sukija'' (mutta ilman lainausmerkkejä) ja napsautetaan kohtaa
 \verb=Add Core=.
+
+Jos tämä ei onnistu, tiedostossa \verb|/etc/default/solr.in.sh|
+oleva rivi
+
+\verb|#SOLR_DATA_HOME=|
+
+pitää muuttaa muotoon
+
+\verb|SOLR_DATA_HOME=/var/solr/data|
+
+Katso \verb|https://github.com/bitnami/vms/issues/1234|
+
 
 Nyt vasemmalle paneeliin alalaitaan pitäisi tulla mahdollisuus valita
 indeksi (Solr käyttää siitä nimeä \verb=core=) sukija. Sen jälkeen voi
@@ -519,8 +531,8 @@ tunnistaminen ei onnistu, palauttaa merkkijonon \verb=centime=.
 Tällä komennolla ei ole parametreja.
 
 
-\bigskip \noindent \noindent
-Copyright © 2011--2022 Hannu Väisänen.
+\bigskip \noindent
+Copyright © 2011--2024 Hannu Väisänen.
 \end{document}
 
 

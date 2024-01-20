@@ -118,6 +118,7 @@ public class Indexer {
       }
 
       final String FILE_NAME = file.getCanonicalPath();
+      logger.info (FILE_NAME);
 
       if (!fileName.matcher(FILE_NAME).matches()) continue;
       if (excludes.matcher(FILE_NAME).matches()) continue;

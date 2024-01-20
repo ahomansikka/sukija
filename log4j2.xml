@@ -78,8 +78,12 @@
     <AsyncLogger name="org.eclipse.jetty.webapp" level="warn"/>
     <AsyncLogger name="org.eclipse.jetty.server.session" level="warn"/>
 
+<!-- OMA LISÄYS ALKAA
+    Tämää tulostaa indeksoitavien tiedostojen nimet lokitiedostoon,
+    kun käyttää indexer.sh'ta.
     <Logger name = "peltomaa.sukija.indexer" level = "all"/>
-<--!
+
+    Tässä on eri mahdollisuuksia Sukijan lokeihin.
     <Logger name = "peltomaa" level = "all"/>
     <Logger name = "peltomaa.sukija" level = "all"/>
     <Logger name = "peltomaa.sukija.finnish" level = "all"/>
@@ -91,6 +95,11 @@
     <Logger name = "peltomaa.sukija.util.SukijaFilterFactory" level = "all"/>
     <Logger name = "peltomaa.sukija.voikko.VoikkoTokenizerFactory" level = "all"/>
     <Logger name = "peltomaa.sukija.voikko.VoikkoUtils" level = "all"/>
+
+    Jos indeksointi juuttuu kiinni, tästä tulostuksesta näkee, mitä tiedostoa
+    Solr ei osaa indeksoida (lokitiedostossa oleva viimeinen tiedoston nimi).
+    Jos ei halua lukea koko lokitiedostoa (-; voi antaa komennon
+          grep FileDataSource /var/solr/logs/solr.log | tail -1
     <Logger name = "org.apache.solr.handler.dataimport.FileDataSource" level = "debug"/>
 -->
     <AsyncRoot level="info">
