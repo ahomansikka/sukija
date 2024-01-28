@@ -78,8 +78,8 @@
     <AsyncLogger name="org.eclipse.jetty.webapp" level="warn"/>
     <AsyncLogger name="org.eclipse.jetty.server.session" level="warn"/>
 
+<!--
     <Logger name = "peltomaa.sukija.indexer" level = "all"/>
-<--!
     <Logger name = "peltomaa" level = "all"/>
     <Logger name = "peltomaa.sukija" level = "all"/>
     <Logger name = "peltomaa.sukija.finnish" level = "all"/>

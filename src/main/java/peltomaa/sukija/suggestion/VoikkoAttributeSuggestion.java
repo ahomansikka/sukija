@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2016, 2022 Hannu Väisänen
+Copyright (©) 2016, 2022, 2024 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -22,6 +22,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.puimula.libvoikko.*;
 
 
@@ -41,7 +43,7 @@ public class VoikkoAttributeSuggestion extends Suggestion {
     boolean success = false;
     final int N = parameter.item.length;
     for (int i = 0; i < parameter.item.length; i++) {
-//System.out.println ("A " + word);
+//      LOG.debug ("A " + word);
       if (suggest (i, word)) {
         if (parameter.tryAll) {
           success = true;
@@ -61,15 +63,16 @@ public class VoikkoAttributeSuggestion extends Suggestion {
     Matcher m = parameter.item[i].pattern.matcher (word);
 
     if (m.find()) {
-//System.out.println ("B "+ word + " " + m.pattern().toString());
+      LOG.debug ("A "+ word + " " + m.pattern().toString());
       for (int j = 0; j < parameter.item[i].replacement.length; j++) {
         for (int k = 0; k < parameter.item[i].replacement[j].list.length; k++) {
-//System.out.println ("C " + word + " " + m.pattern().toString() + " " + parameter.item[i].replacement[j].list[k]);
-        final String u = m.replaceAll (parameter.item[i].replacement[j].list[k]);
-//System.out.println ("D " + word + " " + m.pattern().toString() + " " + parameter.item[i].replacement[j].list[k] + " " + u);
+          final String u = m.replaceAll (parameter.item[i].replacement[j].list[k]);
+          LOG.debug ("B " + word + " " + m.pattern().toString() + " " + parameter.item[i].replacement[j].list[k] + " " + u);
           final List<Analysis> analysis = voikko.analyze (u);
           for (Analysis a: analysis) {
+            LOG.debug ("C " + word + " " + a.get("BASEFORM") + " " + a.get("FSTOUTPUT")); 
             if (ok (i, j, a)) {
+              LOG.debug ("D " + word + " " + a.get("BASEFORM") + " " + a.get("FSTOUTPUT")); 
               addToAnalysis (a);
               success = true;
             }
@@ -96,4 +99,5 @@ public class VoikkoAttributeSuggestion extends Suggestion {
 
 
   private final VoikkoAttributeParameter parameter;
+  private static final Logger LOG = LoggerFactory.getLogger (VoikkoAttributeSuggestion.class);
 }

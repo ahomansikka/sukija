@@ -98,5 +98,5 @@ if (LOG.isDebugEnabled()) LOG.debug ("StringÖ " + word + " " + sb.toString());
   private final PayloadTrie<String> payloadTrie;
   private final Set<String> newWords = new HashSet<String>();
   private final List<Analysis> result = new ArrayList<Analysis>();
-  private static final Logger LOG = LoggerFactory.getLogger (SuggestionUtils.class);
+  private static final Logger LOG = LoggerFactory.getLogger (StringSuggestion.class);
 }

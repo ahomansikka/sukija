@@ -4927,6 +4927,7 @@
     <input>benediktin benediktiin</input>
     <input>berlini berliini</input>
     <input>biljaard biljard</input>
+    <input>biografiia biografia</input>
     <input>bison biison</input>
     <input>bloga blogga</input>
     <input>boiootialai boiotialai</input>
@@ -5459,6 +5460,7 @@
     <input>koloniali koloniaali</input>
     <input>kolportör kolportöör</input>
     <input>komant koment</input>    <!-- Komanto -> komento; komantaja -> komentaja. -->
+    <input>komediia komedia</input>
     <input>komelian komeljan</input>
     <input>komentaari kommentaari</input>
     <input>komentoi kommentoi</input>
@@ -5556,8 +5558,8 @@
     <input>korsikka korsika</input>
     <input>korstein korsteen</input>
     <input>kortier kortteer</input>
+    <input>korttier kortteeri</input>
     <input>kortter kortteer</input>
-    <input>korttier kortteer</input>
     <input>kosmilli kosmi</input>
     <input>kraanaat kranaat</input>
     <input>kraate kraatte</input>
@@ -5673,6 +5675,7 @@
     <input>lakoonilli lakoni</input>
     <input>lanpi lampi</input>
     <input>laskuvajo laskuvarjo</input>
+    <input>latinai latinalai</input>
     <input>lauvantai lauantai</input>
     <input>lauve laue</input>            <!-- Lau(v)eta. -->
     <input>legiona legioona</input>
@@ -5776,6 +5779,7 @@
     <input>molekylääri molekulaari</input>
     <input>monenai monenlai</input>
     <input>moniliit monoliit</input>
+    <input>monografiia monografia</input>
     <input>monumnettaali monumentaali</input>
     <input>moral moraal</input>
     <input>moskea moskeija</input>
@@ -5858,6 +5862,10 @@
     <input>paraim parhaim</input>
     <input>parain parhain</input>
     <input>paratis paratiis</input>
+    <input>pariakinkym pariakym</input>
+    <input>parikinkym parikym</input>
+    <input>parinkaankym parinkym</input>
+    <input>parinkinkym parinkym</input>
     <input>parisilai pariisilai</input>
     <input>parisita pariisita</input>
     <input>parisitta pariisitta</input>
@@ -5903,6 +5911,7 @@
     <input>piirrus piirus</input>
     <input>piljet pilet</input>
     <input>piloot pilot</input>
+    <input>pimme pime</input>
     <input>pioner pioneer</input>
     <input>pionieer pioneer</input>
     <input>pionier pioneer</input>
@@ -6153,6 +6162,7 @@
     <input>syyvä syödä</input>
     <input>säikehistö säikeistö</input>
     <input>säikäy säikähdy</input>
+    <input>särvinnä särpimenä</input>
     <input>säännöli säännölli</input>
     <input>taaemmai taimmai</input>
     <input>taemmai taimmai</input>
@@ -6350,6 +6360,7 @@
     <input>voimakaka voimakkaa</input>
     <input>voimakkaam voimakkaamm</input>
     <input>voimaakkam voimakkaam</input>
+    <input>väkkee väkeä</input>
     <input>välkähyt välkäyt</input>
     <input>välähyt väläyt</input>
     <input>värsy värssy</input>
@@ -6632,6 +6643,7 @@
     <prefix>kirkossa</prefix>
     <prefix>lais</prefix>
     <prefix>molekulaari</prefix>
+    <prefix>parikymmentä</prefix>
 <!--
     <prefix>neo</prefix>
     <prefix>puoleksi</prefix>
@@ -7137,6 +7149,61 @@
         <list>iä</list>
         <attribute>FSTOUTPUT</attribute>
         <regex>\Q[Sp][Ny]iä\E</regex>
+      </replacement>
+      <replacement>
+        <list>ia</list>
+        <attribute>FSTOUTPUT</attribute>
+        <regex>\Q[Sp][Nm]ia\E</regex>
+      </replacement>
+      <replacement>
+        <list>iä</list>
+        <attribute>FSTOUTPUT</attribute>
+        <regex>\Q[Sp][Nm]iä\E</regex>
+      </replacement>
+      <replacement>
+        <list>ia</list>
+        <attribute>FSTOUTPUT</attribute>
+        <regex>\Qi[Sn][Ny]a\E</regex>
+      </replacement>
+      <replacement>
+        <list>iä</list>
+        <attribute>FSTOUTPUT</attribute>
+        <regex>\Qi[Sn][Ny]ä\E</regex>
+      </replacement>
+      <replacement>
+        <list>ia</list>
+        <attribute>FSTOUTPUT</attribute>
+        <regex>\Q[Sp][Nm]mia\E</regex>
+      </replacement>
+      <replacement>
+        <list>iä</list>
+        <attribute>FSTOUTPUT</attribute>
+        <regex>\Q[Sp][Nm]miä\E</regex>
+      </replacement>
+      <replacement>
+        <list>ia</list>
+        <attribute>FSTOUTPUT</attribute>
+        <regex>\Qmia[Sn][Ny]\E</regex>
+      </replacement>
+      <replacement>
+        <list>iä</list>
+        <attribute>FSTOUTPUT</attribute>
+        <regex>\Qmiä[Sn][Ny]\E</regex>
+      </replacement>
+      <replacement>
+        <list>ia</list>
+        <attribute>FSTOUTPUT</attribute>
+        <regex>\Q[Sp][Nm]sia\E</regex>
+      </replacement>
+      <replacement>
+        <list>iä</list>
+        <attribute>FSTOUTPUT</attribute>
+        <regex>\Q[Sp][Nm]siä\E</regex>
+      </replacement>
+      <replacement>
+        <list>iin</list>
+        <attribute>FSTOUTPUT</attribute>
+        <regex>\Q[Sill][Ny]iin\E</regex>
       </replacement>
     </item>
     <item>

@@ -84,6 +84,14 @@
       <type>jar</type>
       <scope>test</scope>
     </dependency>
+
+    <!-- https://mvnrepository.com/artifact/com.lmax/disruptor -->
+    <dependency>
+        <groupId>com.lmax</groupId>
+        <artifactId>disruptor</artifactId>
+        <version>3.4.4</version>
+    </dependency>
+
 <!--
     <dependency>
       <groupId>org.slf4j</groupId>

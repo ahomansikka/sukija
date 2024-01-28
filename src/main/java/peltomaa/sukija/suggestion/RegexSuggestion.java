@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2009-2011, 2013-2016, 2022 Hannu Väisänen
+Copyright (©) 2009-2011, 2013-2016, 2022, 2024 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -23,10 +23,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.Set;
 import java.util.TreeSet;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.puimula.libvoikko.Analysis;
 import org.puimula.libvoikko.Voikko;
 import peltomaa.sukija.util.RegexUtil;
-
 
 /**
  * Replace regular expression with a string.<p>
@@ -64,7 +65,7 @@ public class RegexSuggestion extends Suggestion {
 
     boolean success = false;
 
-//System.out.println ("RegexSuggestion a [" + word + "]");
+    LOG.debug ("a [" + word + "]");
 
     for (int i = 0; i < pattern.length; i++) {
       if (suggest (i, word)) {
@@ -82,13 +83,13 @@ public class RegexSuggestion extends Suggestion {
 
   private boolean suggest (int i, String word)
   {
-//System.out.println ("RegexSuggestion b " + i + " [" + word + "] [" + pattern[i].toString() + "]");
+    LOG.debug ("b " + i + " [" + word + "] [" + pattern[i].toString() + "]");
 
     final Matcher m = pattern[i].matcher(word);
     int start = 0;
 
     while (m.find (start)) {
-//System.out.println ("RegexSuggestion c " + start);
+    LOG.debug ("c " + start);
       if (analyse (m, i, word)) {
         return true;
       }
@@ -103,10 +104,10 @@ public class RegexSuggestion extends Suggestion {
     sb.delete (0, sb.length());
     m.appendReplacement (sb, replacement[i]);
     m.appendTail (sb);
-//System.out.println ("RegexSuggestion d " + i + " " + word + " " + replacement[i] + " [" + sb.toString() + "]");
+    LOG.debug ("d " + i + " " + word + " " + replacement[i] + " [" + sb.toString() + "]");
 
     List<Analysis> a = voikko.analyze (sb.toString());
-//System.out.println ("RegexSuggestion e " + a + " " + (a == null) + " " + a.size());
+    LOG.debug ("e " + a + " " + (a == null) + " " + a.size());
     addToAnalysis (a);
     return (a.size() > 0);
   }
@@ -135,4 +136,5 @@ public class RegexSuggestion extends Suggestion {
   private final String[] replacement;
   private final boolean tryAll;
   private StringBuffer sb = new StringBuffer (500);
+  private static final Logger LOG = LoggerFactory.getLogger (RegexSuggestion.class);
 }

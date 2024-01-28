@@ -135,7 +135,7 @@ e.printStackTrace (System.out);
   {
      OffsetAttribute offsetAtt = input.getAttribute (OffsetAttribute.class);
 
-if (LOG.isDebugEnabled()) LOG.debug ("Word-f A " + word + " " + termAtt.toString()
+ if (LOG.isDebugEnabled()) LOG.info ("Word-f A " + word + " " + termAtt.toString()
                                       + " " + offsetAtt.startOffset() + " " + offsetAtt.endOffset()
                                       + " " + Constants.toString (flagsAtt)
                                       + " " + originalWordAtt.getOriginalWord());
