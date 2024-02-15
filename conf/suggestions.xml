@@ -4029,10 +4029,10 @@
     <input>sabotöri sabotööri</input>
     <input>sagittalinen sagittaalinen</input>
     <input>sagittalis sagittaalis</input>
-    <input>sakale sakaale</input>
     <input>šakale šakaale</input>
-    <input>sakali sakaali</input>
+    <input>sakale sakaale</input>
     <input>šakali šakaali</input>
+    <input>sakali sakaali</input>
     <input>sakrale sakraale</input>
     <input>sakrali sakraali</input>
     <input>salivatio salivaatio</input>
@@ -4952,6 +4952,11 @@
     <input>budda buddha</input>
     <input>buddhlai buddhalai</input>
     <input>budha buddha</input>
+    <input>bukaneer bukanieer</input>
+    <input>bukanier bukanieer</input>
+    <input>bukkanier bukanieer</input>
+    <input>bukkaneer bukanieer</input>
+    <input>bukkaniir bukanieer</input>
     <input>bulgarilai bulgarialai</input>
     <input>bulgrialai bulgarialai</input>
     <input>bulldog bulldoggi</input>
@@ -5594,6 +5599,8 @@
     <input>kronomeeter kronometr</input>
     <input>kronomeetter kronometr</input>
     <input>ksilli kselli</input> <!-- Esim. merkityksillinen => merkityksellinen. -->
+    <input>kukilli kukalli</input>
+    <input>kukkais kukkas</input>
     <input>kulahut kulaut</input>
     <input>kuleske kuljeske</input>
     <input>kulet kuljet</input>
@@ -5730,6 +5737,8 @@
     <input>majesteetillisyy majesteetillisuu</input>
     <input>majestet majesteet</input>
     <input>majister maister</input>
+    <input>majistraat maistraat</input>
+    <input>majistrat maistraat</input>
     <input>majonnees majonees</input>
     <input>majuur majur</input>
     <input>makedonilai makedonialai</input>
@@ -7220,6 +7229,38 @@
         <list>öä</list>
         <attribute>FSTOUTPUT</attribute>
         <regex>\Qö[Sp][Ny]ä\E</regex>
+      </replacement>
+    </item>
+    <item>
+      <pattern>(oo)$</pattern>
+      <replacement>
+        <list>oa</list>
+        <attribute>FSTOUTPUT</attribute>
+        <regex>\Qk[Sp][Ny]koa\E</regex>
+      </replacement>
+    </item>
+    <item>
+      <pattern>(öö)$</pattern>
+      <replacement>
+        <list>öä</list>
+        <attribute>FSTOUTPUT</attribute>
+        <regex>\Qk[Sp][Ny]köä\E</regex>
+      </replacement>
+    </item>
+    <item>
+      <pattern>(uu)$</pattern>
+      <replacement>
+        <list>ua</list>
+        <attribute>FSTOUTPUT</attribute>
+        <regex>\Qu[Sp][Ny]a\E</regex>
+      </replacement>
+    </item>
+    <item>
+      <pattern>(yy)$</pattern>
+      <replacement>
+        <list>yä</list>
+        <attribute>FSTOUTPUT</attribute>
+        <regex>\Qy[Sp][Ny]ä\E</regex>
       </replacement>
     </item>
     <item>
