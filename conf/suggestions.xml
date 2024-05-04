@@ -4031,8 +4031,8 @@
     <input>sagittalis sagittaalis</input>
     <input>šakale šakaale</input>
     <input>sakale sakaale</input>
-    <input>šakali šakaali</input>
     <input>sakali sakaali</input>
+    <input>šakali šakaali</input>
     <input>sakrale sakraale</input>
     <input>sakrali sakraali</input>
     <input>salivatio salivaatio</input>
@@ -6010,6 +6010,7 @@
     <input>päälimmäi päällimmäi</input>
     <input>päälimäi päällimmäi</input>
     <input>päällimäi päällimmäi</input>
+    <input>pääsijäi pääsiäi</input>
     <input>päärona päärynä</input>
     <input>pääskyi pääsky</input>
     <input>raael raadel</input>
@@ -6050,6 +6051,7 @@
     <input>ruomalai roomalai</input>
     <input>ruotslai ruotsalai</input>
     <input>ruottalai ruotsalai</input>
+    <input>ruppee rupea</input>
     <input>ruumilli ruumiilli</input>
     <input>ruummiill ruumiill</input>
     <input>ruummilli ruumiilli</input>
@@ -6225,6 +6227,8 @@
     <input>teater teatter</input>
     <input>teeba theba</input>
     <input>tehottomanpi tehottomampi</input>
+    <input>tekkoo tekoa</input>
+    <input>tekkoon tekoon</input>
     <input>teknilli tekni</input>
     <input>telefuuni telefoni</input>
     <input>temmais tempais</input>
@@ -6245,6 +6249,7 @@
     <input>tieteeli tieteelli</input>
     <input>tietelij tieteilij</input>
     <input>tiijot tiedot</input>
+    <input>tiio tiedo</input>
     <input>tiiä tiedä</input>
     <input>tiijä tiedä</input>
     <input>tiijäkkään tiedäkään</input>
@@ -6351,6 +6356,7 @@
     <input>vierahi vierai</input>
     <input>vierehi vierei</input>
     <input>vierähyt vieräyt</input>
+    <input>vihelijäi viheliäi</input>
     <input>viherjö viheriö</input>
     <input>vihkijäi vihkiäi</input>
     <input>vihoilli viholli</input>
