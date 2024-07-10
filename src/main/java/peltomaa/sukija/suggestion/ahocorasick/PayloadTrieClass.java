@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2021 Hannu Väisänen
+Copyright (©) 2021, 2024 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -16,7 +16,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 
-package peltomaa.sukija.suggestion.ahocorasick;;
+package peltomaa.sukija.suggestion.ahocorasick;
 
 import org.ahocorasick.interval.*;
 import org.ahocorasick.trie.*;
