@@ -38,14 +38,14 @@
     <dependency>
       <groupId>org.glassfish.jaxb</groupId>
       <artifactId>jaxb-runtime</artifactId>
-      <version>4.0.3</version>
+      <version>4.0.5</version>
       <scope>runtime</scope>
     </dependency>
 
     <dependency>
       <groupId>org.glassfish.jaxb</groupId>
       <artifactId>jaxb-core</artifactId>
-      <version>4.0.3</version>
+      <version>4.0.5</version>
       <scope>runtime</scope>
     </dependency>
 
@@ -107,13 +107,13 @@
     <dependency>
       <groupId>org.apache.solr</groupId>
       <artifactId>solr-core</artifactId>
-      <version>9.7.0</version>
+      <version>9.8.0</version>
     </dependency>
 
    <dependency>
       <groupId>org.apache.solr</groupId>
       <artifactId>solr-solrj</artifactId>
-      <version>9.7.0</version>
+      <version>9.8.0</version>
     </dependency>
 
    <dependency>
@@ -242,7 +242,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-javadoc-plugin</artifactId>
-        <version>3.6.3</version>
+        <version>3.11.2</version>
         <configuration>
            <javadocExecutable>${java.home}/bin/javadoc</javadocExecutable>
            <show>public</show>

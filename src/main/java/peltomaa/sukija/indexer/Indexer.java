@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2022-2023 Hannu Väisänen
+Copyright (©) 2022-2023, 2025 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -75,7 +75,7 @@ public class Indexer {
       configuration = io.read (args[0]);
     }
     else {
-      configuration = io.read (Indexer.class.getResourceAsStream ("/indexer-configuration.xml"));
+      configuration = io.read (Indexer.class.getResourceAsStream ("/indexer-configuration-default.xml"));
     }
     io.write (configuration, System.out);
     writeLimit = configuration.getWriteLimit().intValueExact();
@@ -93,8 +93,17 @@ public class Indexer {
     client = new Http2SolrClient.Builder(configuration.getCore()).withResponseParser(new XMLResponseParser()).build();
     parser = new AutoDetectParser (tikaConfig);
     fileName = Pattern.compile (configuration.getFile());
-    excludes = Pattern.compile (configuration.getExcludes());
+//    excludes = Pattern.compile (configuration.getExcludes());
     recursive = configuration.isRecursive();
+
+    if (configuration.getExcludeSuffix().size() > 0) {
+      excludes = Pattern.compile ("(?u)(?i).*[.](" + String.join ("|", configuration.getExcludeSuffix()) + ")$");
+    }
+    else {
+      excludes = Pattern.compile (configuration.getExcludes());
+    }
+
+//    System.out.println (excludes); System.exit(0);
   }
 
 
@@ -122,7 +131,16 @@ public class Indexer {
 
       if (!fileName.matcher(FILE_NAME).matches()) continue;
       if (excludes.matcher(FILE_NAME).matches()) continue;
-      if (Files.size (Path.of(FILE_NAME)) == 0) continue;
+      try {
+        if (Files.size (Path.of(FILE_NAME)) == 0) continue;
+      }
+      catch (java.nio.file.NoSuchFileException e)
+      {
+        e.printStackTrace (System.out);
+        if (abortOnError) {
+          System.exit (1);
+        }
+      }
 
       final ContentHandler textHandler = new BodyContentHandler (writeLimit);
       final Metadata metadata = new Metadata();
@@ -218,7 +236,6 @@ public class Indexer {
   {
     return (configuration.getOnError().value().compareTo(OnErrorType.ABORT.value()) == 0);
   }
-
 
   private final IndexerConfigurationType configuration;
   private final SolrClient client;

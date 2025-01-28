@@ -48,15 +48,14 @@ tekstitiedostojen merkistökoodauksia, joita Apache Tika
       Uusin versio. C-koodin pitää olla käännetty niin,
       että sanojen perusmuodot tulevat mukaan.
 
-\item Solr 9.7.0:
+\item Solr 9.8.0:
       \verb=http://lucene.apache.org/solr/=
       Tässä dokumentissa Solr:sta käytetään nimeä solr-x.y.z,
       missä x.y.z tarkoittaa version numeroa.
 
 \item Javan versio 17 tai uudempi. Sukija ei ehkä käänny Javan aiemmilla versiolla.
 
-\item Apache mavenin versio 3.8.4 tai uudempi. Sen voi imuroida täältä
-      \verb=https://maven.apache.org/download.cgi=
+\item Apache mavenin versio 3.8.4 tai uudempi.
       Aiemmat mavenin versiot eivät tue Java 17:ää.
 
 \item Apache Lucene ja Apace Tika. Niiden pitää olla samoja versioita,
@@ -73,34 +72,6 @@ Tämä asennusohje olettaa, että libvoikko on asennettu hakemistoon
 
 Jos ne ovat jossain muualla, tiedostossa \verb=sukija.properties=
 olevia Libvoikon tietoja pitää muuttaa vastaavasti.
-
-
-\subsection*{Mavenin asentaminen}
-
-Asennetaan maven esimerkiksi hakemistoon \verb=/usr/local/apache-maven=
-
-\begin{verbatim}
-sudo mkdir /usr/local/apache-maven
-cd /usr/local/apache-maven
-*Kopioi apache-maven-3.8.4-bin.tar.gz hakemistoon*
-tar xzvf apache-maven-3.8.4-bin.tar.gz
-\end{verbatim}
-
-Tämän jälkeen lisätään seuraavat rivit tiedostoon \verb=~/.bashrc= tai
-vastaavaan
-
-\begin{verbatim}
-export M2_HOME=/usr/local/apache-maven/apache-maven-3.8.4
-export M2=$M2_HOME/bin
-export MAVEN_OPTS="-Xms256m -Xmx512m"
-export PATH=$M2:$PATH
-\end{verbatim}
-
-Lopuksi pitäänee tehdä \verb=source ~/.bashrc=
-
-minkä jälkeen voi tarkistaa, että mavenin versio on 3.8.4
-
-\verb=mvn --version=
 
 
 \newpage
@@ -148,6 +119,15 @@ Mielestäni latauksen pitäisi toimia, jos Solr:n tiedostoon
 
 mutta se ei toimi. Jos saatte homman toimimaan muuttamatta tiedostoa
 \verb|/etc/default/solr.in.sh| kertokaa minulle.
+
+
+\bigskip\noindent
+Lisäksi samaan tiedostoon pitää lisätä rivi
+
+\verb|SOLR_CONFIG_LIB_ENABLED=true|
+
+tai muuten tiedostossa \verb|solrconfig.xml| olevat
+\verb|<lib ... />| -komennot eivät enää toimi.
 
 
 \newpage
@@ -224,18 +204,6 @@ Mennään sinne ja kirjoitetaan kohtaan \verb=name= ja \verb=instanceDir=
 ''sukija'' (mutta ilman lainausmerkkejä) ja napsautetaan kohtaa
 \verb=Add Core=.
 
-Jos tämä ei onnistu, tiedostossa \verb|/etc/default/solr.in.sh|
-oleva rivi
-
-\verb|#SOLR_DATA_HOME=|
-
-pitää muuttaa muotoon
-
-\verb|SOLR_DATA_HOME=/var/solr/data|
-
-Katso \verb|https://github.com/bitnami/vms/issues/1234|
-
-
 Nyt vasemmalle paneeliin alalaitaan pitäisi tulla mahdollisuus valita
 indeksi (Solr käyttää siitä nimeä \verb=core=) sukija. Sen jälkeen voi
 ruveta indeksoimaan. Katso sivu \zpageref{indexing}.
@@ -269,6 +237,7 @@ Se toimii minulla, mutta en väitä, että se toimii sinulla.
 \verb=src/main/resources/indexer.sh= konfiguroidaan tiedostossa
 \verb|sukija.properties|. Katso sivu \zpageref{Sukija:konf}.
 Tiedoston \verb=conf/indexer-config.xml= kentät ovat
+(nimet on kopioitu \verb=DataImportHandler=ista):
 
 
 \begin{tabularx}{\textwidth}{@{}lX}
@@ -331,6 +300,10 @@ täytyy olla perusmuodossa. Esimerkiksi Helsingin yliopistoa pitää
 etsiä fraasihaulla
 
 \verb="helsinki yliopisto"=
+
+Indeksoinnissa w:t muutetaan v:ksi eli esimerkiksi Waltaria on etsittävä muodossa
+
+\verb=valtari=
 
 
 \subsection*{Tiedoston suggestions.xml konfigurointi}
