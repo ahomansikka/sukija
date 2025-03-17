@@ -4029,8 +4029,8 @@
     <input>sabotöri sabotööri</input>
     <input>sagittalinen sagittaalinen</input>
     <input>sagittalis sagittaalis</input>
-    <input>sakale sakaale</input>
     <input>šakale šakaale</input>
+    <input>sakale sakaale</input>
     <input>šakali šakaali</input>
     <input>sakali sakaali</input>
     <input>sakrale sakraale</input>
@@ -4850,11 +4850,7 @@
     <input>analytti analyytti</input>
     <input>apach apass</input>
     <input>apash apass</input>
-    <input>apoteekar apteekkar</input>
-    <input>apoteekkar apteekkar</input>
     <input>apoteos apoteoos</input>
-    <input>apteekar apteekkar</input>
-    <input>aptekar apteekkar</input>
     <input>aprikooss aprikoos</input>
     <input>aprikos aprikoos</input>
     <input>apuva apua</input>
@@ -5018,6 +5014,9 @@
     <input>elegilli elegi</input>
     <input>elekroniik elektroniik</input>
     <input>eliksir eliksiir</input>
+    <input>ellös ällös</input>
+    <input>ellöspä ällös</input>
+    <input>ellössä ällös</input>
     <input>emalje emale</input>
     <input>emalji emali</input>
     <input>emaljo emalo</input>
@@ -5357,6 +5356,7 @@
     <input>kakkois kaakkois</input>
     <input>kakkoisvoit kaksoisvoit</input>
     <input>kaler kaleer</input>
+    <input>kalkarokäärme kalkkarokäärme</input>
     <input>kalmoilli kalmolli</input>
     <input>kameel kamel</input>
     <input>kamin kamiin</input>
@@ -5423,6 +5423,11 @@
     <input>keittimö keittämö</input>
     <input>kelvoilli kelvolli</input>
     <input>kelvoli kelvolli</input>
+    <input>kerubiime kerube</input>
+    <input>kerubiimi kerubi</input>
+    <input>kerupiimejä kerubeja</input>
+    <input>kerupiimi kerubi</input>
+    <input>kerupiini kerubi</input>
     <input>keruub kerub</input>
     <input>kertahi kertai</input>
     <input>keskenkertahi keskinkertai</input>
@@ -5614,6 +5619,8 @@
     <input>kronomeetar kronometr</input>
     <input>kronomeeter kronometr</input>
     <input>kronomeetter kronometr</input>
+    <input>kselai slai</input>   <!-- Esim. nurmekselainen => nurmeslainen. -->
+    <input>kseläi släi</input>
     <input>ksilli kselli</input> <!-- Esim. merkityksillinen => merkityksellinen. -->
     <input>kukilli kukalli</input>
     <input>kukkais kukkas</input>
@@ -5731,6 +5738,7 @@
     <input>lutherilai luterilai</input>
     <input>lyyrilli lyyri</input>
     <input>lähimäi lähimmäi</input>
+    <input>lämpime lämpimä</input>
     <input>lämpymäis lämpimäis</input>
     <input>läningi leningi</input>
     <input>läninki leninki</input>
@@ -5993,6 +6001,10 @@
     <input>problem probleem</input>
     <input>profesor professor</input>
     <input>profetalli profeetalli</input>
+    <input>propheetalli profeetalli</input>
+    <input>prophetai profeetoi</input>
+    <input>prophetalli profeetalli</input>
+    <input>prophetali profeetalli</input>
     <input>provast rovast</input>
     <input>psaltar psalttar</input>
     <input>psykilli psyykki</input>
@@ -6080,6 +6092,7 @@
     <input>saaha saada</input>
     <input>sabat sapat</input>
     <input>sabbat sapat</input>
+    <input>sabotaashi sabotaasi</input>
     <input>safir safiir</input>
     <input>saipu saippu</input>
     <input>sairaaloi sairaalloi</input>
@@ -6806,11 +6819,19 @@
       </replacement>
     </item>
     <item>
-      <pattern>apoteekk?</pattern>
+      <pattern>apo?tee?kk?i</pattern>
       <replacement>
-        <list>apteek apteekk</list>
+        <list>apteeki apteekki</list>
         <attribute>WORDBASES</attribute>
         <regex>[+(]apteekki</regex>
+      </replacement>
+    </item>
+    <item>
+      <pattern>apo?tee?kk?ar</pattern>
+      <replacement>
+        <list>apteekkar</list>
+        <attribute>WORDBASES</attribute>
+        <regex>[+(]apteekkari</regex>
       </replacement>
     </item>
     <item>
@@ -6996,6 +7017,14 @@
         <list>politiik politiikk</list>
         <attribute>WORDBASES</attribute>
         <regex>[+(]politiikka</regex>
+      </replacement>
+    </item>
+    <item>
+      <pattern>prophee?tt?([ao])</pattern>
+      <replacement>
+        <list>profeet$1 profeett$1</list>
+        <attribute>WORDBASES</attribute>
+        <regex>[+(]profeetta</regex>
       </replacement>
     </item>
     <item>
