@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2016-2017, 2021 Hannu Väisänen
+Copyright (©) 2016-2017, 2021, 2025 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -36,6 +36,8 @@ public class AhoCorasickCorrector {
   {
     final Set<String> set = new HashSet<String>();
 
+    for (Analysis a : analysis) {set.add (a.get("BASEFORM").toLowerCase());} // Testi, mitä funktio tekee.
+
     for (Analysis a : analysis) {
       final String wb = a.get ("WORDBASES");
       final String baseForm = a.get ("BASEFORM");
@@ -60,8 +62,10 @@ if (LOG.isDebugEnabled()) LOG.debug ("Aho5 " + baseForm + " " + bf + " § " + wb
         }
       }
     }
+
 if (LOG.isDebugEnabled()) LOG.debug ("Aho6 " + set.toString());
 if (LOG.isDebugEnabled())for (String s : set) LOG.debug ("Aho7 " + s);
+
     return set;
   }
 

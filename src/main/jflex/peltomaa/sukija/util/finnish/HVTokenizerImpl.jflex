@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2008-2012, 2015-2018, 2020 Hannu Väisänen
+Copyright (©) 2008-2012, 2015-2018, 2020, 2025 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -31,6 +31,7 @@ import peltomaa.sukija.util.Constants;
 %char
 %public
 %final
+%state SKIP
 
 %{
 private static final Logger LOG = LoggerFactory.getLogger (HVTokenizerImpl.class);
@@ -49,6 +50,9 @@ public final void getText (org.apache.lucene.analysis.tokenattributes.CharTermAt
 {
   t.copyBuffer (zzBuffer, zzStartRead, zzMarkedPos-zzStartRead);
 }
+
+private int nbraces = 0;
+private int nbrackets = 0;
 %}
 
 
@@ -85,14 +89,43 @@ LPAR = "{"[0-9a-zA-Z]+"}"
 
 %%
 
+// Jäsennetään LaTeX-komentojen argumentit: lopeteaan, kun alku- ja loppusulkujen {} tai [] määrä on yhtä suuri.
+//
+<SKIP>{
+"}{"  {}
+"]["  {}
+"{"   {nbraces++;}
+"}["  {nbraces--; nbrackets++;}
+"]{"  {nbraces++; nbrackets--;}
+"}"   {nbraces--; if (nbraces == 0 && nbrackets == 0) yybegin(YYINITIAL);}
+"["   {nbrackets++;}
+"]"   {nbrackets--; if (nbraces == 0 && nbrackets == 0) yybegin(YYINITIAL);}
+[^]   {if (nbraces == 0 && nbrackets == 0) yybegin(YYINITIAL);}
+}
+
+
+<YYINITIAL>{
+
+"%\\bibtex{" ~ "}"        {}
+"%\\kuvahakemisto{" ~ "}" {}
+"%\\kuvatiedosto{" ~ "}"  {}
+
 {NUM} {
   if (LOG.isDebugEnabled()) LOG.debug ("NR [" + yytext() + "]");
 } /* Ignore numbers. */
 
 
 
-/* Ignore LaTeX commands. */
+/* Ignore some LaTeX commands. */
 
+
+"\\"(begin|documentclass|emoji|end|figure|usepackage) {
+  if (LOG.isDebugEnabled()) LOG.debug ("L0 [" + yytext() + "]");
+  yybegin(SKIP);
+}
+
+
+/*
 "\\"(documentclass|usepackage)("["[0-9a-zA-Z,]+"]")?{LPAR} {
   if (LOG.isDebugEnabled()) LOG.debug ("L1 [" + yytext() + "]");
 }
@@ -100,12 +133,15 @@ LPAR = "{"[0-9a-zA-Z]+"}"
 "\\"(begin|end){LPAR} {
   if (LOG.isDebugEnabled()) LOG.debug ("L2 [" + yytext() + "]");
 }
+*/
 
 // Jos rivinvaihtoa seuraa sana: "\\Esim".
 // Ilman tätä jäsennetään LaTeX-komento "\Esim".
 [\\][\\] {}
 
-[\\][a-zA-Z@]+[*]? {
+//[\\][a-zA-Z@]+[*]? {
+
+[\\][\p{Letter}\p{Digit}@]+[*]? {
   if (LOG.isDebugEnabled()) LOG.debug ("L3 [" + yytext() + "]");
 }
 
@@ -130,7 +166,7 @@ LPAR = "{"[0-9a-zA-Z]+"}"
   int what = 0;
   if (yytext().indexOf ('[') > -1) what += Constants.BRACKET;
   if (Constants.RE_LATEX_HYPHEN.matcher(yytext()).find()) what += Constants.LATEX_HYPHEN;
-  if (Constants.RE_LATEX_COMPOUND_WORD.matcher(yytext()).find()) what += Constants.LATEX_COMPOUND_WORD;
+  if (Constants.RE_LATEX_COMPOUND_WORD.matcher(yytext()).find()) what += (Constants.LATEX_COMPOUND_WORD + Constants.COMPOUND_WORD);
 /*
   System.out.println ("XX " + yytext() + " " + what + " " + (yytext().indexOf('[') > -1)
                       + " " + Constants.RE_LATEX_HYPHEN.matcher(yytext()).find()
@@ -143,3 +179,4 @@ LPAR = "{"[0-9a-zA-Z]+"}"
 
 
 . | {WHITESPACE}   {} /* Ignore the rest. */
+}

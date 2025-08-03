@@ -51,11 +51,16 @@ public class DeleteAllDocuments
     final String solrURL = getSolrURL (args);
     final SolrClient client = new Http2SolrClient.Builder(solrURL).withResponseParser(new XMLResponseParser()).build();
 
+    if (client == null) {
+      System.out.println ("client == null");
+      System.exit (1);
+    }
+
     // Preparing the Solr document.
     SolrInputDocument doc = new SolrInputDocument();
 
     // Deleting the documents from Solr.
-    client.deleteByQuery ("*");      
+    client.deleteByQuery ("*");
 
     // Saving the document.
     client.commit();

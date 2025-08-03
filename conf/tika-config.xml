@@ -24,14 +24,22 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 <properties>
   <parsers>
+    <parser class = "org.apache.tika.parser.CompositeParser">
+      <mime-exclude>application/x-tex</mime-exclude>
+      <mime-exclude>text/plain</mime-exclude>
+      <mime-exclude>text/x-tex</mime-exclude>
+      <mime-exclude>message/rfc822</mime-exclude>
+    </parser>
     <parser class = "org.apache.tika.parser.DefaultParser">
       <mime-exclude>application/x-tex</mime-exclude>
       <mime-exclude>text/plain</mime-exclude>
+      <mime-exclude>text/x-tex</mime-exclude>
       <mime-exclude>message/rfc822</mime-exclude>
     </parser>
     <parser class = "org.apache.tika.parser.txt.TXTParser">
       <mime>application/x-tex</mime>
       <mime>text/plain</mime>
+      <mime>text/x-tex</mime>
       <mime-exclude>message/rfc822</mime-exclude>
     </parser>
   </parsers>

@@ -48,7 +48,7 @@ tekstitiedostojen merkistökoodauksia, joita Apache Tika
       Uusin versio. C-koodin pitää olla käännetty niin,
       että sanojen perusmuodot tulevat mukaan.
 
-\item Solr 9.8.1:
+\item Solr 9.9.0:
       \verb=http://lucene.apache.org/solr/=
       Tässä dokumentissa Solr:sta käytetään nimeä solr-x.y.z,
       missä x.y.z tarkoittaa version numeroa.
@@ -229,7 +229,7 @@ Lokitulostus menee kansioon \verb=/var/solr/logs/=
 \zlabel{indexing}
 
 Versiosta 9.0.0 alkaen Solr:sta on poistettu \verb=DataImportHandler=,
-jota käytin kovalevyni indeksointiin, ja Sen korvaajaksi tein ohjelman
+jota käytin kovalevyni indeksointiin, ja sen korvaajaksi tein ohjelman
 \verb=src/main/resources/indexer.sh=
 
 Se toimii minulla, mutta en väitä, että se toimii sinulla.
@@ -264,6 +264,20 @@ Kenttien oletusarvot ovat tiedostossa \verb=sukija.properties=
 
 Myös \verb=Apache Nutch=in voi konfiguroida indeksoimaan kovalevyn
 eli paikallisen tiedostojärjestelmän.
+
+\bigskip
+\verb=src/main/resources/indexer.sh= ei toimi (ainakaan minulla)
+Solr:n versiossa 9.9.0, vaan se yrittää joskus indeksoida
+tekstitiedostoja, joitten MIME-tyyppi on \verb=text/plain= tai
+\verb=text/x-tex= ikään kuin ne olisivat jotain Microsoftin
+formaattia.
+
+Mutta ei hätää, olen tehnyt ohjelman
+
+\verb=src/main/resources/indexer2.sh=
+
+joka käyttää samaa asetustiedostoa kuin \verb=indexer.sh= ja toimii
+ainakin minulla. En väitä, että se toimii sinulla.
 
 
 \subsection*{Tietojen etsiminen}

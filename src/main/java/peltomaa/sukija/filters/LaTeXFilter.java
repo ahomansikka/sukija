@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2020-2021 Hannu Väisänen
+Copyright (©) 2020-2021, 2025 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -38,20 +38,23 @@ public final class LaTeXFilter extends TokenFilter {
   public final boolean incrementToken() throws IOException {
     if (input.incrementToken()) {
       String s = termAtt.toString();
-if (LOG.isDebugEnabled()) LOG.debug ("A " + s);
+if (LOG.isDebugEnabled()) LOG.debug ("A " + s + " " + Constants.toString(flagsAtt));
       boolean hasChanged = false;
 
       if (Constants.hasFlag (flagsAtt, Constants.BRACKET)) {
         s = s.replace("[","").replace("]","");
+        Constants.removeFlags (flagsAtt, Constants.BRACKET);
         hasChanged = true;
       }
       if (Constants.hasFlag (flagsAtt, Constants.LATEX_HYPHEN)) {
         s = Constants.RE_LATEX_HYPHEN.matcher(s).replaceAll("");
+        Constants.removeFlags (flagsAtt, Constants.LATEX_HYPHEN);
         hasChanged = true;
       }
       if (Constants.hasFlag (flagsAtt, Constants.LATEX_COMPOUND_WORD)) {
 if (LOG.isDebugEnabled()) LOG.debug ("B " + s);
         s = Constants.RE_LATEX_COMPOUND_WORD.matcher(s).replaceAll("-");
+        Constants.removeFlags (flagsAtt, Constants.LATEX_COMPOUND_WORD);
         hasChanged = true;
 if (LOG.isDebugEnabled()) LOG.debug ("C " + s);
       }

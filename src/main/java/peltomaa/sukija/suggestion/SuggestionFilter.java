@@ -139,20 +139,23 @@ e.printStackTrace (System.out);
                                       + " " + offsetAtt.startOffset() + " " + offsetAtt.endOffset()
                                       + " " + Constants.toString (flagsAtt)
                                       + " " + originalWordAtt.getOriginalWord());
-
+/*
     if (hasFlag (flagsAtt, LATEX_HYPHEN)) {
       word = word.replace ("\\-", "");
     }
+
 
     final int n = word.lastIndexOf ('-');
     if (n > 0) {
       Constants.addFlags (flagsAtt, Constants.COMPOUND_WORD);
     }
     else {
+if (n == 0) {System.out.println ("HHHHHHHHHHHHHHH " + word); System.exit(1);}
       Constants.removeFlags (flagsAtt, Constants.COMPOUND_WORD);
     }
    
 if (LOG.isDebugEnabled()) LOG.debug ("Word-f B " + word + " " + termAtt.toString() + " " + Constants.toString (flagsAtt));
+1*/
 
     if (hasFlag (flagsAtt, Constants.COMPOUND_WORD)) {
 if (LOG.isDebugEnabled()) LOG.debug ("Word-f C " + word + " " + termAtt.toString() + " " + Constants.toString (flagsAtt));
@@ -279,7 +282,11 @@ if (LOG.isDebugEnabled()) LOG.debug ("analyzeCompoundWord0 " + word + " " + base
     final String[] array = PATTERN.split (word);
     final List<Set<String>> output = new ArrayList<Set<String>>();
 
-if (LOG.isDebugEnabled()) for (String s : ngrams) LOG.debug ("analyzeCompoundWordA " + word + " " + s + " " +  ngrams);
+if (LOG.isDebugEnabled()) {
+  LOG.debug ("analyzeCompoundWord1 " + java.util.Arrays.toString(array));
+  LOG.debug ("analyzeCompoundWord2 " + ngrams);
+  for (String s : ngrams) LOG.debug ("analyzeCompoundWordA " + word + " " + s);
+}
 
     for (String s : ngrams) {
       final Set<String> set = analyzeWord (s);
@@ -287,15 +294,15 @@ if (LOG.isDebugEnabled()) for (String s : ngrams) LOG.debug ("analyzeCompoundWor
 if (LOG.isDebugEnabled()) LOG.debug ("analyzeCompoundWordB " + word + " " + s + " " + set);
     }
 
-if (LOG.isDebugEnabled()) LOG.debug ("analyzeCompoundWordC " + word + " " + ngrams.size() + " " + output.size()); 
-
-if (LOG.isDebugEnabled()) for (Set<String> s : output) LOG.debug ("analyzeCompoundWordD " + word + " " + s);
-
+if (LOG.isDebugEnabled()) {
+  LOG.debug ("analyzeCompoundWordC " + word + " " + ngrams.size() + " " + output.size()); 
+  for (Set<String> s : output) LOG.debug ("analyzeCompoundWordD " + word + " " + s);
+}
 
     for (Set<String> u : output) {
       for (String v : u) {
         result.add (v);
-if (LOG.isDebugEnabled()) LOG.debug ("analyzeCompoundWord C " + v + " | " + word);
+if (LOG.isDebugEnabled()) LOG.debug ("analyzeCompoundWordD " + v + " | " + word);
       }
     }
 if (LOG.isDebugEnabled()) for (Set<String> s : output) LOG.debug ("analyzeCompoundWordE " + word + " " + result + " " + result.size());
