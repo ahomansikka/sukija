@@ -2,7 +2,6 @@
 
 # Indeksoijan asetustiedosto.
 F=/var/solr/data/sukija/conf/indexer-config.xml 
-#F=/home/hannu/Mallit/java/sukija/src/main/resources/indexer-configuration-default.xml 
 
 
 # Debug.

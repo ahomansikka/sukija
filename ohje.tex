@@ -48,15 +48,14 @@ tekstitiedostojen merkistökoodauksia, joita Apache Tika
       Uusin versio. C-koodin pitää olla käännetty niin,
       että sanojen perusmuodot tulevat mukaan.
 
-\item Solr 9.9.0:
+\item Solr 9.10.0:
       \verb=http://lucene.apache.org/solr/=
       Tässä dokumentissa Solr:sta käytetään nimeä solr-x.y.z,
       missä x.y.z tarkoittaa version numeroa.
 
-\item Javan versio 17 tai uudempi. Sukija ei ehkä käänny Javan aiemmilla versiolla.
+\item Javan versio 25 tai uudempi. Sukija ei ehkä käänny Javan aiemmilla versiolla.
 
 \item Apache mavenin versio 3.8.4 tai uudempi.
-      Aiemmat mavenin versiot eivät tue Java 17:ää.
 
 \item Apache Lucene ja Apace Tika. Niiden pitää olla samoja versioita,
       joita solr-x.y.z käyttää. Tarkista asia tiedostossa pom.xml.
@@ -95,34 +94,9 @@ Jos kone on kiinni verkossa, kannattaa katsoa myös ohjeet turvallisuudesta
 \verb=https://solr.apache.org/guide/solr/latest/=
 \verb=Deployment Guide -> Securing Solr=
 
-Mitä turvallisuuteen tulee,
-tiedostossa \verb|/etc/default/solr.in.sh| oleva rivi
-
-\verb|#SOLR_SECURITY_MANAGER_ENABLED=true|
-
-pitää muuttaa muotoon
-
-\verb|SOLR_SECURITY_MANAGER_ENABLED=false|
-
-tai muuten Solr ei osaa ladata Voikon binaaritiedostoa libvoikko.so.
-
 
 \bigskip\noindent
-Älkää säikähtäkö: Java 17:ssä SecurityManager on merkitty
-vanhentuneeksi (ulkomaankielellä ''deprecated''), ja se poistetaan
-jossain Javan tulevassa versiossa.
-
-Mielestäni latauksen pitäisi toimia, jos Solr:n tiedostoon
-\verb=server/etc/security.policy= lisää rivin
-
-\verb|permission java.lang.RuntimePermission "loadLibrary.jnidispatch";|
-
-mutta se ei toimi. Jos saatte homman toimimaan muuttamatta tiedostoa
-\verb|/etc/default/solr.in.sh| kertokaa minulle.
-
-
-\bigskip\noindent
-Lisäksi samaan tiedostoon pitää lisätä rivi
+Tiedostoon \verb|/etc/default/solr.in.sh| pitää lisätä rivi
 
 \verb|SOLR_CONFIG_LIB_ENABLED=true|
 
@@ -250,14 +224,12 @@ writeLimit     & Indeksoitavan tiedoston maksimikoko. -1 tarkoittaa, että ylär
 commitWithinMs & Enimmäisaika millisekunteina ennen kuin indeksoitavat tiedostot tallenetaan Solr:ään. \\
 onError        & Mitä tehdään virheilmoituksen jälkeen? \\
                & \texttt{abort} lopettaan. \\
-               & \texttt{skip} siirrytän indeksoimaan seuraavaa tiedostoa. \\
+               & \texttt{skip} siirrytään indeksoimaan seuraavaa tiedostoa. \\
 recursive      & Indeksoidaanko baseDir-hakemistojen alihakemistot \\
                & (\texttt{true}, \texttt{false})? \\
-baseDir        & Indeksoitavat hakemistot, erottimena \\
-               & \texttt{\$\{path.separator\}}, esimerkiksi \\
+baseDir        & Indeksoitavat hakemistot, esimerkiksi \\
                & \texttt{\$\{user.home\}/Asiakirjat:/usr/local/data} \\
-               & Linuxissa erottimena on kaksoispiste : \\
-               & Windowsissa erottimena taitaa olla puolipiste ;
+               & Erottimena on \texttt{\$\{path.separator\}}
 \end{tabularx}
 
 Kenttien oletusarvot ovat tiedostossa \verb=sukija.properties=
