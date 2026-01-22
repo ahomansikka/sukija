@@ -20,8 +20,8 @@ package peltomaa.sukija.indexer;
 import java.nio.file.Files;
 import java.nio.file.FileVisitor;
 
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
+//import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import peltomaa.sukija.schema.IndexerConfigurationType;
 import peltomaa.sukija.schema.ObjectFactory;
@@ -78,6 +78,6 @@ public class Indexer2 {
   private final IndexerConfigurationType configuration;
   private final XjcIO<IndexerConfigurationType> io;
 
-  private static final Logger logger = LogManager.getLogger (Indexer2.class);
+//  private static final Logger LOG = LoggerFactory.getLogger (Indexer2.class);
   private static final long serialVersionUID = 1L;
 }

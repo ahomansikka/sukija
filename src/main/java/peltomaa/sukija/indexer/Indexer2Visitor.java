@@ -29,8 +29,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.regex.Pattern;
 
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
+//import org.slf4j.Logger;
+//import org.slf4j.LoggerFactory;
 
 import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.impl.Http2SolrClient;
@@ -232,6 +232,6 @@ public class Indexer2Visitor extends SimpleFileVisitor<Path> {
   private final long start = System.currentTimeMillis();
   private int totalDoc = 0;
 
-  private static final Logger logger = LogManager.getLogger (Indexer2Visitor.class);
+//  private static final Logger LOG = LoggerFactory.getLogger (Indexer.class);
   private static final long serialVersionUID = 1L;
 }

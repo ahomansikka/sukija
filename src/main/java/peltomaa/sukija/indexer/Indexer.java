@@ -39,8 +39,8 @@ import org.apache.tika.parser.ParseContext;
 import org.apache.tika.sax.BodyContentHandler;
 import org.xml.sax.ContentHandler;
 
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.LogManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import peltomaa.sukija.schema.IndexerConfigurationType;
 import peltomaa.sukija.schema.ObjectFactory;
@@ -123,7 +123,7 @@ public class Indexer {
       }
 
       final String FILE_NAME = file.getCanonicalPath();
-      logger.info (FILE_NAME);
+      LOG.info (FILE_NAME);
 System.out.println ("ALKU  " + FILE_NAME);
       if (!fileName.matcher(FILE_NAME).matches()) continue;
       if (excludes.matcher(FILE_NAME).matches()) continue;
@@ -253,6 +253,6 @@ System.out.println ("LOPPU " + FILE_NAME);
   private final long start = System.currentTimeMillis();
   private int totalDoc = 0;
 
-  private static final Logger logger = LogManager.getLogger (Indexer.class);
+  private static final Logger LOG = LoggerFactory.getLogger (Indexer2.class);
   private static final long serialVersionUID = 1L;
 }
