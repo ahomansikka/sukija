@@ -1,0 +1,15 @@
+// Lisää tämä tiedosto tiedoston /opt/solr/server/etc/security.policy loppuun.
+
+grant {
+  permission java.io.FilePermission "${user.home}${/}.cache${/}-", "read,delete,write,readlink";
+  permission java.lang.RuntimePermission "loadLibrary.*";
+  permission java.io.FilePermission "/usr/lib/x86_64-linux-gnu", "read";
+  permission java.io.FilePermission "/lib/x86_64-linux-gnu","read";
+  permission java.io.FilePermission "/usr/lib64", "read";
+  permission java.io.FilePermission "/lib64", "read";
+  permission java.io.FilePermission "/usr/lib", "read";
+  permission java.io.FilePermission "/lib", "read";
+  permission java.io.FilePermission "/usr/local/lib/libvoikko.so.1", "read";
+  permission java.lang.reflect.ReflectPermission "newProxyInPackage.org.puimula.libvoikko";
+  permission java.lang.RuntimePermission "accessClassInPackage.jdk.internal.event";
+};

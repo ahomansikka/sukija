@@ -1,5 +1,5 @@
 /*
-Copyright (©) 2015-2018, 2020-2022 Hannu Väisänen
+Copyright (©) 2015-2018, 2020-2022, 2026 Hannu Väisänen
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -54,7 +54,6 @@ public class SukijaAsennus {
 
     Properties p = new Properties();
     p.load (new FileReader (propertiesFile));
-    printIndexerConfigFile (p, new FileWriter ("conf/indexer-config.xml"));
     printSchemaFile        (p, new FileWriter ("conf/schema.xml"));
   }
 
@@ -84,35 +83,6 @@ public class SukijaAsennus {
     out.write ("  </document>\n" +
                "</dataConfig>\n");
 
-    out.flush();
-  }
-
-
-  private void printIndexerConfigFile (Properties p, Writer out) throws IOException
-  {
-    final String BASE_DIR = getProperty(p,"sukija.baseDir");
-    if (BASE_DIR == null) return;
-
-    out.write ("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n\n" +
-               "<configuration>\n" +
-               "  <core>" + getProperty (p, "sukija.core") + "</core>\n" +
-               "  <file>" + getProperty (p, "sukija.file", ".*") + "</file>\n" +
-               "  <excludes>" + getProperty (p, "sukija.excludes", "(?u)(?i).*[.]jpg$") + "</excludes>\n" +
-               "  <tika>" + getProperty (p, "sukija.tika", "tika-config.xml") + "</tika>\n" +
-               "  <writeLimit>" + getProperty (p, "sukija.writeLimit", "-1") + "</writeLimit>\n" +
-               "  <commitWithinMs>" + getProperty (p, "sukija.commitWithinMs", "300000") + "</commitWithinMs>\n" +
-               "  <onError>" + getProperty (p, "sukija.onError", "abort") + "</onError>\n" +
-               "  <recursive>" + getProperty (p, "sukija.recursive", "true") + "</recursive>\n");
-
-    for (String dir : BASE_DIR.split(PATH_SEPARATOR)) {
-      if (!directoryOK (dir)) {
-//      throw new RuntimeException (dir + " ei ole olemassa tai se ei ole hakemisto.");
-        System.out.println (dir + " ei ole olemassa tai se ei ole hakemisto.");
-      }
-      out.write ("  <baseDir>" + dir + "</baseDir>\n");
-    }
-
-    out.write ("</configuration>\n");
     out.flush();
   }
 

@@ -48,29 +48,47 @@ tekstitiedostojen merkistökoodauksia, joita Apache Tika
       Uusin versio. C-koodin pitää olla käännetty niin,
       että sanojen perusmuodot tulevat mukaan.
 
-\item Solr 9.10.1:
+\item Solr 10.0.0:
       \verb=http://lucene.apache.org/solr/=
       Tässä dokumentissa Solr:sta käytetään nimeä solr-x.y.z,
       missä x.y.z tarkoittaa version numeroa.
+
+\item Apache Tika Server:
+      \verb=https://tika.apache.org/=
+      Sukija ei tarvitse tätä, mutta Solr tarvitsee.
+      Mieluiten kai uusin versio. Tämä pitää asentaa ennen Solr:ia.
 
 \item Javan versio 25 tai uudempi. Sukija ei ehkä käänny Javan aiemmilla versiolla.
 
 \item Apache mavenin versio 3.8.4 tai uudempi.
 
-\item Apache Lucene ja Apace Tika. Niiden pitää olla samoja versioita,
-      joita solr-x.y.z käyttää. Tarkista asia tiedostossa pom.xml.
+\item Apache Lucene ja Apache Tika.
+      Ne tulevat Solr:n mukana, mutta Sukijan tiedostosta \verb=pom.xml=
+      on hyvä tarkistaa, että paketeista \verb=lucene-core=,
+      \verb=lucene-suggest= ja \verb=tika-core= on siellä samat versiot,
+      joita solr-x.y.z käyttää.
 \end{itemize}
 
+Lisäksi Sukija tarvitsee erinäisiä jar-tiedostoja, mutta maven imuroi
+ne automaagisesti.
 
-Lisäksi Sukija tarvitsee erinäisiä jar-tiedostoja, mutta Maven imuroi
-kaikki Sukijan tarvitsemat jar'it automaagisesti.
 
+Sorl:n tämä versio ei ole yhteensopiva aiempien versioitten kanssa,
+joten sekä sen että Sukijan asennusohjeet ovat muuttuneet.
+
+
+\bigskip
 Tämä asennusohje olettaa, että libvoikko on asennettu hakemistoon
 \verb=/usr/local/lib= ja että Solr on hakemistossa
-\verb=$HOME/Lataukset/solr/solr-x.y.z=
+\verb=$HOME/Lataukset/solr/solr-x.y.z= Siellä Solr:n käyttämät Lucenen
+ja Tikan versiot saa esille Linuxissa näin
 
-Jos ne ovat jossain muualla, tiedostossa \verb=sukija.properties=
-olevia Libvoikon tietoja pitää muuttaa vastaavasti.
+\verb=find . -regextype egrep -regex '.*(lucene|tika).*jar'=
+
+
+\subsection*{Apache Tika Serverin asentaminen}
+
+\verb=https://cwiki.apache.org/confluence/display/TIKA/TikaServer=
 
 
 \newpage
@@ -95,13 +113,56 @@ Jos kone on kiinni verkossa, kannattaa katsoa myös ohjeet turvallisuudesta
 \verb=Deployment Guide -> Securing Solr=
 
 
-\bigskip\noindent
-Tiedostoon \verb|/etc/default/solr.in.sh| pitää lisätä rivi
+\bigskip
+Solr:n uusimmassa versiossa pyörii oletusarvoisesti monia palvelimia
+(SolrCloud Mode). Se on kuitenkin aivan liian raskas yhden koneen
+kovalevy(je)n indeksointiin, mutta ei hätää: se voidaan konfiguroida
+vain yhden palvelimen pyörittämiseen.
 
-\verb|SOLR_CONFIG_LIB_ENABLED=true|
 
-tai muuten tiedostossa \verb|solrconfig.xml| olevat
-\verb|<lib ... />| -komennot eivät enää toimi.
+\bigskip
+Jotta Solr käynnistyisi automaagisesti vain yhdellä palvelimella,
+tiedostossa
+\verb|/etc/systemd/system/solr.service|
+rivi
+
+\verb|ExecStart=/opt/solr/bin/solr start|
+
+pitää muuttaa muotoon
+
+\verb|ExecStart=/opt/solr/bin/solr start --user-managed|
+
+ja tehdä sen jälkeen
+
+\verb|sudo systemctl daemon-reload|
+
+
+\bigskip
+Käsipelillä komennot ovat
+
+\verb|/opt/solr/bin/solr start --user-managed|
+\verb|/opt/solr/bin/solr restart --user-managed|
+
+
+\newpage
+Sukijan asentamiseksi tiedostossa \verb|/etc/default/solr.in.sh|
+rivi
+
+\verb|#SOLR_MODULES=extraction,ltr|
+
+pitää muuttaa muotoon
+
+\verb|SOLR_MODULES=extraction,ltr,scripting|
+
+
+\bigskip
+Lisäksi tiedoston
+
+\verb|/opt/solr/server/etc/security.policy|
+
+loppuun pitää lisätä tiedosto
+
+\verb|src/main/resources/security.policy|
 
 
 \newpage
@@ -159,7 +220,7 @@ Kaikki pitää laittaa yhdelle riville ja mahdollisesti lisätä
 Päivityksen jälkeen Solr pitää käynnistää uudellen. Linuxissa se käy
 näin
 
-\verb=sudo service solr restart=
+\verb|/opt/solr/bin/solr start --user-managed|
 
 Jos Solr:ia käyttää selaimen kautta, sekin on syytä käynnistää
 uudelleen.
@@ -167,6 +228,7 @@ uudelleen.
 
 \bigskip
 Seuraavaksi mennään selaimella osoitteeseen \verb=http://localhost:8983/solr/=
+
 Vasemmalla paneelin alalaidassa lukee 
 
 \begin{verbatim}
@@ -202,54 +264,96 @@ Lokitulostus menee kansioon \verb=/var/solr/logs/=
 \subsection*{Indeksointi}
 \zlabel{indexing}
 
+Vihje: Myös \verb=Apache Nutch=in voi konfiguroida indeksoimaan
+kovalevyn eli paikallisen tiedostojärjestelmän.
+
+
+\bigskip
 Versiosta 9.0.0 alkaen Solr:sta on poistettu \verb=DataImportHandler=,
 jota käytin kovalevyni indeksointiin, ja sen korvaajaksi tein ohjelman
-\verb=src/main/resources/indexer.sh=
+
+\verb=src/main/resources/disk-indexer.sh <asetustiedosto>=
 
 Se toimii minulla, mutta en väitä, että se toimii sinulla.
 
-\verb=src/main/resources/indexer.sh= konfiguroidaan tiedostossa
-\verb|sukija.properties|. Katso sivu \zpageref{Sukija:konf}.
-Tiedoston \verb=conf/indexer-config.xml= kentät ovat
-(nimet on kopioitu \verb=DataImportHandler=ista):
+Se valitsee tiedostot niitten nimien perusteella. Valinta
+MIME"-tyyppien pohjalta täytyy tehdä Apache Tika Serverin asetuksissa.
 
+Asetustiedoston esimerkkinä on
+
+\verb|src/main/resources/indexer-config-esim.xml|
+
+Tiedostoa voidaan muokata XML-editorilla tai emacsin XML-moodilla.
+Tiedoston kentät ovat
 
 \begin{tabularx}{\textwidth}{@{}lX}
-core           & Sukijan indeksin URL-osoite. \\
-file           & Säännöllinen lauseke, joka kuvaa indeksoitavien tiedostojen nimet. \\
-excludes       & Säännöllinen lauseke, joka kuvaa niitten tiedostojen nimet, joita ei indeksoida. \\
-tika           & Apache Tikan asetustiedosto, jota Sukija käyttää. \\
-writeLimit     & Indeksoitavan tiedoston maksimikoko. -1 tarkoittaa, että ylärajaa ei ole.
-                 Jos writeLimit > 0 indeksoidaan tiedoston alusta enintään niin monta tavua ja lopetetaan. \\
-commitWithinMs & Enimmäisaika millisekunteina ennen kuin indeksoitavat tiedostot tallenetaan Solr:ään. \\
-onError        & Mitä tehdään virheilmoituksen jälkeen? \\
-               & \texttt{abort} lopettaan. \\
-               & \texttt{skip} siirrytään indeksoimaan seuraavaa tiedostoa. \\
-recursive      & Indeksoidaanko baseDir-hakemistojen alihakemistot \\
-               & (\texttt{true}, \texttt{false})? \\
-baseDir        & Indeksoitavat hakemistot, esimerkiksi \\
-               & \texttt{\$\{user.home\}/Asiakirjat:/usr/local/data} \\
-               & Erottimena on \texttt{\$\{path.separator\}}
+solrURL           & Solr:n URL. \\
+collection        & Tietokannan nimi (sukija). \\
+commitWithinMs    & Enimmäisaika millisekunteina ennen kuin indeksoitavat tiedostot tallenetaan Solr:ään. \\
+connectionTimeout & Nämä kolme kenttää (millisekunteina) liittyvät \\
+idleTimeout       & HTTP-yhteyksiin. Katso luokan \\
+requestTimeout    & \texttt{HttpSolrClientBuilderBase} dokumentti. \\
+onError           & Mitä tehdään virheilmoituksen jälkeen? \\
+                  & \texttt{abort} lopettaan. \\
+                  & \texttt{skip} siirrytään indeksoimaan seuraavaa tiedostoa. \\
+baseDir           & Indeksoitavat hakemistot, jokainen erikseen, merkkijonoina. \\
+includes          & Säännölliset lausekkeet, joilla valitaan indeksoitavat tiedostot (ei välttämätön).  \\
+excludes          & Säännölliset lausekkeet, joilla valitaan tiedostot, joita ei indeksoida (ei välttämätön).
 \end{tabularx}
 
-Kenttien oletusarvot ovat tiedostossa \verb=sukija.properties=
+Jos \verb=includes= ja \verb=excludes= puuttuvat,
+indeksoidaan kaikki hakemistoissa \verb=baseDir= olevat tiedostot.
 
-Myös \verb=Apache Nutch=in voi konfiguroida indeksoimaan kovalevyn
-eli paikallisen tiedostojärjestelmän.
+
+\newpage
+Esimerkkejä
+
+\verb|<baseDir>${user.home}/Asiakirjat</baseDir>|
+
+\verb=user.home= on ainoa tunnistettu Javan muuttuja.
+
 
 \bigskip
-\verb=src/main/resources/indexer.sh= ei toimi (ainakaan minulla)
-Solr:n versiossa 9.9.0, vaan se yrittää joskus indeksoida
-tekstitiedostoja, joitten MIME-tyyppi on \verb=text/plain= tai
-\verb=text/x-tex= ikään kuin ne olisivat jotain Microsoftin
-formaattia.
+\verb=<pattern>.*(12345|abcd).*</pattern>=
 
-Mutta ei hätää, olen tehnyt ohjelman
+Valtiaan tiedostot, joitten nimissä on \verb=12345= tai \verb=abcd= 
 
-\verb=src/main/resources/indexer2.sh=
+\verb=<pattern>${user.home}/Asiakirjat/salainen/.*</pattern>=
 
-joka käyttää samaa asetustiedostoa kuin \verb=indexer.sh= ja toimii
-ainakin minulla. En väitä, että se toimii sinulla.
+Valitaan kaikki hakemiston tiedostot.
+
+
+\bigskip
+Syntaksi on sama kuin Javan luokassa \verb=Pattern= ja
+\verb=user.home= on ainoa tunnistettu Javan muuttuja.
+Säännöllisen lausekkeen pitää testata koko tiedoston nimeä eli
+\verb=.*= on tarpeen alussa tai lopussa (tai \verb=$=).
+
+
+\bigskip
+Jos tiedostot valitaan niitten loppuosan perusteella, säännöllinen
+lauseke on jotain \verb=.*[.](odt|tex|txt)$= Tällaisen lausekkeen
+kirjoittamisessa tulee helposti virheitä varsinkin, jos loppuosia on
+paljon (\verb=latexmk= tekee paljon aputiedostoja). Niinpä jokainen
+tiedoston loppuosa voidaan laittaa omalle rivilleen merkkijonona.
+
+\verb=<extension>odt</extension>=
+
+ja ohjelma kääntää sen toiseksi säännölliseksi lausekkeeksi
+\verb=pattern=in (jos sellainen on) lisäksi.
+
+
+\bigskip
+\verb=includes=-osassa valitaan kaikki ne tiedostot, jotka jompikumpi
+säännöllinen lauseke valitsee.
+
+\verb=excludes=-osassa valitaan kaikki ne tiedostot, joita kumpikaan
+säännöllinen lauseke ei valitse.
+
+
+\bigskip
+Sukija ei indeksoi tar-, zip- tai muitten sellaisten tiedostojen
+sisällä olevia tiedostoja.
 
 
 \subsection*{Tietojen etsiminen}
@@ -278,7 +382,7 @@ Esimerkiksi sanaa \verb=sana= etsitään näin:
 Tämän tulostuksen ulkonäköä voi muuttaa muuttamalla Sukijan mukana
 tulevaa tiedostoa \verb=conf/xslt/sukija.xsl=.
 
-Tietoja voi etsiä myös Solr:n käyttöliittymällä kohdassa \verb|Query|.
+Tietoja voi etsiä myös Solr:n käyttöliittymällä kohdassa \verb=Query=.
 
 
 Koska sanat on tallennettu perusmuodossa, fraasihaussakin sanojen
@@ -297,7 +401,7 @@ Indeksoinnissa w:t muutetaan v:ksi eli esimerkiksi Waltaria on etsittävä muodo
 
 Tässä vaiheessa kaikki indeksoitavista tiedostoista luetut sanat on
 muutettu pieniksi kirjaimiksi eli tiedostossa
-\verb|suggestions.xml| olevat erisnimetkin pitää kirjoittaa
+\verb=suggestions.xml= olevat erisnimetkin pitää kirjoittaa
 pienellä alkukirjaimella.
 
 Konfigurointitiedoston formaatti on määritelty tiedostossa
@@ -494,4 +598,4 @@ Copyright © 2011--2024 Hannu Väisänen.
 % cp /home/hvaisane/Lataukset/solr/solr-x.y.z/example/example-DIH/solr/db/conf/admin-extra*.html ~/Lataukset/solr/solr-5.0.0/server/solr/sukija/conf/
 
 
-% sudo rm -rf /var/solr/ /opt/solr* /etc/default/solr.in.sh /etc/init.d/solr /etc/rc*/*solr*
+% sudo rm -rf /etc/systemd/system/solr.service /etc/default/solr.in.sh /opt/solr* /var/solr

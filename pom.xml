@@ -92,6 +92,14 @@
         <version>3.4.4</version>
     </dependency>
 
+<!-- Source: https://mvnrepository.com/artifact/com.sun.istack/istack-commons-runtime -->
+<dependency>
+    <groupId>com.sun.istack</groupId>
+    <artifactId>istack-commons-runtime</artifactId>
+    <version>4.1.2</version>
+    <scope>compile</scope>
+</dependency>
+
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
@@ -99,27 +107,35 @@
     </dependency>
 
     <dependency>
-      <groupId>org.apache.solr</groupId>
-      <artifactId>solr-core</artifactId>
-      <version>9.10.1</version>
+        <groupId>org.apache.solr</groupId>
+        <artifactId>solr-core</artifactId>
+        <version>10.0.0</version>
     </dependency>
 
-   <dependency>
-      <groupId>org.apache.solr</groupId>
-      <artifactId>solr-solrj</artifactId>
-      <version>9.10.1</version>
+    <dependency>
+        <groupId>org.apache.solr</groupId>
+        <artifactId>solr-solrj</artifactId>
+        <version>10.0.0</version>
     </dependency>
+
+<!-- Source: https://mvnrepository.com/artifact/org.apache.solr/solr-solrj-jetty -->
+<dependency>
+    <groupId>org.apache.solr</groupId>
+    <artifactId>solr-solrj-jetty</artifactId>
+    <version>10.0.0</version>
+    <scope>compile</scope>
+</dependency>
 
    <dependency>
       <groupId>org.apache.lucene</groupId>
       <artifactId>lucene-core</artifactId>
-      <version>9.12.3</version>
+      <version>10.3.2</version>
    </dependency>
 
    <dependency>
       <groupId>org.apache.lucene</groupId>
       <artifactId>lucene-suggest</artifactId>
-      <version>9.12.3</version>
+      <version>10.3.2</version>
    </dependency>
 
     <dependency>
@@ -134,19 +150,11 @@
         <version>0.6.3</version>
     </dependency>
 
-<!-- Indexer.java -->
     <dependency>
       <groupId>org.apache.tika</groupId>
       <artifactId>tika-core</artifactId>
 <!--      <version>1.28.5</version> -->
-      <version>3.2.2</version>
-    </dependency>
-
-    <dependency>
-      <groupId>org.apache.tika</groupId>
-      <artifactId>tika-parsers</artifactId>
-<!--      <version>1.28.5</version> -->
-      <version>3.2.2</version>
+      <version>3.2.3</version>
     </dependency>
 
     <dependency>
@@ -154,6 +162,39 @@
       <artifactId>httpclient</artifactId>
       <version>4.5.14</version>
     </dependency>
+
+    <dependency>
+      <groupId>net.java.dev.jna</groupId>
+      <artifactId>jna</artifactId>
+      <version>5.17.0</version>
+      <type>jar</type>
+      <scope>compile</scope>
+    </dependency>
+
+<!-- Source: https://mvnrepository.com/artifact/org.apache.tika/tika-server -->
+<dependency>
+    <groupId>org.apache.tika</groupId>
+    <artifactId>tika-server</artifactId>
+    <version>3.3.0</version>
+    <type>pom</type>
+    <scope>compile</scope>
+</dependency>
+
+<!-- Source: https://mvnrepository.com/artifact/org.apache.solr/solr-extraction -->
+<dependency>
+    <groupId>org.apache.solr</groupId>
+    <artifactId>solr-extraction</artifactId>
+    <version>10.0.0</version>
+    <scope>compile</scope>
+</dependency>
+
+
+    <dependency>
+      <groupId>peltomaa</groupId>
+      <artifactId>peltomaa-peltomaa</artifactId>
+    <version>0.1</version>
+    </dependency>
+
   </dependencies>
 
 

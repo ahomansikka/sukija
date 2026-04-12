@@ -12,18 +12,26 @@
 </xsd:simpleType>
 
 
+<xsd:complexType name = "UnionType">
+  <xsd:choice>
+    <xsd:element name = "pattern"   type = "xsd:string"/>
+    <xsd:element name = "extension" type = "xsd:string" minOccurs = "1" maxOccurs = "unbounded"/>
+  </xsd:choice>
+</xsd:complexType>
+
+
 <xsd:complexType name = "IndexerConfigurationType">
   <xsd:sequence>
-    <xsd:element name = "core"           type = "xsd:string"/>
-    <xsd:element name = "file"           type = "xsd:string"/>
-    <xsd:element name = "excludes"       type = "xsd:string"/>
-    <xsd:element name = "tika"           type = "xsd:string"/>
-    <xsd:element name = "writeLimit"     type = "xsd:integer"/>
-    <xsd:element name = "commitWithinMs" type = "xsd:integer"/>
-    <xsd:element name = "onError"        type = "OnErrorType"/>
-    <xsd:element name = "recursive"      type = "xsd:boolean"/>
-    <xsd:element name = "baseDir"        type = "xsd:string" minOccurs = "1" maxOccurs = "unbounded"/>
-    <xsd:element name = "excludeSuffix"  type = "xsd:string" minOccurs = "0" maxOccurs = "unbounded"/>
+    <xsd:element name = "solrURL"           type = "xsd:string"/>
+    <xsd:element name = "collection"        type = "xsd:string"/>
+    <xsd:element name = "commitWithinMs"    type = "xsd:integer"/>
+    <xsd:element name = "connectionTimeout" type = "xsd:integer"/>
+    <xsd:element name = "idleTimeout"       type = "xsd:integer"/>
+    <xsd:element name = "requestTimeout"    type = "xsd:integer"/>
+    <xsd:element name = "onError"           type = "OnErrorType"/>
+    <xsd:element name = "baseDir"           type = "xsd:string" minOccurs = "1" maxOccurs = "unbounded"/>
+    <xsd:element name = "includes"          type = "UnionType" minOccurs = "0"/>
+    <xsd:element name = "excludes"          type = "UnionType" minOccurs = "0"/>
   </xsd:sequence>
 </xsd:complexType>
 

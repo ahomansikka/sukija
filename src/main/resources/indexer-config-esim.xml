@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- Tämä on vain esimerkki. -->
+
+<configuration>
+  <solrURL>http://localhost:8983/solr</solrURL>
+  <collection>sukija</collection>
+  <commitWithinMs>10000</commitWithinMs>
+  <connectionTimeout>120000</connectionTimeout>
+  <idleTimeout>120000</idleTimeout>
+  <requestTimeout>120000</requestTimeout>
+  <onError>abort</onError>
+  <baseDir>${user.home}/Asiakirjat</baseDir>
+  <baseDir>/usr/local/data</baseDir>
+  <includes>
+    <pattern>.*(2026|abcd).*</pattern>
+    <extension>odt</extension>
+    <extension>tex</extension>
+    <extension>txt</extension>
+  </includes>
+  <excludes>
+    <pattern>${user.home}/Asiakirjat/salainen/.*</pattern>
+    <extension>aux</extension>
+    <extension>bbl</extension>
+    <extension>bcf</extension>
+    <extension>blg</extension>
+    <extension>fdb_latexmk</extension>
+    <extension>fls</extension>
+    <extension>idx</extension>
+    <extension>ilg</extension>
+    <extension>ind</extension>
+    <extension>log</extension>
+    <extension>toc</extension>
+    <extension>uhy</extension>
+  </excludes>
+</configuration>
