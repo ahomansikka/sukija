@@ -4,7 +4,11 @@
     <field name="id"        type="string" indexed="true"  stored="true" required="true" multiValued="false" />
 <!--<field name="fileName"  type="string" indexed="true"  stored="true" /> -->
     <field name="text"      type="text"   indexed="true"  stored="true" termOffsets="true" termPositions="true" termVectors="true" multiValued="true" />
-    <dynamicField name="*"  type="string" indexed="false" stored="false" />
+
+<!-- <field name="meta"         type="text_general" indexed="false" stored="false" multiValued="true"/>
+<field name="content_type" type="text_general" indexed="false" stored="false" multiValued="true"/>
+-->
+    <dynamicField name="*" type="text_general" indexed="false" stored="false" multiValued="true"/>
   </fields>
   <uniqueKey>id</uniqueKey>
   <types>

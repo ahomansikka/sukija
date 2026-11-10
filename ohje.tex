@@ -48,7 +48,7 @@ tekstitiedostojen merkistökoodauksia, joita Apache Tika
       Uusin versio. C-koodin pitää olla käännetty niin,
       että sanojen perusmuodot tulevat mukaan.
 
-\item Solr 10.0.0:
+\item Solr 10.1.0:
       \verb=http://lucene.apache.org/solr/=
       Tässä dokumentissa Solr:sta käytetään nimeä solr-x.y.z,
       missä x.y.z tarkoittaa version numeroa.
@@ -60,7 +60,7 @@ tekstitiedostojen merkistökoodauksia, joita Apache Tika
 
 \item Javan versio 25 tai uudempi. Sukija ei ehkä käänny Javan aiemmilla versiolla.
 
-\item Apache mavenin versio 3.8.4 tai uudempi.
+\item Apache maven.
 
 \item Apache Lucene ja Apache Tika.
       Ne tulevat Solr:n mukana, mutta Sukijan tiedostosta \verb=pom.xml=
@@ -72,10 +72,8 @@ tekstitiedostojen merkistökoodauksia, joita Apache Tika
 Lisäksi Sukija tarvitsee erinäisiä jar-tiedostoja, mutta maven imuroi
 ne automaagisesti.
 
-
-Sorl:n tämä versio ei ole yhteensopiva aiempien versioitten kanssa,
-joten sekä sen että Sukijan asennusohjeet ovat muuttuneet.
-
+Sorl:n asentaminen on hieman muuttunut edellisestä versiosta ja siis
+myös nämä asennusohjeet.
 
 \bigskip
 Tämä asennusohje olettaa, että libvoikko on asennettu hakemistoon
@@ -189,9 +187,8 @@ Sen jälkeen komennolla
 
 \verb|make tiedostot|
 
-tehdään Solr:n asetustiedostot \verb=conf/indexer-config.xml= (katso
-sivu \zpageref{indexing}) ja \verb=conf/schema.xml=. Esimerkit näistä
-tiedostoista saa aikaan yllä mainitulla komennolla. (-:
+tehdään Solr:n asetustiedosto \verb=conf/schema.xml=. Esimerkin siitä
+saa aikaan yllä mainitulla komennolla. (-:
 
 Seuraavaksi pitää tehdä Solr:iin Sukijan tarvitsemat hakemistot ja
 kopioida niihin Solr:n tarvitsemat tiedostot. Sitä varten on kaksi
@@ -202,13 +199,23 @@ skriptiä
 
 Jälkimmäistä käytetään, jos Solr on asennettu tunnuksella \verb=solr=.
 
+Skriptit asentavat Sukijan tiedostot kansioon
+\verb|/var/solr/data/configsets| Jotta Sukija toimisi myös yhdellä
+palvelimella, tästä kansiosta pitää tehdä symbolinen linkki sinne,
+missä kansio oli aiemmin, esimerkiksi näin (käytä \verb|sudoa|, jos on tarpeen)
+
+\begin{verbatim}
+cd /var/solr/data
+ln -s configsets/sukija/ .
+\end{verbatim}
+
 
 \bigskip
 Jos asentamisen jälkeen konfiguroi Sukijaa, muutokset voi viedä
 Solr:iin jommallakummalla komennoista
 
-\verb=cp -r conf/* /var/solr/data/sukija/conf/=
-\verb=sudo -u solr cp -r conf/* /var/solr/data/sukija/conf/=
+\verb=cp -r conf/* /var/solr/data/configsets/sukija/conf/=
+\verb=sudo -u solr cp -r conf/* /var/solr/data/configsets/sukija/conf/=
 
 Sukijan jar-paketin voi päivittää näin
 
@@ -309,9 +316,6 @@ indeksoidaan kaikki hakemistoissa \verb=baseDir= olevat tiedostot.
 Esimerkkejä
 
 \verb|<baseDir>${user.home}/Asiakirjat</baseDir>|
-
-\verb=user.home= on ainoa tunnistettu Javan muuttuja.
-
 
 \bigskip
 \verb=<pattern>.*(12345|abcd).*</pattern>=
@@ -590,7 +594,7 @@ Tällä komennolla ei ole parametreja.
 
 
 \bigskip \noindent
-Copyright © 2011--2024 Hannu Väisänen.
+Copyright © 2011--2026 Hannu Väisänen.
 \end{document}
 
 
