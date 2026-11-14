@@ -200,29 +200,14 @@ skriptiä
 Jälkimmäistä käytetään, jos Solr on asennettu tunnuksella \verb=solr=.
 
 Skriptit asentavat Sukijan tiedostot kansioon
-\verb|/var/solr/data/configsets| Jotta Sukija toimisi myös yhdellä
-palvelimella, tästä kansiosta pitää tehdä symbolinen linkki sinne,
-missä kansio oli aiemmin, esimerkiksi näin (käytä \verb|sudoa|, jos on tarpeen)
-
-\begin{verbatim}
-cd /var/solr/data
-ln -s configsets/sukija/ .
-\end{verbatim}
+\verb|/var/solr/data/configsets|
 
 
 \bigskip
-Jos asentamisen jälkeen konfiguroi Sukijaa, muutokset voi viedä
-Solr:iin jommallakummalla komennoista
-
-\verb=cp -r conf/* /var/solr/data/configsets/sukija/conf/=
-\verb=sudo -u solr cp -r conf/* /var/solr/data/configsets/sukija/conf/=
-
-Sukijan jar-paketin voi päivittää näin
-
-\verb=cp $HOME/.m2/repository/peltomaa/sukija/sukija/3.0.0/sukija-3.0.0.jar /var/solr/data/sukija/lib/=
-
-Kaikki pitää laittaa yhdelle riville ja mahdollisesti lisätä
-\verb=sudo= komennon alkuun.
+Asennuksen jälkeen tiedostoja voi muokata joko hakemistossa
+\verb|/var/solr/data/configsets/conf| tai Sukijan lähdekoodissa ja
+kopioida tuohon kansioon, ja päivitetyt jar-paketit voi kopioida
+kansioon \verb|/var/solr/data/configsets/lib|
 
 Päivityksen jälkeen Solr pitää käynnistää uudellen. Linuxissa se käy
 näin
